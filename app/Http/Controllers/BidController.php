@@ -10,23 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class BidController extends Controller
 {
-    public function index($ad_id){
+    public function index($ad_id)
+    {
         $user = Auth::user();
         $user_id = $user->id;
         $ad = Ad::find($ad_id);
 
-        $title = trans('app.bids_for').' '.$ad->title;
+        $title = trans('app.bids_for') . ' ' . $ad->title;
 
-        if (! $user->is_admin()){
-            if ($ad->user_id != $user_id){
+        if (! $user->is_admin()) {
+            if ($ad->user_id != $user_id) {
                 return view('admin.error.error_404');
             }
         }
         return view('admin.bids', compact('title', 'ad'));
     }
 
-    public function postBid(Request $request , $ad_id){
-        if ( ! Auth::check()){
+    public function postBid(Request $request, $ad_id)
+    {
+        if (! Auth::check()) {
             return redirect(route('login'))->with('error', trans('app.login_first_to_post_bid'));
         }
         $user = Auth::user();
@@ -35,8 +37,8 @@ class BidController extends Controller
         $ad = Ad::find($ad_id);
         $current_max_bid = $ad->current_bid();
 
-        if ($bid_amount <= $current_max_bid ){
-            return back()->with('error', sprintf(trans('app.enter_min_bid_amount'), themeqx_price($current_max_bid)) );
+        if ($bid_amount <= $current_max_bid) {
+            return back()->with('error', sprintf(trans('app.enter_min_bid_amount'), themeqx_price($current_max_bid)));
         }
 
         $data = [
@@ -51,7 +53,8 @@ class BidController extends Controller
         return back()->with('success', trans('app.your_bid_posted'));
     }
 
-    public function bidAction(Request $request){
+    public function bidAction(Request $request)
+    {
         $action = $request->action;
         $ad_id = $request->ad_id;
         $bid_id = $request->bid_id;
@@ -60,14 +63,14 @@ class BidController extends Controller
         $user_id = $user->id;
         $ad = Ad::find($ad_id);
 
-        if (! $user->is_admin()){
-            if ($ad->user_id != $user_id){
+        if (! $user->is_admin()) {
+            if ($ad->user_id != $user_id) {
                 return ['success' => 0];
             }
         }
 
         $bid = Bid::find($bid_id);
-        switch ($action){
+        switch ($action) {
             case 'accept':
                 $bid->is_accepted = 1;
                 $bid->save();
@@ -79,7 +82,8 @@ class BidController extends Controller
         return ['success' => 1];
     }
 
-    public function bidderInfo($bid_id){
+    public function bidderInfo($bid_id)
+    {
         $bid = Bid::find($bid_id);
         $title = trans('app.bidder_info');
 
@@ -87,8 +91,8 @@ class BidController extends Controller
         $user_id = $auth_user->id;
         $ad = Ad::find($bid->ad_id);
 
-        if (! $auth_user->is_admin()){
-            if ($ad->user_id != $user_id){
+        if (! $auth_user->is_admin()) {
+            if ($ad->user_id != $user_id) {
                 return view('admin.error.error_404');
             }
         }
@@ -97,6 +101,4 @@ class BidController extends Controller
 
         return view('admin.profile', compact('title', 'user'));
     }
-
-
 }

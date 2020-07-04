@@ -6,7 +6,6 @@ use App\Media;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
@@ -26,47 +25,48 @@ class PostController extends Controller
         return view('admin.pages', compact('title', 'pages'));
     }
 
-    public function uploadPostImage(Request $request){
+    public function uploadPostImage(Request $request)
+    {
         $user_id = Auth::user()->id;
         $post_id = $request->post_id ? $request->post_id : 0 ;
 
         //Check is this post belongs with any image
         $attachedPostMediaCount = Media::whereUserId($user_id)->wherePostId($post_id)->whereRef('blog')->count();
-        if ($attachedPostMediaCount > 0){
+        if ($attachedPostMediaCount > 0) {
             return ['success' => 0, 'msg' => trans('app.max_image_uploaded_msg')];
-        }else{
+        } else {
             $postMediaCount = Media::whereUserId($user_id)->wherePostId(0)->whereRef('blog')->count();
-            if ($postMediaCount > 0){
-                return ['success' => 0, 'msg'=> trans('app.max_image_uploaded_msg')];
+            if ($postMediaCount > 0) {
+                return ['success' => 0, 'msg' => trans('app.max_image_uploaded_msg')];
             }
         }
 
-        if ($request->hasFile('images')){
+        if ($request->hasFile('images')) {
             $image = $request->file('images');
             $valid_extensions = ['jpg','jpeg','png'];
 
-            if ( ! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions) ){
-                return ['success' => 0, 'msg' => implode(',', $valid_extensions).' '.trans('app.valid_extension_msg')];
+            if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+                return ['success' => 0, 'msg' => implode(',', $valid_extensions) . ' ' . trans('app.valid_extension_msg')];
             }
 
-            $file_base_name = str_replace('.'.$image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
 
             $resized = Image::make($image)->resize(null, 200, function ($constraint) {
                 $constraint->aspectRatio();
             })->stream();
             $resized_thumb = Image::make($image)->resize(320, 213)->stream();
 
-            $image_name = strtolower(time().str_random(5).'-'.str_slug($file_base_name)).'.' . $image->getClientOriginalExtension();
+            $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
 
-            $imageFileName = 'uploads/images/'.$image_name;
-            $imageThumbName = 'uploads/images/thumbs/'.$image_name;
+            $imageFileName = 'uploads/images/' . $image_name;
+            $imageThumbName = 'uploads/images/thumbs/' . $image_name;
 
             //Upload original image
             $is_uploaded = current_disk()->put($imageFileName, $resized->__toString(), 'public');
 
             if ($is_uploaded) {
                 //Save image name into db
-                $created_img_db = Media::create(['user_id' => $user_id, 'media_name'=>$image_name, 'type'=>'image','is_feature'=>'1', 'storage' => get_option('default_storage'), 'ref'=>'blog']);
+                $created_img_db = Media::create(['user_id' => $user_id, 'media_name' => $image_name, 'type' => 'image','is_feature' => '1', 'storage' => get_option('default_storage'), 'ref' => 'blog']);
 
                 //upload thumb image
                 current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
@@ -79,7 +79,8 @@ class PostController extends Controller
     }
 
 
-    public function appendPostMediaImage(){
+    public function appendPostMediaImage()
+    {
         $user_id = Auth::user()->id;
         $ads_images = Media::whereUserId($user_id)->wherePostId(0)->whereRef('blog')->get();
 
@@ -104,7 +105,8 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $user = Auth::user();
         $rules = [
             'title'     => 'required',
@@ -112,8 +114,8 @@ class PostController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $show_in_header_menu = $request->show_in_header_menu ? 1:0;
-        $show_in_footer_menu = $request->show_in_footer_menu ? 1:0;
+        $show_in_header_menu = $request->show_in_header_menu ? 1 : 0;
+        $show_in_footer_menu = $request->show_in_footer_menu ? 1 : 0;
 
         $slug = unique_slug($request->title, 'Post');
         $data = [
@@ -129,7 +131,7 @@ class PostController extends Controller
 
         $post_created = Post::create($data);
 
-        if ($post_created){
+        if ($post_created) {
             return redirect(route('pages'))->with('success', trans('app.page_has_been_created'));
         }
         return redirect()->back()->with('error', trans('app.error_msg'));
@@ -159,7 +161,8 @@ class PostController extends Controller
         return view('admin.edit_page', compact('title', 'page'));
     }
 
-    public function updatePage(Request $request, $slug){
+    public function updatePage(Request $request, $slug)
+    {
         $rules = [
             'title'     => 'required',
             'post_content'   => 'required',
@@ -167,8 +170,8 @@ class PostController extends Controller
         $this->validate($request, $rules);
         $page = Post::whereSlug($slug)->first();
 
-        $show_in_header_menu = $request->show_in_header_menu ? 1:0;
-        $show_in_footer_menu = $request->show_in_footer_menu ? 1:0;
+        $show_in_header_menu = $request->show_in_header_menu ? 1 : 0;
+        $show_in_footer_menu = $request->show_in_footer_menu ? 1 : 0;
 
         $data = [
             'title'                 => $request->title,
@@ -179,16 +182,17 @@ class PostController extends Controller
         ];
 
         $post_update = $page->update($data);
-        if ($post_update){
+        if ($post_update) {
             return redirect()->back()->with('success', trans('app.page_has_been_updated'));
         }
         return redirect()->back()->with('error', trans('app.error_msg'));
     }
     
-    public function showPage($slug){
+    public function showPage($slug)
+    {
         $page = Post::whereSlug($slug)->first();
 
-        if (! $page){
+        if (! $page) {
             return view('theme.error_404');
         }
         $title = $page->title;
@@ -196,13 +200,15 @@ class PostController extends Controller
     }
 
 
-    public function blogIndex(){
+    public function blogIndex()
+    {
         $posts = Post::whereType('post')->whereStatus('1')->paginate(20);
         $title = trans('app.blog');
         return view('theme.blog', compact('title', 'posts'));
     }
 
-    public function blogSingle($slug){
+    public function blogSingle($slug)
+    {
         $post = Post::whereSlug($slug)->first();
         $title = $post->title;
         
@@ -210,10 +216,11 @@ class PostController extends Controller
         return view('theme.blog_single', compact('title', 'post', 'enable_discuss'));
     }
 
-    public function authorPosts($id){
+    public function authorPosts($id)
+    {
         $posts = Post::whereType('post')->whereUserId($id)->whereStatus(1)->paginate(20);
         $user = User::find($id);
-        $title = $user->name."'s ".trans('app.blog');
+        $title = $user->name . "'s " . trans('app.blog');
         return view('theme.blog', compact('title', 'posts'));
     }
 
@@ -240,7 +247,7 @@ class PostController extends Controller
     {
         $slug = $request->slug;
         $page = Post::whereSlug($slug)->first();
-        if ($page){
+        if ($page) {
             $page->delete();
             return ['success' => 1, 'msg' => trans('app.operation_success')];
         }

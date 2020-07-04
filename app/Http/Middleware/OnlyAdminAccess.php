@@ -16,14 +16,15 @@ class OnlyAdminAccess
      */
     public function handle($request, Closure $next)
     {
-        if ( ! Auth::check()){
+        if (! Auth::check()) {
             return redirect()->guest(route('login'))->with('error', trans('app.unauthorized_access'));
         }
 
         $user = Auth::user();
 
-        if ( ! $user->is_admin())
+        if (! $user->is_admin()) {
             return redirect(route('dashboard'))->with('error', trans('app.access_restricted'));
+        }
 
         return $next($request);
     }

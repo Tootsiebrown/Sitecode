@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 
 class CategoriesController extends Controller
@@ -69,9 +68,9 @@ class CategoriesController extends Controller
     {
         $title = trans('app.categories');
         $is_category_single = false;
-        if ($id){
+        if ($id) {
             $category = Category::find($id);
-            if ($category){
+            if ($category) {
                 $title = $category->category_name;
                 $is_category_single = true;
             }
@@ -79,7 +78,7 @@ class CategoriesController extends Controller
 
 
         $top_categories = Category::whereCategoryId(0)->orderBy('category_name', 'asc')->get();
-        return view('categories', compact('top_categories', 'title','category','id', 'is_category_single'));
+        return view('categories', compact('top_categories', 'title', 'category', 'id', 'is_category_single'));
     }
 
     /**
@@ -93,11 +92,11 @@ class CategoriesController extends Controller
         $title = trans('app.edit_category');
         $edit_category = Category::find($id);
 
-        if ( ! $edit_category)
+        if (! $edit_category) {
             return redirect(route('parent_categories'))->with('error', trans('app.request_url_not_found'));
+        }
 
         return view('admin.edit_category', compact('title', 'categories', 'edit_category'));
-
     }
 
     /**
@@ -117,7 +116,7 @@ class CategoriesController extends Controller
         $slug = str_slug($request->category_name);
 
         $duplicate = Category::where('category_slug', $slug)->where('id', '!=', $id)->count();
-        if ($duplicate > 0){
+        if ($duplicate > 0) {
             return back()->with('error', trans('app.category_exists_in_db'));
         }
 
@@ -142,7 +141,7 @@ class CategoriesController extends Controller
         $id = $request->data_id;
         
         $delete = Category::where('id', $id)->delete();
-        if ($delete){
+        if ($delete) {
             return ['success' => 1, 'msg' => trans('app.category_deleted_success')];
         }
         return ['success' => 0, 'msg' => trans('app.error_msg')];

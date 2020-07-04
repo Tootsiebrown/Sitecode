@@ -8,13 +8,13 @@ use App\Payment;
 use App\Report_ad;
 use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function dashboard(){
+    public function dashboard()
+    {
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $reports = 0;
         $total_payments_amount = 0;
 
-        if ($user->is_admin()){
+        if ($user->is_admin()) {
             $approved_ads = Ad::whereStatus('1')->count();
             $pending_ads = Ad::whereStatus('0')->count();
             $blocked_ads = Ad::whereStatus('2')->count();
@@ -36,7 +36,7 @@ class DashboardController extends Controller
             $total_payments_amount = Payment::whereStatus('success')->sum('amount');
             $ten_contact_messages = Contact_query::take(10)->orderBy('id', 'desc')->get();
             $reports = Report_ad::orderBy('id', 'desc')->with('ad')->take(10)->get();
-        }else{
+        } else {
             $approved_ads = Ad::whereStatus('1')->whereUserId($user_id)->count();
             $pending_ads = Ad::whereStatus('0')->whereUserId($user_id)->count();
             $blocked_ads = Ad::whereStatus('2')->whereUserId($user_id)->count();
@@ -46,8 +46,9 @@ class DashboardController extends Controller
     }
 
 
-    public function logout(){
-        if (Auth::check()){
+    public function logout()
+    {
+        if (Auth::check()) {
             Auth::logout();
         }
 

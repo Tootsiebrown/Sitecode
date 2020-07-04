@@ -36,7 +36,7 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
-        if (get_option('enable_recaptcha_registration') == 1){
+        if (get_option('enable_recaptcha_registration') == 1) {
             $this->validate($request, array('g-recaptcha-response' => 'required'));
 
             $secret = get_option('recaptcha_secret_key');
@@ -45,10 +45,9 @@ class RegisterController extends Controller
 
             $recaptcha = new \ReCaptcha\ReCaptcha($secret);
             $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-            if ( ! $resp->isSuccess()) {
+            if (! $resp->isSuccess()) {
                 return redirect()->back()->with('error', 'reCAPTCHA is not verified');
             }
-
         }
 
         event(new Registered($user = $this->create($request->all())));

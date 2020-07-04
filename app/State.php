@@ -9,10 +9,12 @@ class State extends Model
     protected $guarded = [];
     public $timestamps = false;
     
-    public function country(){
+    public function country()
+    {
         return $this->belongsTo(Country::class);
     }
-    public function cities(){
+    public function cities()
+    {
         return $this->hasMany(City::class);
     }
 }

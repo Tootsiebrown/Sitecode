@@ -7,11 +7,12 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAccountService
 {
-    public function createOrGetFBUser(ProviderUser $providerUser){
+    public function createOrGetFBUser(ProviderUser $providerUser)
+    {
         $account = SocialAccount::whereProvider('facebook')->whereProviderUserId($providerUser->getId())->first();
 
         if ($account) {
-            if ( ! $account->user){
+            if (! $account->user) {
                 $account->delete();
             }
             return $account->user;
@@ -40,10 +41,11 @@ class SocialAccountService
     }
 
 
-    public function createOrGetGoogleUser(ProviderUser $providerUser){
+    public function createOrGetGoogleUser(ProviderUser $providerUser)
+    {
         $account = SocialAccount::whereProvider('google')->whereProviderUserId($providerUser->getId())->first();
         if ($account) {
-            if ( ! $account->user){
+            if (! $account->user) {
                 $account->delete();
             }
             return $account->user;
@@ -72,10 +74,11 @@ class SocialAccountService
         }
     }
 
-    public function createOrGetTwitterUser(ProviderUser $providerUser){
+    public function createOrGetTwitterUser(ProviderUser $providerUser)
+    {
         $account = SocialAccount::whereProvider('twitter')->whereProviderUserId($providerUser->getId())->first();
         if ($account) {
-            if ( ! $account->user){
+            if (! $account->user) {
                 //Delete social table account if user is not exists
                 $account->delete();
             }
@@ -90,7 +93,7 @@ class SocialAccountService
 
             if (!$user) {
                 $avatar_url = $providerUser->getAvatar();
-                if ( ! empty($providerUser->user['profile_image_url_https'])){
+                if (! empty($providerUser->user['profile_image_url_https'])) {
                     $avatar_url = $providerUser->user['profile_image_url_https'];
                 }
                 $user = User::create([
@@ -108,5 +111,4 @@ class SocialAccountService
             return $user;
         }
     }
-
 }

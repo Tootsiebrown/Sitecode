@@ -29,7 +29,7 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        if (get_option('enable_recaptcha_login') == 1){
+        if (get_option('enable_recaptcha_login') == 1) {
             $this->validate($request, array('g-recaptcha-response' => 'required'));
 
             $secret = get_option('recaptcha_secret_key');
@@ -38,15 +38,15 @@ class LoginController extends Controller
 
             $recaptcha = new \ReCaptcha\ReCaptcha($secret);
             $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
-            if ( ! $resp->isSuccess()) {
+            if (! $resp->isSuccess()) {
                 return redirect()->back()->with('error', 'reCAPTCHA is not verified');
             }
         }
 
         //Check if active account
         $user = User::whereEmail($request->email)->first();
-        if ($user){
-            if ($user->active_status != '1'){
+        if ($user) {
+            if ($user->active_status != '1') {
                 return redirect()->back()->with('error', trans('app.user_account_wrong'));
             }
         }

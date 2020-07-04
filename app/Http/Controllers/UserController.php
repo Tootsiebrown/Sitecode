@@ -8,7 +8,6 @@ use App\Favorite;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +27,7 @@ class UserController extends Controller
     {
         $title = trans('app.users');
 
-        if(env('APP_DEMO') == true){
+        if (env('APP_DEMO') == true) {
             return view('admin.no_data_for_demo', compact('title'));
         }
 
@@ -37,17 +36,17 @@ class UserController extends Controller
         return view('admin.users', compact('title', 'users'));
     }
 
-    public function userInfo($id){
+    public function userInfo($id)
+    {
         $title = trans('app.user_info');
         $user = User::find($id);
         $ads = $user->ads()->paginate(20);
 
-        if (!$user){
+        if (!$user) {
             return view('admin.error.error_404');
         }
 
         return view('admin.user_info', compact('title', 'user', 'ads'));
-
     }
 
     /**
@@ -87,7 +86,7 @@ class UserController extends Controller
         $data = [
             'first_name'        => $request->first_name,
             'last_name'         => $request->last_name,
-            'name'              => $request->first_name.' '.$request->last_name,
+            'name'              => $request->first_name . ' ' . $request->last_name,
             'email'             => $request->email,
             'password'          => bcrypt($request->password),
             'phone'             => $request->phone,
@@ -101,7 +100,7 @@ class UserController extends Controller
 
         $user_create = User::create($data);
 
-        if ($user_create){
+        if ($user_create) {
             $registration_success_activating_msg = "";
             if ($active_status == '1') {
                 try {
@@ -116,15 +115,16 @@ class UserController extends Controller
                     //
                 }
             }
-            return redirect(route('login'))->with('registration_success', trans('app.registration_success'). $registration_success_activating_msg);
+            return redirect(route('login'))->with('registration_success', trans('app.registration_success') . $registration_success_activating_msg);
         } else {
             return back()->withInput()->with('error', trans('app.error_msg'));
         }
     }
 
-    public function activatingAccount($activation_code){
+    public function activatingAccount($activation_code)
+    {
         $get_user = User::whereActivationCode($activation_code)->first();
-        if ( ! $get_user){
+        if (! $get_user) {
             $error = trans('app.invalid_activation_code');
             return view('theme.invalid', compact('error'));
         }
@@ -175,17 +175,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
+    public function destroy($id)
+    {
         //
     }
     
-    public function profile(){
+    public function profile()
+    {
         $title = trans('app.profile');
         $user = Auth::user();
         return view('admin.profile', compact('title', 'user'));
     }
 
-    public function profileEdit(){
+    public function profileEdit()
+    {
         $title = trans('app.profile_edit');
         $user = Auth::user();
         $countries = Country::all();
@@ -193,46 +196,47 @@ class UserController extends Controller
         return view('admin.profile_edit', compact('title', 'user', 'countries'));
     }
 
-    public function profileEditPost(Request $request){
+    public function profileEditPost(Request $request)
+    {
         $user_id = Auth::user()->id;
         $user = User::find($user_id);
 
         //Validating
         $rules = [
-            'email'    => 'required|email|unique:users,email,'.$user_id,
+            'email'    => 'required|email|unique:users,email,' . $user_id,
         ];
         $this->validate($request, $rules);
 
         $inputs = array_except($request->input(), ['_token', 'photo']);
         $user_update = $user->whereId($user_id)->update($inputs);
 
-        if ($request->hasFile('photo')){
-            $rules = ['photo'=>'mimes:jpeg,jpg,png'];
+        if ($request->hasFile('photo')) {
+            $rules = ['photo' => 'mimes:jpeg,jpg,png'];
             $this->validate($request, $rules);
             
             $image = $request->file('photo');
-            $file_base_name = str_replace('.'.$image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
             $resized_thumb = Image::make($image)->resize(300, 300)->stream();
 
-            $image_name = strtolower(time().str_random(5).'-'.str_slug($file_base_name)).'.' . $image->getClientOriginalExtension();
+            $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
 
-            $imageFileName = 'uploads/avatar/'.$image_name;
+            $imageFileName = 'uploads/avatar/' . $image_name;
 
             //Upload original image
             $is_uploaded = current_disk()->put($imageFileName, $resized_thumb->__toString(), 'public');
 
-            if ($is_uploaded){
-                $previous_photo= $user->photo;
-                $previous_photo_storage= $user->photo_storage;
+            if ($is_uploaded) {
+                $previous_photo = $user->photo;
+                $previous_photo_storage = $user->photo_storage;
 
                 $user->photo = $image_name;
                 $user->photo_storage = get_option('default_storage');
                 $user->save();
 
-                if ($previous_photo){
-                    $previous_photo_path = 'uploads/avatar/'.$previous_photo;
+                if ($previous_photo) {
+                    $previous_photo_path = 'uploads/avatar/' . $previous_photo;
                     $storage = Storage::disk($previous_photo_storage);
-                    if ($storage->has($previous_photo_path)){
+                    if ($storage->has($previous_photo_path)) {
                         $storage->delete($previous_photo_path);
                     }
                 }
@@ -242,14 +246,16 @@ class UserController extends Controller
         return redirect(route('profile'))->with('success', trans('app.profile_edit_success_msg'));
     }
 
-    public function administrators(){
+    public function administrators()
+    {
         $title = trans('app.administrators');
         $users = User::whereUserType('admin')->get();
 
         return view('admin.administrators', compact('title', 'users'));
     }
 
-    public function addAdministrator(){
+    public function addAdministrator()
+    {
         $title = trans('app.add_administrator');
         $countries = Country::all();
 
@@ -257,7 +263,8 @@ class UserController extends Controller
     }
 
 
-    public function storeAdministrator(Request $request){
+    public function storeAdministrator(Request $request)
+    {
         $rules = [
             'name'                  => 'required',
             'email'                 => 'required|email',
@@ -285,16 +292,16 @@ class UserController extends Controller
         return redirect(route('administrators'))->with('success', trans('app.registration_success'));
     }
 
-    public function administratorBlockUnblock(Request $request){
-        $status = $request->status == 'unblock'? '1' : '2';
+    public function administratorBlockUnblock(Request $request)
+    {
+        $status = $request->status == 'unblock' ? '1' : '2';
         $user_id = $request->user_id;
         User::whereId($user_id)->update(['active_status' => $status]);
         
-        if ($status ==1){
+        if ($status == 1) {
             return ['success' => 1, 'msg' => trans('app.administrator_unblocked')];
         }
         return ['success' => 1, 'msg' => trans('app.administrator_blocked')];
-
     }
 
     public function changePassword()
@@ -316,19 +323,16 @@ class UserController extends Controller
         $new_password = $request->new_password;
         //$new_password_confirmation = $request->new_password_confirmation;
 
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             $logged_user = Auth::user();
 
-            if(Hash::check($old_password, $logged_user->password))
-            {
+            if (Hash::check($old_password, $logged_user->password)) {
                 $logged_user->password = Hash::make($new_password);
                 $logged_user->save();
                 return redirect()->back()->with('success', trans('app.password_changed_msg'));
             }
             return redirect()->back()->with('error', trans('app.wrong_old_password'));
         }
-
     }
 
 
@@ -337,49 +341,51 @@ class UserController extends Controller
      * @return array
      */
 
-    public function saveAdAsFavorite(Request $request){
-        if ( ! Auth::check())
-            return ['status'=>0, 'msg'=> trans('app.error_msg'), 'redirect_url' => route('login')];
+    public function saveAdAsFavorite(Request $request)
+    {
+        if (! Auth::check()) {
+            return ['status' => 0, 'msg' => trans('app.error_msg'), 'redirect_url' => route('login')];
+        }
 
         $user = Auth::user();
 
         $slug = $request->slug;
         $ad = Ad::whereSlug($slug)->first();
 
-        if ($ad){
+        if ($ad) {
             $get_previous_favorite = Favorite::whereUserId($user->id)->whereAdId($ad->id)->first();
-            if ( ! $get_previous_favorite){
-                Favorite::create(['user_id'=>$user->id, 'ad_id'=>$ad->id]);
-                return ['status'=>1, 'action'=>'added', 'msg'=>'<i class="fa fa-star"></i> '.trans('app.remove_from_favorite')];
-            }else{
+            if (! $get_previous_favorite) {
+                Favorite::create(['user_id' => $user->id, 'ad_id' => $ad->id]);
+                return ['status' => 1, 'action' => 'added', 'msg' => '<i class="fa fa-star"></i> ' . trans('app.remove_from_favorite')];
+            } else {
                 $get_previous_favorite->delete();
-                return ['status'=>1, 'action'=>'removed', 'msg'=>'<i class="fa fa-star-o"></i> '.trans('app.save_ad_as_favorite')];
+                return ['status' => 1, 'action' => 'removed', 'msg' => '<i class="fa fa-star-o"></i> ' . trans('app.save_ad_as_favorite')];
             }
         }
-        return ['status'=>0, 'msg'=> trans('app.error_msg')];
+        return ['status' => 0, 'msg' => trans('app.error_msg')];
     }
 
-    public function replyByEmailPost(Request $request){
+    public function replyByEmailPost(Request $request)
+    {
         $data = $request->all();
         $data['email'];
         $ad_id = $request->ad_id;
         $ad = Ad::find($ad_id);
-        if ($ad){
+        if ($ad) {
             $to_email = $ad->user->email;
-            if ($to_email){
-                try{
+            if ($to_email) {
+                try {
                     Mail::send('emails.reply_by_email', ['data' => $data], function ($m) use ($data, $ad) {
                         $m->from(get_option('email_address'), get_option('site_name'));
-                        $m->to($ad->user->email, $ad->user->name)->subject('query from '.$ad->title);
+                        $m->to($ad->user->email, $ad->user->name)->subject('query from ' . $ad->title);
                         $m->replyTo($data['email'], $data['name']);
                     });
-                }catch (\Exception $e){
+                } catch (\Exception $e) {
                     //
                 }
-                return ['status'=>1, 'msg'=> trans('app.email_has_been_sent')];
+                return ['status' => 1, 'msg' => trans('app.email_has_been_sent')];
             }
         }
-        return ['status'=>0, 'msg'=> trans('app.error_msg')];
+        return ['status' => 0, 'msg' => trans('app.error_msg')];
     }
-
 }

@@ -8,25 +8,30 @@ class Post extends Model
 {
     protected $guarded = [];
 
-    public function getTitleAttribute($value){
+    public function getTitleAttribute($value)
+    {
         return safe_output($value);
     }
 
-    public function getPostContentAttribute($value){
+    public function getPostContentAttribute($value)
+    {
         return safe_output($value);
     }
 
 
-    public function created_at_datetime(){
-        $created_date_time = $this->created_at->timezone(get_option('default_timezone'))->format(get_option('date_format_custom').' '.get_option('time_format_custom'));
+    public function created_at_datetime()
+    {
+        $created_date_time = $this->created_at->timezone(get_option('default_timezone'))->format(get_option('date_format_custom') . ' ' . get_option('time_format_custom'));
         return $created_date_time;
     }
 
-    public function feature_img(){
+    public function feature_img()
+    {
         return $this->hasOne(Media::class);
     }
 
-    public function author(){
+    public function author()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 }

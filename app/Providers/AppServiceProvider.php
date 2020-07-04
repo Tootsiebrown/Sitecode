@@ -77,7 +77,7 @@ class AppServiceProvider extends ServiceProvider
             config($facebookConfig);
             config($googleConfig);
             config($twitterConfig);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $GLOBALS['is_db_connected'] = false;
             //die("Could not connect to the database.  Please check your configuration.");
         }
@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
 
             $current_lang = current_language();
 
-            $view->with(['lUser' => $loggedUser, 'enable_monetize' => $enable_monetize, 'current_lang' => $current_lang] );
+            $view->with(['lUser' => $loggedUser, 'enable_monetize' => $enable_monetize, 'current_lang' => $current_lang]);
         });
     }
 }

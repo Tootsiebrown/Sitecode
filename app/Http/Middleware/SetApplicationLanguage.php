@@ -22,7 +22,7 @@ class SetApplicationLanguage
         App::setLocale(session('lang') ? session('lang') : Config::get('app.locale'));
 
         //Share Logged In User
-        if (Auth::check()){
+        if (Auth::check()) {
             view()->share('logged_user', Auth::user());
         }
 

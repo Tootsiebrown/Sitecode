@@ -1,32 +1,34 @@
 <?php
+
 /**
  * @return mixed
  * Custom functions made by themeqx
  */
 
-require __DIR__.'/laravel_helpers.php';
+require __DIR__ . '/laravel_helpers.php';
 
 /**
  * @param string $img (object)
  * @param bool $full_size
  * @return \Illuminate\Contracts\Routing\UrlGenerator|string
  */
-function media_url($img = '', $full_size = false){
+function media_url($img = '', $full_size = false)
+{
     $url_path = asset('assets/img/classified-placeholder.png');
 
-    if ($img){
-        if ($img->type == 'image'){
-            if ($img->storage == 'public'){
-                if ($full_size){
-                    $url_path = asset('uploads/images/'.$img->media_name);
-                }else{
+    if ($img) {
+        if ($img->type == 'image') {
+            if ($img->storage == 'public') {
+                if ($full_size) {
+                    $url_path = asset('uploads/images/' . $img->media_name);
+                } else {
                     $url_path = asset('uploads/images/thumbs/' . $img->media_name);
                 }
-            }elseif ($img->storage == 's3'){
-                if ($full_size){
-                    $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/images/'.$img->media_name);
-                }else{
-                    $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/images/thumbs/'.$img->media_name);
+            } elseif ($img->storage == 's3') {
+                if ($full_size) {
+                    $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/images/' . $img->media_name);
+                } else {
+                    $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/images/thumbs/' . $img->media_name);
                 }
             }
         }
@@ -40,28 +42,30 @@ function media_url($img = '', $full_size = false){
  * @return null|string
  */
 
-if ( ! function_exists('resume_url')){
-    function resume_url($resume = null){
+if (! function_exists('resume_url')) {
+    function resume_url($resume = null)
+    {
         $url_path = null;
-        if ($resume){
+        if ($resume) {
             $source = get_option('default_storage');
-            if ($source == 'public'){
-                $url_path = asset('uploads/resume/'.$resume);
-            }elseif ($source == 's3'){
-                $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/resume/'.$resume);
+            if ($source == 'public') {
+                $url_path = asset('uploads/resume/' . $resume);
+            } elseif ($source == 's3') {
+                $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/resume/' . $resume);
             }
         }
         return $url_path;
     }
 }
 
-function avatar_img_url($img = '', $source){
+function avatar_img_url($img = null, $source = null)
+{
     $url_path = '';
-    if ($img){
-        if ($source == 'public'){
-            $url_path = asset('uploads/avatar/'.$img);
-        }elseif ($source == 's3'){
-            $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/avatar/'.$img);
+    if ($img) {
+        if ($source == 'public') {
+            $url_path = asset('uploads/avatar/' . $img);
+        } elseif ($source == 's3') {
+            $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/avatar/' . $img);
         }
     }
     return $url_path;
@@ -72,15 +76,16 @@ function avatar_img_url($img = '', $source){
  *
  * @return logo url
  */
-function logo_url(){
+function logo_url()
+{
     $url_path = '';
     $img = get_option('logo');
     $source = get_option('logo_storage');
 
-    if ($source == 'public'){
-        $url_path = asset('uploads/logo/'.$img);
-    }elseif ($source == 's3'){
-        $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/logo/'.$img);
+    if ($source == 'public') {
+        $url_path = asset('uploads/logo/' . $img);
+    } elseif ($source == 's3') {
+        $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/logo/' . $img);
     }
 
     return $url_path;
@@ -89,7 +94,8 @@ function logo_url(){
 /**
  * @return mixed
  */
-function current_disk(){
+function current_disk()
+{
     $current_disk = \Illuminate\Support\Facades\Storage::disk(get_option('default_storage'));
     return $current_disk;
 }
@@ -98,10 +104,11 @@ function current_disk(){
  * @param string $option_key
  * @return string
  */
-function get_option($option_key = ''){
+function get_option($option_key = '')
+{
     global $options;
 
-    if (array_key_exists($option_key, $options)){
+    if (array_key_exists($option_key, $options)) {
         return $options[$option_key];
     }
     return $option_key;
@@ -111,11 +118,12 @@ function get_option($option_key = ''){
  * @param string $text
  * @return mixed
  */
-function get_text_tpl($text = ''){
+function get_text_tpl($text = '')
+{
     $tpl = ['[year]', '[copyright_sign]', '[site_name]'];
     $variable = [date('Y'), '&copy;', get_option('site_name')];
 
-    $tpl_option = str_replace($tpl,$variable,$text);
+    $tpl_option = str_replace($tpl, $variable, $text);
     return $tpl_option;
 }
 
@@ -125,21 +133,21 @@ function get_text_tpl($text = ''){
  * @return string
  */
 
-function unique_slug($title = '', $model = 'Ad'){
+function unique_slug($title = '', $model = 'Ad')
+{
     $slug = str_slug($title);
     //get unique slug...
     $nSlug = $slug;
     $i = 0;
 
-    $model = str_replace(' ','',"\App\ ".$model);
-    while( ($model::whereSlug($nSlug)->count()) > 0){
+    $model = str_replace(' ', '', "\App\ " . $model);
+    while (($model::whereSlug($nSlug)->count()) > 0) {
         $i++;
-        $nSlug = $slug.'-'.$i;
+        $nSlug = $slug . '-' . $i;
     }
-    if($i > 0) {
+    if ($i > 0) {
         $newSlug = substr($nSlug, 0, strlen($slug)) . '-' . $i;
-    } else
-    {
+    } else {
         $newSlug = $slug;
     }
     return $newSlug;
@@ -149,14 +157,15 @@ function unique_slug($title = '', $model = 'Ad'){
  * @param string $plan
  * @return int|string
  */
-function get_ads_price($plan = 'regular'){
+function get_ads_price($plan = 'regular')
+{
     $price = 0;
 
     if ($plan == 'regular') {
         if (get_option('ads_price_plan') == 'all_ads_paid') {
             $price = get_option('regular_ads_price');
         }
-    }elseif($plan == 'premium'){
+    } elseif ($plan == 'premium') {
         if (get_option('ads_price_plan') != 'all_ads_free') {
             $price = get_option('premium_ads_price');
         }
@@ -168,17 +177,19 @@ function get_ads_price($plan = 'regular'){
 /**
  * @return \Illuminate\Database\Eloquent\Collection|static[]
  */
-if ( ! function_exists('get_languages')){
-    function get_languages(){
+if (! function_exists('get_languages')) {
+    function get_languages()
+    {
         $languages = \App\Language::all();
         return $languages;
     }
 }
 
-function current_language(){
-    if (session('lang')){
+function current_language()
+{
+    if (session('lang')) {
         $language = \App\Language::whereLanguageCode(session('lang'))->first();
-        if ($language){
+        if ($language) {
             return $language;
         }
     }
@@ -188,11 +199,12 @@ function current_language(){
 /**
  * @return bool
  */
-if ( ! function_exists('is_rtl')){
-    function is_rtl(){
+if (! function_exists('is_rtl')) {
+    function is_rtl()
+    {
         $current_language = current_language();
-        if ($current_language){
-            if ($current_language->is_rtl == 1){
+        if ($current_language) {
+            if ($current_language->is_rtl == 1) {
                 return true;
             }
         }
@@ -207,19 +219,20 @@ if ( ! function_exists('is_rtl')){
  * @return stripe secret key or test key
  */
 
-function get_stripe_key($type = 'publishable'){
+function get_stripe_key($type = 'publishable')
+{
     $stripe_key = '';
 
-    if ($type == 'publishable'){
-        if (get_option('stripe_test_mode') == 1){
+    if ($type == 'publishable') {
+        if (get_option('stripe_test_mode') == 1) {
             $stripe_key = get_option('stripe_test_publishable_key');
-        }else{
+        } else {
             $stripe_key = get_option('stripe_live_publishable_key');
         }
-    }elseif ($type == 'secret'){
-        if (get_option('stripe_test_mode') == 1){
+    } elseif ($type == 'secret') {
+        if (get_option('stripe_test_mode') == 1) {
             $stripe_key = get_option('stripe_test_secret_key');
-        }else{
+        } else {
             $stripe_key = get_option('sk_live_ojldRoMZ3j14I5pwpfCxidvT');
         }
     }
@@ -232,19 +245,21 @@ function get_stripe_key($type = 'publishable'){
  *
  * return all fa icon list
  */
-function fa_icons(){
+function fa_icons()
+{
     $pattern = '/\.(fa-(?:\w+(?:-)?)+):before\s+{\s*content:\s*"\\\\(.+)";\s+}/';
     $subject =  file_get_contents(public_path('assets/font-awesome-4.4.0/css/font-awesome.css'));
     preg_match_all($pattern, $subject, $matches, PREG_SET_ORDER);
 
-    foreach($matches as $match) {
+    foreach ($matches as $match) {
         $icons[$match[1]] = $match[2];
     }
     ksort($icons);
     return $icons;
 }
 
-function category_classes(){
+function category_classes()
+{
     $classes = [
         'green'     => 'green',
         'gold'      => 'gold',
@@ -262,17 +277,18 @@ function category_classes(){
  * @param int $price
  * @return string
  */
-function themeqx_price($price = 0){
+function themeqx_price($price = 0)
+{
     $show_price = '';
-    if ($price > 0){
+    if ($price > 0) {
         $price = number_format($price, 2);
         $currency_position = get_option('currency_position');
         $currency_sign = classified_currency_symbol(get_option('currency_sign'));
 
-        if ($currency_position == 'right'){
-            $show_price = $price.$currency_sign;
-        }else{
-            $show_price = $currency_sign.$price;
+        if ($currency_position == 'right') {
+            $show_price = $price . $currency_sign;
+        } else {
+            $show_price = $currency_sign . $price;
         }
     }
     return $show_price;
@@ -284,43 +300,47 @@ function themeqx_price($price = 0){
  * @return string
  */
 
-function themeqx_price_ng($price = 0, $negotiable = 0){
-    $ng = $negotiable ? ' ('.trans('app.negotiable').') ' : '';
+function themeqx_price_ng($price = 0, $negotiable = 0)
+{
+    $ng = $negotiable ? ' (' . trans('app.negotiable') . ') ' : '';
     $show_price = '';
-    if ($price > 0){
+    if ($price > 0) {
         $price = number_format($price, 2);
         $currency_position = get_option('currency_position');
         $currency_sign = classified_currency_symbol(get_option('currency_sign'));
 
-        if ($currency_position == 'right'){
-            $show_price = $price.' '.$currency_sign;
-        }else{
-            $show_price = $currency_sign.' '.$price;
+        if ($currency_position == 'right') {
+            $show_price = $price . ' ' . $currency_sign;
+        } else {
+            $show_price = $currency_sign . ' ' . $price;
         }
     }
-    return $show_price.$ng;
+    return $show_price . $ng;
 }
 
 /**
  * @return mixed|string
  */
 
-if ( ! function_exists('currency_sign')){
-    function currency_sign(){
+if (! function_exists('currency_sign')) {
+    function currency_sign()
+    {
         $currency_sign = classified_currency_symbol(get_option('currency_sign'));
         return $currency_sign;
     }
 }
 
-function update_option($key, $value){
+function update_option($key, $value)
+{
     $option = \App\Option::firstOrCreate(['option_key' => $key]);
     $option -> option_value = $value;
     return $option->save();
 }
 
-if ( ! function_exists('safe_output')){
-    function safe_output($text = null){
-        if ($text){
+if (! function_exists('safe_output')) {
+    function safe_output($text = null)
+    {
+        if ($text) {
             $text = strip_tags($text, '<h1><h2><h3><h4><h5><h6><p><br><ul><li><hr><a><abbr><address><b><blockquote><center><cite><code><del><i><ins><strong><sub><sup><time><u><img><iframe><link><nav><ol><table><caption><th><tr><td><thead><tbody><tfoot><col><colgroup><div><span>');
 
             $text = str_replace('javascript:', '', $text);
@@ -329,7 +349,8 @@ if ( ! function_exists('safe_output')){
     }
 }
 
-function themeqx_classifieds_currencies(){
+function themeqx_classifieds_currencies()
+{
     return array(
         'AED' => 'United Arab Emirates dirham',
         'AFN' => 'Afghan afghani',
@@ -492,16 +513,16 @@ function themeqx_classifieds_currencies(){
         'ZAR' => 'South African rand',
         'ZMW' => 'Zambian kwacha',
     );
-
 }
 
 /**
  * @param string $currency
  * @return mixed|string
  */
-if ( ! function_exists('classified_currency_symbol')) {
+if (! function_exists('classified_currency_symbol')) {
 
-    function classified_currency_symbol($currency = ''){
+    function classified_currency_symbol($currency = '')
+    {
         $currency = strtoupper($currency);
 
         $symbols = array(
@@ -673,11 +694,13 @@ if ( ! function_exists('classified_currency_symbol')) {
         return $currency_symbol;
     }
 }
-if ( ! function_exists('paypal_ipn_verify')){
-    function paypal_ipn_verify(){
+if (! function_exists('paypal_ipn_verify')) {
+    function paypal_ipn_verify()
+    {
         $paypal_action_url = "https://www.paypal.com/cgi-bin/webscr";
-        if (get_option('enable_paypal_sandbox') == 1)
+        if (get_option('enable_paypal_sandbox') == 1) {
             $paypal_action_url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+        }
 
         // STEP 1: read POST data
         // Reading POSTed data directly from $_POST causes serialization issues with array data in the POST.
@@ -686,17 +709,18 @@ if ( ! function_exists('paypal_ipn_verify')){
         $raw_post_array = explode('&', $raw_post_data);
         $myPost = array();
         foreach ($raw_post_array as $keyval) {
-            $keyval = explode ('=', $keyval);
-            if (count($keyval) == 2)
+            $keyval = explode('=', $keyval);
+            if (count($keyval) == 2) {
                 $myPost[$keyval[0]] = urldecode($keyval[1]);
+            }
         }
         // read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
         $req = 'cmd=_notify-validate';
-        if(function_exists('get_magic_quotes_gpc')) {
+        if (function_exists('get_magic_quotes_gpc')) {
             $get_magic_quotes_exists = true;
         }
         foreach ($myPost as $key => $value) {
-            if($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+            if ($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
                 $value = urlencode(stripslashes($value));
             } else {
                 $value = urlencode($value);
@@ -708,14 +732,14 @@ if ( ! function_exists('paypal_ipn_verify')){
         $ch = curl_init($paypal_action_url);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
 
-        if( !($res = curl_exec($ch)) ) {
+        if (!($res = curl_exec($ch))) {
             // error_log("Got " . curl_error($ch) . " when processing IPN data");
             curl_close($ch);
             exit;
@@ -723,17 +747,18 @@ if ( ! function_exists('paypal_ipn_verify')){
         curl_close($ch);
 
         // STEP 3: Inspect IPN validation result and act accordingly
-        if (strcmp ($res, "VERIFIED") == 0) {
+        if (strcmp($res, "VERIFIED") == 0) {
             return true;
-        } else if (strcmp ($res, "INVALID") == 0) {
+        } elseif (strcmp($res, "INVALID") == 0) {
             return false;
         }
     }
 }
 
-if ( ! function_exists('safe_output')){
-    function safe_output($text = null){
-        if ($text){
+if (! function_exists('safe_output')) {
+    function safe_output($text = null)
+    {
+        if ($text) {
             $text = strip_tags($text, '<h1><h2><h3><h4><h5><h6><p><br><ul><li><hr><a><abbr><address><b><blockquote><center><cite><code><del><i><ins><strong><sub><sup><time><u><img><iframe><link><nav><ol><table><caption><th><tr><td><thead><tbody><tfoot><col><colgroup><div><span>');
 
             $text = str_replace('javascript:', '', $text);
@@ -742,24 +767,27 @@ if ( ! function_exists('safe_output')){
     }
 }
 
-if ( ! function_exists('avatar_by_email')){
-    function avatar_by_email($email = '', $s = 40, $d = 'mm', $r = 'g', $img = false, $atts = array() ){
+if (! function_exists('avatar_by_email')) {
+    function avatar_by_email($email = '', $s = 40, $d = 'mm', $r = 'g', $img = false, $atts = array())
+    {
         $url = 'http://www.gravatar.com/avatar/';
         $url .= md5(strtolower(trim($email)));
         $url .= "?s=$s&d=$d&r=$r";
 
         if ($img) {
             $url = '<img src="' . $url . '"';
-            foreach ($atts as $key => $val)
+            foreach ($atts as $key => $val) {
                 $url .= ' ' . $key . '="' . $val . '"';
+            }
             $url .= ' />';
         }
         return $url;
     }
 }
 
-if ( ! function_exists('frontendLocalisedJson')){
-    function frontendLocalisedJson(){
+if (! function_exists('frontendLocalisedJson')) {
+    function frontendLocalisedJson()
+    {
         $json_array = [
             'time_remaining'    => trans('app.time_remaining')
         ];
