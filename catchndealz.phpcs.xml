@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="CatchNDealz">
+    <description>PSR12 with exceptions.</description>
+    <rule ref="PSR12">
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps" />
+    </rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>*/helpers.php</exclude-pattern>
+    </rule>
+</ruleset>
