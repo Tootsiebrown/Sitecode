@@ -14,7 +14,7 @@ class CreateBidTable extends Migration
     public function up()
     {
         Schema::create('bids', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('ad_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->decimal('bid_amount', 20,2)->nullable();

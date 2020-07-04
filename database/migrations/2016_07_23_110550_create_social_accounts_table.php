@@ -13,7 +13,7 @@ class CreateSocialAccountsTable extends Migration
     public function up()
     {
         Schema::create('social_accounts', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('user_id')->nullable();
             $table->string('provider_user_id')->nullable();
             $table->string('provider')->nullable();

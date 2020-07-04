@@ -13,7 +13,7 @@ class CreateAdsTable extends Migration
     public function up()
     {
         Schema::create('ads', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title')->nullable();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();

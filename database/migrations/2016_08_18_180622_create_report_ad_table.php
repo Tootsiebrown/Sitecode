@@ -13,7 +13,7 @@ class CreateReportAdTable extends Migration
     public function up()
     {
         Schema::create('report_ads', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('ad_id')->nullable();
             $table->string('reason')->nullable();
             $table->string('email')->nullable();
