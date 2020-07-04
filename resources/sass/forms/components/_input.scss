@@ -1,0 +1,44 @@
+.input {
+
+    &__label {
+    }
+
+    &--required &__label::after {
+        content: "*";
+    }
+
+    &__field {
+        border: {
+            radius: 3px;
+            style: solid;
+            width: 1px;
+        }
+        width: 100%;
+        min-height: 50px;
+        padding:  {
+            top: spacing(1);
+            right: spacing(1);
+            bottom: spacing(1);
+            left: spacing(1);
+        }
+        @include standard-transition(border);
+
+        &:focus {
+            outline: none;
+        }
+    }
+    
+    &--textarea &__field {
+        min-height: 200px;
+    }
+
+    &--has-error &__field {
+    }
+
+    &__error {
+        font: {
+            style: italic;
+            weight: 700;
+        }
+    }
+}

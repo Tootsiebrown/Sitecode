@@ -1,0 +1,6 @@
+export const $bpMobile     = window.matchMedia('(min-width: 480px)')
+export const $bpTablet     = window.matchMedia('(min-width: 768px)')
+export const $bpLaptop     = window.matchMedia('(min-width: 1000px)')
+export const $bpLg         = window.matchMedia('(min-width: 1100px)')
+export const $bpXl         = window.matchMedia('(min-width: 1400px)')
+export const $bpXxl        = window.matchMedia('(min-width: 1560px)')

@@ -1,0 +1,101 @@
+@import "../../vendor/slick/slick";
+
+.carousel {
+    width: 100%;
+    position: relative;
+}
+
+.slide {
+    width: 100%;
+    height: 500px;
+    background: no-repeat center center;
+    background-size: cover;
+}
+
+.slide-title {
+    text-align: center;
+}
+
+.slick-prev,
+.slick-next {
+    display: block;
+    padding: 0;
+    margin: auto;
+    line-height: 0px;
+    font-size: 0px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    z-index: 10;
+
+    &:hover,
+    &:focus {
+        outline: none;
+
+        &:before {}
+    }
+
+    &.slick-disabled:before {}
+
+    &:before {
+        display: block;
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+    }
+}
+
+.slick-prev {
+    @include position(absolute, 0 null 0 20px);
+
+    &:before {
+        border-right: 20px solid #f00;
+    }
+}
+
+.slick-next {
+    @include position(absolute, 0 20px 0 null);
+
+    &:before {
+        border-left: 20px solid #f00;
+    }
+}
+
+.slick-dots {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    @include position(absolute, null 0 10px 0);
+    text-align: center;
+    z-index: 10;
+
+    li {
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+    button {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 0 none;
+        border-radius: 10px;
+        background: #f00;
+        font-size: 10px;
+        line-height: 20px;
+
+        &:before {
+            display: none;
+        }
+    }
+
+    .slick-active {
+
+        button {
+            background: #ff0;
+        }
+    }
+}

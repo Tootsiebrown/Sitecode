@@ -1,0 +1,99 @@
+# Inspired by
+#   https://lorisleiva.com/laravel-deployment-using-gitlab-pipelines/
+#   https://ohdear.app/blog/our-gitlab-ci-pipeline-for-laravel-applications
+#   https://github.com/ohdearapp/gitlab-ci-pipeline-for-laravel/blob/master/.gitlab-ci.yml
+#
+# The idea is additional build/test stages could be added for example to compile
+# front-end assets for e2e testing or automated deployments.
+#
+# "artifacts" are used to pass assets from build-stage jobs down to the consuming
+# jobs where they are declared as dependencies. Artifacts such as logs or db dumps
+# can also be retained for debugging
+
+stages:
+  - preparation
+#  - building
+  - testing
+  - test # Code-Quality include requires a stage named test
+
+# Note: using a default before_script messes with this include
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+
+.gitlab_credentials: &gitlab_credentials |
+  echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
+  git config --global url."https://gitlab.com/".insteadOf git@gitlab.com:
+
+# Additional services can be added for e2e testing
+#services:
+#  - mysql:5.7
+
+variables:
+  MYSQL_DATABASE: homestead
+  MYSQL_ROOT_PASSWORD: secret
+  DB_HOST: mysql
+  DB_USERNAME: root
+  CACHE_DRIVER: array
+  SESSION_DRIVER: array
+  QUEUE_CONNECTION: sync
+  MAIL_DRIVER: array
+
+composer:
+  stage: preparation
+  image: oohology/wax-app:7.2
+  script:
+    - *gitlab_credentials
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    paths:
+      - vendor/
+      - .env
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - vendor/
+
+codestyle:
+  stage: testing
+  # Download the artifacts for these jobs
+  dependencies:
+    - composer
+  image: oohology/wax-app:7.2
+  script:
+    - vendor/bin/phpcs --standard=PSR12 --extensions=php app
+
+phpunit:7.2:
+  stage: testing
+  image: oohology/wax-app:7.2
+  # Download the artifacts for these jobs
+  dependencies:
+    - composer
+  script:
+    - php -v
+    - vendor/bin/phpunit
+
+phpunit:7.3:
+  stage: testing
+  image: oohology/wax-app:7.3
+  # Download the artifacts for these jobs
+  dependencies:
+    - composer
+  script:
+    - php -v
+    - vendor/bin/phpunit
+
+phpunit:7.4:
+  stage: testing
+  image: oohology/wax-app:7.4
+  # Download the artifacts for these jobs
+  dependencies:
+    - composer
+  script:
+    - php -v
+    - vendor/bin/phpunit

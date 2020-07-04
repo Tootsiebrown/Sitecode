@@ -1,0 +1,24 @@
+table {
+    border-collapse: collapse;
+    margin: spacing(sm) 0;
+    table-layout: fixed;
+    width: 100%;
+}
+
+th {
+    border-bottom: 1px solid palette(black);
+    font-weight: 600;
+    padding: spacing(sm) 0;
+    text-align: left;
+}
+
+td {
+    border-bottom: 1px solid palette(black);
+    padding: spacing(sm) 0;
+}
+
+tr,
+td,
+th {
+    vertical-align: middle;
+}

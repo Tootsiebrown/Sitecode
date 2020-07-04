@@ -1,0 +1,11 @@
+@import 'base/mixins',
+        'base/functions',
+        'base/variables',
+        'base/typography',
+        'site/components/editable-content';
+
+// Adds editable content styles to Quill editor display
+.ql-editor {
+	@include base-typography;
+    @extend .editable-content;
+}

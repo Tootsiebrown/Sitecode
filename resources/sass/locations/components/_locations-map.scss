@@ -1,0 +1,33 @@
+.locations-map {
+    @include media(breakpoint(tablet)) {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    &__map-container {
+        height: 70vh;
+        overflow: hidden;
+        position: relative;
+        flex: 0 0 80%;
+    }
+
+    &__controls-list {
+        padding: spacing(2) 0 spacing(3);
+        flex: 0 0 15%;
+        @include media(breakpoint(tablet)) {
+            padding: 0;
+        }
+    }
+
+    &__controls-item {
+        margin: spacing(1) 0;
+    }
+
+    &__controls-list {
+        padding: spacing(2) 0 spacing(3);
+    }
+
+    &__controls-item {
+        margin: spacing(1) 0;
+    }
+}

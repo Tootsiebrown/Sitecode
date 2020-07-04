@@ -1,0 +1,83 @@
+@function new-breakpoint($query: $feature $value) {
+    @if length($query) == 1 {
+        $query: $default-feature nth($query, 1);
+    } @else if is-even(length($query)) {
+        $query: append($query);
+    }
+
+    @return $query;
+}
+
+@function _unpack-shorthand($shorthand) {
+    @if length($shorthand) == 1 {
+        @return nth($shorthand, 1) nth($shorthand, 1) nth($shorthand, 1) nth($shorthand, 1);
+    } @else if length($shorthand) == 2 {
+        @return nth($shorthand, 1) nth($shorthand, 2) nth($shorthand, 1) nth($shorthand, 2);
+    } @else if length($shorthand) == 3 {
+        @return nth($shorthand, 1) nth($shorthand, 2) nth($shorthand, 3) nth($shorthand, 2);
+    } @else {
+        @return $shorthand;
+    }
+}
+
+@function is-even($int) {
+    @return $int % 2 == 0;
+}
+
+// Not function for Libsass compatibility
+// https://github.com/sass/libsass/issues/368
+@function is-not($value) {
+    @return if($value, false, true);
+}
+
+@function breakpoint($name) {
+    @if map-has-key($breakpoints, $name) {
+        @return map-get($breakpoints, $name);
+    } @else {
+        @error "Breakpoint #{$name} not in base breakpoint list";
+    }
+}
+
+@function palette($color, $modifier: null) {
+    @if map-has-key($palette, $color) {
+        $color: map-get($palette, $color);
+
+        @if $modifier == 'tint' {
+            @return #{tint($color, 25%)};
+        } @elseif $modifier == 'shade' {
+            @return #{shade($color, 25%)};
+        } @else {
+            @return $color;
+        }
+    }
+    
+    @error "Argument `#{$color}` is not a defined color in $palette.";
+}
+
+@function font($font) {
+    @if map-has-key($fonts, $font) {
+        @return map-get($fonts, $font);
+    } @else {
+        @error "Font #{$font} not in base font list";
+    }
+}
+
+@function spacing($size) {
+    @if type-of($size) == string {
+        @return map-get($spacing, $size);
+    }
+
+    @if type-of($size) == number {
+        @return $base-spacing * $size;
+    }
+    
+    @error "Argument $size to function spacing must be of type string or number";
+}
+
+@function tint($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}

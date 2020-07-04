@@ -1,0 +1,202 @@
+@mixin base-typography() {
+    font: {
+        family: font(helvetica);
+        feature-settings: "kern", "liga", "pnum";
+        size: $base-font-size;
+    }
+    text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: $base-line-height;
+}
+
+/*
+ * @name: @wysiwyg
+ * @args: $margin-side, $margin-bottom, $image-max-width
+ * @description: Applies to an element that contains WYSIWYG
+ *               content. Gives sensible default margin values
+ *               and max-width for floated image child elements.
+ */
+@mixin wysiwyg($margin-side: spacing(4), $margin-bottom: spacing(4), $image-max-width: 100%) {
+    img {
+        max-width: $image-max-width;
+        height: auto;
+    }
+
+    img[style^="float:left;"],
+    img[style^="float: left;"],
+    img[style^="float :left;"],
+    img[style*=" float:left;"],
+    img[style*=" float: left;"],
+    img[style*=" float :left;"] {
+        margin: {
+            right: $margin-side;
+            bottom: $margin-bottom;
+        }
+    }
+
+    img[style^="float:right;"],
+    img[style^="float: right;"],
+    img[style^="float :right;"],
+    img[style*=" float:right;"],
+    img[style*=" float: right;"],
+    img[style*=" float :right;"] {
+        margin: {
+            left: $margin-side;
+            bottom: $margin-bottom;
+        }
+    }
+}
+
+/*
+ * @name: @standard-transition
+ * @args: $properties, $duration, $easing, $delay
+ * @description: Applies transition properties to an element
+ *               with a 'standard' duration, easing, and delay.
+ *               default usage: @include standard-transition(color background-color)
+ *               Properties are added to the first argument separated
+ *               by spaces. Next arguments set duration, easing and delay
+ *               or use the default if omitted.
+ */
+@mixin standard-transition($properties, $duration: $base-duration, $easing: $base-timing, $delay: 0s) {
+    transition-property: join($properties, (), comma);
+    transition-duration: $duration;
+    transition-timing-function: $easing;
+    transition-delay: $delay;
+}
+
+@mixin position($position, $box-edge-values) {
+    $box-edge-values: _unpack-shorthand($box-edge-values);
+    $offsets: (top: nth($box-edge-values, 1), right: nth($box-edge-values, 2), bottom: nth($box-edge-values, 3), left: nth($box-edge-values, 4),);
+    position: $position;
+
+    @each $offset, $value in $offsets {
+        @if _is-length($value) {
+            #{$offset}: $value;
+        }
+    }
+}
+
+@mixin clearfix {
+    &::after {
+        clear: both;
+        content: "";
+        display: table;
+    }
+}
+
+@mixin size($value) {
+    $width: nth($value, 1);
+    $height: $width;
+
+    @if length($value) > 1 {
+        $height: nth($value, 2);
+    }
+
+    @if is-size($height) {
+        height: $height;
+    } @else {
+        @warn "`#{$height}` is not a valid length for the `$height` parameter in the `size` mixin.";
+    }
+
+    @if is-size($width) {
+        width: $width;
+    } @else {
+        @warn "`#{$width}` is not a valid length for the `$width` parameter in the `size` mixin.";
+    }
+}
+
+@mixin media($query: $feature $value) {
+    @if length($query) == 1 {
+        @media screen and ($default-feature: nth($query, 1)) {
+            @content;
+        }
+    } @else {
+        $loop-to: length($query);
+        $media-query: "screen and ";
+
+        @if is-not(is-even(length($query))) {
+            $grid-columns: nth($query, $loop-to) !global;
+            $loop-to: $loop-to - 1;
+        }
+        $i: 1;
+
+        @while $i <= $loop-to {
+            $media-query: $media-query + "(" + nth($query, $i) + ": " + nth($query, $i + 1) + ") ";
+
+            @if ($i + 1) != $loop-to {
+                $media-query: $media-query + "and ";
+            }
+            $i: $i + 2;
+        }
+
+        @media #{$media-query} {
+            @content;
+        }
+    }
+}
+
+@mixin triangle($size, $color, $direction) {
+    $width: nth($size, 1);
+    $height: nth($size, length($size));
+    $foreground-color: nth($color, 1);
+    $background-color: if(length($color) == 2, nth($color, 2), transparent);
+    height: 0;
+    width: 0;
+
+    @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+        $width: $width / 2;
+        $height: if(length($size) > 1, $height, $height/2);
+
+        @if $direction == up {
+            border-bottom: $height solid $foreground-color;
+            border-left: $width solid $background-color;
+            border-right: $width solid $background-color;
+        } @else if $direction == right {
+            border-bottom: $width solid $background-color;
+            border-left: $height solid $foreground-color;
+            border-top: $width solid $background-color;
+        } @else if $direction == down {
+            border-left: $width solid $background-color;
+            border-right: $width solid $background-color;
+            border-top: $height solid $foreground-color;
+        } @else if $direction == left {
+            border-bottom: $width solid $background-color;
+            border-right: $height solid $foreground-color;
+            border-top: $width solid $background-color;
+        }
+    } @else if($direction == up-right) or ($direction == up-left) {
+        border-top: $height solid $foreground-color;
+
+        @if $direction == up-right {
+            border-left: $width solid $background-color;
+        } @else if $direction == up-left {
+            border-right: $width solid $background-color;
+        }
+    } @else if($direction == down-right) or ($direction == down-left) {
+        border-bottom: $height solid $foreground-color;
+
+        @if $direction == down-right {
+            border-left: $width solid $background-color;
+        } @else if $direction == down-left {
+            border-right: $width solid $background-color;
+        }
+    } @else if($direction == inset-up) {
+        border-color: $background-color $background-color $foreground-color;
+        border-style: solid;
+        border-width: $height $width;
+    } @else if($direction == inset-down) {
+        border-color: $foreground-color $background-color $background-color;
+        border-style: solid;
+        border-width: $height $width;
+    } @else if($direction == inset-right) {
+        border-color: $background-color $background-color $background-color $foreground-color;
+        border-style: solid;
+        border-width: $width $height;
+    } @else if($direction == inset-left) {
+        border-color: $background-color $foreground-color $background-color $background-color;
+        border-style: solid;
+        border-width: $width $height;
+    }
+}
