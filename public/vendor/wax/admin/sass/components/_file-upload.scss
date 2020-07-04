@@ -1,0 +1,92 @@
+
+.file-upload {
+
+    .mfp-content {
+        background-color: #f0f0ee;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 8px;
+    }
+
+    &__container {
+    }
+
+    &__nav {
+        > hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 11px 0;
+            padding: 0;
+        }
+    }
+
+    &__tab {
+        margin-bottom:-12px;
+    }
+
+    &__pagination {
+        padding-top: 16px;
+
+        > .wax-pager {
+            width:auto;
+            margin: 0 auto;
+        }
+    }
+}
+
+/*
+=TOP-TABS====================== */
+.modal-tab{-webkit-appearance:none; -moz-appearance:none; margin:none; padding:none; border:none; background:#e8e8e8; cursor:pointer; font-size:1.7em; font-weight:normal; line-height:2.0em; color:rgb(43, 111, 182); border:1px solid #d0d0d0; margin-bottom:-12px; outline:none;}
+.modal-tab[disabled=disabled]{color:#333; border-bottom:1px solid #f0f0ee; cursor:default; background:#f0f0ee;}
+
+/*
+=BOTH-TABLES=================== */
+.modal-table {display:block; border-collapse:collapse; font-size:13px; background:#ddd; border:1px solid #d0d0d0;}
+.modal-table th {text-align:left; border-bottom:1px solid #d0d0d0; background:#ddd;}
+.modal-table tr:nth-child(odd){background:#f8f8f6;}
+.modal-table tr:nth-child(even){background:#fffffd;}
+.modal-table tbody {display:block; height:320px; overflow-y:scroll;}
+.modal-table tbody#librarylist { height: 360px;}
+.modal-table td, .modal-table th {height:55px; font-size:13px; line-height:35px; text-indent:6px; vertical-align:middle;}
+.modal-table .header-row th {height:36px;}
+.footer-row{border-top:1px solid #d0d0d0;}
+
+/*
+=MEDIA-UPLOADER================ */
+.filename-column    {width:480px; text-align:left;}
+.filesize-column    {width:140px;}
+.progress-column    {width:162px;}
+.button-column      {width:300px;}
+.progress-bar-column    {width:182px;}
+
+/*
+=MEDIA-LIBRARY================= */
+.filename-column-long   {width:680px;}
+.insert-column      {width:180px;}
+#library-container{display:none;}
+
+
+/*
+=ERROR-MESSAGE================= */
+#error-msg{display:none; position:absolute; left:0px; top:0px; z-index:9001; width:100%; background:#ffffe0; 
+        box-shadow:0px 0px 5px #000; font-size:16px; line-height:22px; text-indent:20px; padding-bottom:12px; padding-top:12px;}
+.error-name {color:#68251a;}
+
+/*
+=DESCRIPTION=================== */
+#description-container{display:none;}
+#description-container p{font-size:14px; line-height:30px;}
+#description-input{font-size:14px; line-height:30px;}
+#description-submit{font-size:14px; line-height:30px;}
+
+/*
+=PAGINATION===================  */
+// .wax-pager{display:block; text-align:center;}
+// .wax-pager li{line-height:1em; margin:0px 2px; list-style-type:none; display:inline; padding-bottom:1px}
+// .wax-pager a, .wax-pager a:visited{padding:5px 8px; text-decoration:none; border:1px solid #aaa; color:#4d4d4d; white-space: nowrap;}
+// .wax-pager a:hover, .wax-pager a:active{background-color:#CCC; border-color:#999; text-decoration:none}
+// .wax-pager a.currentpage, .wax-pager a.currentpage:hover{border:1px solid #4d4d4d; background-color:#e9eff4; color:#000; font-weight:bold; cursor:default}
+// .wax-pager a.disablelink, .wax-pager a.disablelink:hover{background-color:white; cursor:default; color:#AAA; border-color:#AAA; font-weight:normal !important}
+

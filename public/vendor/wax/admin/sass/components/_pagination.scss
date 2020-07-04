@@ -1,0 +1,30 @@
+/*--pagination*/
+.wax-pager{
+	display: block; 
+	text-align: center;
+	margin-top: 15px; 
+	a{
+		display:inline-block; 
+		padding:0.6em; 
+		border:1px solid #aaa; 
+		margin:0px 2px;
+	}
+	li{
+		display:inline;
+		line-height: 1.2em; 
+		list-style-type:none;
+		margin: 0px 2px; 
+		padding-bottom: 1px;
+	}
+	ul{
+		white-space:nowrap;
+	}
+}
+	
+	
+	
+
+	.wax-pager a, .wax-pager a:visited{padding:5px 8px; text-decoration:none; border:1px solid #aaa; color:#4d4d4d; white-space: nowrap;}
+	.wax-pager a:hover, .wax-pager a:active{background-color:#CCC; border-color:#999; text-decoration:none}
+	.wax-pager li.current a, .wax-pager li.current a:hover{border:1px solid #4d4d4d; background-color:#e9eff4; color:#000; font-weight:bold; cursor:default}
+	.wax-pager a.disablelink, .wax-pager a.disablelink:hover{background-color:white; cursor:default; color:#AAA; border-color:#AAA; font-weight:normal !important}

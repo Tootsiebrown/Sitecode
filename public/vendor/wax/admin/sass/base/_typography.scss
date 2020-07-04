@@ -1,0 +1,155 @@
+$col-header: $col-thunder;
+$col-headerlink : $col-jellybean;
+
+/* Typography
+======================================================================================= */
+/* 1. Fonts
+=================================================================== */
+
+
+/* 2. Styles
+=================================================================== */
+h1, h2, h3, h4, h5, h6{
+	font:{
+		family: sans-serif;
+		style:normal;
+		weight:normal;
+	}
+		
+}
+
+h1{
+	margin:0px;
+	padding:0 0 5px 0;
+	color:$col-header;
+	font-size:1.5em;
+	font-family:helvetica,arial,sans-serif
+}
+
+h1 a{
+	color: $col-headerlink;
+}
+
+h2{
+	margin:2px 0px 0px 0px;
+	padding:0px;
+	color:$col-header;
+	font-size: 1.5em;
+	padding-bottom: 0;
+	text-transform: capitalize;
+}
+
+h3{
+	margin:2px 0px 0px 0px;
+	padding:0px;
+	color:$col-header;
+	font-size: 1.3em;
+	padding-bottom: 0;
+	text-transform: capitalize;
+}
+
+
+p{
+	padding:5px 0;
+	line-height:1.3em;
+}
+
+.link,
+a {
+	color:#406f8a;
+	border:none;
+	text-decoration:none;
+	outline:none;
+    &:hover {
+        color: darken(#406f8a, 10%);
+    }
+}
+
+a:hover,
+a:focus{
+	color:#D54E21;
+	text-decoration:underline
+}
+
+ul{
+	list-style:disc;
+}
+
+ul li{
+	margin:4px 0
+}
+
+ol,
+ul{
+	margin:0 0 10px 40px;
+	padding:0;
+	line-height:1.2em;
+}
+
+ol li,
+ul li{
+	padding:0 0 5px 0;
+}
+
+ol li ul,
+ol li ol,
+ul li ol,
+ul li ul{
+	padding:5px 0 0 0;
+	margin-bottom:5px;
+}
+
+dl{
+	margin:0;
+	padding:0 0 20px 0;
+}
+
+dl dt{
+	font-size:1.2em;
+	padding-bottom:5px;
+}
+
+dl dd{
+	padding-bottom:15px;
+	margin-left:30px;
+	line-height:1.2em;
+}
+
+.body-container table{
+	width:100%;
+}
+
+table td{
+	padding:5px;
+}
+
+.text-editor.ql-snow .ql-editor {
+    
+    h3, h4, h5, h6, p {
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    h3 {
+        font-size: 36px;
+    }
+
+    h4 {
+        font-size: 32px;
+    }
+
+    h5 {
+        font-size: 28px;
+    }
+
+    h6 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+}

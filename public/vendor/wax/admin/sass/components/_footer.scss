@@ -1,0 +1,43 @@
+.page_footer{
+	width:96%;
+	padding:5px 2%;
+	text-align:right;
+	border-top:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	background:#eee;
+	position:absolute;
+	bottom:0;
+	left:0;
+	z-index:5;
+}
+
+#login .page_footer{
+	box-shadow: 2px -3px 5px -2px $col-silverchalice;
+	position: fixed;
+}
+
+#copyright{
+	margin:4px 0 0 0;
+	float:right;
+}
+
+#branding {
+    float: right;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding: {
+        top: 8px;
+        bottom: 4px;
+        left: 8px;
+    }
+
+    > a {
+        display: flex;
+        max-height: 24px;
+        
+        > svg {
+            display: block;
+            max-height: 24px;
+        }
+    }
+}

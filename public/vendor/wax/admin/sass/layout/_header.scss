@@ -1,0 +1,227 @@
+$col	: (
+	border 	: $col-silver-lt,
+	header 	: $col-thunder,
+	shadow 	: $col-silverchalice
+);
+/* 1. General
+=================================================================== */
+.page_header{
+	padding: 0;
+	border-bottom: 1px solid map-get($col, border);
+	background: #eee;
+	position: relative;
+	z-index: 5;
+	* {
+		box-sizing: border-box; // TO-DO: Remove when it's Bourbon time
+	}
+	h1 a{
+		color: map-get($col, header);
+		@include transition ( color $spd-medium ease-in-out );
+		&:hover,
+		&:focus{
+			color: tint(map-get($col, header) , 30%);
+			text-decoration:none;
+		}
+	}
+	.left{
+		padding:10px 0 0 2%;
+		width:48%;
+	}
+	.right{
+		padding-right:2%;
+		width:48%;
+	}
+}
+#login .page_header{
+	box-shadow: 2px 2px 5px -1px map-get($col, shadow);
+}
+/* 2. Main Nav (top-right)
+=================================================================== */
+.page_header .mainnav{
+	font:{
+		family: georgia,sans-serif;
+		size: 14px;
+	}
+	margin: 0px;
+	color:#00C;
+	a{
+		background: $col-white;
+		border:1px solid $col-silverchalice;						
+		border-radius: 0 0 2px 2px;
+		border-top: none;
+		box-shadow: -1px 1px 7px -2px $col-silverchalice;
+		color: $col-tundora;
+		display: block;
+		float: right;	
+		margin-left: 5px;
+		padding: 5px 10px;
+		&:hover,
+		&:focus{
+			background: $col-wildsand;
+			color: $col-tundora;
+			padding-top: 8px;
+			text-decoration: none;			
+		}
+	}	
+}
+/* 3. Fixed Status Bar (top)
+=================================================================== */
+.user-status{
+    text-align:center;
+    position:fixed;
+    height: 2rem;
+    top: 0;
+    width:100%;
+    background-color: $col-tundora;
+    color: $col-white;
+    z-index: 12;
+    line-height: 2rem;
+    border-width: 0 0 1px 0;
+    border-style:solid;
+    border-color: $col-black;
+    box-shadow: 0 0 10px $col-black;
+    a {
+        color:$col-white;
+        text-decoration:underline;
+    }
+}
+/* 4. Breadcrumbs
+=================================================================== */
+
+#bread-nav{
+	background: $col-offwhite;
+	border: 1px solid $col-silver-lt;
+	border-bottom: none;
+	border-right: none;
+	box-shadow: inset 0 -2px 8px -3px $col-silver;	
+	@include span-columns(16, block-collapse); @include omega; float: right;
+	@include media($bp-desktop-xxl){
+		@include span-columns(15, block-collapse); @include omega; float: right;
+	}
+	@include media($bp-desktop-m){
+		@include span-columns(14, block-collapse); @include omega; float: right;
+	}
+	@include media($bp-desktop-s){
+		@include span-columns(13.5, block-collapse); @include omega; float: right;
+	}		
+	ul{
+		color: $col-tundora;
+		font:{
+			family: georgia,serif;
+			size: 12px;
+		}
+		list-style: none;		
+		margin: 0;
+		padding: 0px;				
+		text-transform: none;
+		width: 100%;
+	}
+	a{		
+		background: $col-alabaster;
+		border:1px solid #ccc;
+		border-bottom:none;
+		display: block;
+		line-height: 25px;
+		margin-top: -3px;
+		padding: 5px 10px 8px 10px;
+		position: relative;		
+	}	
+}
+
+
+	#bread-nav ul a:hover,
+	#bread-nav ul a:focus{
+		background:#f4f4f4;
+		color:#4d4d4d;
+		text-decoration:none;
+	}
+
+	#bread-nav ul li + li + li a{padding-right:10px;}
+
+	#bread-nav ul span{
+		display:block;
+		background:#FCFCFC;
+		border:1px solid #ccc;
+		border-bottom:none;
+		line-height:25px;
+		padding:8px 10px 10px 10px;
+		position:relative;
+		margin-top:-8px;
+		bottom:-1px;
+		-webkit-box-shadow:-1px -1px 8px -2px #eee;
+		-moz-box-shadow:-1px -1px 8px -2px #eee;
+		box-shadow:-1px -1px 8px -2px #eee;
+	}
+
+	#bread-nav ul li{
+		float:left;
+		line-height:25px;
+		padding:0;
+		margin:0 5px 0 0;
+		position:relative;
+		text-transform:capitalize;
+	}
+
+	#bread-nav ul li + li .more{
+		border:none!important;
+		background-color:transparent!important;
+		cursor:auto;
+	}
+
+	#bread-nav ul .more:hover{
+		border-color:#21759B;
+		background-color:#eee;
+	}
+
+	#bread-nav ul ul{
+		margin:0;
+		padding:0;
+	}
+
+	#bread-nav ul li ul{
+		display:none;
+		padding:10px 0;
+		background:#fafafa;
+		border:1px solid #aaa;
+		position:absolute;
+		top:110%;
+		left:0;
+		min-width:100%;
+		-webkit-box-shadow: 2px 2px 5px -1px #aaaaaa;
+		-moz-box-shadow: 2px 2px 5px -1px #aaaaaa;
+		box-shadow: 2px 2px 5px -1px #aaaaaa;
+	}
+
+	#bread-nav ul li ul li{
+		margin:0;
+		padding:0;
+		float:none;
+		display:block;
+		white-space:nowrap;
+	}
+
+	#bread-nav ul li ul li a{
+		border:none;
+		float:none;
+		padding:3px 10px;
+		display:block;
+		margin:0;
+		-webkit-box-shadow:none;
+		-moz-box-shadow:none;
+		box-shadow:none;
+		-webkit-border-radius:0;
+		-moz-border-radius:0;
+		border-radius:0;
+	}
+
+	#bread-nav ul li ul li a:hover{
+		background:#4481a4;
+		color:#fff;
+		text-decoration:none;
+	}
+
+	#bread-nav ul li ul li a:active{
+		background:#4481a4;
+		color:#fff;
+		text-decoration:none;
+	}

@@ -1,0 +1,101 @@
+$col  : (
+    bg-table        : $col-alabaster-dk,
+    bd-table        : darken($col-alabaster-dk, 10%),
+    bg-td-hover     : $col-gallery,
+);
+
+.table{
+    background: map-get($col, bg-table);
+    border:1px solid map-get($col, bd-table);
+    border:{
+        collapse: collapse;
+        spacing: 0;
+    }   
+    margin:4px 0px 4px 0px;
+    color:#464646;  
+    position: relative;
+    tr:hover td{
+        background-color: map-get($col, bg-td-hover);
+    }
+    td{
+        @include transition ( background-color $spd-fast ease-in-out );
+    }
+}
+
+
+
+
+.table td{
+    table-layout: fixed;
+    empty-cells: show;
+    background:transparent;
+    vertical-align: top;
+    padding:12px 8px 12px 8px;
+    margin:0px;
+    font-size:14px;
+    position:relative;
+    margin:1px;
+    border-bottom:1px solid #dfdfdf;
+}
+
+.table thead:hover th{
+    background-color:transparent!important
+}
+
+.table thead tr{
+    padding:5px 8px;
+    margin:0px 0px 16px 0px;
+    background:#f9f9f9 url("/vendor/wax/admin/images/bg-headers.jpg") repeat-x bottom left;
+    color:#464646;
+    font-size:1em;
+    border-bottom:1px #dfdfdf solid;
+    border-bottom-color:#DFDFDF;
+    font-family:'georgia',serif;
+}
+
+.table thead th{
+    padding:12px 8px;
+    text-align: left;
+}
+
+.table tr #edit-button{
+    display:none;
+    position:absolute;
+    bottom:6px;
+    left:1%;
+}
+
+.table tr:hover #edit-button{
+    display:block;
+}
+
+.editor_table input,
+.editor_table select,
+.editor_table textarea{
+    margin-bottom:10px;
+}
+
+/*--cms table*/
+.cms_table{border-spacing:0px; width:98%; table-layout: fixed;}
+.cms_table td{padding:10px 6px; color:#000; vertical-align:top; text-align:left}
+.cms_table td td{padding:0}
+.cms_table td.cms_table_left label{margin-right:4px;}
+.cms_table td input[type="text"]{width:100%;}
+.cms_table .settings-row{width:98%; margin:0 0 20px 0;}
+.cms_table .settings-row .cms_table_left{width:20%; vertical-align:top; padding-right:1%;}
+.cms_table .settings-row label{font-size:1.1em; padding:0 0 5px 0;}
+.add-new{display:inline-block; background:#eee; padding:2px 3px;  text-align:center; border-radius:3px; -webkit-border-radius:3px; -moz-border-radius:3px;}
+.add-new:hover,
+.add-new:focus{text-decoration:none;}
+
+.check-edit-delete{display:block; float:right;}
+
+.listImage {
+    margin: 0 10px 10px 0;
+}
+
+/* --box body table*/
+.box_body table{background:none;}
+.box_body table td{background:none;}
+.box_body table tr{background:none;}
+.box_body table tr:hover td{background:none;}

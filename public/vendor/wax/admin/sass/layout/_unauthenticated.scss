@@ -1,0 +1,75 @@
+$col : (
+	bg-page	: $col-silver,
+);
+
+body#unauthenticated #page-content{
+	width:100%;
+}
+
+
+#unauthenticated{
+	.inside{
+		width:50%;
+	}
+	.page{
+		background: map-get($col, bg-page);
+		border: 0;
+		box-shadow: none;
+		margin: 0;
+		padding: 0;	
+		width: 100%;	
+	}
+	.page_body {
+		background: map-get($col, bg-page);
+	}	
+}
+
+
+#unauthenticated .page_body .img-container{
+	width:350px;
+	text-align:center;
+	margin:50px auto 30px auto
+}
+
+#unauthenticated .page_body .img-container img{
+	width:100%;
+	max-width:350px;
+	text-align:center;
+}
+
+#unauthenticated .box_body{
+	padding:0 30px 10px 30px;
+	ul + div{
+		clear:both;
+	}	
+}
+
+/* form elements */
+#unauthenticated input[type="text"],
+#unauthenticated input[type="password"]{
+	padding:6px 1%!important;
+	width:98%!important;
+}
+
+#unauthenticated .input_submit {
+	margin-top:10px;
+	float:right;
+}
+
+/* -- Login Box */
+#unauthenticated-box{
+	width: 350px;
+	margin: 100px auto 8px auto;
+	padding-bottom:15px;
+	box-shadow:0 0 8px -1px #777;
+	form ul li {
+		@extend %float-fill;
+	}
+}
+
+#unauthenticated-box form ul li label {
+	width:100%;
+	font-size:1em;
+	padding:5px 0;
+	margin:0;
+}

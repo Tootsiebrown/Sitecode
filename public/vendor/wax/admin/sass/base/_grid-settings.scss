@@ -1,0 +1,37 @@
+/* Grid Settings
+======================================================================================= */
+
+/* 1. Neat Settings
+=================================================================== */
+@import "../vendor/neat/neat-helpers";
+
+/* These numbers come from the original width of the left sidebar. 
+ * It took up 10%, so at 1080p it was 192px wide. 
+*/
+$column: 			84px;
+$gutter: 			24px;
+$grid-columns: 		18;
+$max-width: 		100%;
+$mobile-first: 		false;
+$visual-grid:		false;
+$visual-grid-index:	front;
+
+/* 2. Neat Settings
+=================================================================== */
+$bp-mobile: 	new-breakpoint(max-width 480px 24);
+$bp-tablet: 	new-breakpoint(max-width 768px 24);
+$bp-laptop:		new-breakpoint(max-width 968px 24);
+$bp-desktop:	new-breakpoint(min-width 969px 24);
+
+
+/* 3. Legacy Wax Breakpoints
+=================================================================== */
+$bp-desktop-xxl : new-breakpoint(max-width 1800px);
+$bp-desktop-xl 	: new-breakpoint(max-width 1550px);
+$bp-desktop-l 	: new-breakpoint(max-width 1200px);
+$bp-desktop-m	: new-breakpoint(max-width 1140px);
+$bp-desktop-s 	: new-breakpoint(max-width 1000px);
+
+/* 4. General
+=================================================================== */
+$bp-cms-cols-1	: new-breakpoint( max-width 920px);

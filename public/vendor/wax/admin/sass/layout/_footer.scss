@@ -1,0 +1,50 @@
+$col : (
+	bg 		: #eee,
+	border 	: #ccc,
+	shadow 	: $col-silverchalice
+);
+
+.page_footer{	
+	background: map-get($col, bg);
+	border: {
+		top: 1px solid map-get($col, border);
+		bottom: 1px solid map-get($col, border);
+	}
+	box-sizing: border-box;
+	padding: 5px 2%;
+	text-align: right;	
+	width: 100%;
+	z-index: 5;
+	@include position( absolute, null null 0px 0px );
+}
+
+#login .page_footer{
+	box-shadow: 2px -3px 5px -2px map-get($col, shadow);
+	position: fixed;
+}
+
+#copyright{
+	float:right;
+	margin:4px 0 0 0;
+}
+
+#branding {
+	float: right;
+	font-size: 14px;
+	text-transform: uppercase;
+    padding: {
+        top: 8px;
+        bottom: 4px;
+        left: 8px;
+    }
+
+    > a {
+        display: flex;
+        max-height: 24px;
+        
+        > svg {
+            display: block;
+            max-height: 24px;
+        }
+    }
+}

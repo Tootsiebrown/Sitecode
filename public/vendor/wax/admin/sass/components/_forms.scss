@@ -1,0 +1,181 @@
+$col : (
+	input-hover: $col-tundora,
+	input-focus: $col-corn,
+);
+
+form ul{
+	margin:0 !important;
+	padding:0 !important;
+	list-style:none !important;
+}
+
+.error-list {
+	font-weight: bold;
+	font-size: 1.5em;
+	color:#ff0000;
+}
+
+.field-error {
+	margin: 12px 0 6px;
+	color: #f00;
+}
+
+.alert-success {
+	margin: 12px 0 6px;
+	font-weight: bold;
+}
+
+label.new-window {
+    border-top: 1px solid #eee;
+    cursor: pointer;
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+
+    > input[type="checkbox"] {
+        float: none;
+        flex: 0 0 auto;
+    }
+
+    > span {
+        flex: 0 0 auto;
+    }
+}
+
+#search{
+	width:100px;
+}
+
+#{$all-text-inputs},
+select,
+textarea {
+	font-family: sans-serif;
+	&:hover{
+		border:1px solid map-get($col, hover);
+		box-shadow: inset 0px 0px 7px -2px map-get($col, hover);
+	}
+	&:focus{
+		outline: 0;
+		border:1px solid map-get($col, focus);
+		box-shadow: inset 0px 0px 7px -2px map-get($col, focus);
+	}
+}
+
+label{
+	display:block;
+	font{
+		family: georgia,serif;
+		size: 1.4em;
+	}
+	padding:15px 0 5px 0;
+
+}
+
+.cms_table label{
+	display:block;
+	font-size:.9em;
+	padding:0;
+	font-family:corbel,sans-serif;
+}
+
+input[type=text],
+input[type="password"],
+input[type="tel"],
+input[type="email"],
+textarea{
+	width:48%;
+	border:1px solid #aaa;
+	border-radius: 3px;
+	padding:1px 1%;
+}
+
+select{
+	border:1px solid #aaa;
+	border-radius: 3px;
+	padding:0;
+	margin:0 5px 0 0;
+}
+
+textarea{
+	font-family: monospace;
+	height:120px;
+}
+
+.text-editor {
+    background-color: #fff;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.vertGroupInner {margin: 0 0 16px 0;}
+
+.group .inputContainer label {
+	margin-bottom: 8px;
+}
+
+.group .inputContainer input[type="checkbox"] {
+	float: left;
+	margin-right: 5px;
+}
+
+.inputContainer input[type="text"],
+.inputContainer input[type="password"],
+.inputContainer input[type="tel"],
+.inputContainer input[type="email"],
+.inputContainer textarea{
+	padding:5px .5%;
+	width:99%;
+}
+
+.inputContainer input[type="checkbox"] {
+	/* margin: 3px 0;*/
+}
+
+.inputContainer select{
+	width:100%;
+	padding:5px 0;
+}
+
+.timeinput select{
+	font-size:9px;
+	margin:0 2px;
+	padding:4px 0;
+	@include size(40px 28px);
+}
+
+div.timeinput{
+	display:inline;
+}
+
+.inputContainer .uix-multiselect{
+	width:100%!important;
+}
+
+.inputContainer .uix-multiselect .multiselect-available-list{
+	width:49.9%!important;
+	left:50%!important;
+}
+
+.inputContainer .uix-multiselect .multiselect-selected-list{
+	width:49.9%!important;
+}
+
+.inputContainer button{margin:8px 2px;}
+
+.inputContainer .maxLengthCounter {
+	float: right;
+	color: #777;
+}
+
+.optionbox{
+	border:1px #888 solid;
+	background-color:#fff;
+	padding:6px;
+	margin:8px 0px 8px 30px
+}
+
+#ui-datepicker-div{
+	display:none;
+}
+

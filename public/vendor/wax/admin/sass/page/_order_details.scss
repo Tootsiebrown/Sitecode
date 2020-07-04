@@ -1,0 +1,13 @@
+body#order_details{
+	.cartitem-thumb img {
+		max-height: 100px;
+		max-width: 100px;
+	}
+	section.order-address {
+		float: left;
+		margin-right: 30px;
+		a {
+			text-decoration: none;
+		}
+	}
+}

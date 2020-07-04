@@ -1,0 +1,112 @@
+button {
+    appearance: none;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0;
+    text-decoration: none;
+    user-select: none;
+
+    &:hover,
+    &:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        
+        &:hover {
+            background-color: transparent;
+        }
+    }
+}
+
+.ui-button,
+.button {
+    display: inline-block;
+    background: $col-jellybean;
+    border:1px solid $col-jellybean;
+    color:#fefefe;
+    font-size: 1.1em;
+    margin: 2px 0’;
+    padding:3px;
+    min-width:60px;
+    border-radius: 7px;
+    box-shadow:-2px 2px 2px -1px $col-black;
+    @include linear-gradient($col-waikawagray, $col-gunpowder);
+    &:hover,
+    &:focus{
+        background: $col-piper;
+        border-color: $col-piper;
+        @include linear-gradient( $col-piper, $col-mulefawn );
+    }
+    &:active{
+        background: $col-tundora;
+        border-color: $col-tundora;
+        box-shadow: inset 0px 0px 7px 2px $col-black;
+        color: $col-white;
+        @include position( relative, 2px null null null );
+    }
+
+    &--nav {
+        margin:none;
+        padding:none;
+        border:none;
+        background:#e8e8e8;
+        cursor:pointer;
+        font-size:1.7em;
+        font-weight:normal;
+        line-height:2.0em;
+        color:rgb(43, 111, 182);
+        border:1px solid #d0d0d0;
+        outline:none;
+
+        &[disabled=disabled] {
+            color:#333;
+            border-bottom:1px solid #f0f0ee;
+            cursor:default;
+            background:#f0f0ee;
+        }
+    }
+
+    &--insert-image {
+
+        > .fa {
+            color: #397812;
+            font-size: 24px;
+            @include transition(color 0.2s ease-in-out);
+            &:hover {
+                color: darken(#397812, 10%);
+            }
+        }
+    }
+
+    &--select-file {
+        color: #397812;
+        background-color: rgba(#397812, 0.1);
+        border: {
+            color: rgba(#397812, 0.7);
+            radius: 3px;
+            style: solid;
+            width: 1px;
+        }
+        padding: 4px 12px;
+        @include transition(color 0.2s ease-in-out, background-color 0.2s ease-in-out);
+        &:hover {
+            background: rgba(#4ea518, 0.2);
+            border-color: darken(rgba(#4ea518, 0.7), 10%);
+            color: darken(#4ea518, 10%);
+            > .fa {
+                color: darken(#4ea518, 10%);
+            }
+        }
+
+        > .fa {
+            color: #397812;
+            font-size: 18px;
+            padding-right: 4px;
+        }
+    }
+}

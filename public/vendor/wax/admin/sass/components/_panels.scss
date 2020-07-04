@@ -1,0 +1,93 @@
+/* 1. Panel (as seen on dasboard)
+======================================================================================= */
+.panel{
+	background: $col-alabaster-dk;
+	border: 1px solid $col-mercury;
+	border-radius: 3px;
+	box-shadow: $col-silverchalice 0 4px 10px -1px;
+	float: left;
+	font-weight:normal;
+	//margin:0 1% 15px 1%;
+	margin-bottom:15px;
+	h2{
+		color: $col-black;
+	}
+	ul{
+		list-style:none;
+		margin:0 0 0 10px;
+		padding:0
+	}	
+	.dashboard &{
+		min-height:150px;	
+	}
+	.cms-link a{
+		display:block;
+		padding:4px 2%;
+		&:hover,
+		&:focus{
+			background-color:#4481a4;
+			color:#fff;
+			text-decoration:none;			
+		}
+	}	
+}
+
+/* 2. Layout
+======================================================================================= */
+.panel.alpha {
+	clear: left;
+}
+
+.panel.omega {
+	margin-right: 0 !important; //TO DO: (perhaps) something as simple as cols1 + cols1
+}
+
+.panel.cols1 {
+	//width: 48%;
+	@include span-columns(8 of 16);
+	@include media($bp-cms-cols-1){
+		@include fill-parent; @include omega;
+	}
+}
+
+.panel.cols2 {
+	//width: 98%;
+	@include fill-parent;
+}
+
+/* 3. Specific Panels
+======================================================================================= */
+.panel#SystemNoticesPanel{
+	border:1px solid #E6DB55;
+	background-color: $col-halfandhalf;
+	a{
+		display:inline;
+	}
+	.box_header{
+		background: $col-halfandhalf;
+		border-bottom:1px solid #E6DB55;
+	}		
+}
+
+.panel#PushNoticesPanel{
+	h2 {
+		font-size: 1.3em;
+	}
+	.archive {
+		float: right;
+	}	
+	.datetime {
+		float: right;
+		font-style: italic;
+	}	
+	.dismiss {
+		display: none;
+		float: right;
+	}	
+	.notice {
+		margin-bottom: 1.5em;
+		&:hover .dismiss{
+			display: block;		
+		}
+	}		
+}
