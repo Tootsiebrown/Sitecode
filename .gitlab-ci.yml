@@ -43,7 +43,7 @@ variables:
 
 composer:
   stage: preparation
-  image: oohology/wax-app:7.2
+  image: oohology/wax-app:7.4
   script:
     - *gitlab_credentials
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
@@ -64,29 +64,9 @@ codestyle:
   # Download the artifacts for these jobs
   dependencies:
     - composer
-  image: oohology/wax-app:7.2
+  image: oohology/wax-app:7.4
   script:
     - vendor/bin/phpcs --standard=catchndealz.phpcs.xml --extensions=php app -snp
-
-phpunit:7.2:
-  stage: testing
-  image: oohology/wax-app:7.2
-  # Download the artifacts for these jobs
-  dependencies:
-    - composer
-  script:
-    - php -v
-    - vendor/bin/phpunit
-
-phpunit:7.3:
-  stage: testing
-  image: oohology/wax-app:7.3
-  # Download the artifacts for these jobs
-  dependencies:
-    - composer
-  script:
-    - php -v
-    - vendor/bin/phpunit
 
 phpunit:7.4:
   stage: testing
