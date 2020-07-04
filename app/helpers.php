@@ -5,6 +5,9 @@
  * Custom functions made by themeqx
  */
 
+use App\Option;
+use Illuminate\Support\Facades\DB;
+
 require __DIR__ . '/laravel_helpers.php';
 
 /**
@@ -108,10 +111,81 @@ function get_option($option_key = '')
 {
     global $options;
 
+    if (empty($options)) {
+        $options = load_options();
+    }
+
     if (array_key_exists($option_key, $options)) {
         return $options[$option_key];
     }
     return $option_key;
+}
+
+function load_options()
+{
+    global $options;
+
+    if (!empty($options)) {
+        return $options;
+    }
+
+    try {
+        DB::connection()->getPdo();
+
+        //Auto-loading options to reduce the query
+        $options = Option::all()->pluck('option_value', 'option_key')->toArray();
+        $GLOBALS['options'] = $options;
+
+
+        /**
+         * Set dynamic configuration for third party services
+         */
+        $amazonS3Config = [
+            'filesystems.disks.s3' =>
+                [
+                    'driver' => 's3',
+                    'key' => get_option('amazon_key'),
+                    'secret' => get_option('amazon_secret'),
+                    'region' => get_option('amazon_region'),
+                    'bucket' => get_option('bucket'),
+                ]
+        ];
+        $facebookConfig = [
+            'services.facebook' =>
+                [
+                    'client_id' => get_option('fb_app_id'),
+                    'client_secret' => get_option('fb_app_secret'),
+                    'redirect' => url('login/facebook-callback'),
+                ]
+        ];
+        $googleConfig = [
+            'services.google' =>
+                [
+                    'client_id' => get_option('google_client_id'),
+                    'client_secret' => get_option('google_client_secret'),
+                    'redirect' => url('login/google-callback'),
+                ]
+        ];
+        $twitterConfig = [
+            'services.twitter' =>
+                [
+                    'client_id' => get_option('twitter_consumer_key'),
+                    'client_secret' => get_option('twitter_consumer_secret'),
+                    'redirect' => url('login/twitter-callback'),
+                ]
+        ];
+        config($amazonS3Config);
+        config($facebookConfig);
+        config($googleConfig);
+        config($twitterConfig);
+
+        $GLOBALS['is_db_connected'] = true;
+    } catch (\Exception $e) {
+        $GLOBALS['is_db_connected'] = false;
+        //die("Could not connect to the database.  Please check your configuration.");
+    }
+
+    return $options;
 }
 
 /**
