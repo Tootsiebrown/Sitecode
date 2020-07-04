@@ -13,6 +13,7 @@
 /storage/*.key
 .env
 .env.backup
+/db-backup/
 
 ## OS temp files & caches
 .DS*

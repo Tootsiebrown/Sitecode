@@ -112,7 +112,7 @@ function get_option($option_key = '')
     global $options;
 
     if (empty($options)) {
-        $options = load_options();
+        load_options();
     }
 
     if (array_key_exists($option_key, $options)) {
@@ -130,12 +130,8 @@ function load_options()
     }
 
     try {
-        DB::connection()->getPdo();
-
         //Auto-loading options to reduce the query
         $options = Option::all()->pluck('option_value', 'option_key')->toArray();
-        $GLOBALS['options'] = $options;
-
 
         /**
          * Set dynamic configuration for third party services
@@ -144,33 +140,33 @@ function load_options()
             'filesystems.disks.s3' =>
                 [
                     'driver' => 's3',
-                    'key' => get_option('amazon_key'),
-                    'secret' => get_option('amazon_secret'),
-                    'region' => get_option('amazon_region'),
-                    'bucket' => get_option('bucket'),
+                    'key' => $options['amazon_key'],
+                    'secret' => $options['amazon_secret'],
+                    'region' => $options['amazon_region'],
+                    'bucket' => $options['bucket'],
                 ]
         ];
         $facebookConfig = [
             'services.facebook' =>
                 [
-                    'client_id' => get_option('fb_app_id'),
-                    'client_secret' => get_option('fb_app_secret'),
+                    'client_id' => $options['fb_app_id'],
+                    'client_secret' => $options['fb_app_secret'],
                     'redirect' => url('login/facebook-callback'),
                 ]
         ];
         $googleConfig = [
             'services.google' =>
                 [
-                    'client_id' => get_option('google_client_id'),
-                    'client_secret' => get_option('google_client_secret'),
+                    'client_id' => $options['google_client_id'],
+                    'client_secret' => $options['google_client_secret'],
                     'redirect' => url('login/google-callback'),
                 ]
         ];
         $twitterConfig = [
             'services.twitter' =>
                 [
-                    'client_id' => get_option('twitter_consumer_key'),
-                    'client_secret' => get_option('twitter_consumer_secret'),
+                    'client_id' => $options['twitter_consumer_key'],
+                    'client_secret' => $options['twitter_consumer_secret'],
                     'redirect' => url('login/twitter-callback'),
                 ]
         ];
