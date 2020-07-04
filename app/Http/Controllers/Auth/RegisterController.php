@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -24,6 +25,39 @@ class RegisterController extends Controller
     |
     */
     use RegistersUsers;
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        if (get_option('enable_recaptcha_registration') == 1){
+            $this->validate($request, array('g-recaptcha-response' => 'required'));
+
+            $secret = get_option('recaptcha_secret_key');
+            $gRecaptchaResponse = $request->input('g-recaptcha-response');
+            $remoteIp = $request->ip();
+
+            $recaptcha = new \ReCaptcha\ReCaptcha($secret);
+            $resp = $recaptcha->verify($gRecaptchaResponse, $remoteIp);
+            if ( ! $resp->isSuccess()) {
+                return redirect()->back()->with('error', 'reCAPTCHA is not verified');
+            }
+
+        }
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+    }
 
     /**
      * Where to redirect users after registration.

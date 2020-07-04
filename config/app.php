@@ -197,6 +197,16 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         *  LaraBid
+         */
+        //Debugbar
+        Barryvdh\Debugbar\ServiceProvider::class,
+        //Image Processor
+        Intervention\Image\ImageServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
+
         /*
          * Important catch-all route included
          */
@@ -262,6 +272,15 @@ return [
         'SeoTags' => Wax\Core\Facades\SeoTags::class,
         'GoogleAnalytics' => Wax\Core\Facades\GoogleAnalytics::class,
         'BugHerd' => Wax\Core\Facades\BugHerd::class,
+
+        /**
+         * LaraBid
+         */
+        //Debugbar
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        //Image Processor
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];
