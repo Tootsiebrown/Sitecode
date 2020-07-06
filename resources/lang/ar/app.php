@@ -252,6 +252,7 @@ return [
     'report_deleted_success'    => 'تم حذف التقرير بنجاح',
     'date_time'                 => 'تاريخ الوقت',
     'users'                     => 'المستخدمين',
+    'name'                      => 'اسم',
     'first_name'                => 'الاسم المعطى',
     'last_name'                 => 'اسم العائلة',
     'user_name'                 => 'اسم المستخدم',

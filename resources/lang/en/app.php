@@ -252,6 +252,7 @@ return [
     'report_deleted_success'    => 'Report has been deleted successfully',
     'date_time'                 => 'Date Time',
     'users'                     => 'Users',
+    'name'                      => 'Name',
     'first_name'                => 'First Name',
     'last_name'                 => 'Last Name',
     'user_name'                 => 'User Name',
