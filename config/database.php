@@ -126,6 +126,14 @@ return [
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel').env('APP_URL'), '_').'_database_'),
         ],
 
+        'default' => [
+            'url' => env('REDIS_URL'),
+            'host' => env('REDIS_HOST', env('APP_ENV') == 'production' ? 'redis.hosting.oohology.com' : '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_CACHE_DB', env('APP_ENV') == 'production' ? 0 : 3),
+        ],
+
         'cache' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', env('APP_ENV') == 'production' ? 'redis.hosting.oohology.com' : '127.0.0.1'),
