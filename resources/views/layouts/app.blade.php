@@ -52,9 +52,6 @@
 <body class="@if(is_rtl()) rtl @endif">
 <div id="app">
 
-    @if(env('APP_DEMO') == true)
-        @include('demobar')
-    @endif
     <div id="sub-header">
         <div class="container">
             <div class="row">

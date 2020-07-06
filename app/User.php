@@ -102,9 +102,6 @@ class User extends UserBase
 
     public function is_admin()
     {
-        if ($this->user_type == 'admin') {
-            return true;
-        }
-        return false;
+        return $this->hasPrivilege('Administrator');
     }
 }
