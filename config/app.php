@@ -283,4 +283,8 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
+    'datafiniti' => [
+        'token' => env('DATAFINITI_TOKEN'),
+    ],
+
 ];
