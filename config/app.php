@@ -284,7 +284,7 @@ return [
     ],
 
     'datafiniti' => [
-        'token' => env('DATAFINITI_TOKEN'),
+        'token' => env('DATAFINITI_TOKEN', 'xxxxxxxxxxxxxxxxxxxxxxxxx'),
     ],
 
 ];
