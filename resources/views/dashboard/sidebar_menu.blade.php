@@ -6,15 +6,7 @@
                 <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')</a>
             </li>
 
-            <li>
-                <a href="#"><i class="fa fa-bullhorn"></i> @lang('app.my_ads')<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>  <a href="{{ route('my_ads') }}">@lang('app.my_ads')</a> </li>
-                    <li>  <a href="{{ route('create_ad') }}">@lang('app.post_an_ad')</a> </li>
-                    <li>  <a href="{{ route('pending_ads') }}">@lang('app.pending_for_approval')</a> </li>
-                    <li>  <a href="{{ route('favorite_ads') }}">@lang('app.favourite_ads')</a> </li>
-                </ul>
-            </li>
+            <li>  <a href="{{ route('favorite_ads') }}">@lang('app.favourite_ads')</a> </li>
 
             @if($lUser->isAdmin())
 
@@ -24,7 +16,6 @@
                     <ul class="nav nav-second-level">
                         <li>  <a href="{{ route('approved_ads') }}">@lang('app.approved_ads')</a> </li>
                         <li>  <a href="{{ route('admin_pending_ads') }}">@lang('app.pending_for_approval')</a> </li>
-                        <li>  <a href="{{ route('admin_blocked_ads') }}">@lang('app.blocked_ads')</a> </li>
                     </ul>
                 </li>
 
@@ -34,7 +25,6 @@
                 <li>
                     <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>
                     <ul class="nav nav-second-level">
-                        <li> <a href="{{ route('theme_settings') }}">@lang('app.theme_settings')</a> </li>
                         <li> <a href="{{ route('social_url_settings') }}">@lang('app.social_url')</a> </li>
                     </ul>
                     <!-- /.nav-second-level -->

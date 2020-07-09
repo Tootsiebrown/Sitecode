@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 if (App::environment() == 'dev') {
     Route::get('/frontend-test', function(){
         return view('site.pages.test');
@@ -105,7 +107,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
 
     Route::group(['middleware'=>'only_admin_access'], function(){
         Route::group(['prefix'=>'settings'], function(){
-            Route::get('theme-settings', ['as'=>'theme_settings', 'uses' => 'SettingsController@ThemeSettings']);
             Route::get('modern-theme-settings', ['as'=>'modern_theme_settings', 'uses' => 'SettingsController@modernThemeSettings']);
             Route::get('social-url-settings', ['as'=>'social_url_settings', 'uses' => 'SettingsController@SocialUrlSettings']);
             Route::get('general', ['as'=>'general_settings', 'uses' => 'SettingsController@GeneralSettings']);
@@ -159,7 +160,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
 
         Route::get('approved', ['as'=>'approved_ads', 'uses' => 'AdsController@index']);
         Route::get('pending', ['as'=>'admin_pending_ads', 'uses' => 'AdsController@adminPendingAds']);
-        Route::get('blocked', ['as'=>'admin_blocked_ads', 'uses' => 'AdsController@adminBlockedAds']);
         Route::post('status-change', ['as'=>'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
         Route::get('users', ['as'=>'users', 'uses' => 'UserController@index']);
@@ -191,7 +191,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
             Route::post('delete', ['as'=>'delete_ads', 'uses' => 'AdsController@destroy']);
             Route::get('edit/{id}', ['as'=>'edit_ad', 'uses' => 'AdsController@edit']);
             Route::post('edit/{id}', ['uses' => 'AdsController@update']);
-            Route::get('my-lists', ['as'=>'my_ads', 'uses' => 'AdsController@myAds']);
             Route::get('favorite-lists', ['as'=>'favorite_ads', 'uses' => 'AdsController@favoriteAds']);
             //Upload ads image
             Route::post('upload-a-image', ['as'=>'upload_ads_image', 'uses' => 'AdsController@uploadAdsImage']);
@@ -200,7 +199,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
             Route::post('delete-media', ['as'=>'delete_media', 'uses' => 'AdsController@deleteMedia']);
             Route::post('feature-media-creating', ['as'=>'feature_media_creating_ads', 'uses' => 'AdsController@featureMediaCreatingAds']);
             Route::get('append-media-image', ['as'=>'append_media_image', 'uses' => 'AdsController@appendMediaImage']);
-            Route::get('pending-lists', ['as'=>'pending_ads', 'uses' => 'AdsController@pendingAds']);
             Route::get('archive-lists', ['as'=>'favourite_ad', 'uses' => 'AdsController@create']);
 
             Route::get('profile', ['as'=>'profile', 'uses' => 'UserController@profile']);

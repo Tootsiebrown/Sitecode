@@ -90,13 +90,6 @@ class SettingsController extends Controller
         return back();
     }
 
-
-
-    public function ThemeSettings()
-    {
-        $title = trans('app.theme_settings');
-        return view('dashboard.theme_settings', compact('title'));
-    }
     public function modernThemeSettings()
     {
         $title = trans('app.modern_theme_settings');

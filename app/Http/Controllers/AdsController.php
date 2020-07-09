@@ -42,33 +42,6 @@ class AdsController extends Controller
 
         return view('dashboard.all_ads', compact('title', 'ads'));
     }
-    public function adminBlockedAds()
-    {
-        $title = trans('app.blocked_ads');
-        $ads = Ad::with('city', 'country', 'state')->whereStatus('2')->orderBy('id', 'desc')->paginate(20);
-
-        return view('dashboard.all_ads', compact('title', 'ads'));
-    }
-
-    public function myAds()
-    {
-        $title = trans('app.my_ads');
-
-        $user = Auth::user();
-        $ads = $user->ads()->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
-
-        return view('dashboard.my_ads', compact('title', 'ads'));
-    }
-
-    public function pendingAds()
-    {
-        $title = trans('app.my_ads');
-
-        $user = Auth::user();
-        $ads = $user->ads()->whereStatus('0')->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
-
-        return view('dashboard.pending_ads', compact('title', 'ads'));
-    }
 
     public function favoriteAds()
     {

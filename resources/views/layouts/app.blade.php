@@ -37,12 +37,6 @@
 
     @yield('page-css')
 
-    @if(get_option('additional_css'))
-        <style type="text/css">
-            {{ get_option('additional_css') }}
-        </style>
-    @endif
-
     <script src="{{ asset('assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js') }}"></script>
     <script type="text/javascript">
         window.jsonData = {!! frontendLocalisedJson() !!};
@@ -199,10 +193,6 @@
                         <h3>{{get_option('site_name')}}</h3>
                     </div>
 
-                    <div class="footer-copyright">
-                        <p>{!! get_text_tpl(get_option('footer_copyright_text')) !!}</p>
-                    </div>
-
                     <div class="footer-social-links">
                         @php
                             $facebook_url = get_option('facebook_url');
@@ -261,10 +251,6 @@
 <script>
     var toastr_options = {closeButton : true};
 </script>
-
-@if(get_option('additional_js'))
-    {!! get_option('additional_js') !!}
-@endif
 
 @yield('page-js')
 </body>
