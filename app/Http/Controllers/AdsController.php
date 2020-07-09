@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Ad;
 use App\Brand;
-use App\CarsVehicle;
 use App\Category;
 use App\City;
 use App\Comment;
 use App\Country;
-use App\Job;
-use App\JobApplication;
 use App\Media;
 use App\Payment;
 use App\State;
@@ -135,23 +132,6 @@ class AdsController extends Controller
         }
 
         if ($request->category) {
-            if ($sub_category->category_type == 'jobs') {
-                $rules['salary_will_be'] = 'required';
-                $rules['job_nature'] = 'required';
-                $rules['job_validity'] = 'required';
-                $rules['application_deadline'] = 'required';
-
-                unset($rules['type']);
-                unset($rules['condition']);
-            }
-
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $rules['transmission'] = 'required';
-                $rules['fuel_type'] = 'required';
-                $rules['engine_cc'] = 'required';
-                $rules['mileage'] = 'required';
-                $rules['build_year'] = 'required';
-            }
             if ($sub_category->category_type == 'auction') {
                 $rules['bid_deadline'] = 'required';
             }
@@ -213,13 +193,6 @@ class AdsController extends Controller
             'longitude'         => $request->longitude,
         ];
 
-        if ($sub_category->category_type == 'jobs') {
-            $data['category_type'] = 'jobs';
-        }
-
-        if ($sub_category->category_type == 'cars_and_vehicles') {
-            $data['category_type'] = 'cars_and_vehicles';
-        }
         if ($sub_category->category_type == 'auction') {
             $data['category_type']  = 'auction';
             $data['expired_at']     = $request->bid_deadline;
@@ -240,31 +213,6 @@ class AdsController extends Controller
          * iF add created
          */
         if ($created_ad) {
-            //If job
-            if ($sub_category->category_type == 'jobs') {
-                $job_data = [
-                    'ad_id'                 => $created_ad->id,
-                    'job_nature'            => $request->job_nature,
-                    'job_validity'          => $request->job_validity,
-                    'apply_instruction'     => $request->apply_instruction,
-                    'application_deadline'  => $request->application_deadline,
-                    'is_any_where'          => $request->is_any_where,
-                    'salary_will_be'        => $request->salary_will_be,
-                ];
-                Job::create($job_data);
-            }
-            //If cars or vehicle
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $cars_data = [
-                    'ad_id'                 => $created_ad->id,
-                    'transmission'            => $request->transmission,
-                    'fuel_type'            => $request->fuel_type,
-                    'engine_cc'            => $request->engine_cc,
-                    'mileage'            => $request->mileage,
-                    'build_year'            => $request->build_year . '-01-01',
-                ];
-                CarsVehicle::create($cars_data);
-            }
             //Attach all unused media with this ad
             $this->uploadAdsImage($request, $created_ad->id);
             /**
@@ -384,23 +332,6 @@ class AdsController extends Controller
             'address'           => 'required',
         ];
 
-        if ($sub_category->category_type == 'jobs') {
-            $rules['salary_will_be']        = 'required';
-            $rules['job_nature']            = 'required';
-            $rules['job_validity']          = 'required';
-            $rules['application_deadline']  = 'required';
-
-            unset($rules['type']);
-            unset($rules['condition']);
-        }
-
-        if ($sub_category->category_type == 'cars_and_vehicles') {
-            $rules['transmission'] = 'required';
-            $rules['fuel_type'] = 'required';
-            $rules['engine_cc'] = 'required';
-            $rules['mileage'] = 'required';
-            $rules['build_year'] = 'required';
-        }
 
         $this->validate($request, $rules);
 
@@ -434,30 +365,6 @@ class AdsController extends Controller
          * iF add created
          */
         if ($updated_ad) {
-            if ($sub_category->category_type == 'jobs') {
-                $job_data = [
-                    'job_nature'            => $request->job_nature,
-                    'job_validity'          => $request->job_validity,
-                    'apply_instruction'     => $request->apply_instruction,
-                    'application_deadline'  => $request->application_deadline,
-                    'is_any_where'          => $request->is_any_where,
-                    'salary_will_be'        => $request->salary_will_be,
-                ];
-                $ad->job->update($job_data);
-            }
-
-
-            //If cars or vehicle
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $cars_data = [
-                    'transmission'      => $request->transmission,
-                    'fuel_type'         => $request->fuel_type,
-                    'engine_cc'         => $request->engine_cc,
-                    'mileage'           => $request->mileage,
-                    'build_year'        => $request->build_year . '-01-01',
-                ];
-                $ad->cars_and_vehicles->update($cars_data);
-            }
 
             //Upload new image
             $this->uploadAdsImage($request, $ad->id);

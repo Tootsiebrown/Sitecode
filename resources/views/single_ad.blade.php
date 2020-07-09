@@ -312,55 +312,23 @@
 
                         <div class="widget">
 
-                            @if($ad->category_type== 'jobs')
-                                <h3>@lang('app.job_summery')</h3>
-                                <p><span class="ad-info-name"><i class="fa fa-houzz"></i> @lang('app.employer')</span> <span class="ad-info-value company-name">{{ $ad->seller_name }}</span></p>
-                                <p><span class="ad-info-name"><i class="fa fa-money"></i> @lang('app.salary')</span> <span class="ad-info-value">{!! themeqx_price_ng($ad->price) !!}</span></p>
-                                <p><span class="ad-info-name"><i class="fa fa-refresh"></i> @lang('app.mentioned_salary_will_be')</span> <span class="ad-info-value"> @lang('app.'.$ad->job->salary_will_be) </span></p>
+                            <h3>@lang('app.general_info')</h3>
+                            <p><span class="ad-info-name"><i class="fa fa-money"></i> @lang('app.price')</span> <span class="ad-info-value">{!! themeqx_price_ng($ad->price) !!}</span></p>
 
-                                <p><span class="ad-info-name"><i class="fa fa-newspaper-o"></i> @lang('app.published_on')</span> <span class="ad-info-value">{{ $ad->created_at->format('M d, Y') }}</span></p>
-                                <p><span class="ad-info-name"><i class="fa fa-building-o"></i> @lang('app.job_nature')</span> <span class="ad-info-value">@lang('app.'.$ad->job->job_nature)</span></p>
-                                <p>
-                                    <span class="ad-info-name"><i class="fa fa-map-marker"></i> @lang('app.job_location')</span> <span class="ad-info-value">
-                                        @if($ad->job->is_any_where)
-                                            @lang('app.any_where_in')
-                                        @else
-                                            @if($ad->city)
-                                                {!! $ad->city->city_name !!},
-                                            @endif
-                                            @if($ad->state)
-                                                {!! $ad->state->state_name !!},
-                                            @endif
-                                        @endif
-                                        {!! $ad->country->country_name !!}
-                                    </span>
-                                </p>
-
-                                <p><span class="ad-info-name"><i class="fa fa-briefcase"></i> @lang('app.job_validity')</span> <span class="ad-info-value">@lang('app.'.$ad->job->job_validity)</span></p>
-
-
-                                <p><span class="ad-info-name"><i class="fa fa-clock-o"></i> @lang('app.application_deadline')</span> <span class="ad-info-value">{{ date('M d, Y', strtotime($ad->job->application_deadline)) }}</span></p>
-
-                            @else
-
-                                <h3>@lang('app.general_info')</h3>
-                                <p><span class="ad-info-name"><i class="fa fa-money"></i> @lang('app.price')</span> <span class="ad-info-value">{!! themeqx_price_ng($ad->price) !!}</span></p>
-
-                                @if(! empty($ad->country))
-                                    <p><span class="ad-info-name"><i class="fa fa-globe"></i>  @lang('app.country') </span> <span class="ad-info-value"> {!! $ad->country->country_name !!} </span> </p>
-                                @endif
-
-                                @if(! empty($ad->state))
-                                    <p><span class="ad-info-name"><i class="fa fa-flag-o"></i>  @lang('app.state') </span> <span class="ad-info-value"> {!! $ad->state->state_name !!} </span> </p>
-                                @endif
-
-                                @if(! empty($ad->city))
-                                    <p><span class="ad-info-name"><i class="fa fa-area-chart"></i>  @lang('app.city') </span> <span class="ad-info-value"> {!! $ad->city->city_name !!} </span> </p>
-                                @endif
-
-                                <p><span class="ad-info-name"><i class="fa fa-map-marker"></i>  @lang('app.address') </span> <span class="ad-info-value"> {!! safe_output($ad->address) !!} </span> </p>
-
+                            @if(! empty($ad->country))
+                                <p><span class="ad-info-name"><i class="fa fa-globe"></i>  @lang('app.country') </span> <span class="ad-info-value"> {!! $ad->country->country_name !!} </span> </p>
                             @endif
+
+                            @if(! empty($ad->state))
+                                <p><span class="ad-info-name"><i class="fa fa-flag-o"></i>  @lang('app.state') </span> <span class="ad-info-value"> {!! $ad->state->state_name !!} </span> </p>
+                            @endif
+
+                            @if(! empty($ad->city))
+                                <p><span class="ad-info-name"><i class="fa fa-area-chart"></i>  @lang('app.city') </span> <span class="ad-info-value"> {!! $ad->city->city_name !!} </span> </p>
+                            @endif
+
+                            <p><span class="ad-info-name"><i class="fa fa-map-marker"></i>  @lang('app.address') </span> <span class="ad-info-value"> {!! safe_output($ad->address) !!} </span> </p>
+
 
                             <p><span class="ad-info-name"><i class="fa fa-calendar-check-o"></i> @lang('app.posted_at')</span> <span class="ad-info-value">{{$ad->posted_date()}}</span></p>
                             <p><span class="ad-info-name"><i class="fa fa-calendar-check-o"></i> @lang('app.expired_at')</span> <span class="ad-info-value">{{$ad->expired_date()}}</span></p>

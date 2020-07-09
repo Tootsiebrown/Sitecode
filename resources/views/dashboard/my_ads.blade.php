@@ -40,9 +40,6 @@
                                             @if($ad->category_type== 'auction')
                                                 <a href="{{route('auction_bids', $ad->id)}}" class="btn btn-info" data-toggle="tooltip" title="@lang('app.bids')"><i class="fa fa-gavel"></i> {{$ad->bids->count()}} </a>
                                             @endif
-                                            @if($ad->category_type== 'jobs')
-                                                <a href="{{route('job_applicants', $ad->id)}}" class="btn btn-info" data-toggle="tooltip" title="@lang('app.applicants')"><i class="fa fa-briefcase"></i> {{$ad->applicants->count()}} </a>
-                                            @endif
 
                                             <a href="{{ route('edit_ad', $ad->id) }}" class="btn btn-primary"><i class="fa fa-edit"></i> </a>
                                             <a href="javascript:;" class="btn btn-danger deleteAds" data-slug="{{ $ad->slug }}"><i class="fa fa-trash"></i> </a>

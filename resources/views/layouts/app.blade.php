@@ -162,14 +162,6 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     &nbsp;<li><a href="{{route('home')}}">@lang('app.home')</a> </li>
-                    <?php
-                    $header_menu_pages = \App\Post::whereStatus('1')->where('show_in_header_menu', 1)->get();
-                    ?>
-                    @if($header_menu_pages->count() > 0)
-                        @foreach($header_menu_pages as $page)
-                            <li><a href="{{ route('single_page', $page->slug) }}">{{ $page->title }} </a></li>
-                        @endforeach
-                    @endif
                     &nbsp;<li><a href="{{route('create_ad')}}">@lang('app.post_an_ad')</a> </li>
                 </ul>
 
@@ -201,15 +193,6 @@
 
                     <ul class="footer-menu">
                         <li> <a href="{{ route('home') }}"><i class="fa fa-home"></i> @lang('app.home')</a></li>
-
-                        <?php
-                        $show_in_footer_menu = \App\Post::whereStatus('1')->where('show_in_footer_menu', 1)->get();
-                        ?>
-                        @if($show_in_footer_menu->count() > 0)
-                            @foreach($show_in_footer_menu as $page)
-                                <li><a href="{{ route('single_page', $page->slug) }}">{{ $page->title }} </a></li>
-                            @endforeach
-                        @endif
                     </ul>
 
                     <div class="footer-heading">

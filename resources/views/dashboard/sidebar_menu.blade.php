@@ -28,7 +28,6 @@
                     </ul>
                 </li>
 
-                <li> <a href="{{ route('pages') }}"><i class="fa fa-file-word-o"></i> @lang('app.pages') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
                 <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
                 <li> <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>  </li>
 

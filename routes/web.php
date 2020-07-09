@@ -34,10 +34,6 @@ Route::get('LanguageSwitch/{lang}', ['as' => 'switch_language', 'uses'=>'HomeCon
 //Account activating
 Route::get('account/activating/{activation_code}', ['as' => 'email_activation_link', 'uses'=>'UserController@activatingAccount']);
 
-//Listing page
-
-Route::get('page/{slug}', ['as' => 'single_page', 'uses'=>'PostController@showPage']);
-
 Route::get('category/{cat_id?}', ['uses'=>'CategoriesController@show'])->name('category');
 Route::get('countries/{country_code?}', ['uses'=>'LocationController@countriesListsPublic'])->name('countries');
 Route::get('set-country/{country_code}', ['uses'=>'LocationController@setCurrentCountry'])->name('set_country');
@@ -61,6 +57,7 @@ Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses'=>'CommentCont
 
 // Password reset routes...
 Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses'=>'Auth\PasswordController@postEmail']);
+
 //Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 //Route::post('password/reset', ['as'=>'password_reset_post', 'uses'=>'Auth\PasswordController@postReset']);
 
@@ -156,16 +153,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
             Route::post('delete-categories', ['as'=>'delete_categories', 'uses' => 'CategoriesController@destroy']);
         });
 
-        Route::group(['prefix'=>'pages'], function(){
-            Route::get('/', ['as'=>'pages', 'uses' => 'PostController@index']);
-
-            Route::get('create', ['as'=>'create_new_page', 'uses' => 'PostController@create']);
-            Route::post('create', ['uses' => 'PostController@store']);
-            Route::post('delete', ['as'=>'delete_page','uses' => 'PostController@destroy']);
-
-            Route::get('edit/{slug}', ['as'=>'edit_page', 'uses' => 'PostController@edit']);
-            Route::post('edit/{slug}', ['uses' => 'PostController@updatePage']);
-        });
         Route::group(['prefix'=>'admin_comments'], function(){
             Route::get('/', ['as'=>'admin_comments', 'uses' => 'CommentController@index']);
             Route::post('action', ['as'=>'comment_action', 'uses' => 'CommentController@commentAction']);
@@ -209,12 +196,11 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
             Route::get('favorite-lists', ['as'=>'favorite_ads', 'uses' => 'AdsController@favoriteAds']);
             //Upload ads image
             Route::post('upload-a-image', ['as'=>'upload_ads_image', 'uses' => 'AdsController@uploadAdsImage']);
-            Route::post('upload-post-image', ['as'=>'upload_post_image', 'uses' => 'PostController@uploadPostImage']);
+
             //Delete media
             Route::post('delete-media', ['as'=>'delete_media', 'uses' => 'AdsController@deleteMedia']);
             Route::post('feature-media-creating', ['as'=>'feature_media_creating_ads', 'uses' => 'AdsController@featureMediaCreatingAds']);
             Route::get('append-media-image', ['as'=>'append_media_image', 'uses' => 'AdsController@appendMediaImage']);
-            Route::get('append-post-media-image', ['as'=>'append_post_media_image', 'uses' => 'PostController@appendPostMediaImage']);
             Route::get('pending-lists', ['as'=>'pending_ads', 'uses' => 'AdsController@pendingAds']);
             Route::get('archive-lists', ['as'=>'favourite_ad', 'uses' => 'AdsController@create']);
 

@@ -159,23 +159,6 @@
                             </div>
                         </div>
 
-                        @if($ad->category_type == 'jobs')
-                            <div class="job_field">
-                                <div class="form-group  {{ $errors->has('is_any_where')? 'has-error':'' }}">
-                                    <label for="is_any_where_select" class="col-sm-4 control-label"></label>
-                                    <div class="col-sm-8">
-
-                                        <label>
-                                            <input type="checkbox" name="is_any_where" value="1" @if($ad->job->is_any_where == '1') checked="checked" @endif /> @lang('app.is_any_where')
-                                        </label>
-                                        <p class="text-info">
-                                            @lang('app.is_any_where_in_country')
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
                         <legend><span class="seller_text"> @lang('app.seller') </span> @lang('app.info')</legend>
 
                         <div class="form-group {{ $errors->has('seller_name')? 'has-error':'' }}">
