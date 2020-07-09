@@ -120,10 +120,6 @@ class SettingsController extends Controller
      */
     public function update(Request $request)
     {
-        if (env('APP_DEMO') == true) {
-            return ['success' => 0, 'msg' => trans('app.settings_disable_in_demo_msg')];
-        }
-
         $inputs = array_except($request->input(), ['_token']);
 
         foreach ($inputs as $key => $value) {

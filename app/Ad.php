@@ -38,16 +38,6 @@ class Ad extends Model
         return $this->belongsTo(Sub_Category::class);
     }
 
-    public function scopeActivePremium($query)
-    {
-        return $query->whereStatus('1')->wherePricePlan('premium');
-    }
-
-    public function scopeActiveRegular($query)
-    {
-        return $query->whereStatus('1')->wherePricePlan('regular');
-    }
-
     public function scopeActive($query)
     {
         return $query->whereStatus('1');

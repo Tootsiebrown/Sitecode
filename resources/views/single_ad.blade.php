@@ -475,7 +475,6 @@
                                         @endif
                                     @endif
 
-                                    <li><a href="#" data-toggle="modal" data-target="#reportAdModal"><i class="fa fa-ban"></i> @lang('app.report_this_ad')</a></li>
                                 </ul>
 
                             </div>
@@ -611,56 +610,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="reportAdModal" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">@lang('app.report_ad_title')</h4>
-                </div>
-                <div class="modal-body">
-
-                    <p>@lang('app.report_ad_description')</p>
-
-                    <form>
-
-                        <div class="form-group">
-                            <label class="control-label">@lang('app.reason'):</label>
-                            <select class="form-control" name="reason">
-                                <option value="">@lang('app.select_a_reason')</option>
-                                <option value="unavailable">@lang('app.item_sold_unavailable')</option>
-                                <option value="fraud">@lang('app.fraud')</option>
-                                <option value="duplicate">@lang('app.duplicate')</option>
-                                <option value="spam">@lang('app.spam')</option>
-                                <option value="wrong_category">@lang('app.wrong_category')</option>
-                                <option value="offensive">@lang('app.offensive')</option>
-                                <option value="other">@lang('app.other')</option>
-                            </select>
-
-                            <div id="reason_info"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email" class="control-label">@lang('app.email'):</label>
-                            <input type="text" class="form-control" id="email" name="email">
-                            <div id="email_info"></div>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="control-label">@lang('app.message'):</label>
-                            <textarea class="form-control" id="message" name="message"></textarea>
-                            <div id="message_info"></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@lang('app.close')</button>
-                    <button type="button" class="btn btn-primary" id="report_ad">@lang('app.report_ad')</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="replyByEmail" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -765,56 +714,6 @@
                         }
                     }
                 });
-            });
-
-            $('button#report_ad').click(function(){
-                var reason = $('[name="reason"]').val();
-                var email = $('[name="email"]').val();
-                var message = $('[name="message"]').val();
-                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-                var error = 0;
-                if(reason.length < 1){
-                    $('#reason_info').html('<p class="text-danger">Reason required</p>');
-                    error++;
-                }else {
-                    $('#reason_info').html('');
-                }
-                if(email.length < 1){
-                    $('#email_info').html('<p class="text-danger">Email required</p>');
-                    error++;
-                }else {
-                    if ( ! regex.test(email)){
-                        $('#email_info').html('<p class="text-danger">Valid email required</p>');
-                        error++;
-                    }else {
-                        $('#email_info').html('');
-                    }
-                }
-                if(message.length < 1){
-                    $('#message_info').html('<p class="text-danger">Message required</p>');
-                    error++;
-                }else {
-                    $('#message_info').html('');
-                }
-
-                if (error < 1){
-                    $('#loadingOverlay').show();
-                    $.ajax({
-                        type : 'POST',
-                        url : '{{ route('report_ads_pos') }}',
-                        data : { reason : reason, email: email,message:message, slug:'{{ $ad->slug }}',  _token : '{{ csrf_token() }}' },
-                        success : function (data) {
-                            if (data.status == 1){
-                                toastr.success(data.msg, '@lang('app.success')', toastr_options);
-                            }else {
-                                toastr.error(data.msg, '@lang('app.error')', toastr_options);
-                            }
-                            $('#reportAdModal').modal('hide');
-                            $('#loadingOverlay').hide();
-                        }
-                    });
-                }
             });
 
             $('#replyByEmailForm').submit(function(e){

@@ -13,7 +13,6 @@ use App\Job;
 use App\JobApplication;
 use App\Media;
 use App\Payment;
-use App\Report_ad;
 use App\State;
 use App\Sub_Category;
 use App\User;
@@ -942,20 +941,6 @@ class AdsController extends Controller
     }
 
 
-    public function adsByUser($user_id = 0)
-    {
-        $user = User::find($user_id);
-
-        if (! $user_id || ! $user) {
-            return redirect(route('search'));
-        }
-
-        $title = trans('app.ads_by') . ' ' . $user->name;
-        $ads = Ad::active()->whereUserId($user_id)->paginate(40);
-
-        return view('ads_by_user', compact('ads', 'title', 'user'));
-    }
-
     /**
      * @param $slug
      * @return mixed
@@ -997,58 +982,6 @@ class AdsController extends Controller
         session(['grid_list_view' => $request->grid_list_view]);
     }
 
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function reportAds(Request $request)
-    {
-        $ad = Ad::whereSlug($request->slug)->first();
-        if ($ad) {
-            $data = [
-                'ad_id' => $ad->id,
-                'reason' => $request->reason,
-                'email' => $request->email,
-                'message' => $request->message,
-            ];
-            Report_ad::create($data);
-            return ['status' => 1, 'msg' => trans('app.ad_reported_msg')];
-        }
-        return ['status' => 0, 'msg' => trans('app.error_msg')];
-    }
 
 
-    public function reports()
-    {
-        $reports = Report_ad::orderBy('id', 'desc')->with('ad')->paginate(20);
-        $title = trans('app.ad_reports');
-
-        return view('dashboard.ad_reports', compact('title', 'reports'));
-    }
-
-    public function deleteReports(Request $request)
-    {
-        Report_ad::find($request->id)->delete();
-        return ['success' => 1, 'msg' => trans('app.report_deleted_success')];
-    }
-
-    public function reportsByAds($slug)
-    {
-        $user = Auth::user();
-
-        if ($user->isAdmin()) {
-            $ad = Ad::whereSlug($slug)->first();
-        } else {
-            $ad = Ad::whereSlug($slug)->whereUserId($user->id)->first();
-        }
-
-        if (! $ad) {
-            return view('dashboard.error.error_404');
-        }
-
-        $reports = $ad->reports()->paginate(20);
-
-        $title = trans('app.ad_reports');
-        return view('dashboard.reports_by_ads', compact('title', 'ad', 'reports'));
-    }
 }

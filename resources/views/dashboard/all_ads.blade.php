@@ -43,10 +43,6 @@
 
                                         <td>
 
-                                            <a href="{{ route('reports_by_ads', $ad->slug) }}">
-                                                <i class="fa fa-exclamation-triangle"></i> @lang('app.reports') : {{ $ad->reports->count() }}
-                                            </a>
-
                                             <hr />
 
                                             @if($ad->category_type== 'auction')

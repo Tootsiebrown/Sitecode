@@ -54,7 +54,7 @@ Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses'=>'AdsController@
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses'=>'AdsController@embeddedAd']);
 
 Route::post('save-ad-as-favorite', ['as' => 'save_ad_as_favorite', 'uses'=>'UserController@saveAdAsFavorite']);
-Route::post('report-post', ['as' => 'report_ads_pos', 'uses'=>'AdsController@reportAds']);
+
 Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses'=>'UserController@replyByEmailPost']);
 Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses'=>'CommentController@postComments']);
 
@@ -177,13 +177,10 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
         Route::get('blocked', ['as'=>'admin_blocked_ads', 'uses' => 'AdsController@adminBlockedAds']);
         Route::post('status-change', ['as'=>'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
-        Route::get('ad-reports', ['as'=>'ad_reports', 'uses' => 'AdsController@reports']);
         Route::get('users', ['as'=>'users', 'uses' => 'UserController@index']);
         Route::get('users-info/{id}', ['as'=>'user_info', 'uses' => 'UserController@userInfo']);
         Route::post('change-user-status', ['as'=>'change_user_status', 'uses' => 'UserController@changeStatus']);
         Route::post('change-user-feature', ['as'=>'change_user_feature', 'uses' => 'UserController@changeFeature']);
-        Route::post('delete-reports', ['as'=>'delete_report', 'uses' => 'AdsController@deleteReports']);
-
         Route::get('contact-messages', ['as'=>'contact_messages', 'uses' => 'HomeController@contactMessages']);
 
         Route::group(['prefix'=>'administrators'], function(){
@@ -222,7 +219,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
             Route::get('pending-lists', ['as'=>'pending_ads', 'uses' => 'AdsController@pendingAds']);
             Route::get('archive-lists', ['as'=>'favourite_ad', 'uses' => 'AdsController@create']);
 
-            Route::get('reports-by/{slug}', ['as'=>'reports_by_ads', 'uses' => 'AdsController@reportsByAds']);
             Route::get('profile', ['as'=>'profile', 'uses' => 'UserController@profile']);
             Route::get('profile/edit', ['as'=>'profile_edit', 'uses' => 'UserController@profileEdit']);
             Route::post('profile/edit', ['uses' => 'UserController@profileEditPost']);

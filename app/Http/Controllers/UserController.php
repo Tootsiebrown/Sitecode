@@ -27,11 +27,8 @@ class UserController extends Controller
     {
         $title = trans('app.users');
 
-        if (env('APP_DEMO') == true) {
-            return view('dashboard.no_data_for_demo', compact('title'));
-        }
-
-        $users = User::whereUserType('user')->paginate(20);
+        //$users = User::whereUserType('user')->paginate(20);
+        $users = User::paginate(20);
 
         return view('dashboard.users', compact('title', 'users'));
     }
@@ -40,13 +37,12 @@ class UserController extends Controller
     {
         $title = trans('app.user_info');
         $user = User::find($id);
-        $ads = $user->ads()->paginate(20);
 
         if (!$user) {
             return view('dashboard.error.error_404');
         }
 
-        return view('dashboard.user_info', compact('title', 'user', 'ads'));
+        return view('dashboard.user_info', compact('title', 'user'));
     }
 
     /**
@@ -249,7 +245,8 @@ class UserController extends Controller
     public function administrators()
     {
         $title = trans('app.administrators');
-        $users = User::whereUserType('admin')->get();
+        //$users = User::whereUserType('admin')->get();
+        $users = User::get();
 
         return view('dashboard.administrators', compact('title', 'users'));
     }
