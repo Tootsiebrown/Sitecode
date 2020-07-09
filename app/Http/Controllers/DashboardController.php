@@ -25,7 +25,6 @@ class DashboardController extends Controller
             $total_payments_amount = Payment::whereStatus('success')->sum('amount');
 
             return view('dashboard.dashboard', compact('approved_ads', 'total_users', 'total_payments', 'total_payments_amount'));
-
         }
 
         return view('dashboard.dashboard');
