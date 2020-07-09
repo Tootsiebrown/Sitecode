@@ -20,7 +20,7 @@ class HomeController extends Controller
 
         $total_ads_count = Ad::active()->count();
 
-        return view('index', compact('top_categories', '$ads', 'total_ads_count'));
+        return view('index', compact('top_categories', 'ads', 'total_ads_count'));
     }
 
     /**
