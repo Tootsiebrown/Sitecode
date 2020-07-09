@@ -36,7 +36,7 @@ class AdsController extends Controller
         $title = trans('app.all_ads');
         $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.all_ads', compact('title', 'ads'));
+        return view('dashboard.all_ads', compact('title', 'ads'));
     }
 
     public function adminPendingAds()
@@ -44,14 +44,14 @@ class AdsController extends Controller
         $title = trans('app.pending_ads');
         $ads = Ad::with('city', 'country', 'state')->whereStatus('0')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.all_ads', compact('title', 'ads'));
+        return view('dashboard.all_ads', compact('title', 'ads'));
     }
     public function adminBlockedAds()
     {
         $title = trans('app.blocked_ads');
         $ads = Ad::with('city', 'country', 'state')->whereStatus('2')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.all_ads', compact('title', 'ads'));
+        return view('dashboard.all_ads', compact('title', 'ads'));
     }
 
     public function myAds()
@@ -61,7 +61,7 @@ class AdsController extends Controller
         $user = Auth::user();
         $ads = $user->ads()->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.my_ads', compact('title', 'ads'));
+        return view('dashboard.my_ads', compact('title', 'ads'));
     }
 
     public function pendingAds()
@@ -71,7 +71,7 @@ class AdsController extends Controller
         $user = Auth::user();
         $ads = $user->ads()->whereStatus('0')->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.pending_ads', compact('title', 'ads'));
+        return view('dashboard.pending_ads', compact('title', 'ads'));
     }
 
     public function favoriteAds()
@@ -81,7 +81,7 @@ class AdsController extends Controller
         $user = Auth::user();
         $ads = $user->favourite_ads()->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.favourite_ads', compact('title', 'ads'));
+        return view('dashboard.favourite_ads', compact('title', 'ads'));
     }
 
     /**
@@ -337,12 +337,12 @@ class AdsController extends Controller
         $ad = Ad::find($id);
 
         if (!$ad) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
         if (! $user->is_admin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
 
@@ -351,7 +351,7 @@ class AdsController extends Controller
         $previous_states = State::where('country_id', $ad->country_id)->get();
         $previous_cities = City::where('state_id', $ad->state_id)->get();
 
-        return view('admin.edit_ad', compact('title', 'countries', 'ad', 'previous_states', 'previous_cities'));
+        return view('dashboard.edit_ad', compact('title', 'countries', 'ad', 'previous_states', 'previous_cities'));
     }
 
     /**
@@ -369,7 +369,7 @@ class AdsController extends Controller
 
         if (! $user->is_admin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
 
@@ -654,7 +654,7 @@ class AdsController extends Controller
         $user_id = Auth::user()->id;
         $ads_images = Media::whereUserId($user_id)->whereAdId(0)->whereRef('ad')->get();
 
-        return view('admin.append_media', compact('ads_images'));
+        return view('dashboard.append_media', compact('ads_images'));
     }
 
     /**
@@ -1023,7 +1023,7 @@ class AdsController extends Controller
         $reports = Report_ad::orderBy('id', 'desc')->with('ad')->paginate(20);
         $title = trans('app.ad_reports');
 
-        return view('admin.ad_reports', compact('title', 'reports'));
+        return view('dashboard.ad_reports', compact('title', 'reports'));
     }
 
     public function deleteReports(Request $request)
@@ -1043,12 +1043,12 @@ class AdsController extends Controller
         }
 
         if (! $ad) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
         $reports = $ad->reports()->paginate(20);
 
         $title = trans('app.ad_reports');
-        return view('admin.reports_by_ads', compact('title', 'ad', 'reports'));
+        return view('dashboard.reports_by_ads', compact('title', 'ad', 'reports'));
     }
 }

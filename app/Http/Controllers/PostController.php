@@ -22,7 +22,7 @@ class PostController extends Controller
         $title = trans('app.pages');
         $pages = Post::whereType('page')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.pages', compact('title', 'pages'));
+        return view('dashboard.pages', compact('title', 'pages'));
     }
 
     public function uploadPostImage(Request $request)
@@ -84,7 +84,7 @@ class PostController extends Controller
         $user_id = Auth::user()->id;
         $ads_images = Media::whereUserId($user_id)->wherePostId(0)->whereRef('blog')->get();
 
-        return view('admin.append_media', compact('ads_images'));
+        return view('dashboard.append_media', compact('ads_images'));
     }
 
 
@@ -96,7 +96,7 @@ class PostController extends Controller
     public function create()
     {
         $title = trans('app.pages');
-        return view('admin.page_create', compact('title'));
+        return view('dashboard.page_create', compact('title'));
     }
 
     /**
@@ -158,7 +158,7 @@ class PostController extends Controller
     {
         $title = trans('app.edit_page');
         $page = Post::whereSlug($slug)->first();
-        return view('admin.edit_page', compact('title', 'page'));
+        return view('dashboard.edit_page', compact('title', 'page'));
     }
 
     public function updatePage(Request $request, $slug)
@@ -187,7 +187,7 @@ class PostController extends Controller
         }
         return redirect()->back()->with('error', trans('app.error_msg'));
     }
-    
+
     public function showPage($slug)
     {
         $page = Post::whereSlug($slug)->first();
@@ -211,7 +211,7 @@ class PostController extends Controller
     {
         $post = Post::whereSlug($slug)->first();
         $title = $post->title;
-        
+
         $enable_discuss = get_option('enable_disqus_comment_in_blog');
         return view('theme.blog_single', compact('title', 'post', 'enable_discuss'));
     }

@@ -23,8 +23,8 @@ class CommentController extends Controller
             $get_ad_ids = $user->ads->pluck('id')->toArray();
             $comments = Comment::whereIn('ad_id', $get_ad_ids)->orderBy('id', 'desc')->paginate(50);
         }
-        
-        return view('admin.comments', compact('title', 'comments'));
+
+        return view('dashboard.comments', compact('title', 'comments'));
     }
 
     public function postComments(Request $request, $id)

@@ -13,45 +13,45 @@ class SettingsController extends Controller
     public function GeneralSettings()
     {
         $title = trans('app.general_settings');
-        return view('admin.general_settings', compact('title'));
+        return view('dashboard.general_settings', compact('title'));
     }
 
     public function PaymentSettings()
     {
         $title = trans('app.payment_settings');
-        return view('admin.payment_settings', compact('title'));
+        return view('dashboard.payment_settings', compact('title'));
     }
     public function AdSettings()
     {
         $title = trans('app.ad_settings_and_pricing');
-        return view('admin.ad_settings', compact('title'));
+        return view('dashboard.ad_settings', compact('title'));
     }
 
     public function StorageSettings()
     {
         $title = trans('app.file_storage_settings');
-        return view('admin.storage_settings', compact('title'));
+        return view('dashboard.storage_settings', compact('title'));
     }
-    
+
     public function SocialSettings()
     {
         $title = trans('app.social_settings');
-        return view('admin.social_settings', compact('title'));
+        return view('dashboard.social_settings', compact('title'));
     }
     public function BlogSettings()
     {
         $title = trans('app.blog_settings');
-        return view('admin.blog_settings', compact('title'));
+        return view('dashboard.blog_settings', compact('title'));
     }
     public function reCaptchaSettings()
     {
         $title = trans('app.re_captcha_settings');
-        return view('admin.re_captcha_settings', compact('title'));
+        return view('dashboard.re_captcha_settings', compact('title'));
     }
     public function OtherSettings()
     {
         $title = trans('app.other_settings');
-        return view('admin.other_settings', compact('title'));
+        return view('dashboard.other_settings', compact('title'));
     }
 
 
@@ -98,18 +98,18 @@ class SettingsController extends Controller
     public function ThemeSettings()
     {
         $title = trans('app.theme_settings');
-        return view('admin.theme_settings', compact('title'));
+        return view('dashboard.theme_settings', compact('title'));
     }
     public function modernThemeSettings()
     {
         $title = trans('app.modern_theme_settings');
-        return view('admin.modern_theme_settings', compact('title'));
+        return view('dashboard.modern_theme_settings', compact('title'));
     }
 
     public function SocialUrlSettings()
     {
         $title = trans('app.social_url_settings');
-        return view('admin.social_url_settings', compact('title'));
+        return view('dashboard.social_url_settings', compact('title'));
     }
 
 
@@ -142,6 +142,6 @@ class SettingsController extends Controller
     public function monetization()
     {
         $title = trans('app.website_monetization');
-        return view('admin.website_monetization', compact('title'));
+        return view('dashboard.website_monetization', compact('title'));
     }
 }

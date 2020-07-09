@@ -20,10 +20,10 @@ class BidController extends Controller
 
         if (! $user->is_admin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
-        return view('admin.bids', compact('title', 'ad'));
+        return view('dashboard.bids', compact('title', 'ad'));
     }
 
     public function postBid(Request $request, $ad_id)
@@ -93,12 +93,12 @@ class BidController extends Controller
 
         if (! $auth_user->is_admin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
 
         $user = User::find($bid->user_id);
 
-        return view('admin.profile', compact('title', 'user'));
+        return view('dashboard.profile', compact('title', 'user'));
     }
 }

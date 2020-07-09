@@ -63,7 +63,7 @@
             <div class="row">
                 <div class="col-sm-8 col-xs-12">
 
-                    @include('admin.flash_msg')
+                    @include('dashboard.flash_msg')
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
