@@ -365,7 +365,6 @@ class AdsController extends Controller
          * iF add created
          */
         if ($updated_ad) {
-
             //Upload new image
             $this->uploadAdsImage($request, $ad->id);
         }

@@ -117,7 +117,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
 
             Route::get('storage', ['as'=>'file_storage_settings', 'uses' => 'SettingsController@StorageSettings']);
             Route::get('social', ['as'=>'social_settings', 'uses' => 'SettingsController@SocialSettings']);
-            Route::get('blog', ['as'=>'blog_settings', 'uses' => 'SettingsController@BlogSettings']);
             Route::get('other', ['as'=>'other_settings', 'uses' => 'SettingsController@OtherSettings']);
             Route::post('other', ['as'=>'other_settings', 'uses' => 'SettingsController@OtherSettingsPost']);
 

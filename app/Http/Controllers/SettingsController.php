@@ -38,16 +38,13 @@ class SettingsController extends Controller
         $title = trans('app.social_settings');
         return view('dashboard.social_settings', compact('title'));
     }
-    public function BlogSettings()
-    {
-        $title = trans('app.blog_settings');
-        return view('dashboard.blog_settings', compact('title'));
-    }
+
     public function reCaptchaSettings()
     {
         $title = trans('app.re_captcha_settings');
         return view('dashboard.re_captcha_settings', compact('title'));
     }
+
     public function OtherSettings()
     {
         $title = trans('app.other_settings');
