@@ -2,15 +2,6 @@
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
 @section('content')
-    @if(get_option('enable_monetize') == 1)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {!! get_option('monetize_code_above_categories') !!}
-                </div>
-            </div>
-        </div>
-    @endif
 
     @if($top_categories->count())
         <div class="home-category">
@@ -45,28 +36,6 @@
         </div>
     @endif
 
-
-    @if(get_option('enable_monetize') == 1)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {!! get_option('monetize_code_below_categories') !!}
-                </div>
-            </div>
-        </div>
-    @endif
-
-
-
-    @if(get_option('enable_monetize') == 1)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {!! get_option('monetize_code_below_premium_ads') !!}
-                </div>
-            </div>
-        </div>
-    @endif
 
     @if($ads->count())
         <div id="regular-ads-container">
@@ -151,15 +120,6 @@
     @endif
 
 
-    @if(get_option('enable_monetize') == 1)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {!! get_option('monetize_code_below_regular_ads') !!}
-                </div>
-            </div>
-        </div>
-    @endif
 
     <div class="container">
         <div class="section-stats-box">

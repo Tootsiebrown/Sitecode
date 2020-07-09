@@ -128,7 +128,6 @@ Route::group(['prefix'=>'dashboard', 'middleware' => 'dashboard'], function(){
 
             //Save settings / options
             Route::post('save-settings', ['as'=>'save_settings', 'uses' => 'SettingsController@update']);
-            Route::get('monetization', ['as'=>'monetization', 'uses' => 'SettingsController@monetization']);
         });
 
         Route::group(['prefix'=>'location'], function(){

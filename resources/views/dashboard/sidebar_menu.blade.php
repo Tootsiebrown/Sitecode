@@ -51,8 +51,6 @@
                     <!-- /.nav-second-level -->
                 </li>
 
-                <li> <a href="{{ route('monetization') }}"><i class="fa fa-dollar"></i> @lang('app.monetization') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>
-
                 <li>
                     <a href="#"><i class="fa fa-wrench fa-fw"></i> @lang('app.settings')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>
                     <ul class="nav nav-second-level">

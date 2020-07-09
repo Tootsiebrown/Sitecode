@@ -47,16 +47,6 @@
     </div>
 
 
-    @if(get_option('enable_monetize') == 1)
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    {!! get_option('monetize_code_below_ad_title') !!}
-                </div>
-            </div>
-        </div>
-    @endif
-
     <div class="single-auction-wrap">
 
         <div class="container">
@@ -114,32 +104,11 @@
 
                     </div>
 
-
-                    @if(get_option('enable_monetize') == 1)
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {!! get_option('monetize_code_below_ad_image') !!}
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
                     <div class="ads-detail">
                         @lang('app.description')</h4>
                         {!! nl2br(safe_output($ad->description)) !!}
                     </div>
 
-
-                    @if(get_option('enable_monetize') == 1)
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {!! get_option('monetize_code_below_ad_description') !!}
-                                </div>
-                            </div>
-                        </div>
-                    @endif
 
                     @if($ad->category_type == 'auction')
                         <hr />
@@ -341,16 +310,6 @@
                             </div>
                         @endif
 
-
-                        @if(get_option('enable_monetize') == 1)
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {!! get_option('monetize_code_above_general_info') !!}
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                         <div class="widget">
 
                             @if($ad->category_type== 'jobs')
@@ -416,16 +375,6 @@
 
                         </div>
 
-                        @if(get_option('enable_monetize') == 1)
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {!! get_option('monetize_code_below_general_info') !!}
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
                         <div class="widget">
 
                             {{--<h3>@lang('app.seller_info')</h3>--}}
@@ -480,16 +429,6 @@
                             </div>
 
                         </div>
-
-                        @if(get_option('enable_monetize') == 1)
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {!! get_option('monetize_code_below_seller_info') !!}
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
 
                         @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
                             <div class="widget similar-ads">

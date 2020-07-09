@@ -133,11 +133,4 @@ class SettingsController extends Controller
         }
         return redirect()->back()->with('success', trans('app.settings_saved_msg'));
     }
-
-
-    public function monetization()
-    {
-        $title = trans('app.website_monetization');
-        return view('dashboard.website_monetization', compact('title'));
-    }
 }

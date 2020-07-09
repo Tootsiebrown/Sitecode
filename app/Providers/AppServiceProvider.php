@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
         load_options();
 
         view()->composer('*', function ($view) {
-            $enable_monetize = get_option('enable_monetize');
             $loggedUser = null;
             if (Auth::check()) {
                 $loggedUser = Auth::user();
@@ -37,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
 
             $current_lang = current_language();
 
-            $view->with(['lUser' => $loggedUser, 'enable_monetize' => $enable_monetize, 'current_lang' => $current_lang]);
+            $view->with(['lUser' => $loggedUser, 'current_lang' => $current_lang]);
         });
     }
 }

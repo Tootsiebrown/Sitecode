@@ -981,7 +981,4 @@ class AdsController extends Controller
     {
         session(['grid_list_view' => $request->grid_list_view]);
     }
-
-
-
 }
