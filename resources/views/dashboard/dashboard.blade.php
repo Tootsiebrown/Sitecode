@@ -31,7 +31,7 @@
 
 
             <div class="row">
-                @if($lUser->is_admin())
+                @if($lUser->isAdmin())
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">

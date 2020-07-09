@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class Ad extends Model
 {
     protected $guarded = [];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -27,7 +27,7 @@ class Ad extends Model
     {
         return $this->belongsTo(Country::class);
     }
-    
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -47,22 +47,12 @@ class Ad extends Model
     {
         return $query->whereStatus('1')->wherePricePlan('regular');
     }
-    public function scopeActiveUrgent($query)
-    {
-        return $query->whereStatus('1')->whereMarkAdUrgent('1');
-    }
+
     public function scopeActive($query)
     {
         return $query->whereStatus('1');
     }
-    public function scopeBusiness($query)
-    {
-        return $query->whereType('business');
-    }
-    public function scopePersonal($query)
-    {
-        return $query->whereType('personal');
-    }
+
     public function feature_img()
     {
         $feature_img = $this->hasOne(Media::class)->whereIsFeature('1');
@@ -79,7 +69,7 @@ class Ad extends Model
     /**
      * @return bool
      */
-    
+
     public function is_published()
     {
         if ($this->status == 1) {
@@ -87,7 +77,7 @@ class Ad extends Model
         }
         return false;
     }
-    
+
     public function full_address()
     {
         $location = '';
@@ -157,32 +147,6 @@ class Ad extends Model
         } else {
             return false;
         }
-    }
-
-    public function reports()
-    {
-        return $this->hasMany(Report_ad::class);
-    }
-
-    public function increase_impression()
-    {
-        $this->max_impression = $this->max_impression + 1;
-        $this->save();
-    }
-
-    public function job()
-    {
-        return $this->hasOne(Job::class);
-    }
-
-    public function cars_and_vehicles()
-    {
-        return $this->hasOne(CarsVehicle::class);
-    }
-
-    public function applicants()
-    {
-        return $this->hasMany(JobApplication::class);
     }
 
     public function bids()

@@ -210,7 +210,6 @@
                                 <li><a href="{{ route('single_page', $page->slug) }}">{{ $page->title }} </a></li>
                             @endforeach
                         @endif
-                        <li><a href="{{ route('contact_us_page') }}">@lang('app.contact_us')</a></li>
                     </ul>
 
                     <div class="footer-heading">

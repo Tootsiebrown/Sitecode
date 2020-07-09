@@ -16,7 +16,7 @@ class PaymentController extends Controller
         $title = trans('app.payments');
 
         $user = Auth::user();
-        if ($user->is_admin()) {
+        if ($user->isAdmin()) {
             $payments = Payment::with('ad', 'user')->paginate(50);
         } else {
             $payments = Payment::whereUserId($user->id)->with('ad', 'user')->paginate(50);

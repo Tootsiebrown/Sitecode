@@ -340,7 +340,7 @@ class AdsController extends Controller
             return view('dashboard.error.error_404');
         }
 
-        if (! $user->is_admin()) {
+        if (! $user->isAdmin()) {
             if ($ad->user_id != $user_id) {
                 return view('dashboard.error.error_404');
             }
@@ -367,7 +367,7 @@ class AdsController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        if (! $user->is_admin()) {
+        if (! $user->isAdmin()) {
             if ($ad->user_id != $user_id) {
                 return view('dashboard.error.error_404');
             }
@@ -1036,7 +1036,7 @@ class AdsController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->is_admin()) {
+        if ($user->isAdmin()) {
             $ad = Ad::whereSlug($slug)->first();
         } else {
             $ad = Ad::whereSlug($slug)->whereUserId($user->id)->first();

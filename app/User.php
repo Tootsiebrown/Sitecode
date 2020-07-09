@@ -63,10 +63,7 @@ class User extends UserBase
         return $address;
     }
 
-    public function ads()
-    {
-        return $this->hasMany(Ad::class);
-    }
+
     public function favourite_ads()
     {
         return $this->belongsToMany(Ad::class, 'favorites');
@@ -100,7 +97,7 @@ class User extends UserBase
         return $context;
     }
 
-    public function is_admin()
+    public function isAdmin()
     {
         return $this->hasPrivilege('Administrator');
     }

@@ -16,7 +16,7 @@
                 </ul>
             </li>
 
-            @if($lUser->is_admin())
+            @if($lUser->isAdmin())
 
                 <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
                 <li>
@@ -52,7 +52,6 @@
                     <!-- /.nav-second-level -->
                 </li>
 
-                <li> <a href="{{ route('contact_messages') }}"><i class="fa fa-envelope-o"></i> @lang('app.contact_messages') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>
                 <li> <a href="{{ route('monetization') }}"><i class="fa fa-dollar"></i> @lang('app.monetization') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>
 
                 <li>

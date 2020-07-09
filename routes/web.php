@@ -35,8 +35,6 @@ Route::get('LanguageSwitch/{lang}', ['as' => 'switch_language', 'uses'=>'HomeCon
 Route::get('account/activating/{activation_code}', ['as' => 'email_activation_link', 'uses'=>'UserController@activatingAccount']);
 
 //Listing page
-Route::get('contact-us', ['as' => 'contact_us_page', 'uses'=>'HomeController@contactUs']);
-Route::post('contact-us', ['uses'=>'HomeController@contactUsPost']);
 
 Route::get('page/{slug}', ['as' => 'single_page', 'uses'=>'PostController@showPage']);
 
