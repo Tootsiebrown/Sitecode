@@ -18,7 +18,7 @@
                         </div>
                     @endif
 
-                    @include('admin.flash_msg')
+                    @include('dashboard.flash_msg')
 
                     <form action="" id="adsPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
 

@@ -16,15 +16,15 @@ class CommentController extends Controller
         $title = trans('app.comments');
 
         $user = Auth::user();
-        if ($user->is_admin()) {
+        if ($user->isAdmin()) {
             $comments = Comment::orderBy('id', 'desc')->paginate(50);
         } else {
             //Get user specific comments
             $get_ad_ids = $user->ads->pluck('id')->toArray();
             $comments = Comment::whereIn('ad_id', $get_ad_ids)->orderBy('id', 'desc')->paginate(50);
         }
-        
-        return view('admin.comments', compact('title', 'comments'));
+
+        return view('dashboard.comments', compact('title', 'comments'));
     }
 
     public function postComments(Request $request, $id)
@@ -95,7 +95,7 @@ class CommentController extends Controller
         $comment = Comment::find($request->comment_id);
         $comment_ad = Ad::find($comment->ad_id);
 
-        if ($user->id != $comment_ad->user_id &&  ! $user->is_admin()) {
+        if ($user->id != $comment_ad->user_id &&  ! $user->isAdmin()) {
             return ['success' => false];
         }
 

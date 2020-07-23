@@ -8,7 +8,7 @@
                 <div class="panel-heading">@lang('app.register')</div>
                 <div class="panel-body">
 
-                    @include('admin.flash_msg')
+                    @include('dashboard.flash_msg')
                     @include('auth.social_login')
 
 

@@ -22,13 +22,13 @@ class User extends UserBase
      * @param array $atts
      * @return string
      */
-    public function get_gravatar($s = 40, $d = 'mm', $r = 'g', $img = false, $atts = array())
+    public function get_gravatar($s = 40, $d = 'mm', $r = 'g', $img = false, $atts = [])
     {
         $parse_url = parse_url($this->photo);
         $url = '';
         $email = $this->email;
 
-        if (! empty($parse_url['scheme'])) {
+        if (!empty($parse_url['scheme'])) {
             $url = $this->photo;
         } else {
             $url = 'http://www.gravatar.com/avatar/';
@@ -57,16 +57,13 @@ class User extends UserBase
         if ($this->country) {
             $address .= $this->country->country_name . ', ';
         }
-        if (! empty($this->address)) {
+        if (!empty($this->address)) {
             $address .= $this->address;
         }
         return $address;
     }
 
-    public function ads()
-    {
-        return $this->hasMany(Ad::class);
-    }
+
     public function favourite_ads()
     {
         return $this->belongsToMany(Ad::class, 'favorites');
@@ -76,7 +73,9 @@ class User extends UserBase
     {
         $created_date_time = false;
         if ($this->created_at) {
-            $created_date_time = $this->created_at->timezone(get_option('default_timezone'))->format(get_option('date_format_custom') . ' ' . get_option('time_format_custom'));
+            $created_date_time = $this->created_at->timezone(get_option('default_timezone'))->format(
+                get_option('date_format_custom') . ' ' . get_option('time_format_custom')
+            );
         }
         return $created_date_time;
     }
@@ -100,8 +99,13 @@ class User extends UserBase
         return $context;
     }
 
-    public function is_admin()
+    public function isAdmin()
     {
         return $this->hasPrivilege('Administrator');
+    }
+
+    public function getNameAttribute()
+    {
+        return sprintf('%s %s', $this->firstname, $this->lastname);
     }
 }

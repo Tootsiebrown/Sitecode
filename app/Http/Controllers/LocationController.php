@@ -15,7 +15,7 @@ class LocationController extends Controller
     {
         $title = trans('app.countries');
         $countries = Country::all();
-        return view('admin.countries', compact('title', 'countries'));
+        return view('dashboard.countries', compact('title', 'countries'));
     }
 
     public function stateList()
@@ -31,7 +31,7 @@ class LocationController extends Controller
         }
 
 
-        return view('admin.states', compact('title', 'countries', 'states'));
+        return view('dashboard.states', compact('title', 'countries', 'states'));
     }
 
     public function saveState(Request $request)
@@ -61,9 +61,9 @@ class LocationController extends Controller
         $state = State::find($id);
         $title = trans('app.edit_state');
         $countries = Country::all();
-        return view('admin.state_edit', compact('title', 'countries', 'state'));
+        return view('dashboard.state_edit', compact('title', 'countries', 'state'));
     }
-    
+
     public function stateEditPost(Request $request, $id)
     {
         $state = State::find($id);
@@ -110,8 +110,8 @@ class LocationController extends Controller
         } else {
             $cities = City::query()->leftJoin('states', 'states.id', '=', 'cities.state_id')->leftJoin('countries', 'countries.id', '=', 'states.country_id')->orderBy('city_name', 'asc')->paginate(50);
         }
-        
-        return view('admin.cities', compact('title', 'countries', 'cities'));
+
+        return view('dashboard.cities', compact('title', 'countries', 'cities'));
     }
 
 
@@ -143,18 +143,18 @@ class LocationController extends Controller
         $city = City::find($id);
 
         if (!$city) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
         $title = trans('app.edit_city');
         $countries = Country::all();
-        
+
         $states = null;
         if ($city->state) {
             $states = State::whereCountryId($city->state->country_id)->get();
         }
 
-        return view('admin.city_edit', compact('title', 'countries', 'city', 'states'));
+        return view('dashboard.city_edit', compact('title', 'countries', 'city', 'states'));
     }
 
     public function cityEditPost(Request $request, $id)
