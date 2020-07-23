@@ -20,7 +20,7 @@ class CategoriesController extends Controller
         $title = trans('app.categories');
         $categories = Category::orderBy('category_name', 'asc')->get();
 
-        return view('admin.categories', compact('title', 'categories'));
+        return view('dashboard.categories', compact('title', 'categories'));
     }
 
     /**
@@ -96,7 +96,7 @@ class CategoriesController extends Controller
             return redirect(route('parent_categories'))->with('error', trans('app.request_url_not_found'));
         }
 
-        return view('admin.edit_category', compact('title', 'categories', 'edit_category'));
+        return view('dashboard.edit_category', compact('title', 'categories', 'edit_category'));
     }
 
     /**
@@ -139,7 +139,7 @@ class CategoriesController extends Controller
     public function destroy(Request $request)
     {
         $id = $request->data_id;
-        
+
         $delete = Category::where('id', $id)->delete();
         if ($delete) {
             return ['success' => 1, 'msg' => trans('app.category_deleted_success')];

@@ -7,7 +7,7 @@
                 <div class="panel panel-default login-form">
                     <div class="panel-heading">Login</div>
                     <div class="panel-body">
-                        @include('admin.flash_msg')
+                        @include('dashboard.flash_msg')
                         @include('auth.social_login')
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">

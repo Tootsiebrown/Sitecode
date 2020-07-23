@@ -13,7 +13,7 @@ class LanguageController extends Controller
         $title = trans('app.language_settings');
         $languages = Language::all();
 
-        return view('admin.languages', compact('title', 'languages'));
+        return view('dashboard.languages', compact('title', 'languages'));
     }
 
     public function store(Request $request)
@@ -28,7 +28,7 @@ class LanguageController extends Controller
         if ($language_exist) {
             return back()->with('error', trans('app.language_exists_msg'));
         }
-        
+
         $inputs = array_except($request->input(), array('enable_language_switcher', '_token'));
         $language_created = Language::create($inputs);
         if ($language_created) {

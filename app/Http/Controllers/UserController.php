@@ -27,26 +27,22 @@ class UserController extends Controller
     {
         $title = trans('app.users');
 
-        if (env('APP_DEMO') == true) {
-            return view('admin.no_data_for_demo', compact('title'));
-        }
+        //$users = User::whereUserType('user')->paginate(20);
+        $users = User::paginate(20);
 
-        $users = User::whereUserType('user')->paginate(20);
-
-        return view('admin.users', compact('title', 'users'));
+        return view('dashboard.users', compact('title', 'users'));
     }
 
     public function userInfo($id)
     {
         $title = trans('app.user_info');
         $user = User::find($id);
-        $ads = $user->ads()->paginate(20);
 
         if (!$user) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
-        return view('admin.user_info', compact('title', 'user', 'ads'));
+        return view('dashboard.user_info', compact('title', 'user'));
     }
 
     /**
@@ -179,12 +175,12 @@ class UserController extends Controller
     {
         //
     }
-    
+
     public function profile()
     {
         $title = trans('app.profile');
         $user = Auth::user();
-        return view('admin.profile', compact('title', 'user'));
+        return view('dashboard.profile', compact('title', 'user'));
     }
 
     public function profileEdit()
@@ -193,7 +189,7 @@ class UserController extends Controller
         $user = Auth::user();
         $countries = Country::all();
 
-        return view('admin.profile_edit', compact('title', 'user', 'countries'));
+        return view('dashboard.profile_edit', compact('title', 'user', 'countries'));
     }
 
     public function profileEditPost(Request $request)
@@ -213,7 +209,7 @@ class UserController extends Controller
         if ($request->hasFile('photo')) {
             $rules = ['photo' => 'mimes:jpeg,jpg,png'];
             $this->validate($request, $rules);
-            
+
             $image = $request->file('photo');
             $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
             $resized_thumb = Image::make($image)->resize(300, 300)->stream();
@@ -249,9 +245,10 @@ class UserController extends Controller
     public function administrators()
     {
         $title = trans('app.administrators');
-        $users = User::whereUserType('admin')->get();
+        //$users = User::whereUserType('admin')->get();
+        $users = User::get();
 
-        return view('admin.administrators', compact('title', 'users'));
+        return view('dashboard.administrators', compact('title', 'users'));
     }
 
     public function addAdministrator()
@@ -259,7 +256,7 @@ class UserController extends Controller
         $title = trans('app.add_administrator');
         $countries = Country::all();
 
-        return view('admin.add_administrator', compact('title', 'countries'));
+        return view('dashboard.add_administrator', compact('title', 'countries'));
     }
 
 
@@ -297,7 +294,7 @@ class UserController extends Controller
         $status = $request->status == 'unblock' ? '1' : '2';
         $user_id = $request->user_id;
         User::whereId($user_id)->update(['active_status' => $status]);
-        
+
         if ($status == 1) {
             return ['success' => 1, 'msg' => trans('app.administrator_unblocked')];
         }
@@ -307,7 +304,7 @@ class UserController extends Controller
     public function changePassword()
     {
         $title = trans('app.change_password');
-        return view('admin.change_password', compact('title'));
+        return view('dashboard.change_password', compact('title'));
     }
 
     public function changePasswordPost(Request $request)

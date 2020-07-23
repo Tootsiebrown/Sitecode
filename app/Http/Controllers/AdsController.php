@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Ad;
 use App\Brand;
-use App\CarsVehicle;
 use App\Category;
 use App\City;
 use App\Comment;
 use App\Country;
-use App\Job;
-use App\JobApplication;
 use App\Media;
 use App\Payment;
-use App\Report_ad;
 use App\State;
 use App\Sub_Category;
 use App\User;
@@ -36,7 +32,7 @@ class AdsController extends Controller
         $title = trans('app.all_ads');
         $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.all_ads', compact('title', 'ads'));
+        return view('dashboard.all_ads', compact('title', 'ads'));
     }
 
     public function adminPendingAds()
@@ -44,34 +40,7 @@ class AdsController extends Controller
         $title = trans('app.pending_ads');
         $ads = Ad::with('city', 'country', 'state')->whereStatus('0')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.all_ads', compact('title', 'ads'));
-    }
-    public function adminBlockedAds()
-    {
-        $title = trans('app.blocked_ads');
-        $ads = Ad::with('city', 'country', 'state')->whereStatus('2')->orderBy('id', 'desc')->paginate(20);
-
-        return view('admin.all_ads', compact('title', 'ads'));
-    }
-
-    public function myAds()
-    {
-        $title = trans('app.my_ads');
-
-        $user = Auth::user();
-        $ads = $user->ads()->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
-
-        return view('admin.my_ads', compact('title', 'ads'));
-    }
-
-    public function pendingAds()
-    {
-        $title = trans('app.my_ads');
-
-        $user = Auth::user();
-        $ads = $user->ads()->whereStatus('0')->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
-
-        return view('admin.pending_ads', compact('title', 'ads'));
+        return view('dashboard.all_ads', compact('title', 'ads'));
     }
 
     public function favoriteAds()
@@ -81,7 +50,7 @@ class AdsController extends Controller
         $user = Auth::user();
         $ads = $user->favourite_ads()->with('city', 'country', 'state')->orderBy('id', 'desc')->paginate(20);
 
-        return view('admin.favourite_ads', compact('title', 'ads'));
+        return view('dashboard.favourite_ads', compact('title', 'ads'));
     }
 
     /**
@@ -136,23 +105,6 @@ class AdsController extends Controller
         }
 
         if ($request->category) {
-            if ($sub_category->category_type == 'jobs') {
-                $rules['salary_will_be'] = 'required';
-                $rules['job_nature'] = 'required';
-                $rules['job_validity'] = 'required';
-                $rules['application_deadline'] = 'required';
-
-                unset($rules['type']);
-                unset($rules['condition']);
-            }
-
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $rules['transmission'] = 'required';
-                $rules['fuel_type'] = 'required';
-                $rules['engine_cc'] = 'required';
-                $rules['mileage'] = 'required';
-                $rules['build_year'] = 'required';
-            }
             if ($sub_category->category_type == 'auction') {
                 $rules['bid_deadline'] = 'required';
             }
@@ -214,13 +166,6 @@ class AdsController extends Controller
             'longitude'         => $request->longitude,
         ];
 
-        if ($sub_category->category_type == 'jobs') {
-            $data['category_type'] = 'jobs';
-        }
-
-        if ($sub_category->category_type == 'cars_and_vehicles') {
-            $data['category_type'] = 'cars_and_vehicles';
-        }
         if ($sub_category->category_type == 'auction') {
             $data['category_type']  = 'auction';
             $data['expired_at']     = $request->bid_deadline;
@@ -241,31 +186,6 @@ class AdsController extends Controller
          * iF add created
          */
         if ($created_ad) {
-            //If job
-            if ($sub_category->category_type == 'jobs') {
-                $job_data = [
-                    'ad_id'                 => $created_ad->id,
-                    'job_nature'            => $request->job_nature,
-                    'job_validity'          => $request->job_validity,
-                    'apply_instruction'     => $request->apply_instruction,
-                    'application_deadline'  => $request->application_deadline,
-                    'is_any_where'          => $request->is_any_where,
-                    'salary_will_be'        => $request->salary_will_be,
-                ];
-                Job::create($job_data);
-            }
-            //If cars or vehicle
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $cars_data = [
-                    'ad_id'                 => $created_ad->id,
-                    'transmission'            => $request->transmission,
-                    'fuel_type'            => $request->fuel_type,
-                    'engine_cc'            => $request->engine_cc,
-                    'mileage'            => $request->mileage,
-                    'build_year'            => $request->build_year . '-01-01',
-                ];
-                CarsVehicle::create($cars_data);
-            }
             //Attach all unused media with this ad
             $this->uploadAdsImage($request, $created_ad->id);
             /**
@@ -337,12 +257,12 @@ class AdsController extends Controller
         $ad = Ad::find($id);
 
         if (!$ad) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
-        if (! $user->is_admin()) {
+        if (! $user->isAdmin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
 
@@ -351,7 +271,7 @@ class AdsController extends Controller
         $previous_states = State::where('country_id', $ad->country_id)->get();
         $previous_cities = City::where('state_id', $ad->state_id)->get();
 
-        return view('admin.edit_ad', compact('title', 'countries', 'ad', 'previous_states', 'previous_cities'));
+        return view('dashboard.edit_ad', compact('title', 'countries', 'ad', 'previous_states', 'previous_cities'));
     }
 
     /**
@@ -367,9 +287,9 @@ class AdsController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
-        if (! $user->is_admin()) {
+        if (! $user->isAdmin()) {
             if ($ad->user_id != $user_id) {
-                return view('admin.error.error_404');
+                return view('dashboard.error.error_404');
             }
         }
 
@@ -385,23 +305,6 @@ class AdsController extends Controller
             'address'           => 'required',
         ];
 
-        if ($sub_category->category_type == 'jobs') {
-            $rules['salary_will_be']        = 'required';
-            $rules['job_nature']            = 'required';
-            $rules['job_validity']          = 'required';
-            $rules['application_deadline']  = 'required';
-
-            unset($rules['type']);
-            unset($rules['condition']);
-        }
-
-        if ($sub_category->category_type == 'cars_and_vehicles') {
-            $rules['transmission'] = 'required';
-            $rules['fuel_type'] = 'required';
-            $rules['engine_cc'] = 'required';
-            $rules['mileage'] = 'required';
-            $rules['build_year'] = 'required';
-        }
 
         $this->validate($request, $rules);
 
@@ -435,31 +338,6 @@ class AdsController extends Controller
          * iF add created
          */
         if ($updated_ad) {
-            if ($sub_category->category_type == 'jobs') {
-                $job_data = [
-                    'job_nature'            => $request->job_nature,
-                    'job_validity'          => $request->job_validity,
-                    'apply_instruction'     => $request->apply_instruction,
-                    'application_deadline'  => $request->application_deadline,
-                    'is_any_where'          => $request->is_any_where,
-                    'salary_will_be'        => $request->salary_will_be,
-                ];
-                $ad->job->update($job_data);
-            }
-
-
-            //If cars or vehicle
-            if ($sub_category->category_type == 'cars_and_vehicles') {
-                $cars_data = [
-                    'transmission'      => $request->transmission,
-                    'fuel_type'         => $request->fuel_type,
-                    'engine_cc'         => $request->engine_cc,
-                    'mileage'           => $request->mileage,
-                    'build_year'        => $request->build_year . '-01-01',
-                ];
-                $ad->cars_and_vehicles->update($cars_data);
-            }
-
             //Upload new image
             $this->uploadAdsImage($request, $ad->id);
         }
@@ -654,7 +532,7 @@ class AdsController extends Controller
         $user_id = Auth::user()->id;
         $ads_images = Media::whereUserId($user_id)->whereAdId(0)->whereRef('ad')->get();
 
-        return view('admin.append_media', compact('ads_images'));
+        return view('dashboard.append_media', compact('ads_images'));
     }
 
     /**
@@ -942,20 +820,6 @@ class AdsController extends Controller
     }
 
 
-    public function adsByUser($user_id = 0)
-    {
-        $user = User::find($user_id);
-
-        if (! $user_id || ! $user) {
-            return redirect(route('search'));
-        }
-
-        $title = trans('app.ads_by') . ' ' . $user->name;
-        $ads = Ad::active()->whereUserId($user_id)->paginate(40);
-
-        return view('ads_by_user', compact('ads', 'title', 'user'));
-    }
-
     /**
      * @param $slug
      * @return mixed
@@ -995,60 +859,5 @@ class AdsController extends Controller
     public function switchGridListView(Request $request)
     {
         session(['grid_list_view' => $request->grid_list_view]);
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function reportAds(Request $request)
-    {
-        $ad = Ad::whereSlug($request->slug)->first();
-        if ($ad) {
-            $data = [
-                'ad_id' => $ad->id,
-                'reason' => $request->reason,
-                'email' => $request->email,
-                'message' => $request->message,
-            ];
-            Report_ad::create($data);
-            return ['status' => 1, 'msg' => trans('app.ad_reported_msg')];
-        }
-        return ['status' => 0, 'msg' => trans('app.error_msg')];
-    }
-
-
-    public function reports()
-    {
-        $reports = Report_ad::orderBy('id', 'desc')->with('ad')->paginate(20);
-        $title = trans('app.ad_reports');
-
-        return view('admin.ad_reports', compact('title', 'reports'));
-    }
-
-    public function deleteReports(Request $request)
-    {
-        Report_ad::find($request->id)->delete();
-        return ['success' => 1, 'msg' => trans('app.report_deleted_success')];
-    }
-
-    public function reportsByAds($slug)
-    {
-        $user = Auth::user();
-
-        if ($user->is_admin()) {
-            $ad = Ad::whereSlug($slug)->first();
-        } else {
-            $ad = Ad::whereSlug($slug)->whereUserId($user->id)->first();
-        }
-
-        if (! $ad) {
-            return view('admin.error.error_404');
-        }
-
-        $reports = $ad->reports()->paginate(20);
-
-        $title = trans('app.ad_reports');
-        return view('admin.reports_by_ads', compact('title', 'ad', 'reports'));
     }
 }

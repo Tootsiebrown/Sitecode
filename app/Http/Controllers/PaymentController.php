@@ -10,31 +10,31 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    
+
     public function index()
     {
         $title = trans('app.payments');
 
         $user = Auth::user();
-        if ($user->is_admin()) {
+        if ($user->isAdmin()) {
             $payments = Payment::with('ad', 'user')->paginate(50);
         } else {
             $payments = Payment::whereUserId($user->id)->with('ad', 'user')->paginate(50);
         }
 
-        return view('admin.payments', compact('title', 'payments'));
+        return view('dashboard.payments', compact('title', 'payments'));
     }
-    
+
     public function paymentInfo($tran_id)
     {
         $payment = Payment::where('local_transaction_id', $tran_id)->first() ;
 
         if (!$payment) {
-            return view('admin.error.error_404');
+            return view('dashboard.error.error_404');
         }
 
         $title = trans('app.payment_info');
-        return view('admin.payment_info', compact('title', 'payment'));
+        return view('dashboard.payment_info', compact('title', 'payment'));
     }
 
     /**
@@ -43,7 +43,7 @@ class PaymentController extends Controller
      *
      * Checkout Method
      */
-    
+
     public function checkout($transaction_id)
     {
         $payment = Payment::whereLocalTransactionId($transaction_id)->whereStatus('initial')->first();
