@@ -2,6 +2,11 @@
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav">
         <ul class="nav" id="side-menu">
+
+            @if($lUser->hasPrivilege('Lister'))
+                <li> <a href="{{ route('lister.index') }}">Product Listings</a>  </li>
+            @endif
+
             <li>
                 <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')</a>
             </li>
