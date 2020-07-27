@@ -690,4 +690,9 @@ return [
     'human_support'                 => 'Human Support',
     'expired_at'                    => 'Expired at',
     'time_remaining'                    => 'Time remaining',
+
+    /**
+     * @date July 26, 2020
+     */
+    'there_is_no_products'              => 'No products found for ":search".',
 ];

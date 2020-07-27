@@ -19,21 +19,29 @@ class ListerController extends Controller
 
     public function productSearch(Request $request)
     {
-        $products = Product::where(
-            function ($query) use ($request) {
-                $query->where('upc', $request->input('search'))
-                    ->orWhere('sku', $request->input('search'));
-            }
-        )
+        $search = $request->input('search');
+
+        $products = Product::where('upc', $search)
             ->orderBy('name', 'asc')
             ->paginate(20);
 
         return view(
             'dashboard.lister.index',
             [
+                'search' => $search,
                 'title' => 'Product Listings',
                 'products' => $products,
             ]
         );
+    }
+
+    public function addProduct(Request $request)
+    {
+        $product = new Product;
+        $product
+            ->fill($request->except('_token'))
+            ->save();
+
+        return redirect(route('lister.index'));
     }
 }

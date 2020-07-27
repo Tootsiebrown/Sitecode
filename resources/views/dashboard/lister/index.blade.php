@@ -27,7 +27,7 @@
                         @csrf
 
                         <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">UPC / SKU</label>
+                            <label for="state_name" class="col-sm-4 control-label">UPC</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="">
                                 {!! $errors->has('search')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
@@ -56,14 +56,7 @@
                                                 <img src="{{ media_url($product->feature_img) }}" class="thumb-listing-table" alt="">
                                             </td>
                                             <td>
-                                                <h5><a href="{{  route('single_ad', [$product->id, $product->slug]) }}" target="_blank">{{ safe_output($product->title) }}</a> ({!! $product->status_context() !!})</h5>
-                                                <p class="text-muted">
-                                                    <i class="fa fa-map-marker"></i> {!! $product->full_address()  !!} <br />  <i class="fa fa-clock-o"></i> {{ $product->posting_datetime()  }}
-                                                </p>
-                                            </td>
-
-                                            <td>
-
+                                                {{ $product-> name }}
                                                 <hr />
 
                                                 @if($product->category_type== 'auction')
@@ -84,10 +77,30 @@
                                     @endforeach
 
                                 </table>
-                                {!! $ads->links() !!}
-
                             @else
-                                <h2>@lang('app.there_is_no_ads')</h2>
+                                <h2>@lang('app.there_is_no_products', ['search' => $search])</h2>
+                                <form method="POST" action="{{ route('lister.addProduct') }}">
+                                    @csrf
+
+                                    <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
+                                        <label for="state_name" class="col-sm-4 control-label">Product Name</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="name" value="{{ old('name') }}" name="name" placeholder="">
+                                            {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
+                                        </div>
+                                        <label for="state_name" class="col-sm-4 control-label">UPC</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? $search }}" name="upc" placeholder="">
+                                            {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-4 col-sm-8">
+                                            <button type="submit" class="btn btn-primary">Add Product</button>
+                                        </div>
+                                    </div>
+                                </form>
                             @endif
 
 
