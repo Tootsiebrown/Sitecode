@@ -33,5 +33,4 @@ class Product extends Model
     {
         return $this->hasMany(Ad::class)->orderBy('id', 'desc');
     }
-
 }
