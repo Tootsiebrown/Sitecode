@@ -35,13 +35,36 @@ class ListerController extends Controller
         );
     }
 
-    public function addProduct(Request $request)
+    public function newProduct(Request $request)
     {
-        $product = new Product;
-        $product
-            ->fill($request->except('_token'))
-            ->save();
+        $rules = [
+            'name' => 'required',
+            'upc' => 'required',
+        ];
+        $this->validate($request, $rules);
 
-        return redirect(route('lister.index'));
+        $data = [
+            'name' => $request->name,
+            'upc' => $request->upc,
+        ];
+
+        $product = Product::create($data);
+
+        return view('dashboard.lister.create_listing', [
+            'product' => $product,
+        ])->with('success', trans('app.product_created'));
+    }
+
+    public function newListing($product_id, Request $request)
+    {
+        $product = Product::find($product_id);
+
+        if (!$product) {
+            return back()->with('error', 'Product not found');
+        }
+
+        return view('dashboard.lister.create_listing', [
+            'product' => $product,
+        ]);
     }
 }

@@ -59,19 +59,7 @@
                                                 {{ $product-> name }}
                                                 <hr />
 
-                                                @if($product->category_type== 'auction')
-                                                    <a href="{{route('auction_bids', $product->id)}}" class="btn btn-info" data-toggle="tooltip" title="@lang('app.bids')"><i class="fa fa-gavel"></i> {{$product->bids->count()}} </a>
-                                                @endif
-
-                                                <a href="{{ route('edit_ad', $product->id) }}" class="btn btn-primary"><i class="fa fa-edit"></i> </a>
-
-                                                @if($product->status ==1)
-                                                <a href="javascript:;" class="btn btn-warning blockAds" data-slug="{{ $product->slug }}" data-value="2"><i class="fa fa-ban"></i> </a>
-                                                @else
-                                                    <a href="javascript:;" class="btn btn-success approveAds" data-slug="{{ $product->slug }}" data-value="1"><i class="fa fa-check-circle-o"></i> </a>
-                                                @endif
-
-                                                <a href="javascript:;" class="btn btn-danger deleteAds" data-slug="{{ $product->slug }}"><i class="fa fa-trash"></i> </a>
+                                                <a href="{{ route('lister.newListing', $product->id) }}" class="btn btn-primary">Create Listing For This Product</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -79,7 +67,7 @@
                                 </table>
                             @else
                                 <h2>@lang('app.there_is_no_products', ['search' => $search])</h2>
-                                <form method="POST" action="{{ route('lister.addProduct') }}">
+                                <form method="POST" action="{{ route('lister.newProduct') }}">
                                     @csrf
 
                                     <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
@@ -97,7 +85,7 @@
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-4 col-sm-8">
-                                            <button type="submit" class="btn btn-primary">Add Product</button>
+                                            <button type="submit" class="btn btn-primary">Save Product &amp; Create Listing</button>
                                         </div>
                                     </div>
                                 </form>

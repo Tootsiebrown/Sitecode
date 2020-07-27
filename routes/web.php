@@ -138,7 +138,8 @@ Route::group(
             function () {
                 Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
                 Route::post('/', ['as' => 'lister.index', 'uses' => 'ListerController@productSearch']);
-                Route::post('/add-product', ['as' => 'lister.addProduct', 'uses' => 'ListerController@addProduct']);
+                Route::post('/product-new', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::get('/listing-new/{product}', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
             }
         );
 
