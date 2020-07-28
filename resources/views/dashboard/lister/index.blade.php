@@ -85,7 +85,7 @@
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-4 col-sm-8">
-                                            <button type="submit" class="btn btn-primary">Save Product &amp; Create Listing</button>
+                                            <button type="submit" class="btn btn-primary">Save Product</button>
                                         </div>
                                     </div>
                                 </form>

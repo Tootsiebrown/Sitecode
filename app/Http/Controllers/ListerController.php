@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ad;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -50,9 +51,7 @@ class ListerController extends Controller
 
         $product = Product::create($data);
 
-        return view('dashboard.lister.create_listing', [
-            'product' => $product,
-        ])->with('success', trans('app.product_created'));
+        return back()->with('success', trans('app.product_created'));
     }
 
     public function newListing($product_id, Request $request)
@@ -66,5 +65,32 @@ class ListerController extends Controller
         return view('dashboard.lister.create_listing', [
             'product' => $product,
         ]);
+    }
+
+    public function saveListing(Request $request)
+    {
+        $rules = [
+            'ad_title' => 'required',
+            'sku' => 'required',
+            'bid_deadline' => 'required',
+        ];
+        $this->validate($request, $rules);
+
+        $product = Product::find($request->product_id);
+
+        $data = [
+            'title' => $request->ad_title,
+            'sku' => $request->sku,
+            'expired_at' => $request->bid_deadline,
+            'description' => $product->description,
+            'features' => $product->features,
+            'product_id' => $product->id,
+            'upc' => $product->upc,
+            'price' => $product->price,
+        ];
+
+        $product = Ad::create($data);
+
+        return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
     }
 }
