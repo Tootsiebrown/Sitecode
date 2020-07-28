@@ -87,6 +87,7 @@ class ListerController extends Controller
             'product_id' => $product->id,
             'upc' => $product->upc,
             'price' => $product->price,
+            'status' => 1,
         ];
 
         $product = Ad::create($data);
