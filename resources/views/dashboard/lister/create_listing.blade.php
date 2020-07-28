@@ -20,7 +20,8 @@
 
                     @include('dashboard.flash_msg')
 
-                    <form action="" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                    <form action="{{ route('lister.saveListing') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
 
                     <legend> <span class="ad_text"> Listing </span> Info for {{ $product->name }} </legend>
 
@@ -43,31 +44,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('ad_description')? 'has-error':'' }}">
-                        <label class="col-sm-4 control-label"><span class="ad_text"> Listing </span> @lang('app.description')</label>
+                    <div class="form-group {{ $errors->has('sku')? 'has-error':'' }}">
+                        <label for="sku" class="col-sm-4 control-label"> <span class="text"> Listing </span> SKU</label>
                         <div class="col-sm-8">
-                            <textarea name="ad_description" class="form-control" id="content_editor" rows="8">{{ old('ad_description') }}</textarea>
-                            {!! $errors->has('ad_description')? '<p class="help-block">'.$errors->first('ad_description').'</p>':'' !!}
-                            <p class="text-info"> @lang('app.ad_description_info_text')</p>
+                            <input type="text" class="form-control" id="sku" value="{{ old('sku') }}" name="sku" placeholder="Listing sku">
+                            {!! $errors->has('sku')? '<p class="help-block">'.$errors->first('sku').'</p>':'' !!}
                         </div>
                     </div>
-
-
-                    <div class="form-group  {{ $errors->has('price')? 'has-error':'' }}">
-                        <label for="price" class="col-md-4 control-label"> <span class="price_text">@lang('app.starting_price')</span> </label>
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">{{ get_option('currency_sign') }}</span>
-                                <input type="text" placeholder="@lang('app.ex_price')" class="form-control" name="price" id="price" value="{{ old('price') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-8 col-md-offset-4">
-                            {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
-                        </div>
-                    </div>
-
-
 
                     <div class="form-group {{ $errors->has('bid_deadline')? 'has-error':'' }}">
                         <label for="bid_deadline" class="col-sm-4 control-label"> @lang('app.bid_deadline')</label>
@@ -76,93 +59,6 @@
                             {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
                         </div>
                     </div>
-
-                    <legend>@lang('app.image')</legend>
-
-                    <div class="form-group {{ $errors->has('images')? 'has-error':'' }}">
-                        <div class="col-sm-12">
-                            <div class="col-sm-8 col-sm-offset-4">
-                                <div class="upload-images-input-wrap">
-                                    <input type="file" name="images[]" class="form-control" />
-                                    <input type="file" name="images[]" class="form-control" />
-                                </div>
-
-                                <div class="image-ad-more-wrap">
-                                    <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>
-                                </div>
-                            </div>
-                            {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <legend>@lang('app.video')</legend>
-
-                    <div class="form-group {{ $errors->has('video_url')? 'has-error':'' }}">
-                        <label for="video_url" class="col-sm-4 control-label">@lang('app.video_url')</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="video_url" value="{{ old('video_url') }}" name="video_url" placeholder="@lang('app.video_url')">
-                            {!! $errors->has('video_url')? '<p class="help-block">'.$errors->first('video_url').'</p>':'' !!}
-                            <p class="help-block">@lang('app.video_url_help')</p>
-                            <p class="text-info">@lang('app.video_url_help_for_modern_theme')</p>
-                        </div>
-                    </div>
-
-
-                    @if(get_option('ads_price_plan') != 'all_ads_free')
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">@lang('app.payment_info')</h3>
-                            </div>
-                            <div class="panel-body">
-
-                                <div class="form-group {{ $errors->has('price_plan')? 'has-error':'' }}">
-                                    <label for="price_plan" class="col-sm-4 control-label">@lang('app.price_plan')</label>
-                                    <div class="col-sm-8">
-
-                                        <div class="price_input_group">
-
-                                            <label>
-                                                <input type="radio" value="regular" name="price_plan" data-price="{{ get_ads_price() }}" checked="checked" />@lang('app.regular') </label> <br />
-
-                                            <label><input type="radio" value="premium" name="price_plan" data-price="{{ get_ads_price('premium') }}" />@lang('app.premium') </label>
-
-                                            <hr />
-
-                                            <div class="well" id="price_summery" style="display: none;">
-                                                @lang('app.payable_amount') :
-                                                <span id="payable_amount">{{ get_option('regular_ads_price') }}</span>
-                                            </div>
-
-                                            {!! $errors->has('price_plan')? '<p class="help-block">'.$errors->first('price_plan').'</p>':'' !!}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group {{ $errors->has('payment_method')? 'has-error':'' }}">
-                                    <label for="payment_method" class="col-sm-4 control-label">@lang('app.payment_method')</label>
-                                    <div class="col-sm-8">
-
-
-                                        @if(get_option('enable_paypal') == 1)
-                                            <label>
-                                                <input type="radio" name="payment_method" value="paypal"  @if(old('payment_method')) {{ old('payment_method') == 'paypal' ? 'selected':'' }} @else checked="checked" @endif > @lang('app.paypal')
-                                            </label>
-                                            <br />
-                                        @endif
-
-                                        @if(get_option('enable_stripe') == 1)
-                                            <label>
-                                                <input type="radio" name="payment_method" value="stripe"  {{ old('payment_method') == 'stripe' ? 'checked="checked"':'' }} > @lang('app.stripe')
-                                            </label>
-                                        @endif
-
-                                        {!! $errors->has('payment_method')? '<p class="help-block">'.$errors->first('payment_method').'</p>':'' !!}
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    @endif
 
                     @if(get_option('enable_recaptcha_post_ad') == 1)
                         <div class="form-group {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
