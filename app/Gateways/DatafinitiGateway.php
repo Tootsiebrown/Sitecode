@@ -4,7 +4,6 @@ namespace App\Gateways;
 
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class DatafinitiGateway
@@ -56,10 +55,14 @@ class DatafinitiGateway
 
     protected function processRecord($record)
     {
-        $record['descriptions'] = collect($record['descriptions'])
-            ->pluck('value')
-            ->sort(fn($a, $b) => Str::length($b) <=> Str::length($a))
-            ->values()->all();
+        if (! isset($record['descriptions'])) {
+            $record['descriptions'] = collect();
+        } else {
+            $record['descriptions'] = collect($record['descriptions'])
+                ->pluck('value')
+                ->sort(fn($a, $b) => Str::length($b) <=> Str::length($a))
+                ->values()->all();
+        }
 
         return $record;
     }
