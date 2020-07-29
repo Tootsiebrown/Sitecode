@@ -138,7 +138,10 @@ Route::group(
             function () {
                 Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
                 Route::post('/', ['as' => 'lister.index', 'uses' => 'ListerController@productSearch']);
-                Route::post('/product-new', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::get('/profile', ['as' => 'lister.profile', 'uses' => 'ListerController@profile']);
+                Route::post('/profile', ['as' => 'lister.profile', 'uses' => 'ListerController@profileSearch']);
+                Route::get('/product-new', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::post('/product-new', ['as' => 'lister.saveProduct', 'uses' => 'ListerController@saveProduct']);
                 Route::get('/listing-new/{product}', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
                 Route::post('/listing-new', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
             }

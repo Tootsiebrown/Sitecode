@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\Gateways\DatafinitiGateway;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,40 @@ class ListerController extends Controller
         );
     }
 
-    public function newProduct(Request $request)
+    public function profile()
+    {
+        return view('dashboard.lister.profile');
+    }
+
+    public function profileSearch(Request $request)
+    {
+        $search = $request->input('search');
+
+        $gateway = app()->make(DatafinitiGateway::class);
+
+        $profiles = collect($gateway->barCodeSearch($search))
+            ->map(function ($item) {
+                return [
+                    'name' => $item['name'],
+                    'upc' => $item['upca'],
+                ];
+            });
+
+        return view(
+            'dashboard.lister.profile',
+            [
+                'search' => $search,
+                'profiles' => $profiles,
+            ]
+        );
+    }
+
+    public function newProduct()
+    {
+        return view('dashboard.lister.create_product');
+    }
+
+    public function saveProduct(Request $request)
     {
         $rules = [
             'name' => 'required',

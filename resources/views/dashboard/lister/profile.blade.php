@@ -22,12 +22,12 @@
                 @include('dashboard.flash_msg')
 
 
-                <h2>Product Search</h2>
-                    <form method="POST" action="{{ route('lister.index') }}">
+                <h2>Barcode Search</h2>
+                    <form method="POST" action="{{ route('lister.profile') }}">
                         @csrf
 
                         <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">UPC</label>
+                            <label for="state_name" class="col-sm-4 control-label">Barcode</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="">
                                 {!! $errors->has('search')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
@@ -42,33 +42,34 @@
                         </div>
                     </form>
 
-                @if(!empty($products))
+                @if(!empty($profiles))
                     <div class="row">
                         <div class="col-xs-12">
 
 
-                            @if($products->total() > 0)
+                            @if($profiles->count() > 0)
                                 <table class="table table-bordered table-striped table-responsive">
 
-                                    @foreach($products as $product)
+                                    @foreach($profiles as $profile)
                                         <tr>
-                                            <td width="100">
-                                                <img src="{{ media_url($product->feature_img) }}" class="thumb-listing-table" alt="">
-                                            </td>
                                             <td>
-                                                {{ $product-> name }}
+                                                {{ $profile["name"] }}
                                                 <hr />
 
-                                                <a href="{{ route('lister.newListing', $product->id) }}" class="btn btn-primary">Create Listing For This Product</a>
+                    <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                        <input type="hidden" value="{{ $profile['name'] }}" name="name">
+                        <input type="hidden" value="{{ $profile['upc'] }}" name="upc">
+                        <button type="submit" class="btn btn-primary">Create Product From This Profile</button>
+                    </form>
                                             </td>
                                         </tr>
                                     @endforeach
 
                                 </table>
                             @else
-                                <h2>@lang('app.there_is_no_products', ['search' => $search])</h2>
+                                <h2>No profiles were found for "{{ $search }}"</h2>
                                 <p>
-                                    Place the item in the To-Be-Profiled bin and move on to next item.
+                                    <a href="{{ route('lister.newProduct') }}" class="btn btn-primary">Create New Product From Scratch</a>
                                 </p>
                             @endif
 
