@@ -73,10 +73,8 @@ class Kernel extends HttpKernel
 
         // LaraBid
         'dashboard' => \App\Http\Middleware\DashboardArea::class,
-        'only_admin_access' => \App\Http\Middleware\OnlyAdminAccess::class,
-
-        // App
-        'only_lister_access' => \App\Http\Middleware\OnlyListerAccess::class,
+        // Required Privilege
+        'privilege' => \App\Http\Middleware\RequiredPrivilege::class,
     ];
 
     /**

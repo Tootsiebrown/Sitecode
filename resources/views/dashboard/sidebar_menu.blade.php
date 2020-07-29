@@ -19,14 +19,14 @@
                 </li>
             @endif
 
-{{--            @if($lUser->hasPrivilege('Profiler'))--}}
+            @if($lUser->hasPrivilege('Profiler'))
                 <li>
                     <a href="{{ route('profiler.index') }}">
                         <i class="fa fa-edit"></i>
                         Product Profiler
                     </a>
                 </li>
-{{--            @endif--}}
+            @endif
 
             <li>
                 <a href="{{ route('favorite_ads') }}">
