@@ -56,11 +56,11 @@
                                                 {{ $profile["name"] }}
                                                 <hr />
 
-                    <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
-                        <input type="hidden" value="{{ $profile['name'] }}" name="name">
-                        <input type="hidden" value="{{ $profile['upc'] }}" name="upc">
-                        <button type="submit" class="btn btn-primary">Create Product From This Profile</button>
-                    </form>
+                                                <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                                                    <input type="hidden" value="{{ $profile['name'] }}" name="name">
+                                                    <input type="hidden" value="{{ $profile['upc'] }}" name="upc">
+                                                    <button type="submit" class="btn btn-primary">Create Product From This Profile</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
