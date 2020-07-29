@@ -68,8 +68,9 @@
 
                         @if(! $products->isEmpty())
                             @include('dashboard.lister.product-suggestions', ['products' => $products])
+                        @else
+                            <h2>@lang('app.there_is_no_products', ['search' => $name]) Please have a  product creator add the product and then try again.</h2>
                         @endif
-                        <h2>@lang('app.there_is_no_products', ['search' => $name]) Please have a  product creator add the product and then try again.</h2>
                         @break
 
                 @endswitch
