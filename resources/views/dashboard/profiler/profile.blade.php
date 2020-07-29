@@ -23,7 +23,7 @@
 
 
                 <h2>Barcode Search</h2>
-                    <form method="POST" action="{{ route('lister.profile') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('profiler.index') }}">
                         @csrf
 
                         <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
