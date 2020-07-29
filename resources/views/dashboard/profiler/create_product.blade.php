@@ -7,7 +7,7 @@
 
 @section('content')
 
-    <div id="post-new-ad">
+    <div id="post-new-product">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -20,7 +20,7 @@
 
                     @include('dashboard.flash_msg')
 
-                    <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                    <form action="{{ route('profiler.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
 
                         <legend> New Product </legend>
 

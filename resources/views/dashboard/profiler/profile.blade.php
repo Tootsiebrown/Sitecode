@@ -23,13 +23,13 @@
 
 
                 <h2>Barcode Search</h2>
-                    <form method="POST" action="{{ route('lister.profile') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('profiler.index') }}">
                         @csrf
 
-                        <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
+                        <div class="form-group {{ $errors->has('search')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">Barcode</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="">
+                                <input type="text" class="form-control" id="search" value="{{ request('search') }}" name="search" placeholder="">
                                 {!! $errors->has('search')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
 
                             </div>
@@ -56,7 +56,7 @@
                                                 {{ $profile["name"] }}
                                                 <hr />
 
-                                                <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                                                <form action="{{ route('profiler.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
                                                     <input type="hidden" value="{{ $profile['name'] }}" name="name">
                                                     <input type="hidden" value="{{ $profile['upc'] }}" name="upc">
                                                     <button type="submit" class="btn btn-primary">Create Product From This Profile</button>
@@ -69,7 +69,7 @@
                             @else
                                 <h2>No profiles were found for "{{ $search }}"</h2>
                                 <p>
-                                    <a href="{{ route('lister.newProduct') }}" class="btn btn-primary">Create New Product From Scratch</a>
+                                    <a href="{{ route('profiler.newProduct') }}" class="btn btn-primary">Create New Product From Scratch</a>
                                 </p>
                             @endif
 
