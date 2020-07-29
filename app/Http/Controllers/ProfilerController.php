@@ -6,7 +6,7 @@ use App\Gateways\DatafinitiGateway;
 use App\Product;
 use Illuminate\Http\Request;
 
-class ProfilerController
+class ProfilerController extends Controller
 {
     public function index()
     {
