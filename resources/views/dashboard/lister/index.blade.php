@@ -22,79 +22,59 @@
                 @include('dashboard.flash_msg')
 
 
-                <h2>Product Search</h2>
-                    <form method="POST" action="{{ route('lister.index') }}">
-                        @csrf
+                <h2>Search by UPC</h2>
+                <form class="form-horizontal" method="POST" action="{{ route('lister.index') }}">
+                    @csrf
 
-                        <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">UPC</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="search" value="{{ old('search') }}" name="search" placeholder="">
-                                {!! $errors->has('search')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
-
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-4 col-sm-8">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </div>
-                        </div>
-                    </form>
-
-                @if(!empty($products))
-                    <div class="row">
-                        <div class="col-xs-12">
-
-
-                            @if($products->total() > 0)
-                                <table class="table table-bordered table-striped table-responsive">
-
-                                    @foreach($products as $product)
-                                        <tr>
-                                            <td width="100">
-                                                <img src="{{ media_url($product->feature_img) }}" class="thumb-listing-table" alt="">
-                                            </td>
-                                            <td>
-                                                {{ $product-> name }}
-                                                <hr />
-
-                                                <a href="{{ route('lister.newListing', $product->id) }}" class="btn btn-primary">Create Listing For This Product</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-
-                                </table>
-                            @else
-                                <h2>@lang('app.there_is_no_products', ['search' => $search])</h2>
-                                <form method="POST" action="{{ route('lister.newProduct') }}">
-                                    @csrf
-
-                                    <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
-                                        <label for="state_name" class="col-sm-4 control-label">Product Name</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="name" value="{{ old('name') }}" name="name" placeholder="">
-                                            {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
-                                        </div>
-                                        <label for="state_name" class="col-sm-4 control-label">UPC</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? $search }}" name="upc" placeholder="">
-                                            {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-4 col-sm-8">
-                                            <button type="submit" class="btn btn-primary">Save Product</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            @endif
-
+                    <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
+                        <label for="state_name" class="col-sm-4 control-label">UPC</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="upc" value="{{ request('upc') }}" name="upc" placeholder="">
+                            {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
 
                         </div>
                     </div>
-                    @endif
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+
+                @switch($stage)
+                    @case('start')
+                        <!-- nothing for this case -->
+                        @break
+                    @case('upc')
+                        @if(! $products->isEmpty())
+                            @include('dashboard.lister.product-suggestions', ['products' => $products])
+                        @else
+                            <p>@lang('app.there_is_no_products', ['search' => $upc])</p>
+                            <h2>Search by Name</h2>
+                            @include('dashboard.lister.product-name-search', [
+                                'upc' => $upc,
+                                'name' => $name,
+                            ])
+                        @endif
+                        @break
+                    @case('name')
+                        <p>@lang('app.there_is_no_products', ['search' => $upc])</p>
+                        <h2>Search by Name</h2>
+                        @include('dashboard.lister.product-name-search', [
+                            'name' => $name,
+                            'upc' => $upc,
+                        ])
+
+                        @if(! $products->isEmpty())
+                            @include('dashboard.lister.product-suggestions', ['products' => $products])
+                        @endif
+                        <h2>@lang('app.there_is_no_products', ['search' => $name]) Please have a  product creator add the product and then try again.</h2>
+                        @break
+
+                @endswitch
+
+
 
             </div>   <!-- /#page-wrapper -->
 

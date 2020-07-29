@@ -14,24 +14,37 @@ class ListerController extends Controller
             'dashboard.lister.index',
             [
                 'title' => 'Product Listings',
+                'stage' => 'start',
+                'products' => collect(),
             ]
         );
     }
 
     public function productSearch(Request $request)
     {
-        $search = $request->input('search');
+        $upc = $request->input('upc');
+        $name = $request->input('name');
 
-        $products = Product::where('upc', $search)
+        if ($name) {
+            $productsQuery = Product::where('name', 'like', "%$name%");
+            $stage = 'name';
+        } else {
+            $productsQuery = Product::where('upc', $upc);
+            $stage = 'upc';
+        }
+
+        $products = $productsQuery
             ->orderBy('name', 'asc')
             ->paginate(20);
 
         return view(
             'dashboard.lister.index',
             [
-                'search' => $search,
+                'upc' => $upc,
+                'name' => $name,
                 'title' => 'Product Listings',
                 'products' => $products,
+                'stage' => $stage,
             ]
         );
     }
