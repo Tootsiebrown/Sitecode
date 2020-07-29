@@ -42,6 +42,7 @@ class DatafinitiSearch extends Command
      */
     public function handle()
     {
-        dd($this->gateway->barCodeSearch($this->argument('barcode')));
+        $results = $this->gateway->barCodeSearch($this->argument('barcode'));
+        dd($results[0]);
     }
 }
