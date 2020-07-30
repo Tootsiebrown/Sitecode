@@ -248,6 +248,7 @@
     </script>
 @endif
 <script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{ mix('/js/app.js') }}"></script>
 <script>
     var toastr_options = {closeButton : true};
 </script>

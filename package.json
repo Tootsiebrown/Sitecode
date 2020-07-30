@@ -26,6 +26,7 @@
         "webpack-cli": "^3.3.12"
     },
     "dependencies": {
+        "@ericblade/quagga2": "^1.2.1",
         "autosize": "^3.0.20",
         "babel-polyfill": "^6.23.0",
         "cross-env": "^5.0.1",
@@ -33,7 +34,6 @@
         "hamburgers": "^0.8.1",
         "jquery": "^3.2.0",
         "lodash": "^4.17.13",
-        "quagga": "^0.12.1",
         "velocity-animate": "^1.2.3",
         "vue": "^2.6.11"
     }

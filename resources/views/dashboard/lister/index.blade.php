@@ -28,7 +28,18 @@
                     <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">UPC</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="upc" value="{{ request('upc') }}" name="upc" placeholder="">
+                            <div data-component="barcode-reader">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="upc"
+                                  value="{{ request('upc') }}"
+                                  name="upc"
+                                  placeholder=""
+                                  data-element="input"
+                                >
+                                <div data-element="viewport" style="height: 200px;"></div>
+                            </div>
                             {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
 
                         </div>
