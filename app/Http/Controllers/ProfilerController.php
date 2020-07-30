@@ -41,21 +41,5 @@ class ProfilerController extends Controller
         return view('dashboard.profiler.create_product');
     }
 
-    public function saveProduct(Request $request)
-    {
-        $rules = [
-            'name' => 'required',
-            'upc' => 'required',
-        ];
-        $this->validate($request, $rules);
 
-        $data = [
-            'name' => $request->name,
-            'upc' => $request->upc,
-        ];
-
-        $product = Product::create($data);
-
-        return back()->with('success', trans('app.product_created'));
-    }
 }

@@ -3,55 +3,122 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\Gateways\DatafinitiGateway;
 use App\Product;
 use Illuminate\Http\Request;
 
 class ListerController extends Controller
 {
-    public function index()
+    protected $datafinitiGateway;
+
+    public function __construct(DatafinitiGateway $datafinitiGateway)
     {
-        return view(
-            'dashboard.lister.index',
-            [
-                'title' => 'Product Listings',
-                'stage' => 'start',
-                'products' => collect(),
-            ]
-        );
+        $this->datafinitiGateway = $datafinitiGateway;
     }
 
-    public function productSearch(Request $request)
+    public function index(Request $request)
     {
         $upc = $request->input('upc');
         $name = $request->input('name');
+        $searchBy = $request->input('search_by');
+        $datafinitiUpc = $request->input('datafiniti_upc');
 
-        if ($name) {
-            $productsQuery = Product::where('name', 'like', "%$name%");
-            $stage = 'name';
-        } else {
-            $productsQuery = Product::where('upc', $upc);
-            $stage = 'upc';
+        switch($searchBy) {
+            case 'name':
+                $searchString = $name;
+                break;
+            case 'upc':
+                $searchString = $upc;
+                break;
+            default:
+                $searchString = null;
         }
-
-        $products = $productsQuery
-            ->orderBy('name', 'asc')
-            ->paginate(20);
 
         return view(
             'dashboard.lister.index',
             [
+                'title' => 'Product Listings',
                 'upc' => $upc,
                 'name' => $name,
-                'title' => 'Product Listings',
-                'products' => $products,
-                'stage' => $stage,
+                'searchBy' => $searchBy,
+                'searchString' => $searchString,
+                'products' => $this->productSearch(
+                    $searchBy,
+                    $upc,
+                    $name
+                ),
+                'datafinitiUpc' => $datafinitiUpc,
+                'datafinitiProfiles' => $this->datafinitiSearch($datafinitiUpc),
             ]
         );
     }
 
-    public function newListing($product_id, Request $request)
+    private function productSearch($searchBy, $upc, $name)
     {
-        $product = Product::find($product_id);
+        if (is_null($searchBy)) {
+            return collect();
+        }
+
+        switch($searchBy) {
+            case 'name':
+                if (empty($name)) {
+                    return collect();
+                }
+                $productsQuery = Product::where('name', 'like', "%$name%");
+                break;
+            case 'upc':
+                if (empty($upc)) {
+                    return collect();
+                }
+                $productsQuery = Product::where('upc', $upc);
+                break;
+            default:
+                throw new \Exception('Invalid search method:' . $searchBy);
+        }
+
+        return $productsQuery
+            ->orderBy('name', 'asc')
+            ->paginate(20);
+    }
+
+    protected function datafinitiSearch($upc) {
+        if (! $upc) {
+            return collect();
+        }
+
+        return $this->datafinitiGateway->barCodeSearch($upc);
+    }
+
+    public function newProduct()
+    {
+        return view('dashboard.lister.create_product');
+    }
+
+    public function saveProduct(Request $request)
+    {
+        $rules = [
+            'name' => 'required',
+            'upc' => 'required',
+        ];
+        $this->validate($request, $rules);
+
+        $data = [
+            'name' => $request->name,
+            'upc' => $request->upc,
+        ];
+
+        $product = Product::create($data);
+
+        return redirect(
+            route('lister.newListing', [
+                'product' => $product->id,
+            ])
+            )->with('success', trans('app.product_created'));
+    }
+
+    public function newListing(Request $request)
+    {
+        $product = Product::find($request->input('product'));
 
         if (!$product) {
             return back()->with('error', 'Product not found');

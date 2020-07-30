@@ -7,10 +7,13 @@
 
 @section('content')
 
-    <div id="post-new-product">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+    <div class="container">
+
+        <div id="wrapper">
+
+            @include('dashboard.sidebar_menu')
+
+            <div id="page-wrapper">
 
                     @if( ! \Auth::check())
                         <div class="alert alert-info no-login-info">
@@ -20,10 +23,9 @@
 
                     @include('dashboard.flash_msg')
 
-                    <form action="{{ route('profiler.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
-
-                        <legend> New Product </legend>
-
+                    <h2>New Product</h2>
+                    <form action="{{ route('lister.saveProduct') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data">
+                        @csrf
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -34,15 +36,18 @@
                             </div>
                         @endif
 
-                        <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
+                        <div class="form-group {{ $errors->has('name')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">Product Name</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="name" value="{{ old('name') }}" name="name" placeholder="">
+                                <input type="text" class="form-control" id="name" value="{{ old('name') ?? request('name') }}" name="name" placeholder="">
                                 {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
                             </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">UPC</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="upc" value="{{ old('upc') }}" name="upc" placeholder="">
+                                <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') }}" name="upc" placeholder="">
                                 {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
                             </div>
                         </div>
@@ -53,12 +58,9 @@
                             </div>
                         </div>
                     </form>
-                </div>
-
-            </div> <!-- #row -->
-
-        </div> <!-- /#container -->
-    </div>
+            </div> <!-- .page-wrapper -->
+        </div> <!-- #wrapper -->
+    </div><!-- .container -->
 
 @endsection
 

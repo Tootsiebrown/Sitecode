@@ -23,10 +23,9 @@
 
 
                 <h2>Search by UPC</h2>
-                <form class="form-horizontal" method="POST" action="{{ route('lister.index') }}">
-                    @csrf
-
-                    <div class="form-group {{ $errors->has('state_name')? 'has-error':'' }}">
+                <form class="form-horizontal" method="GET" action="{{ route('lister.index') }}">
+                    <input type="hidden" name="search_by" value="upc">
+                    <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">UPC</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="upc" value="{{ request('upc') }}" name="upc" placeholder="">
@@ -42,39 +41,87 @@
                     </div>
                 </form>
 
-                @switch($stage)
-                    @case('start')
-                        <!-- nothing for this case -->
-                        @break
-                    @case('upc')
-                        @if(! $products->isEmpty())
-                            @include('dashboard.lister.product-suggestions', ['products' => $products])
-                        @else
-                            <p>@lang('app.there_is_no_products', ['search' => $upc])</p>
-                            <h2>Search by Name</h2>
-                            @include('dashboard.lister.product-name-search', [
-                                'upc' => $upc,
-                                'name' => $name,
-                            ])
+                <h2>Search by Name</h2>
+                <form class="form-horizontal" method="GET" action="{{ route('lister.index') }}">
+                    <input type="hidden" name="search_by" value="name">
+
+                    <div class="form-group {{ $errors->has('name')? 'has-error':'' }}">
+                        <label for="name" class="col-sm-4 control-label">Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="name" value="{{ request('name') }}" name="name" placeholder="">
+                            {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+
+                @if(! is_null($searchBy))
+                    @if(! $products->isEmpty())
+                        @include('dashboard.lister.product-suggestions', ['products' => $products])
+                    @else
+                        <p>@lang('app.there_is_no_products', ['search' => $searchString])</p>
+                        <h2>Search Datafiniti</h2>
+                        <form class="form-horizontal" method="POST" action="{{ route('lister.index') }}">
+                            @csrf
+
+                            <input type="hidden" name="upc" value="{{ $upc }}">
+                            <input type="hidden" name="name" value="{{ $name }}">
+                            <input type="hidden" name="search_by" value="{{ $searchBy }}">
+
+                            <div class="form-group {{ $errors->has('datafiniti_upc')? 'has-error' : '' }}">
+                                <label for="datafiniti_upc" class="col-sm-4 control-label">UPC</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="datafiniti_upc" value="{{ request('datafiniti_upc') ?? request('upc') ?? '' }}" name="datafiniti_upc" placeholder="">
+                                    {!! $errors->has('datafiniti_upc')? '<p class="help-block">'.$errors->first('datafiniti_upc').'</p>':'' !!}
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-4 col-sm-8">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        @if(! $datafinitiProfiles->isEmpty())
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <table class="table table-bordered table-striped table-responsive">
+
+                                        @foreach($datafinitiProfiles as $profile)
+                                            <tr>
+                                                <td>
+                                                    {{ $profile["name"] }}
+                                                    <hr />
+
+                                                    <a
+                                                      class="btn btn-primary"
+                                                      href="{{ route('lister.saveProduct', ['name' => $profile['name'], 'upc' => $profile['upca']]) }}"
+                                                    >Create Product From This Profile</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                    </table>
+                                </div>
+                            </div>
+                        @elseif(!empty($datafinitiUpc) && $datafinitiProfiles->isEmpty())
+                            <h2>No profiles were found for "{{ $datafinitiUpc }}"</h2>
+                            <p>
+                                <a
+                                  href="{{ route('lister.newProduct', ['upc' => $upc, 'name' => $name]) }}"
+                                  class="btn btn-primary"
+                                >Create New Product From Scratch</a>
+                            </p>
                         @endif
-                        @break
-                    @case('name')
-                        <p>@lang('app.there_is_no_products', ['search' => $upc])</p>
-                        <h2>Search by Name</h2>
-                        @include('dashboard.lister.product-name-search', [
-                            'name' => $name,
-                            'upc' => $upc,
-                        ])
-
-                        @if(! $products->isEmpty())
-                            @include('dashboard.lister.product-suggestions', ['products' => $products])
-                        @else
-                            <h2>@lang('app.there_is_no_products', ['search' => $name]) Please have a  product creator add the product and then try again.</h2>
-                        @endif
-                        @break
-
-                @endswitch
-
+                    @endif
+                @endif
             </div>   <!-- /#page-wrapper -->
 
         </div>   <!-- /#wrapper -->

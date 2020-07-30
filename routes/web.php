@@ -137,9 +137,13 @@ Route::group(
             ->prefix('l')
             ->group(function () {
                 Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
-                Route::post('/', ['as' => 'lister.search', 'uses' => 'ListerController@productSearch']);
-                Route::get('/listing-new/{product}', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
-                Route::post('/listing-new', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
+                Route::post('/', ['as' => 'lister.datafiniti', 'uses' => 'ListerController@index']);
+
+                Route::get('/product', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::post('/product', ['as' => 'lister.saveProduct', 'uses' => 'ListerController@saveProduct']);
+
+                Route::get('/listing', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
+                Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
             });
 
         Route::middleware('privilege:Profiler')
@@ -147,8 +151,6 @@ Route::group(
             ->group(function() {
                 Route::get('/', ['as' => 'profiler.index', 'uses' => 'ProfilerController@index']);
                 Route::post('/', ['as' => 'profiler.search', 'uses' => 'ProfilerController@profileSearch']);
-                Route::get('/product-new', ['as' => 'profiler.newProduct', 'uses' => 'ProfilerController@newProduct']);
-                Route::post('/product-new', ['as' => 'profiler.saveProduct', 'uses' => 'ProfilerController@saveProduct']);
             });
 
         Route::middleware('privilege:Administrator')

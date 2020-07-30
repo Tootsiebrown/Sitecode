@@ -19,15 +19,6 @@
                 </li>
             @endif
 
-            @if($lUser->hasPrivilege('Profiler'))
-                <li>
-                    <a href="{{ route('profiler.index') }}">
-                        <i class="fa fa-edit"></i>
-                        Product Profiler
-                    </a>
-                </li>
-            @endif
-
             <li>
                 <a href="{{ route('favorite_ads') }}">
                     <i class="fa fa-star"></i>

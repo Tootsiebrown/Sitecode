@@ -9,7 +9,7 @@
                 {{ $product-> name }}
                 <hr />
 
-                <a href="{{ route('lister.newListing', $product->id) }}" class="btn btn-primary">Create Listing For This Product</a>
+                <a href="{{ route('lister.newListing', ['product' => $product->id]) }}" class="btn btn-primary">Create Listing For This Product</a>
             </td>
         </tr>
     @endforeach

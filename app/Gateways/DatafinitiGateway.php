@@ -19,7 +19,7 @@ class DatafinitiGateway
     public function barCodeSearch($code)
     {
         if (empty($code)) {
-            return [];
+            return collect();
         }
 
         $requestBody = [
@@ -47,16 +47,15 @@ class DatafinitiGateway
                 $json = (string)$response->getBody();
                 $result = json_decode($json, 1);
 
-                 return collect($result['records'])
-                     ->map(fn($record) => $this->processRecord($record))
-                     ->all();
+                return collect($result['records'])
+                     ->map(fn($record) => $this->processRecord($record));
             });
     }
 
     protected function processRecord($record)
     {
         if (! isset($record['descriptions'])) {
-            $record['descriptions'] = collect();
+            $record['descriptions'] = [];
         } else {
             $record['descriptions'] = collect($record['descriptions'])
                 ->pluck('value')
