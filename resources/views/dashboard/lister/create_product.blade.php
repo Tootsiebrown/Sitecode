@@ -264,32 +264,8 @@
                     }
                 });
             });
-            /**
-             * Change ads price by urgent or premium
-             */
-
-            $(document).on('change', '.price_input_group', function(){
-                var price = 0;
-                var checkedValues = $('.price_input_group input:checked').map(function() {
-                    return $(this).data('price');
-                }).get();
-
-                for( var i = 0; i < checkedValues.length; i++ ){
-                    price += parseInt( checkedValues[i]); //don't forget to add the base
-                }
-
-                $('#payable_amount').text(price);
-                $('#price_summery').show('slow');
-            });
-
-            $(document).on('click', '.image-add-more', function (e) {
-                e.preventDefault();
-                $('.upload-images-input-wrap').append('<input type="file" name="images[]" class="form-control" />');
-            });
-
         });
     </script>
-
 
     <script>
         @if(session('success'))

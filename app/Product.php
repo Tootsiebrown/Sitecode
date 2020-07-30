@@ -33,10 +33,10 @@ class Product extends Model
 //         }
 //         return $this->hasOne(Media::class);
 //     }
-//     public function media_img()
-//     {
-//         return $this->hasMany(Media::class)->whereType('image');
-//     }
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->whereType('image');
+    }
 
 
     public function ads()

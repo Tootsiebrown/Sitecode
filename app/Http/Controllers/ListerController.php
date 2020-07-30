@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Ad;
 use App\Gateways\DatafinitiGateway;
 use App\Product;
+use App\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 
 class ListerController extends Controller
 {
@@ -143,6 +145,10 @@ class ListerController extends Controller
 
         $product = Product::create($data);
 
+        if ($product) {
+            $this->uploadProductImages($request, $product->id);
+        }
+
         return redirect(
             route('lister.newListing', [
                 'product' => $product->id,
@@ -189,5 +195,45 @@ class ListerController extends Controller
         $product = Ad::create($data);
 
         return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
+    }
+
+    public function uploadProductImages(Request $request, $product_id = 0)
+    {
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                $valid_extensions = ['jpg','jpeg','png'];
+                if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+                    return redirect()->back()->withInput($request->input())->with('error', 'Only .jpg, .jpeg and .png is allowed extension') ;
+                }
+
+                $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+                $resized = Image::make($image)->resize(640, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->stream();
+                $resized_thumb = Image::make($image)->resize(320, 213)->stream();
+
+                $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+
+                $imageFileName = 'uploads/images/' . $image_name;
+                $imageThumbName = 'uploads/images/thumbs/' . $image_name;
+
+                try {
+                    //Upload original image
+                    $is_uploaded = current_disk()->put($imageFileName, $resized->__toString(), 'public');
+
+                    if ($is_uploaded) {
+                        //Save image name into db
+                        $created_img_db = ProductImage::create(['product_id' => $product_id, 'media_name' => $image_name, 'type' => 'image', 'storage' => get_option('default_storage'), 'ref' => 'product']);
+
+                        //upload thumb image
+                        current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
+                        $img_url = media_url($created_img_db, false);
+                    }
+                } catch (\Exception $e) {
+                    return redirect()->back()->withInput($request->input())->with('error', $e->getMessage()) ;
+                }
+            }
+        }
     }
 }
