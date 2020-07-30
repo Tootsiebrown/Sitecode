@@ -106,13 +106,16 @@ class ListerController extends Controller
             if (!empty($product['descriptions'])) {
                 $product['description'] = implode(' ', $product['descriptions']);
             }
+
+            $productFeatures = '';
             if (!empty($product['features'])) {
                 $productFeatures = collect($product['features'])->where('key', 'Product Features')->first();
-                $productFeatures = $productFeatures['value'] ?? [];
+                $productFeatures = $productFeatures['value'] ?? '';
                 if (!empty($productFeatures)) {
-                    $product['features'] = '<ul><li>' . implode('</li><li>', $productFeatures) . '</li></ul>';
+                    $productFeatures = '<ul><li>' . implode('</li><li>', $productFeatures) . '</li></ul>';
                 }
             }
+            $product['features'] = $productFeatures;
         }
 
         return view('dashboard.lister.create_product', [
