@@ -117,7 +117,7 @@ class ListerController extends Controller
                     'product' => $product->id,
                 ]
             )
-            )->with('success', trans('app.product_created'));
+        )->with('success', trans('app.product_created'));
     }
 
     public function newListing(Request $request)
