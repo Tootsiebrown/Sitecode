@@ -40,6 +40,4 @@ class ProfilerController extends Controller
     {
         return view('dashboard.profiler.create_product');
     }
-
-
 }

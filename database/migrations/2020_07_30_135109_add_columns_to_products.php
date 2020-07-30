@@ -17,7 +17,7 @@ class AddColumnsToProducts extends Migration
             $table->string('color')->nullable();
 
             //0 = used, 1 = new
-            $table->enum('condition', [0,1]);
+            $table->enum('condition', [0,1])->nullable();
 
             $table->string('gender')->nullable();
             $table->string('model_number')->nullable();
