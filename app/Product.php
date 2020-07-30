@@ -10,6 +10,16 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    public function scopeNew($query)
+    {
+        return $query->whereCondition('1');
+    }
+
+    public function scopeUsed($query)
+    {
+        return $query->whereCondition('0');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

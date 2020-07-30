@@ -6,6 +6,7 @@ use App\Ad;
 use App\Gateways\DatafinitiGateway;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ListerController extends Controller
 {
@@ -89,9 +90,31 @@ class ListerController extends Controller
         return $this->datafinitiGateway->barCodeSearch($upc);
     }
 
-    public function newProduct()
+    public function newProduct(Request $request)
     {
-        return view('dashboard.lister.create_product');
+        if (null !== $request->input('from_profile')) {
+            $key = $this->datafinitiGateway->getKey($request->input('upc'));
+            $cache = Cache::store('database')->get($key);
+            $product = $cache[$request->input('from_profile')];
+
+            if (!empty($product['prices'])) {
+                $product['original_price'] = $product['prices'][0]['amountMax'];
+            }
+            if (!empty($product['descriptions'])) {
+                $product['description'] = implode(' ', $product['descriptions']);
+            }
+            if (!empty($product['features'])) {
+                $productFeatures = collect($product['features'])->where('key', 'Product Features')->first();
+                $productFeatures = $productFeatures['value'] ?? [];
+                if (!empty($productFeatures)) {
+                    $product['features'] = '<ul><li>' . implode('</li><li>', $productFeatures) . '</li></ul>';
+                }
+            }
+        }
+
+        return view('dashboard.lister.create_product', [
+            'product' => $product ?? null,
+        ]);
     }
 
     public function saveProduct(Request $request)
@@ -99,12 +122,22 @@ class ListerController extends Controller
         $rules = [
             'name' => 'required',
             'upc' => 'required',
+            'price' => 'required',
+            'description' => 'required',
         ];
         $this->validate($request, $rules);
 
         $data = [
             'name' => $request->name,
             'upc' => $request->upc,
+            'original_price' => $request->original_price,
+            'price' => $request->price,
+            'condition' => ($request->condition == 'used' ? '0' : '1'),
+            'description' => $request->description,
+            'features' => $request->features,
+            'gender' => $request->gender,
+            'model_number' => $request->model_number,
+            'color' => $request->color,
         ];
 
         $product = Product::create($data);

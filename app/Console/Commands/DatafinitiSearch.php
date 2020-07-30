@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Gateways\DatafinitiGateway;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class DatafinitiSearch extends Command
 {
@@ -19,7 +20,7 @@ class DatafinitiSearch extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Pulls data from cache, if possible. Calls Datafiniti API if not.';
 
     protected $gateway;
 
@@ -42,7 +43,14 @@ class DatafinitiSearch extends Command
      */
     public function handle()
     {
-        $results = $this->gateway->barCodeSearch($this->argument('barcode'));
-        dd($results[0]);
+        $code = $this->argument('barcode');
+        $key = $this->gateway->getKey($code);
+        $results = Cache::store('database')->get($key);
+
+        if (empty($results)) {
+            $results = $this->gateway->barCodeSearch($code);
+        }
+
+        dd($results);
     }
 }

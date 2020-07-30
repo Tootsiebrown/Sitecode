@@ -94,7 +94,7 @@
                                 <div class="col-xs-12">
                                     <table class="table table-bordered table-striped table-responsive">
 
-                                        @foreach($datafinitiProfiles as $profile)
+                                        @foreach($datafinitiProfiles as $key => $profile)
                                             <tr>
                                                 <td>
                                                     {{ $profile["name"] }}
@@ -102,7 +102,7 @@
 
                                                     <a
                                                       class="btn btn-primary"
-                                                      href="{{ route('lister.saveProduct', ['name' => $profile['name'], 'upc' => $profile['upca']]) }}"
+                                                      href="{{ route('lister.newProduct', ['name' => $profile['name'], 'upc' => $profile['upca'], 'from_profile' => $key]) }}"
                                                     >Create Product From This Profile</a>
                                                 </td>
                                             </tr>

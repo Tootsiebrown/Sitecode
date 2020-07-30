@@ -52,6 +52,98 @@
                             </div>
                         </div>
 
+                        <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Original Price</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? $product['original_price'] ?? '' }}" name="original_price" placeholder="">
+                                {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Listing Price</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="price" value="{{ old('price') ?? $product['price'] ?? '' }}" name="price" placeholder="">
+                                {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
+                            <label for="condition" class="col-sm-4 control-label">Condition</label>
+                            <div class="col-sm-8">
+                                <label>
+                                    <input type="radio" name="condition" value="new"  @if(old('condition')) {{ old('condition') == 'new' ? 'checked="checked"':'' }} @else checked="checked" @endif > New
+                                </label>
+                                <br />
+
+                                <label>
+                                    <input type="radio" name="condition" value="used"  {{ old('condition') == 'used' ? 'checked="checked"':'' }} > Used
+                                </label>
+
+                                {!! $errors->has('condition')? '<p class="help-block">'.$errors->first('condition').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('description')? 'has-error':'' }}">
+                            <label class="col-sm-4 control-label">Description</label>
+                            <div class="col-sm-8">
+                                <textarea name="description" class="form-control" id="description_editor" rows="8">{!! old('description')?? $product['description'] ?? '' !!}</textarea>
+                                {!! $errors->has('description')? '<p class="help-block">'.$errors->first('description').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('features')? 'has-error':'' }}">
+                            <label class="col-sm-4 control-label">Features</label>
+                            <div class="col-sm-8">
+                                <textarea name="features" class="form-control" id="features_editor" rows="8">{!! old('features') ?? $product['features'] ?? '' !!}</textarea>
+                                {!! $errors->has('features')? '<p class="help-block">'.$errors->first('features').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <legend>Product Images</legend>
+
+                        <div class="form-group {{ $errors->has('images')? 'has-error':'' }}">
+                            <div class="col-sm-12">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <div class="upload-images-input-wrap">
+                                        <input type="file" name="images[]" class="form-control" />
+                                        <input type="file" name="images[]" class="form-control" />
+                                    </div>
+
+                                    <div class="image-ad-more-wrap">
+                                        <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>
+                                    </div>
+                                </div>
+                                {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <legend>Optional Attributes</legend>
+
+                        <div class="form-group {{ $errors->has('gender')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Gender</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="gender" value="{{ old('gender') ?? $product['gender'] ?? '' }}" name="gender" placeholder="">
+                                {!! $errors->has('gender')? '<p class="help-block">'.$errors->first('gender').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('model_number')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Model Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="model_number" value="{{ old('model_number') ?? $product['model_number'] ?? '' }}" name="model_number" placeholder="">
+                                {!! $errors->has('model_number')? '<p class="help-block">'.$errors->first('model_number').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('color')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Color</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="color" value="{{ old('color') ?? $product['color'] ?? '' }}" name="color" placeholder="">
+                                {!! $errors->has('color')? '<p class="help-block">'.$errors->first('color').'</p>':'' !!}
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-primary">Save Product</button>
@@ -70,7 +162,8 @@
     <script>
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
-        CKEDITOR.replace( 'content_editor' );
+        //CKEDITOR.replace( 'description_editor' );
+        CKEDITOR.replace( 'features_editor' );
     </script>
     <script src="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js')}}"></script>
     <script type="text/javascript">
