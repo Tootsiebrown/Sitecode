@@ -23,7 +23,7 @@ class ListerController extends Controller
         $searchBy = $request->input('search_by');
         $datafinitiUpc = $request->input('datafiniti_upc');
 
-        switch($searchBy) {
+        switch ($searchBy) {
             case 'name':
                 $searchString = $name;
                 break;
@@ -59,7 +59,7 @@ class ListerController extends Controller
             return collect();
         }
 
-        switch($searchBy) {
+        switch ($searchBy) {
             case 'name':
                 if (empty($name)) {
                     return collect();
@@ -81,7 +81,8 @@ class ListerController extends Controller
             ->paginate(20);
     }
 
-    protected function datafinitiSearch($upc) {
+    protected function datafinitiSearch($upc)
+    {
         if (! $upc) {
             return collect();
         }
@@ -110,9 +111,12 @@ class ListerController extends Controller
         $product = Product::create($data);
 
         return redirect(
-            route('lister.newListing', [
-                'product' => $product->id,
-            ])
+            route(
+                'lister.newListing',
+                [
+                    'product' => $product->id,
+                ]
+            )
             )->with('success', trans('app.product_created'));
     }
 
