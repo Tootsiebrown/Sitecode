@@ -6,8 +6,10 @@ use App\Ad;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Product;
+use App\ProductCategory;
 use App\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class ListerController extends Controller
@@ -119,6 +121,7 @@ class ListerController extends Controller
 
         return view('dashboard.lister.create_product', [
             'brands' => Brand::all(),
+            'categories' => ProductCategory::where('parent_id', 0)->get(),
             'product' => $product ?? null,
         ]);
     }
@@ -139,9 +142,22 @@ class ListerController extends Controller
                 'name' => $request->input('brand'),
             ]);
         }
-
         if (empty($brand)) {
             $rules['brand'] = 'required';
+        }
+
+        if ($request->input('existing_category')) {
+            $category = ProductCategory::find($request->input('existing_category'));
+        } elseif (!empty($request->input('category'))) {
+            $category = ProductCategory::create([
+                'breadcrumb' => $request->input('category'),
+                'name' => $request->input('category'),
+                'parent_id' => 0,
+                'url_slug' => Str::slug($request->input('category')),
+            ]);
+        }
+        if (empty($category)) {
+            $rules['category'] = 'required';
         }
 
         $this->validate($request, $rules);
@@ -163,6 +179,7 @@ class ListerController extends Controller
         $product = Product::create($data);
 
         if ($product) {
+            $product->category()->attach($category->id);
             $this->uploadProductImages($request, $product->id);
         }
 

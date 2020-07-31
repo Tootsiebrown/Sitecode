@@ -52,28 +52,6 @@
                             </div>
                         </div>
 
-                        @if (!$brands->isEmpty())
-                            <div class="form-group">
-                                <label for="existing_brand" class="col-sm-4 control-label">Existing Brand</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control select2" name="existing_brand" id="existing_brand">
-                                        <option>Select existing Brand or enter new Brand below</option>
-                                        @foreach($brands as $brand)
-                                            <option value="{{ $brand->id }}" @if ($brand->id == old('existing_brand')) selected="selected" @endif>{{ $brand->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="form-group {{ $errors->has('brand')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">Brand</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="brand" value="{{ old('brand') ?? $product['brand'] ?? '' }}" name="brand" placeholder="">
-                                {!! $errors->has('brand')? '<p class="help-block">'.$errors->first('brand').'</p>':'' !!}
-                            </div>
-                        </div>
-
                         <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">Original Price</label>
                             <div class="col-sm-8">
@@ -119,6 +97,54 @@
                             <div class="col-sm-8">
                                 <textarea name="features" class="form-control" id="features_editor" rows="8">{!! old('features') ?? $product['features'] ?? '' !!}</textarea>
                                 {!! $errors->has('features')? '<p class="help-block">'.$errors->first('features').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <legend>Product Brand</legend>
+
+                        @if (!$brands->isEmpty())
+                            <div class="form-group">
+                                <label for="existing_brand" class="col-sm-4 control-label">Existing Brand</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control select2" name="existing_brand" id="existing_brand">
+                                        <option value="">Select existing Brand or enter new Brand below</option>
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}" @if ($brand->id == old('existing_brand')) selected="selected" @endif>{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="form-group {{ $errors->has('brand')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Brand</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="brand" value="{{ old('brand') ?? $product['brand'] ?? '' }}" name="brand" placeholder="">
+                                {!! $errors->has('brand')? '<p class="help-block">'.$errors->first('brand').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        <legend>Product Category</legend>
+
+                        @if (!$categories->isEmpty())
+                            <div class="form-group">
+                                <label for="existing_category" class="col-sm-4 control-label">Existing Category</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control select2" name="existing_category" id="existing_category">
+                                        <option value="">Select existing Category or enter new Category below</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" @if ($category->id == old('existing_category')) selected="selected" @endif>{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="form-group {{ $errors->has('category')? 'has-error':'' }}">
+                            <label for="state_name" class="col-sm-4 control-label">Category</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="category" value="{{ old('category') ?? $product['category'] ?? '' }}" name="category" placeholder="">
+                                {!! $errors->has('category')? '<p class="help-block">'.$errors->first('category').'</p>':'' !!}
                             </div>
                         </div>
 

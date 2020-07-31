@@ -22,7 +22,7 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(ProductCategory::class, 'product_category_links', 'product_id', 'category_id');
     }
 
 //     public function feature_img()
