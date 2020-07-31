@@ -146,13 +146,6 @@ Route::group(
                 Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
             });
 
-        Route::middleware('privilege:Profiler')
-            ->prefix('product-profiler')
-            ->group(function() {
-                Route::get('/', ['as' => 'profiler.index', 'uses' => 'ProfilerController@index']);
-                Route::post('/', ['as' => 'profiler.search', 'uses' => 'ProfilerController@profileSearch']);
-            });
-
         Route::middleware('privilege:Administrator')
             ->group(function () {
                 Route::group(

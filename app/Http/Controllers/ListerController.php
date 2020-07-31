@@ -169,9 +169,12 @@ class ListerController extends Controller
         }
 
         return redirect(
-            route('lister.newListing', [
-                'product' => $product->id,
-            ])
+            route(
+                'lister.newListing',
+                [
+                    'product' => $product->id,
+                ]
+            )
         )->with('success', trans('app.product_created'));
     }
 
