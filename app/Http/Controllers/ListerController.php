@@ -8,7 +8,6 @@ use App\Gateways\DatafinitiGateway;
 use App\Product;
 use App\ProductImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 
 class ListerController extends Controller
@@ -97,9 +96,8 @@ class ListerController extends Controller
     public function newProduct(Request $request)
     {
         if (null !== $request->input('from_profile')) {
-            $key = $this->datafinitiGateway->getKey($request->input('upc'));
-            $cache = Cache::store('database')->get($key);
-            $product = $cache[$request->input('from_profile')];
+            $products = $this->datafinitiGateway->barCodeSearch($request->input('upc'));
+            $product = $products[$request->input('from_profile')];
 
             if (!empty($product['prices'])) {
                 $product['original_price'] = $product['prices'][0]['amountMax'];
