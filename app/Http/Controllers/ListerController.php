@@ -132,6 +132,13 @@ class ListerController extends Controller
         ]);
     }
 
+    public function getCategoryChildren(Request $request)
+    {
+        $category_id = $request->category_id;
+        $children = ProductCategory::whereParentId($category_id)->select('id', 'name')->get();
+        return $children;
+    }
+
     public function saveProduct(Request $request)
     {
         $rules = [
@@ -161,28 +168,34 @@ class ListerController extends Controller
                 'parent_id' => 0,
                 'url_slug' => Str::slug($request->input('category')),
             ]);
-            if (!empty($request->input('child'))) {
-                $child = ProductCategory::create([
-                    'breadcrumb' => $request->input('child'),
-                    'name' => $request->input('child'),
-                    'parent_id' => $category->id,
-                    'url_slug' => Str::slug($request->input('child')),
-                ]);
-                if (!empty($request->input('grandchild'))) {
-                    $grandchild = ProductCategory::create([
-                        'breadcrumb' => $request->input('grandchild'),
-                        'name' => $request->input('grandchild'),
-                        'parent_id' => $child->id,
-                        'url_slug' => Str::slug($request->input('grandchild')),
-                    ]);
-                }
-            }
         }
         if (empty($category)) {
             $rules['category'] = 'required';
         }
 
         $this->validate($request, $rules);
+
+        if ($request->input('existing_child')) {
+            $child = ProductCategory::find($request->input('existing_child'));
+        } elseif (!empty($request->input('child'))) {
+            $child = ProductCategory::create([
+                'breadcrumb' => $request->input('child'),
+                'name' => $request->input('child'),
+                'parent_id' => $category->id,
+                'url_slug' => Str::slug($request->input('child')),
+            ]);
+        }
+
+        if ($request->input('existing_grandchild')) {
+            $grandchild = ProductCategory::find($request->input('existing_grandchild'));
+        } elseif (!empty($request->input('grandchild'))) {
+            $grandchild = ProductCategory::create([
+                'breadcrumb' => $request->input('grandchild'),
+                'name' => $request->input('grandchild'),
+                'parent_id' => $child->id,
+                'url_slug' => Str::slug($request->input('grandchild')),
+            ]);
+        }
 
         $data = [
             'brand' => $brand->id,

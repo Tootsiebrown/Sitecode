@@ -279,36 +279,45 @@
 
     <script>
         function generate_option_from_json(jsonData, fromLoad){
-            //Load Category Json Data To Brand Select
-            if(fromLoad === 'country_to_state'){
+            //Load Category Json Data To Child Select
+            if(fromLoad === 'category_children') {
                 var option = '';
                 if (jsonData.length > 0) {
-                    option += '<option value="0" selected> @lang('app.select_state') </option>';
+                    option += '<option value="0" selected>Select existing Child Category or enter new Child Category below</option>';
                     for ( i in jsonData){
-                        option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].state_name +' </option>';
+                        option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].name +' </option>';
                     }
-                    $('#state_select').html(option);
-                    $('#state_select').select2();
-                }else {
-                    $('#state_select').html('');
-                    $('#state_select').select2();
+                    $('#existing_child').html(option);
+                    $('#existing_child').select2();
+                    $('#existing-child').show();
+                    $('#child-wrapper').show();
+                } else {
+                    $('#existing_child').html('');
+                    $('#existing_child').select2();
+                    $('#existing-child').hide();
+                    $('#child-wrapper').hide();
                 }
-                $('#state_loader').hide('slow');
+                // $('#state_loader').hide('slow');
 
-            }else if(fromLoad === 'state_to_city'){
+            } else if(fromLoad === 'child_grandchildren') {
                 var option = '';
                 if (jsonData.length > 0) {
-                    option += '<option value="0" selected> @lang('app.select_city') </option>';
+                    option += '<option value="0" selected>Select existing Grandchild Category or enter new Grandchild Category below</option>';
                     for ( i in jsonData){
-                        option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].city_name +' </option>';
+                        option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].name +' </option>';
                     }
-                    $('#city_select').html(option);
-                    $('#city_select').select2();
-                }else {
-                    $('#city_select').html('');
-                    $('#city_select').select2();
+                    $('#existing_grandchild').html(option);
+                    $('#existing_grandchild').select2();
+                    $('#existing-grandchild').show();
+                    $('#grandchild-wrapper').show();
+                } else {
+                    $('#existing_grandchild').html('');
+                    $('#existing_grandchild').select2();
+                    $('#existing-grandchild').hide();
+                    $('#grandchild-wrapper').hide();
                 }
-                $('#city_loader').hide('slow');
+                // $('#state_loader').hide('slow');
+
             }
         }
 
@@ -360,28 +369,28 @@
                 });
             });
 
-            $('[name="country"]').change(function(){
-                var country_id = $(this).val();
-                $('#state_loader').show();
+            $('[name="existing_category"]').change(function(){
+                var category_id = $(this).val();
+                // $('#state_loader').show();
                 $.ajax({
                     type : 'POST',
-                    url : '{{ route('get_state_by_country') }}',
-                    data : { country_id : country_id,  _token : '{{ csrf_token() }}' },
+                    url : '{{ route("get_product_category_children") }}',
+                    data : { category_id : category_id,  _token : '{{ csrf_token() }}' },
                     success : function (data) {
-                        generate_option_from_json(data, 'country_to_state');
+                        generate_option_from_json(data, 'category_children');
                     }
                 });
             });
 
-            $('[name="state"]').change(function(){
-                var state_id = $(this).val();
-                $('#city_loader').show();
+            $('[name="existing_child"]').change(function(){
+                var category_id = $(this).val();
+                // $('#state_loader').show();
                 $.ajax({
                     type : 'POST',
-                    url : '{{ route('get_city_by_state') }}',
-                    data : { state_id : state_id,  _token : '{{ csrf_token() }}' },
+                    url : '{{ route("get_product_category_children") }}',
+                    data : { category_id : category_id,  _token : '{{ csrf_token() }}' },
                     success : function (data) {
-                        generate_option_from_json(data, 'state_to_city');
+                        generate_option_from_json(data, 'child_grandchildren');
                     }
                 });
             });
