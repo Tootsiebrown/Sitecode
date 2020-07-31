@@ -141,12 +141,60 @@
                         @endif
 
                         <div class="form-group {{ $errors->has('category')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">Category</label>
+                            <label for="category" class="col-sm-4 control-label">Category</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="category" value="{{ old('category') ?? $product['category'] ?? '' }}" name="category" placeholder="">
                                 {!! $errors->has('category')? '<p class="help-block">'.$errors->first('category').'</p>':'' !!}
                             </div>
                         </div>
+
+                        <div id="child-wrapper" style="display: none;">
+                            <legend>Product Child Category</legend>
+
+                            <div class="form-group" id="existing-child">
+                                <label for="existing_child" class="col-sm-4 control-label">Existing Child Category</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control select2" name="existing_child" id="existing_child">
+                                        <option value="">Select existing Child Category or enter new Child Category below</option>
+                                        @foreach($children as $child)
+                                            <option value="{{ $child->id }}" @if ($child->id == old('existing_child')) selected="selected" @endif>{{ $child->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group {{ $errors->has('child')? 'has-error':'' }}">
+                                <label for="child" class="col-sm-4 control-label">Child Category</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="child" value="{{ old('child') ?? $product['child'] ?? '' }}" name="child" placeholder="" />
+                                    {!! $errors->has('child')? '<p class="help-block">'.$errors->first('child').'</p>':'' !!}
+                                </div>
+                            </div>
+                        </div> <!-- .child-wrapper -->
+
+                        <div id="grandchild-wrapper" style="display: none;">
+                            <legend>Product Grandchild Category</legend>
+
+                            <div class="form-group" id="existing-grandchild">
+                                <label for="existing_grandchild" class="col-sm-4 control-label">Existing Grandchild Category</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control select2" name="existing_grandchild" id="existing_grandchild">
+                                        <option value="">Select existing Grandchild Category or enter new Grandchild Category below</option>
+                                        @foreach($grandchildren as $grandchild)
+                                            <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('existing_grandchild')) selected="selected" @endif>{{ $grandchild->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group {{ $errors->has('grandchild')? 'has-error':'' }}">
+                                <label for="grandchild" class="col-sm-4 control-label">Grandchild Category</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="grandchild" value="{{ old('grandchild') ?? $product['grandchild'] ?? '' }}" name="grandchild" placeholder="" />
+                                    {!! $errors->has('grandchild')? '<p class="help-block">'.$errors->first('grandchild').'</p>':'' !!}
+                                </div>
+                            </div>
+                        </div> <!-- .grandchild-wrapper -->
 
                         <legend>Product Images</legend>
 
@@ -265,6 +313,52 @@
         }
 
         $(document).ready(function(){
+
+            $('#category').each(function() {
+                var elem = $(this);
+
+                // Save current value of element
+                elem.data('oldVal', elem.val());
+
+                // Look for changes in the value
+                elem.bind("propertychange keyup keydown input paste", function(event){
+                    // If value has changed...
+                    if (elem.data('oldVal') != elem.val()) {
+                    // Updated stored value
+                        elem.data('oldVal', elem.val());
+
+                        if (elem.val().length > 0) {
+                            $('#existing-child').hide();
+                            $('#child-wrapper').show();
+                        } else {
+                            $('#child-wrapper').hide();
+                        }
+                    }
+                });
+            });
+
+            $('#child').each(function() {
+                var elem = $(this);
+
+                // Save current value of element
+                elem.data('oldVal', elem.val());
+
+                // Look for changes in the value
+                elem.bind("propertychange keyup keydown input paste", function(event){
+                    // If value has changed...
+                    if (elem.data('oldVal') != elem.val()) {
+                    // Updated stored value
+                        elem.data('oldVal', elem.val());
+
+                        if (elem.val().length > 0) {
+                            $('#existing-grandchild').hide();
+                            $('#grandchild-wrapper').show();
+                        } else {
+                            $('#grandchild-wrapper').hide();
+                        }
+                    }
+                });
+            });
 
             $('[name="country"]').change(function(){
                 var country_id = $(this).val();

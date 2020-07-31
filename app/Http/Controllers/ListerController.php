@@ -122,6 +122,12 @@ class ListerController extends Controller
         return view('dashboard.lister.create_product', [
             'brands' => Brand::all(),
             'categories' => ProductCategory::where('parent_id', 0)->get(),
+            'children' => ProductCategory::whereIn('parent_id', function ($query) {
+                $query->select('id')
+                    ->from('product_categories')
+                    ->where('parent_id', 0);
+            })->get(),
+            'grandchildren' => collect(),
             'product' => $product ?? null,
         ]);
     }
@@ -155,6 +161,22 @@ class ListerController extends Controller
                 'parent_id' => 0,
                 'url_slug' => Str::slug($request->input('category')),
             ]);
+            if (!empty($request->input('child'))) {
+                $child = ProductCategory::create([
+                    'breadcrumb' => $request->input('child'),
+                    'name' => $request->input('child'),
+                    'parent_id' => $category->id,
+                    'url_slug' => Str::slug($request->input('child')),
+                ]);
+                if (!empty($request->input('grandchild'))) {
+                    $grandchild = ProductCategory::create([
+                        'breadcrumb' => $request->input('grandchild'),
+                        'name' => $request->input('grandchild'),
+                        'parent_id' => $child->id,
+                        'url_slug' => Str::slug($request->input('grandchild')),
+                    ]);
+                }
+            }
         }
         if (empty($category)) {
             $rules['category'] = 'required';
@@ -180,6 +202,12 @@ class ListerController extends Controller
 
         if ($product) {
             $product->category()->attach($category->id);
+            if (!empty($child)) {
+                $product->category()->attach($child->id);
+            }
+            if (!empty($grandchild)) {
+                $product->category()->attach($grandchild->id);
+            }
             $this->uploadProductImages($request, $product->id);
         }
 
