@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Product;
 use App\ProductImage;
@@ -119,6 +120,7 @@ class ListerController extends Controller
         }
 
         return view('dashboard.lister.create_product', [
+            'brands' => Brand::all(),
             'product' => $product ?? null,
         ]);
     }
@@ -131,11 +133,25 @@ class ListerController extends Controller
             'price' => 'required',
             'description' => 'required',
         ];
+
+        if ($request->input('existing_brand')) {
+            $brand = Brand::find($request->input('existing_brand'));
+        } elseif (!empty($request->input('brand'))) {
+            $brand = Brand::create([
+                'name' => $request->input('brand'),
+            ]);
+        }
+
+        if (empty($brand)) {
+            $rules['brand'] = 'required';
+        }
+
         $this->validate($request, $rules);
 
         $data = [
-            'name' => $request->name,
+            'brand' => $brand->id,
             'upc' => $request->upc,
+            'name' => $request->name,
             'original_price' => $request->original_price,
             'price' => $request->price,
             'condition' => ($request->condition == 'used' ? '0' : '1'),
