@@ -93,7 +93,7 @@
                             <input type="hidden" name="search_by" value="{{ $searchBy }}">
 
                             <div class="form-group {{ $errors->has('datafiniti_upc')? 'has-error':'' }}">
-                                <label for="name" class="col-sm-4 control-label">UPC</label>
+                                <label for="datafiniti_upc" class="col-sm-4 control-label">UPC</label>
                                 <div class="col-sm-8">
                                     <div data-component="barcode-reader">
                                         <div class="input-group mb-3">
