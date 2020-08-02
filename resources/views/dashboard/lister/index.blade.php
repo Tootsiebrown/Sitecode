@@ -28,7 +28,26 @@
                     <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">UPC</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="upc" value="{{ request('upc') }}" name="upc" placeholder="">
+                            <div data-component="barcode-reader">
+                                <div class="input-group mb-3">
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="upc"
+                                      value="{{ request('upc') }}"
+                                      name="upc"
+                                      placeholder=""
+                                      data-element="input"
+                                    >
+                                    <span class="input-group-btn">
+                                        <button
+                                          class="btn btn-primary"
+                                          type="button"
+                                          data-element="button"
+                                        ><i class="fa fa-camera"></i> &nbsp;Scan</button>
+                                    </span>
+                                </div>
+                            </div>
                             {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
 
                         </div>
@@ -73,14 +92,42 @@
                             <input type="hidden" name="name" value="{{ $name }}">
                             <input type="hidden" name="search_by" value="{{ $searchBy }}">
 
-                            <div class="form-group {{ $errors->has('datafiniti_upc')? 'has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('datafiniti_upc')? 'has-error':'' }}">
                                 <label for="datafiniti_upc" class="col-sm-4 control-label">UPC</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="datafiniti_upc" value="{{ request('datafiniti_upc') ?? request('upc') ?? '' }}" name="datafiniti_upc" placeholder="">
-                                    {!! $errors->has('datafiniti_upc')? '<p class="help-block">'.$errors->first('datafiniti_upc').'</p>':'' !!}
-
+                                    <div data-component="barcode-reader">
+                                        <div class="input-group mb-3">
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="datafiniti_upc"
+                                              value="{{ request('datafiniti_upc') ?? request('datafiniti_upc') ?? '' }}"
+                                              name="datafiniti_upc"
+                                              placeholder=""
+                                              data-element="input"
+                                            >
+                                            <span class="input-group-btn">
+                                                <button
+                                                    class="btn btn-primary"
+                                                    type="button"
+                                                    data-element="button"
+                                                ><i class="fa fa-camera"></i> &nbsp;Scan</button>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+
+{{--                            <div class="form-group {{ $errors->has('datafiniti_upc')? 'has-error' : '' }}">--}}
+{{--                                <label for="datafiniti_upc" class="col-sm-4 control-label">UPC</label>--}}
+{{--                                <div class="col-sm-8">--}}
+{{--                                    <input type="text"--}}
+{{--                                           data-element="input" class="form-control" id="datafiniti_upc" value="{{ request('datafiniti_upc') ?? request('datafiniti_upc') ?? '' }}" name="datafiniti_upc" placeholder="">--}}
+{{--                                    {!! $errors->has('datafiniti_upc')? '<p class="help-block">'.$errors->first('datafiniti_upc').'</p>':'' !!}--}}
+
+{{--                                </div>--}}
+{{--                            </div>--}}
 
                             <div class="form-group">
                                 <div class="col-sm-offset-4 col-sm-8">
@@ -128,6 +175,7 @@
 
 
     </div> <!-- /#container -->
+    @include('site.components.quagga-popup');
 @endsection
 
 @section('page-js')
