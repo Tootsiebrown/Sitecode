@@ -87,6 +87,8 @@ Route::post('get-state-by-country', ['as' => 'get_state_by_country', 'uses' => '
 Route::post('get-city-by-state', ['as' => 'get_city_by_state', 'uses' => 'AdsController@getCityByState']);
 Route::post('switch/product-view', ['as' => 'switch_grid_list_view', 'uses' => 'AdsController@switchGridListView']);
 
+Route::post('get-product-category-children', ['as' => 'get_product_category_children', 'uses' => 'ListerController@getCategoryChildren']);
+
 
 Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);
 Route::post('post-new', ['uses' => 'AdsController@store']);
@@ -139,8 +141,9 @@ Route::group(
                 Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
                 Route::post('/', ['as' => 'lister.datafiniti', 'uses' => 'ListerController@index']);
 
-                Route::get('/product', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::get('/product', ['as' => 'lister.productForm', 'uses' => 'ListerController@productForm']);
                 Route::post('/product', ['as' => 'lister.saveProduct', 'uses' => 'ListerController@saveProduct']);
+                Route::get("/product-clone", ['as' => 'lister.cloneProduct', 'uses' => 'ListerController@cloneProduct']);
 
                 Route::get('/listing', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
                 Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);

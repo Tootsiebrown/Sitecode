@@ -19,7 +19,7 @@ class DatafinitiSearch extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Dumps Datafiniti data for a given barcode.';
 
     protected $gateway;
 
@@ -42,7 +42,6 @@ class DatafinitiSearch extends Command
      */
     public function handle()
     {
-        $results = $this->gateway->barCodeSearch($this->argument('barcode'));
-        dd($results[0]);
+        dd($this->gateway->barCodeSearch($code));
     }
 }

@@ -13,7 +13,7 @@
             @if($lUser->hasPrivilege('Lister'))
                 <li>
                     <a href="{{ route('lister.index') }}">
-                        <i class="fa fa-qrcode"></i>
+                        <i class="fa fa-barcode"></i>
                         Product Listings
                     </a>
                 </li>

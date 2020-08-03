@@ -16,20 +16,29 @@ class DatafinitiGateway
         $this->token = config('app.datafiniti.token');
     }
 
+    public function getRequestBody($code)
+    {
+        return [
+            'query' => 'gtins:' . $code,
+            'format' => 'JSON',
+            'num_records' => 5,
+            'download' => false,
+        ];
+    }
+
+    public function getKey($code)
+    {
+        return 'df.' . $this->getRequestBody($code)['query'];
+    }
+
     public function barCodeSearch($code)
     {
         if (empty($code)) {
             return collect();
         }
 
-        $requestBody = [
-            'query' => 'gtins:' . $code,
-            'format' => 'JSON',
-            'num_records' => 5,
-            'download' => false,
-        ];
-
-        $key = 'df.' . $requestBody['query'];
+        $requestBody = $this->getRequestBody($code);
+        $key = $this->getKey($code);
 
         return Cache::store('database')
             ->remember($key, now()->addWeeks(2), function () use ($requestBody) {

@@ -94,7 +94,7 @@
     <script>
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
-        CKEDITOR.replace( 'content_editor' );
+        // CKEDITOR.replace( 'content_editor' );
     </script>
     <script src="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js')}}"></script>
     <script type="text/javascript">
