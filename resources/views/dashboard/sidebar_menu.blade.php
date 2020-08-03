@@ -2,11 +2,29 @@
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav">
         <ul class="nav" id="side-menu">
+
             <li>
-                <a href="{{ route('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')</a>
+                <a href="{{ route('dashboard') }}">
+                    <i class="fa fa-dashboard fa-fw"></i>
+                    @lang('app.dashboard')
+                </a>
             </li>
 
-            <li>  <a href="{{ route('favorite_ads') }}">@lang('app.favourite_ads')</a> </li>
+            @if($lUser->hasPrivilege('Lister'))
+                <li>
+                    <a href="{{ route('lister.index') }}">
+                        <i class="fa fa-barcode"></i>
+                        Product Listings
+                    </a>
+                </li>
+            @endif
+
+            <li>
+                <a href="{{ route('favorite_ads') }}">
+                    <i class="fa fa-star"></i>
+                    @lang('app.favourite_ads')
+                </a>
+            </li>
 
             @if($lUser->isAdmin())
 

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class OnlyAdminAccess
+class RequiredPrivilege
 {
     /**
      * Handle an incoming request.
@@ -14,7 +14,7 @@ class OnlyAdminAccess
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, string $privilege)
     {
         if (! Auth::check()) {
             return redirect()->guest(route('login'))->with('error', trans('app.unauthorized_access'));
@@ -22,7 +22,7 @@ class OnlyAdminAccess
 
         $user = Auth::user();
 
-        if (! $user->isAdmin()) {
+        if (! $user->hasPrivilege($privilege)) {
             return redirect(route('dashboard'))->with('error', trans('app.access_restricted'));
         }
 

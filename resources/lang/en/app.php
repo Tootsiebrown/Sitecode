@@ -277,7 +277,7 @@ return [
     'charge_id_or_token'        => 'Payment token',
     'payer_email'               => 'Payer email',
     'payment_completed_at'      => 'Payment completed at',
-    'there_is_no_ads'           => 'There is no ads found in this search criteria',
+    'there_is_no_ads'           => 'No ads were found in this search criteria',
     'location_settings'         => 'Location Settings',
     'locations'                 => 'Locations',
     'countries'                 => 'Countries',
@@ -523,8 +523,8 @@ return [
     'find_local_ads'                    => 'Find Local Auctions Ads',
     'search_classified_ads_your_city'   => 'Search auction ads in your city or worldwide',
     'in'                                => 'in',
-    'no_regular_ads_country'            => 'There is no regular ads available in your country',
-    'no_premium_ads_country'            => 'There is no prmeium ads available in your country',
+    'no_regular_ads_country'            => 'No regular ads are available in your country',
+    'no_premium_ads_country'            => 'No prmeium ads are available in your country',
     'payment_success'                   => 'Payment Success',
     'payment_success_info'              => 'Thank you for your payment, we will be verify your payment and notify soon',
     'premium_ad'                        => 'Premium Ad',
@@ -648,7 +648,7 @@ return [
     'your_bid_posted'                   => 'Your bid has been posted successfully',
     'bid_history'                       => 'Bid history',
     'bidder'                            => 'Bidder',
-    'there_is_no_bids'                  => 'There is no bids',
+    'there_is_no_bids'                  => 'No bids found',
     'highest_bid'                       => 'Highest bid',
     'total_bids'                        => 'Total Bids',
     'enter_min_bid_amount'              => 'Please enter bid amount that is not less then or equal to %s',
@@ -690,4 +690,10 @@ return [
     'human_support'                 => 'Human Support',
     'expired_at'                    => 'Expired at',
     'time_remaining'                    => 'Time remaining',
+
+    /**
+     * @date July 26, 2020
+     */
+    'there_is_no_products'          => 'No products found for ":search".',
+    'product_created'               => 'Successfully added product',
 ];

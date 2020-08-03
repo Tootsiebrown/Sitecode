@@ -1,9 +1,77 @@
-
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+//magnific popup
+@import "node_modules/magnific-popup/src/css/main";
+
+.mfp-content {
+    background-color: $brand-white;
+}
+
+#quagga-popup {
+    margin: 36px;
+    max-width: 90%;
+
+    height: 600px;
+    display: relative;
+
+    &__video {
+        position: relative;
+        margin-bottom: 36px;
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    &__freeze-frame {
+        position: absolute;
+        left: 36px;
+        top: 36px;
+
+    }
+
+    #freeze-frame {
+        opacity: 0;
+    }
+
+    &.paused {
+        #freeze-frame {
+            opacity: 1;
+        }
+
+        video {
+            opacity: 0;
+        }
+
+
+    }
+
+    .form-horizontal .form-group {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right:auto;
+    }
+
+    .barcode-actions {
+        display:flex;
+        justify-content: space-between;
+    }
+}
+
+.mfp-inline-holder .mfp-content {
+    width: auto;
+    height: auto;
+}
+
+.product-suggestion {
+    &__details-container {
+        padding: 36px;
+    }
+
+    p.product-suggestion__label {
+        margin-bottom: 2px;
+    }
+}

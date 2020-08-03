@@ -1,9 +1,9 @@
 import 'velocity-animate'
 import 'velocity-animate/velocity.ui'
-import Site from 'site'
+import BarcodeReader from 'component/barcode-reader'
 
 $(document).ready(() => {
-	Site().init()
+	//Site().init()
 
 	$.ajaxSetup({
 	    headers: {
