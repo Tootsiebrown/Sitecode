@@ -8,6 +8,7 @@ import selectComponent from './utilities/select-component'
 // import Share from 'component/Share'
 // import SubNav from 'component/subnav'
 import BarcodeReader from "./component/barcode-reader";
+import ProductSuggestion from "./component/product-suggestion";
 
 // const AUTO_MODULES = [
 //     PhotoSwipe
@@ -69,6 +70,8 @@ export default function Site() {
         //     // selectComponent('share').each((index, element) => new Share(element))
         //
         selectComponent('barcode-reader').each((index, element) => new BarcodeReader(element))
+
+        selectComponent('product-suggestion').each((index, element) => new ProductSuggestion(element))
     }
 
     return {

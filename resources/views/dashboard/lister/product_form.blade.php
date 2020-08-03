@@ -36,10 +36,14 @@
                             </div>
                         @endif
 
+                        @if($product->id)
+                            <input name="product_id" value="{{ $product->id }}" type="hidden">
+                        @endif
+
                         <div class="form-group {{ $errors->has('name')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">Product Name</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="name" value="{{ old('name') ?? request('name') }}" name="name" placeholder="">
+                                <input type="text" class="form-control" id="name" value="{{ old('name') ?? request('name') ?? $product->name ?? '' }}" name="name" placeholder="">
                                 {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
                             </div>
                         </div>
@@ -47,7 +51,7 @@
                         <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
                             <label for="state_name" class="col-sm-4 control-label">UPC</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') }}" name="upc" placeholder="">
+                                <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') ?? $product->upc ?? '' }}" name="upc" placeholder="">
                                 {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
                             </div>
                         </div>
@@ -68,19 +72,21 @@
                             </div>
                         </div>
 
-                        <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
-                            <label for="condition" class="col-sm-4 control-label">Condition</label>
+                        <div class="form-group {{ $errors->has('new')? 'has-error':'' }}">
+                            <label for="new" class="col-sm-4 control-label">Condition</label>
                             <div class="col-sm-8">
                                 <label>
-                                    <input type="radio" name="condition" value="new"  @if(old('condition')) {{ old('condition') == 'new' ? 'checked="checked"':'' }} @else checked="checked" @endif > New
+                                    <input
+                                      type="checkbox"
+                                      name="new"
+                                      value="1"
+                                      @if (old('new') !== null) {{ old('new') == true ? 'checked="checked"':'' }}
+                                      @elseif (request('new') !== null) {{ request('new') == true ? 'checked="checked"' : '' }}
+                                      @elseif ($product->new) checked="checked"
+                                      @endif > New
                                 </label>
-                                <br />
 
-                                <label>
-                                    <input type="radio" name="condition" value="used"  {{ old('condition') == 'used' ? 'checked="checked"':'' }} > Used
-                                </label>
-
-                                {!! $errors->has('condition')? '<p class="help-block">'.$errors->first('condition').'</p>':'' !!}
+                                {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}
                             </div>
                         </div>
 
@@ -104,12 +110,18 @@
 
                         @if (!$brands->isEmpty())
                             <div class="form-group">
-                                <label for="existing_brand" class="col-sm-4 control-label">Existing Brand</label>
+                                <label for="brand_id" class="col-sm-4 control-label">Existing Brand</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control select2" name="existing_brand" id="existing_brand">
+                                    <select class="form-control select2" name="brand_id" id="brand_id">
                                         <option value="">Select existing Brand or enter new Brand below</option>
                                         @foreach($brands as $brand)
-                                            <option value="{{ $brand->id }}" @if ($brand->id == old('existing_brand')) selected="selected" @endif>{{ $brand->name }}</option>
+                                            <option
+                                              value="{{ $brand->id }}"
+                                              @if ($brand->id == old('brand_id')) selected="selected"
+                                              @elseif ($brand->id == request('brand_id')) selected="selected"
+                                              @elseif ($brand->id == $product->brand_id) selected="selected"
+                                              @endif
+                                            >{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -117,9 +129,16 @@
                         @endif
 
                         <div class="form-group {{ $errors->has('brand')? 'has-error':'' }}">
-                            <label for="state_name" class="col-sm-4 control-label">Brand</label>
+                            <label for="brand" class="col-sm-4 control-label">Brand</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="brand" value="{{ old('brand') ?? $product['brand'] ?? '' }}" name="brand" placeholder="">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="brand"
+                                  value="{{ old('brand') ?? $product['brand'] ?? '' }}"
+                                  name="brand"
+                                  placeholder=""
+                                >
                                 {!! $errors->has('brand')? '<p class="help-block">'.$errors->first('brand').'</p>':'' !!}
                             </div>
                         </div>
@@ -133,7 +152,13 @@
                                     <select class="form-control select2" name="existing_category" id="existing_category">
                                         <option value="">Select existing Category or enter new Category below</option>
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" @if ($category->id == old('existing_category')) selected="selected" @endif>{{ $category->name }}</option>
+                                            <option
+                                              value="{{ $category->id }}"
+                                              @if ($category->id == old('existing_category')) selected="selected"
+                                              @elseif ($category->id == request('existing_category')) selected="selected"
+                                              @elseif ($product->categories->pluck('id')->contains($category->id)) selected="selected"
+                                              @endif
+                                            >{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -143,7 +168,7 @@
                         <div class="form-group {{ $errors->has('category')? 'has-error':'' }}">
                             <label for="category" class="col-sm-4 control-label">Category</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="category" value="{{ old('category') ?? $product['category'] ?? '' }}" name="category" placeholder="">
+                                <input type="text" class="form-control" id="category" value="{{ old('category') ?? request('category') ?? '' }}" name="category" placeholder="">
                                 {!! $errors->has('category')? '<p class="help-block">'.$errors->first('category').'</p>':'' !!}
                             </div>
                         </div>
@@ -154,7 +179,7 @@
                             <div class="form-group" id="existing-child">
                                 <label for="existing_child" class="col-sm-4 control-label">Existing Child Category</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control select2" name="existing_child" id="existing_child">
+                                    <select class="form-control select2" name="existing_child" id="existing_child" data-selected="{{ !is_null($product->child_category) ? $product->child_category->id : '' }}">
                                         <option value="">Select existing Child Category or enter new Child Category below</option>
                                         @foreach($children as $child)
                                             <option value="{{ $child->id }}" @if ($child->id == old('existing_child')) selected="selected" @endif>{{ $child->name }}</option>
@@ -166,7 +191,7 @@
                             <div class="form-group {{ $errors->has('child')? 'has-error':'' }}">
                                 <label for="child" class="col-sm-4 control-label">Child Category</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="child" value="{{ old('child') ?? $product['child'] ?? '' }}" name="child" placeholder="" />
+                                    <input type="text" class="form-control" id="child" value="{{ old('child') ?? $product->child->id ?? '' }}" name="child" placeholder="" />
                                     {!! $errors->has('child')? '<p class="help-block">'.$errors->first('child').'</p>':'' !!}
                                 </div>
                             </div>
@@ -178,7 +203,7 @@
                             <div class="form-group" id="existing-grandchild">
                                 <label for="existing_grandchild" class="col-sm-4 control-label">Existing Grandchild Category</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control select2" name="existing_grandchild" id="existing_grandchild">
+                                    <select class="form-control select2" name="existing_grandchild" id="existing_grandchild" data-selected="{{ !is_null($product->grandChildCategory) ? $product->grandChildCategory->id : '' }}">
                                         <option value="">Select existing Grandchild Category or enter new Grandchild Category below</option>
                                         @foreach($grandchildren as $grandchild)
                                             <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('existing_grandchild')) selected="selected" @endif>{{ $grandchild->name }}</option>
@@ -206,13 +231,51 @@
                                         <input type="file" name="images[]" class="form-control" />
                                     </div>
 
-                                    <div class="image-ad-more-wrap">
-                                        <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>
-                                    </div>
+{{--                                    <div class="image-ad-more-wrap">--}}
+{{--                                        <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>--}}
+{{--                                    </div>--}}
                                 </div>
                                 {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
                             </div>
                         </div>
+
+                        @if ($product->images->isNotEmpty())
+                            <legend>Product Images</legend>
+
+                            <div class="form-group {{ $errors->has('existing_images')? 'has-error':'' }}">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-8 col-sm-offset-4">
+                                        <div class="upload-images-input-wrap">
+                                            @foreach($product->images as $image)
+                                                <label>
+                                                    <input
+                                                      type="checkbox"
+                                                      name="existing_images[{{ $image->id }}]"
+                                                      class="form-control"
+                                                      @if (old('existing_images.' . $image->id) == true) checked="checked"
+
+
+                                                      @elseif (request('existing_images.' . $image->id) == true) checked="checked"
+
+
+                                                      @elseif (! request()->has('existing_images')) checked="checked"
+
+
+                                                      @endif
+                                                    />
+                                                    {{ $image->media_name }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+
+{{--                                        <div class="image-ad-more-wrap">--}}
+{{--                                            <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>--}}
+{{--                                        </div>--}}
+                                    </div>
+                                    {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
+                                </div>
+                            </div>
+                        @endif
 
                         <legend>Optional Attributes</legend>
 
@@ -288,9 +351,17 @@
                         option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].name +' </option>';
                     }
                     $('#existing_child').html(option);
-                    $('#existing_child').select2();
                     $('#existing-child').show();
                     $('#child-wrapper').show();
+                    $('#existing_child').select2();
+                    if ($('#existing_child').get(0).hasAttribute('data-selected')) {
+                        var stickyValue = $('#existing_child').attr('data-selected')
+                        if (stickyValue) {
+                            $('#existing_child').val(stickyValue);
+                        }
+
+                    }
+                    $('#existing_child').trigger('change');
                 } else {
                     $('#existing_child').html('');
                     $('#existing_child').select2();
@@ -307,9 +378,9 @@
                         option += '<option value="'+jsonData[i].id+'"> '+jsonData[i].name +' </option>';
                     }
                     $('#existing_grandchild').html(option);
-                    $('#existing_grandchild').select2();
                     $('#existing-grandchild').show();
                     $('#grandchild-wrapper').show();
+                    $('#existing_grandchild').select2();
                 } else {
                     $('#existing_grandchild').html('');
                     $('#existing_grandchild').select2();
@@ -377,7 +448,7 @@
                     url : '{{ route("get_product_category_children") }}',
                     data : { category_id : category_id,  _token : '{{ csrf_token() }}' },
                     success : function (data) {
-                        generate_option_from_json(data, 'category_children');
+                        generate_option_from_json(data, 'category_children', );
                     }
                 });
             });
@@ -415,6 +486,8 @@
                     }
                 });
             });
+
+            $('[name="existing_category"]').trigger('change');
         });
     </script>
 

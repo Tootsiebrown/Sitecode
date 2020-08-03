@@ -12,17 +12,40 @@ class Product extends Model
 
     public function scopeNew($query)
     {
-        return $query->whereCondition('1');
+        return $query->whereNew(true);
     }
 
     public function scopeUsed($query)
     {
-        return $query->whereCondition('0');
+        return $query->whereNew(false);
     }
 
-    public function category()
+    public function categories()
     {
         return $this->belongsToMany(ProductCategory::class, 'product_category_links', 'product_id', 'category_id');
+    }
+
+    public function getCategoryAttribute()
+    {
+        return $this->categories()->top()->first();
+    }
+
+    public function getChildCategoryAttribute()
+    {
+        if (! $this->category) {
+            return null;
+        }
+
+        return $this->categories()->where('parent_id', $this->category->id)->first();
+    }
+
+    public function getGrandchildCategoryAttribute()
+    {
+        if (! $this->childcategory) {
+            return null;
+        }
+
+        return $this->categories()->where('parent_id', $this->childcategory->id)->first();
     }
 
 //     public function feature_img()

@@ -95,31 +95,22 @@ class ListerController extends Controller
         return $this->datafinitiGateway->barCodeSearch($upc);
     }
 
-    public function newProduct(Request $request)
+    public function productForm(Request $request)
     {
         if (null !== $request->input('from_profile')) {
-            $products = $this->datafinitiGateway->barCodeSearch($request->input('upc'));
-            $product = $products[$request->input('from_profile')];
+            $product = $this->newProductFromDatafiniti(
+                $request->input('upc'),
+                $request->input('from_profile')
+            );
+        } elseif (null != $request->input('product')) {
+            $product = Product::find($request->input('product'));
 
-            if (!empty($product['prices'])) {
-                $product['original_price'] = $product['prices'][0]['amountMax'];
+            if (! $product) {
+                abort(404);
             }
-            if (!empty($product['descriptions'])) {
-                $product['description'] = implode(' ', $product['descriptions']);
-            }
-
-            $productFeatures = '';
-            if (!empty($product['features'])) {
-                $productFeatures = collect($product['features'])->where('key', 'Product Features')->first();
-                $productFeatures = $productFeatures['value'] ?? '';
-                if (!empty($productFeatures)) {
-                    $productFeatures = '<ul><li>' . implode('</li><li>', $productFeatures) . '</li></ul>';
-                }
-            }
-            $product['features'] = $productFeatures;
         }
 
-        return view('dashboard.lister.create_product', [
+        return view('dashboard.lister.product_form', [
             'brands' => Brand::all(),
             'categories' => ProductCategory::where('parent_id', 0)->get(),
             'children' => ProductCategory::whereIn('parent_id', function ($query) {
@@ -130,6 +121,54 @@ class ListerController extends Controller
             'grandchildren' => collect(),
             'product' => $product ?? null,
         ]);
+    }
+
+    protected function newProductFromDatafiniti($upc, $profileId)
+    {
+        $product = new Product;
+        $datafinitProducts = $this->datafinitiGateway->barCodeSearch($upc);
+        $datafinitiProduct = $datafinitProducts[$profileId];
+
+        if (!empty($datafinitiProduct['prices'])) {
+            $product->original_price = $datafinitiProduct['prices'][0]['amountMax'];
+        }
+        if (!empty($datafinitiProduct['descriptions'])) {
+            $product->description = implode(' ', $datafinitiProduct['descriptions']);
+        }
+
+        $productFeatures = '';
+        if (!empty($datafinitiProduct['features'])) {
+            $productFeatures = collect($datafinitiProduct['features'])->where('key', 'Product Features')->first();
+            $productFeatures = $productFeatures['value'] ?? '';
+            if (!empty($productFeatures)) {
+                $productFeatures = '<ul><li>' . implode('</li><li>', $productFeatures) . '</li></ul>';
+            }
+        }
+        $product->features = $productFeatures;
+
+        return $product;
+    }
+
+    public function cloneProduct(Request $request)
+    {
+        $originalProduct = Product::find($request->input('product'));
+
+        if (! $originalProduct) {
+            abort(404);
+        }
+
+        $clone = $originalProduct->replicate();
+        $clone->save();
+
+        foreach($originalProduct->categories as $category) {
+            $clone->categories()->attach($category->id);
+        }
+
+        foreach($originalProduct->images as $image) {
+            $clone->images()->save($image->replicate());
+        }
+
+        return redirect(route('lister.productForm', ['product' => $clone->id]));
     }
 
     public function getCategoryChildren(Request $request)
@@ -198,12 +237,12 @@ class ListerController extends Controller
         }
 
         $data = [
-            'brand' => $brand->id,
+            'brand_id' => $brand->id,
             'upc' => $request->upc,
             'name' => $request->name,
             'original_price' => $request->original_price,
             'price' => $request->price,
-            'condition' => ($request->condition == 'used' ? '0' : '1'),
+            'new' => (int)($request->new),
             'description' => $request->description,
             'features' => $request->features,
             'gender' => $request->gender,
@@ -214,12 +253,12 @@ class ListerController extends Controller
         $product = Product::create($data);
 
         if ($product) {
-            $product->category()->attach($category->id);
+            $product->categories()->attach($category->id);
             if (!empty($child)) {
-                $product->category()->attach($child->id);
+                $product->categories()->attach($child->id);
             }
             if (!empty($grandchild)) {
-                $product->category()->attach($grandchild->id);
+                $product->categories()->attach($grandchild->id);
             }
             $this->uploadProductImages($request, $product->id);
         }

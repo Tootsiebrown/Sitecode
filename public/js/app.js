@@ -14320,6 +14320,52 @@ var BarcodeReader = function BarcodeReader(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/product-suggestion.js":
+/*!*************************************************************!*\
+  !*** ./resources/assets/js/component/product-suggestion.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductSuggestion; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var magnific_popup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! magnific-popup */ "./node_modules/magnific-popup/dist/jquery.magnific-popup.js");
+/* harmony import */ var magnific_popup__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(magnific_popup__WEBPACK_IMPORTED_MODULE_2__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+
+var ProductSuggestion = function ProductSuggestion(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ProductSuggestion);
+
+  this.openModal = function () {
+    jquery__WEBPACK_IMPORTED_MODULE_1__["magnificPopup"].open({
+      items: {
+        type: 'inline',
+        src: _this.$modalTrigger.attr('href')
+      }
+    });
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$modalTrigger = this.$component.elements.modalTrigger;
+  this.$modalTrigger.on('click', this.openModal);
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/site.js":
 /*!*************************************!*\
   !*** ./resources/assets/js/site.js ***!
@@ -14332,6 +14378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Site; });
 /* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
 /* harmony import */ var _component_barcode_reader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component/barcode-reader */ "./resources/assets/js/component/barcode-reader.js");
+/* harmony import */ var _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./component/product-suggestion */ "./resources/assets/js/component/product-suggestion.js");
 // import AjaxForm from 'component/ajax-form'
 // import CustomInput from 'component/custom-input'
 // import GoogleMap from 'component/GoogleMap'
@@ -14340,6 +14387,7 @@ __webpack_require__.r(__webpack_exports__);
 // import PhotoSwipe from 'component/gallery-photoswipe'
  // import Share from 'component/Share'
 // import SubNav from 'component/subnav'
+
 
  // const AUTO_MODULES = [
 //     PhotoSwipe
@@ -14402,6 +14450,9 @@ function Site() {
     //
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('barcode-reader').each(function (index, element) {
       return new _component_barcode_reader__WEBPACK_IMPORTED_MODULE_1__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('product-suggestion').each(function (index, element) {
+      return new _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__["default"](element);
     });
   };
 
@@ -14513,8 +14564,8 @@ function selectComponent(target) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/catchndealz.com/resources/assets/js/app.js */"./resources/assets/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/catchndealz.com/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
+__webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/js/app.js */"./resources/assets/js/app.js");
+module.exports = __webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
 
 
 /***/ })

@@ -141,8 +141,9 @@ Route::group(
                 Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
                 Route::post('/', ['as' => 'lister.datafiniti', 'uses' => 'ListerController@index']);
 
-                Route::get('/product', ['as' => 'lister.newProduct', 'uses' => 'ListerController@newProduct']);
+                Route::get('/product', ['as' => 'lister.productForm', 'uses' => 'ListerController@productForm']);
                 Route::post('/product', ['as' => 'lister.saveProduct', 'uses' => 'ListerController@saveProduct']);
+                Route::get("/product-clone", ['as' => 'lister.cloneProduct', 'uses' => 'ListerController@cloneProduct']);
 
                 Route::get('/listing', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
                 Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
