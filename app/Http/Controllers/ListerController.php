@@ -125,7 +125,7 @@ class ListerController extends Controller
 
     protected function newProductFromDatafiniti($upc, $profileId)
     {
-        $product = new Product;
+        $product = new Product();
         $datafinitProducts = $this->datafinitiGateway->barCodeSearch($upc);
         $datafinitiProduct = $datafinitProducts[$profileId];
 
@@ -160,11 +160,11 @@ class ListerController extends Controller
         $clone = $originalProduct->replicate();
         $clone->save();
 
-        foreach($originalProduct->categories as $category) {
+        foreach ($originalProduct->categories as $category) {
             $clone->categories()->attach($category->id);
         }
 
-        foreach($originalProduct->images as $image) {
+        foreach ($originalProduct->images as $image) {
             $clone->images()->save($image->replicate());
         }
 
