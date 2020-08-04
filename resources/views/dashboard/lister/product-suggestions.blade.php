@@ -12,15 +12,30 @@
                 >{{ $product-> name }} <i class="fa fa-info-circle"></i></a>
                 <hr />
 
-                <a
-                  href="{{ route('lister.newListing', ['product' => $product->id]) }}"
-                  class="btn btn-primary"
-                >Create Listing For This Product</a>
+                <ul class="product-suggestion__actions">
+                    <li>
+                        <a
+                            href="{{ route('lister.newListing', ['product' => $product->id]) }}"
+                            class=""
+                        ><i class="fa fa-plus"></i> Create Listing For This Product</a>
+                    </li>
 
-                <a
-                  href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
-                  class="btn btn-primary"
-                >Clone Product for Listing</a>
+                    <li>
+                        <a
+                            href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
+                            class=""
+                        ><i class="fa fa-clone"></i> Clone Product for Listing</a>
+                    </li>
+
+                    @if (Auth::user()->superuser)
+                        <li>
+                            <a
+                                href="{{ route('lister.productForm', ['product' => $product->id]) }}"
+                                class=""
+                            ><i class="fa fa-edit"></i> Edit Existing Product for New Listing</a>
+                        </li>
+                    @endif
+                </ul>
 
                 <div id="modal-product-details-{{ $product->id }}" class="white-popup mfp-hide">
                     <div class="product-suggestion__details-container">

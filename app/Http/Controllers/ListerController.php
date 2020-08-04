@@ -108,6 +108,11 @@ class ListerController extends Controller
             if (! $product) {
                 abort(404);
             }
+        } else {
+            $product = new Product([
+                'upc' => $request->input('upc'),
+                'name' => $request->input('name')
+            ]);
         }
 
         return view('dashboard.lister.product_form', [
