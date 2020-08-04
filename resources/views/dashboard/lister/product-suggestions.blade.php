@@ -3,27 +3,39 @@
     @foreach($products as $product)
         <tr class="product-suggestion" data-component="product-suggestion">
             <td width="100">
-                <img src="{{ media_url($product->feature_img) }}" class="thumb-listing-table" alt="">
+                <img src="{{ $product->featured_image ? $product->featured_image->thumb_url : media_url() }}" class="thumb-listing-table" alt="">
             </td>
             <td>
-                {{ $product-> name }}
+                <a
+                  href="#modal-product-details-{{ $product->id }}"
+                  data-element="modalTrigger"
+                >{{ $product-> name }} <i class="fa fa-info-circle"></i></a>
                 <hr />
 
-                <a
-                  href="{{ route('lister.newListing', ['product' => $product->id]) }}"
-                  class="btn btn-primary"
-                >Create Listing For This Product</a>
+                <ul class="product-suggestion__actions">
+                    <li>
+                        <a
+                            href="{{ route('lister.newListing', ['product' => $product->id]) }}"
+                            class=""
+                        ><i class="fa fa-plus"></i> Create Listing For This Product</a>
+                    </li>
 
-                <a
-                    href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
-                    class="btn btn-primary"
-                >Clone Product for Listing</a>
+                    <li>
+                        <a
+                            href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
+                            class=""
+                        ><i class="fa fa-clone"></i> Clone Product for Listing</a>
+                    </li>
 
-                <a
-                    href="#modal-product-details-{{ $product->id }}"
-                    class="btn btn-primary"
-                    data-element="modalTrigger"
-                >View Product Details</a>
+                    @if (Auth::user()->superuser)
+                        <li>
+                            <a
+                                href="{{ route('lister.productForm', ['product' => $product->id]) }}"
+                                class=""
+                            ><i class="fa fa-edit"></i> Edit Existing Product for New Listing</a>
+                        </li>
+                    @endif
+                </ul>
 
                 <div id="modal-product-details-{{ $product->id }}" class="white-popup mfp-hide">
                     <div class="product-suggestion__details-container">
@@ -46,7 +58,7 @@
                         <p class="product-suggestion__label">Images</p>
                         <ul>
                             @foreach($product->images as $image)
-                                <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"</li>
+                                <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"></li>
                             @endforeach
                         </ul>
                     </div>

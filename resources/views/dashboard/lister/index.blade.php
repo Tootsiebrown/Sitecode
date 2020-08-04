@@ -162,7 +162,7 @@
                             <h2>No profiles were found for "{{ $datafinitiUpc }}"</h2>
                             <p>
                                 <a
-                                  href="{{ route('lister.productForm', ['upc' => $upc, 'name' => $name]) }}"
+                                  href="{{ route('lister.productForm', ['upc' => $datafinitiUpc, 'name' => $name]) }}"
                                   class="btn btn-primary"
                                 >Create New Product From Scratch</a>
                             </p>
