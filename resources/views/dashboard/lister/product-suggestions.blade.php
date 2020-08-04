@@ -3,10 +3,13 @@
     @foreach($products as $product)
         <tr class="product-suggestion" data-component="product-suggestion">
             <td width="100">
-                <img src="{{ media_url($product->feature_img) }}" class="thumb-listing-table" alt="">
+                <img src="{{ $product->featured_image ? $product->featured_image->thumb_url : media_url() }}" class="thumb-listing-table" alt="">
             </td>
             <td>
-                {{ $product-> name }}
+                <a
+                  href="#modal-product-details-{{ $product->id }}"
+                  data-element="modalTrigger"
+                >{{ $product-> name }} <i class="fa fa-info-circle"></i></a>
                 <hr />
 
                 <a
@@ -15,15 +18,9 @@
                 >Create Listing For This Product</a>
 
                 <a
-                    href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
-                    class="btn btn-primary"
+                  href="{{ route('lister.cloneProduct', ['product' => $product->id]) }}"
+                  class="btn btn-primary"
                 >Clone Product for Listing</a>
-
-                <a
-                    href="#modal-product-details-{{ $product->id }}"
-                    class="btn btn-primary"
-                    data-element="modalTrigger"
-                >View Product Details</a>
 
                 <div id="modal-product-details-{{ $product->id }}" class="white-popup mfp-hide">
                     <div class="product-suggestion__details-container">
@@ -46,7 +43,7 @@
                         <p class="product-suggestion__label">Images</p>
                         <ul>
                             @foreach($product->images as $image)
-                                <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"</li>
+                                <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"></li>
                             @endforeach
                         </ul>
                     </div>

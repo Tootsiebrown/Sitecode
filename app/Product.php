@@ -48,17 +48,14 @@ class Product extends Model
         return $this->categories()->where('parent_id', $this->childcategory->id)->first();
     }
 
-//     public function feature_img()
-//     {
-//         $feature_img = $this->hasOne(Media::class)->whereIsFeature('1');
-//         if (! $feature_img) {
-//             $feature_img = $this->hasOne(Media::class)->first();
-//         }
-//         return $this->hasOne(Media::class);
-//     }
+    public function getFeaturedImageAttribute()
+    {
+        return $this->images()->orderBy('featured', 'desc')->first();
+    }
+
     public function images()
     {
-        return $this->hasMany(ProductImage::class)->whereType('image');
+        return $this->hasMany(ProductImage::class);
     }
 
 
