@@ -41,11 +41,11 @@ class Product extends Model
 
     public function getGrandchildCategoryAttribute()
     {
-        if (! $this->childcategory) {
+        if (! $this->child_category) {
             return null;
         }
 
-        return $this->categories()->where('parent_id', $this->childcategory->id)->first();
+        return $this->categories()->where('parent_id', $this->child_category->id)->first();
     }
 
     public function getFeaturedImageAttribute()

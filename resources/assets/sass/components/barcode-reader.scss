@@ -1,0 +1,53 @@
+
+#quagga-popup {
+    margin: 36px;
+    max-width: 90%;
+
+    height: 600px;
+    display: relative;
+
+    &__video {
+        position: relative;
+        margin-bottom: 36px;
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    &__freeze-frame {
+        position: absolute;
+        left: 36px;
+        top: 36px;
+
+    }
+
+    #freeze-frame {
+        opacity: 0;
+    }
+
+    &.paused {
+        #freeze-frame {
+            opacity: 1;
+        }
+
+        video {
+            opacity: 0;
+        }
+
+
+    }
+
+    .form-horizontal .form-group {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right:auto;
+    }
+
+    .barcode-actions {
+        display:flex;
+        justify-content: space-between;
+    }
+}

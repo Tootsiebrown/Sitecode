@@ -87,7 +87,7 @@ Route::post('get-state-by-country', ['as' => 'get_state_by_country', 'uses' => '
 Route::post('get-city-by-state', ['as' => 'get_city_by_state', 'uses' => 'AdsController@getCityByState']);
 Route::post('switch/product-view', ['as' => 'switch_grid_list_view', 'uses' => 'AdsController@switchGridListView']);
 
-Route::post('get-product-category-children', ['as' => 'get_product_category_children', 'uses' => 'ListerController@getCategoryChildren']);
+Route::get('get-product-category-children', ['as' => 'getProductCategoryChildren', 'uses' => 'ListerController@getCategoryChildren']);
 
 
 Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);

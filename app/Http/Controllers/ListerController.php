@@ -10,6 +10,7 @@ use App\ProductCategory;
 use App\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
 class ListerController extends Controller
@@ -102,17 +103,25 @@ class ListerController extends Controller
                 $request->input('upc'),
                 $request->input('from_profile')
             );
+
+            $action = 'new';
         } elseif (null != $request->input('product')) {
             $product = Product::find($request->input('product'));
 
             if (! $product) {
                 abort(404);
             }
+
+            $action = $request->input('action', 'new') == 'edit'
+                ? 'edit'
+                : 'new';
         } else {
             $product = new Product([
                 'upc' => $request->input('upc'),
                 'name' => $request->input('name')
             ]);
+
+            $action = 'new';
         }
 
         return view('dashboard.lister.product_form', [
@@ -125,6 +134,7 @@ class ListerController extends Controller
             })->get(),
             'grandchildren' => collect(),
             'product' => $product ?? null,
+            'action' => $action,
         ]);
     }
 
@@ -190,21 +200,38 @@ class ListerController extends Controller
             'upc' => 'required',
             'price' => 'required',
             'description' => 'required',
+
+            'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
+            'brand' => 'exclude_unless:brand_id,new|required',
+
+            'category_id'  => 'exclude_if:category_id,new|required|exists:product_categories,id',
+            'new_category' => 'exclude_unless:category_id,new|required|unique,product_categories,name',
+
+            'child_category_id' => [
+                'exclude_if:child_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('category_id'));
+//                }),
+            ],
+            'new_child_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
+
+
+            'grandchild_category_id' => [
+                'exclude_if:grandchild_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('child_category_id'));
+//                }),
+            ],
+            'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
         ];
 
-        if ($request->input('existing_brand')) {
-            $brand = Brand::find($request->input('existing_brand'));
-        } elseif (!empty($request->input('brand'))) {
-            $brand = Brand::create([
-                'name' => $request->input('brand'),
-            ]);
-        }
-        if (empty($brand)) {
-            $rules['brand'] = 'required';
-        }
 
-        if ($request->input('existing_category')) {
-            $category = ProductCategory::find($request->input('existing_category'));
+        $this->validate($request, $rules);
+
+        if ($request->input('category_id')) {
+            $category = ProductCategory::find($request->input('category_id'));
         } elseif (!empty($request->input('category'))) {
             $category = ProductCategory::create([
                 'breadcrumb' => $request->input('category'),
@@ -213,31 +240,34 @@ class ListerController extends Controller
                 'url_slug' => Str::slug($request->input('category')),
             ]);
         }
-        if (empty($category)) {
-            $rules['category'] = 'required';
-        }
 
-        $this->validate($request, $rules);
-
-        if ($request->input('existing_child')) {
-            $child = ProductCategory::find($request->input('existing_child'));
-        } elseif (!empty($request->input('child'))) {
+        if ($request->input('child_category_id')) {
+            $child = ProductCategory::find($request->input('child_category_id'));
+        } elseif (!empty($request->input('new_child_category'))) {
             $child = ProductCategory::create([
-                'breadcrumb' => $request->input('child'),
-                'name' => $request->input('child'),
+                'breadcrumb' => $category->name . ' » ' . $request->input('new_child_category'),
+                'name' => $request->input('new_child_category'),
                 'parent_id' => $category->id,
-                'url_slug' => Str::slug($request->input('child')),
+                'url_slug' => Str::slug($request->input('new_child_category')),
             ]);
         }
 
-        if ($request->input('existing_grandchild')) {
-            $grandchild = ProductCategory::find($request->input('existing_grandchild'));
-        } elseif (!empty($request->input('grandchild'))) {
+        if ($request->input('grandchild_category_id')) {
+            $grandchild = ProductCategory::find($request->input('grandchild_category_id'));
+        } elseif (!empty($request->input('new_grandchild_category'))) {
             $grandchild = ProductCategory::create([
-                'breadcrumb' => $request->input('grandchild'),
-                'name' => $request->input('grandchild'),
+                'breadcrumb' => $category->name . ' » ' . $child->name . ' » ' . $request->input('new_grandchild_category'),
+                'name' => $request->input('new_grandchild_category'),
                 'parent_id' => $child->id,
-                'url_slug' => Str::slug($request->input('grandchild')),
+                'url_slug' => Str::slug($request->input('new_grandchild_category')),
+            ]);
+        }
+
+        if ($request->input('brand_id') && $request->input('brand_id') !== 'new') {
+            $brand = Brand::find($request->input('brand_id'));
+        } elseif (!empty($request->input('new_brand'))) {
+            $brand = Brand::create([
+                'name' => $request->input('new_brand'),
             ]);
         }
 
@@ -255,7 +285,15 @@ class ListerController extends Controller
             'color' => $request->color,
         ];
 
-        $product = Product::create($data);
+        if ($request->input('action') == 'edit') {
+            $product = Product::find($request->input('product_id'));
+            $product->fill($data);
+            $product->save();
+        } else {
+            $product = Product::create($data);
+        }
+
+        $product->categories()->detach();
 
         if ($product) {
             $product->categories()->attach($category->id);

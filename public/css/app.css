@@ -449,6 +449,15 @@ img.mfp-img {
   background-color: #ffffff;
 }
 
+.mfp-inline-holder .mfp-content {
+  width: auto;
+  height: auto;
+}
+
+.select2-container {
+  width: 100% !important;
+}
+
 #quagga-popup {
   margin: 36px;
   max-width: 90%;
@@ -496,9 +505,16 @@ img.mfp-img {
   justify-content: space-between;
 }
 
-.mfp-inline-holder .mfp-content {
-  width: auto;
-  height: auto;
+.select-or-new__new {
+  magrin-bottom: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s, margin-bottom 0.2s;
+}
+
+.select-or-new__new.visible {
+  max-height: 48px;
+  margin-bottom: 15px;
 }
 
 .product-suggestion__details-container {
