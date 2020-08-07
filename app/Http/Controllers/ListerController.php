@@ -9,6 +9,8 @@ use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
@@ -303,7 +305,13 @@ class ListerController extends Controller
             if (!empty($grandchild)) {
                 $product->categories()->attach($grandchild->id);
             }
-            $this->uploadProductImages($request, $product->id);
+            $this->syncProductImages(
+                $product,
+                $request->input('existing_images', []),
+                $request->input('deletable_images', [])
+            );
+            $this->addProductImages($product, $request->input('new_images', []));
+
         }
 
         return redirect(
@@ -314,6 +322,36 @@ class ListerController extends Controller
                 ]
             )
         )->with('success', trans('app.product_created'));
+    }
+
+    protected function syncProductImages(Product $product, array $existingImages, array $deletableImages)
+    {
+        ProductImage::whereNotIn('id', $existingImages)
+            ->where('product_id', $product->id)
+            ->get()
+            ->each(function ($productImage) {
+                // do them each individually so that the delete event fires
+                // so that the corresponding files can be deleted off the disk
+                Log::info('deleting and image');
+                $productImage->delete();
+            });
+
+        foreach ($deletableImages as $deletableImage) {
+            current_disk()->delete(ProductImage::DISK_PATH . $deletableImage);
+            current_disk()->delete(ProductImage::DISK_PATH . 'thumbs/' . $deletableImage);
+        }
+    }
+
+    protected function addProductImages(Product $product, array $newImages)
+    {
+        foreach ($newImages as $newImage) {
+            $created_img_db = ProductImage::create([
+                'product_id' => $product->id,
+                'media_name' => $newImage,
+                'disk' => get_option('default_storage'),
+            ]);
+        }
+
     }
 
     public function newListing(Request $request)
@@ -357,43 +395,59 @@ class ListerController extends Controller
         return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
     }
 
-    public function uploadProductImages(Request $request, $product_id = 0)
+    public function uploadImage(Request $request)
     {
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            foreach ($images as $image) {
-                $valid_extensions = ['jpg','jpeg','png'];
-                if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Only .jpg, .jpeg and .png is allowed extension') ;
-                }
-
-                $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-                $resized = Image::make($image)->resize(640, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->stream();
-                $resized_thumb = Image::make($image)->resize(320, 213)->stream();
-
-                $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
-
-                $imageFileName = 'uploads/images/' . $image_name;
-                $imageThumbName = 'uploads/images/thumbs/' . $image_name;
-
-                try {
-                    //Upload original image
-                    $is_uploaded = current_disk()->put($imageFileName, $resized->__toString(), 'public');
-
-                    if ($is_uploaded) {
-                        //Save image name into db
-                        $created_img_db = ProductImage::create(['product_id' => $product_id, 'media_name' => $image_name, 'type' => 'image', 'storage' => get_option('default_storage'), 'ref' => 'product']);
-
-                        //upload thumb image
-                        current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-                        $img_url = media_url($created_img_db, false);
-                    }
-                } catch (\Exception $e) {
-                    return redirect()->back()->withInput($request->input())->with('error', $e->getMessage()) ;
-                }
-            }
+        if (! $request->hasFile('image')) {
+            abort(400);
         }
+
+        $image = $request->file('image');
+
+        $valid_extensions = ['jpg','jpeg','png'];
+        if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+            return response()
+                ->json(
+                    [
+                        'success' => false,
+                        'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
+                    ],
+                    422,
+                );
+        }
+
+        $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+        $resized = Image::make($image)->resize(640, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->stream();
+        $resized_thumb = Image::make($image)->resize(320, 213)->stream();
+
+        $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+
+        $imageFileName = 'uploads/images/' . $imageName;
+        $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+
+        try {
+            current_disk()->put($imageFileName, $resized->__toString(), 'public');
+            current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
+        } catch (\Exception $e) {
+            Log::info($e);
+            return response()
+                ->json(
+                    [
+                        'success' => false,
+                        'error' => $e->getMessage(),
+                    ],
+                    422
+                );
+        }
+
+        return response()
+            ->json(
+                [
+                    'success' => true,
+                    'filename' => $imageName,
+                    'url' => Storage::url($imageThumbName),
+                ]
+            );
     }
 }

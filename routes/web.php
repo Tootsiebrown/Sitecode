@@ -89,7 +89,6 @@ Route::post('switch/product-view', ['as' => 'switch_grid_list_view', 'uses' => '
 
 Route::get('get-product-category-children', ['as' => 'getProductCategoryChildren', 'uses' => 'ListerController@getCategoryChildren']);
 
-
 Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);
 Route::post('post-new', ['uses' => 'AdsController@store']);
 
@@ -147,6 +146,8 @@ Route::group(
 
                 Route::get('/listing', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
                 Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
+
+                Route::post('upload-image', ['as' => 'lister.upload-image', 'uses' => 'ListerController@uploadImage']);
             });
 
         Route::middleware('privilege:Administrator')

@@ -1,0 +1,16 @@
+.lister-product-image {
+    margin-bottom: 8px;
+
+    &__display-container {
+        display: flex;
+        align-items: center;
+    }
+    &__image-wrapper {
+        flex-basis: 120px;
+        text-align: center;
+
+        img {
+            max-height: 50px;
+        }
+    }
+}

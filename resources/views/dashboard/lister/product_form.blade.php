@@ -290,59 +290,45 @@
 
                     <legend>Product Images</legend>
 
-                    <div class="form-group {{ $errors->has('images')? 'has-error':'' }}">
-                        <div class="col-sm-12">
-                            <div class="col-sm-8 col-sm-offset-4">
-                                <div class="upload-images-input-wrap">
-                                    <input type="file" name="images[]" class="form-control" />
-                                    <input type="file" name="images[]" class="form-control" />
+                    <div class="images-wrapper" data-component="lister-product-image-wrapper">
+                        @foreach($product->images as $image)
+                            <div class="lister-product-image clearfix" data-component="lister-product-image">
+                                <input
+                                    type="hidden"
+                                    name="existing_images[]"
+                                    value="{{ $image->id }}"
+                                />
+                                <label class="col-sm-4 control-label"></label>
+                                <div class="col-sm-8 lister-product-image__display-container">
+                                    <div class="lister-product-image__image-wrapper"><img src="{{ $image->url }}"></div>
+                                    <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
                                 </div>
-
-{{--                                    <div class="image-ad-more-wrap">--}}
-{{--                                        <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>--}}
-{{--                                    </div>--}}
                             </div>
-                            {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
-                        </div>
+                        @endforeach
                     </div>
 
-                    @if ($product->images->isNotEmpty())
-                        <legend>Product Images</legend>
+                    <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
+                        <div class="col-sm-12">
 
-                        <div class="form-group {{ $errors->has('existing_images')? 'has-error':'' }}">
-                            <div class="col-sm-12">
-                                <div class="col-sm-8 col-sm-offset-4">
-                                    <div class="upload-images-input-wrap">
-                                        @foreach($product->images as $image)
-                                            <label>
-                                                <input
-                                                  type="checkbox"
-                                                  name="existing_images[{{ $image->id }}]"
-                                                  class="form-control"
-                                                  @if (old('existing_images.' . $image->id) == true) checked="checked"
-
-
-                                                  @elseif (request('existing_images.' . $image->id) == true) checked="checked"
-
-
-                                                  @elseif (! request()->has('existing_images')) checked="checked"
-
-
-                                                  @endif
-                                                />
-                                                {{ $image->media_name }}
-                                            </label>
-                                        @endforeach
+                            <label class="col-sm-4 control-label">New Image</label>
+                            <div class="col-sm-8">
+                                <div class="new-product-image" data-component="new-product-image">
+                                    <input
+                                      type="file"
+                                      name="new_image"
+                                      data-element="input"
+                                      class="form-control new-product-image__input"
+                                      data-action="{{ route('lister.upload-image') }}"
+                                    />
+                                    <div class="new-product-image__spinner" data-element="spinner">
+                                        <img src="/assets/img/loading-spinner.gif" alt="loading">
                                     </div>
-
-{{--                                        <div class="image-ad-more-wrap">--}}
-{{--                                            <a href="javascript:;" class="image-add-more"><i class="fa fa-plus-circle"></i> @lang('app.add_more')</a>--}}
-{{--                                        </div>--}}
+                                    <p class="new-product-image__message" data-element="message"></p>
                                 </div>
-                                {!! $errors->has('images')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
                             </div>
+                            {!! $errors->has('new_image ')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
                         </div>
-                    @endif
+                    </div>
 
                     <legend>Optional Attributes</legend>
 

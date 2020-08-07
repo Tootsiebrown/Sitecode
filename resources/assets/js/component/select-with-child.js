@@ -1,6 +1,5 @@
 import selectComponent from '../utilities/select-component'
 import * as $ from 'jquery'
-import select2 from 'select2'
 import SelectOrNew from "./select-or-new";
 
 export default class SelectWithChild {
@@ -43,7 +42,6 @@ export default class SelectWithChild {
 
     emptyAndHideChild = () => {
         this.$childSelect.html('');
-        // this.$childSelect.select2();
         this.$childSelect.hide();
         this.$childWrapper.hide();
     }
@@ -58,23 +56,17 @@ export default class SelectWithChild {
         this.$childSelect.html(option);
         this.$childSelect.show();
         this.$childWrapper.show();
-        // this.$childSelect.select2();
         var $selectOrNew = this.$childSelect.closest('[data-component="select-or-new"]');
         if ($selectOrNew.length > 0) {
             new SelectOrNew($selectOrNew.get(0))
         }
-console.log(this.$childSelect.attr('name'));
-console.log(this.$childSelect.attr('data-selected'));
 
         if (jsonData.length === 0) {
-            console.log('set')
             this.$childSelect.val('new')
         } else if (this.$childSelect.attr('data-selected') && this.$childSelect.find('[value="' + this.$childSelect.attr('data-selected') + '"]').length > 0) {
-            console.log('wellllll')
             this.$childSelect.val(this.$childSelect.attr('data-selected'))
         }
 
-        console.log('trigger change')
         this.$childSelect.trigger('change');
     }
 }

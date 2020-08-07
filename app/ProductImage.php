@@ -3,17 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ProductImage extends Model
 {
     protected $guarded = [];
 
     const URL_PATH = 'storage/uploads/images/';
-    const STORAGE_PATH = 'app/public/uploads/images/';
+    const DISK_PATH = 'uploads/images/';
 
     public function getUrlAttribute()
     {
-        if (file_exists(storage_path(self::STORAGE_PATH . $this->media_name))) {
+        if (Storage::disk($this->disk)->exists(static::DISK_PATH . $this->media_name)) {
             return asset(static::URL_PATH . $this->media_name);
         } else {
             return $this->getPlaceholderUrl();
@@ -22,7 +23,7 @@ class ProductImage extends Model
 
     public function getThumbUrlAttribute()
     {
-        if (file_exists(storage_path(self::STORAGE_PATH . $this->media_name))) {
+        if (Storage::disk($this->disk)->exists(static::DISK_PATH . $this->media_name)) {
             return asset(static::URL_PATH . $this->media_name);
         } else {
             return $this->getPlaceholderUrl();

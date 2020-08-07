@@ -1,0 +1,26 @@
+.new-product-image {
+
+    &__spinner {
+        display: none;
+
+        img {
+            width: 24px;
+        }
+    }
+
+    &__message {
+        &:empty {
+            display: none;
+        }
+    }
+
+    &.loading {
+        .new-product-image__spinner {
+            display: block;
+        }
+
+        .new-product-image__input {
+            display: none;
+        }
+    }
+}

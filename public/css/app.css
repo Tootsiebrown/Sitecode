@@ -525,3 +525,41 @@ img.mfp-img {
   margin-bottom: 2px;
 }
 
+.lister-product-image {
+  margin-bottom: 8px;
+}
+
+.lister-product-image__display-container {
+  display: flex;
+  align-items: center;
+}
+
+.lister-product-image__image-wrapper {
+  flex-basis: 120px;
+  text-align: center;
+}
+
+.lister-product-image__image-wrapper img {
+  max-height: 50px;
+}
+
+.new-product-image__spinner {
+  display: none;
+}
+
+.new-product-image__spinner img {
+  width: 24px;
+}
+
+.new-product-image__message:empty {
+  display: none;
+}
+
+.new-product-image.loading .new-product-image__spinner {
+  display: block;
+}
+
+.new-product-image.loading .new-product-image__input {
+  display: none;
+}
+

@@ -3,6 +3,8 @@ import BarcodeReader from "./component/barcode-reader";
 import ProductSuggestion from "./component/product-suggestion";
 import SelectOrNew from "./component/select-or-new";
 import SelectWithChild from "./component/select-with-child";
+import NewProductImage from "./component/new-product-image";
+import ProductImage from "./component/product-image";
 
 export default function Site() {
 
@@ -15,6 +17,8 @@ export default function Site() {
         selectComponent('product-suggestion').each((index, element) => new ProductSuggestion(element))
         selectComponent('select-with-child').each((index, element) => new SelectWithChild(element))
         selectComponent('select-or-new').each((index, element) => new SelectOrNew(element))
+        selectComponent('new-product-image').each((index, element) => new NewProductImage(element))
+        selectComponent('lister-product-image').each((index, element) => new ProductImage(element))
     }
 
     return {
