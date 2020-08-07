@@ -311,7 +311,6 @@ class ListerController extends Controller
                 $request->input('deletable_images', [])
             );
             $this->addProductImages($product, $request->input('new_images', []));
-
         }
 
         return redirect(
@@ -351,7 +350,6 @@ class ListerController extends Controller
                 'disk' => get_option('default_storage'),
             ]);
         }
-
     }
 
     public function newListing(Request $request)
