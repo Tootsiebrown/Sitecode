@@ -563,3 +563,11 @@ img.mfp-img {
   display: none;
 }
 
+.listing-type-select__quantity {
+  display: none;
+}
+
+.listing-type-select__quantity.visible {
+  display: block;
+}
+

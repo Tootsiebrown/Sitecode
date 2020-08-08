@@ -1,0 +1,9 @@
+.listing-type-select {
+    &__quantity {
+        display: none;
+
+        &.visible {
+            display: block;
+        }
+    }
+}

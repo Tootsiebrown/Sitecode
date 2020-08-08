@@ -14315,6 +14315,47 @@ var BarcodeReader = function BarcodeReader(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/listing-type-select.js":
+/*!**************************************************************!*\
+  !*** ./resources/assets/js/component/listing-type-select.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ListingTypeSelect; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var ListingTypeSelect = function ListingTypeSelect(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ListingTypeSelect);
+
+  this.handleChange = function (e) {
+    if (_this.$select.val() === 'buy-it-now') {
+      _this.$quantity.addClass('visible');
+    } else {
+      _this.$quantity.removeClass('visible');
+    }
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$select = this.$component.elements.select;
+  this.$quantity = this.$component.elements.quantity;
+  this.$select.on('change', this.handleChange);
+  this.$select.trigger('change');
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/component/new-product-image.js":
 /*!************************************************************!*\
   !*** ./resources/assets/js/component/new-product-image.js ***!
@@ -14675,6 +14716,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_select_with_child__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./component/select-with-child */ "./resources/assets/js/component/select-with-child.js");
 /* harmony import */ var _component_new_product_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/new-product-image */ "./resources/assets/js/component/new-product-image.js");
 /* harmony import */ var _component_product_image__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/product-image */ "./resources/assets/js/component/product-image.js");
+/* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
+
 
 
 
@@ -14705,6 +14748,9 @@ function Site() {
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('lister-product-image').each(function (index, element) {
       return new _component_product_image__WEBPACK_IMPORTED_MODULE_6__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('listing-type-select').each(function (index, element) {
+      return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_7__["default"](element);
     });
   };
 

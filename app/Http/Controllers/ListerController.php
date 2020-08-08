@@ -369,16 +369,18 @@ class ListerController extends Controller
     {
         $rules = [
             'ad_title' => 'required',
-            'sku' => 'required',
             'bid_deadline' => 'required',
+            'product_id' => 'exists:products,id',
+            'type' => 'required|in:auction,buy-it-now',
+            'quantity' => 'integer'
         ];
+
         $this->validate($request, $rules);
 
         $product = Product::find($request->product_id);
 
         $data = [
             'title' => $request->ad_title,
-            'sku' => $request->sku,
             'expired_at' => $request->bid_deadline,
             'description' => $product->description,
             'features' => $product->features,
@@ -386,6 +388,10 @@ class ListerController extends Controller
             'upc' => $product->upc,
             'price' => $product->price,
             'status' => 1,
+            'type' => $request->input('type'),
+            'quantity' => $request->input('type') == 'auction'
+                ? null
+                : $request->input('quantity')
         ];
 
         $product = Ad::create($data);
