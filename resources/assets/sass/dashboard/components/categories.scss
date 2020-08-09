@@ -1,0 +1,13 @@
+#listingPostForm {
+    #child-wrapper,
+    #grandchild-wrapper
+    {
+        max-height: 0;
+        transition: max-height .2s;
+        overflow: hidden;
+
+        &.visible {
+            max-height: 400px;
+        }
+    }
+}

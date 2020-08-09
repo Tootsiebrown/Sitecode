@@ -6,7 +6,9 @@
 @endsection
 
 @section('content')
-
+    <script type="text/javascript">
+        var categoryHierarchy = {!! json_encode($categoryHierarchy) !!};
+    </script>
     <div class="container">
 
         <div id="wrapper">
@@ -159,135 +161,145 @@
                         </div>
                     </div>
 
-                    <legend>Product Category</legend>
+                    <div data-component="product-categories-hierarchy">
+                        <legend>Product Category</legend>
 
-                    <div class="select-or-new" data-component="select-or-new">
-                        @if (!$categories->isEmpty())
-                            <div class="form-group">
-                                <label for="category_id" class="col-sm-4 control-label">Category</label>
+                        <div class="select-or-new" data-component="select-or-new">
+                            @if (!$categories->isEmpty())
+                                <div class="form-group">
+                                    <label for="category_id" class="col-sm-4 control-label">Category</label>
+                                    <div class="col-sm-8">
+                                        <select
+                                          class="form-control select2 select-or-new__select"
+                                          name="category_id"
+                                          id="category_id"
+                                          data-element="select"
+                                          data-product-categories-hierarchy-element="topSelect"
+                                          data-component="select-with-child"
+                                          data-child-wrapper="#child-wrapper"
+                                          data-child-data-url="{{ route("getProductCategoryChildren") }}"
+                                          data-url-parameter="category_id"
+                                          data-child-name="Child Category"
+                                        >
+                                            <option value="">Select Category...</option>
+                                            <option value="new">New Category...</option>
+                                            @foreach($categories as $category)
+                                                <option
+                                                  value="{{ $category->id }}"
+                                                  @if ($category->id == old('category_id')) selected="selected"
+                                                  @elseif ($category->id == request('category_id')) selected="selected"
+                                                  @elseif ($product->categories->pluck('id')->contains($category->id)) selected="selected"
+                                                  @endif
+                                                >{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div
+                              class="form-group select-or-new__new {{ $errors->has('new_category')? 'has-error':'' }}"
+                              data-element="new"
+                            >
+                                <label for="category" class="col-sm-4 control-label">New Category</label>
+                                <div class="col-sm-8">
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      id="new_category"
+                                      value="{{ old('new_category') ?? request('new_category') ?? '' }}"
+                                      name="new_category"
+                                      placeholder=""
+                                    >
+                                    {!! $errors->has('category')? '<p class="help-block">'.$errors->first('new_category').'</p>':'' !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                          id="child-wrapper"
+                          class="select-or-new"
+                          data-component="select-or-new"
+                          data-product-categories-hierarchy-element="child-select"
+                          data-my-child-hierarchy-component="[data-component='grand-child-select-component']"
+                        >
+                            <legend>Product Child Category</legend>
+
+                            <div class="form-group" id="child-category" >
+                                <label for="child_category_id" class="col-sm-4 control-label">Child Category</label>
                                 <div class="col-sm-8">
                                     <select
                                       class="form-control select2 select-or-new__select"
-                                      name="category_id"
-                                      id="category_id"
+                                      name="child_category_id"
+                                      id="child_category_id"
+                                      data-selected="{{ !is_null($product->child_category) ? $product->child_category->id : '' }}"
                                       data-element="select"
                                       data-component="select-with-child"
-                                      data-child-wrapper="#child-wrapper"
+                                      data-child-wrapper="#grandchild-wrapper"
                                       data-child-data-url="{{ route("getProductCategoryChildren") }}"
                                       data-url-parameter="category_id"
-                                      data-child-name="Child Category"
+                                      data-child-name="Grandchild Category"
                                     >
-                                        <option value="">Select Category...</option>
-                                        <option value="new">New Category...</option>
-                                        @foreach($categories as $category)
-                                            <option
-                                              value="{{ $category->id }}"
-                                              @if ($category->id == old('category_id')) selected="selected"
-                                              @elseif ($category->id == request('category_id')) selected="selected"
-                                              @elseif ($product->categories->pluck('id')->contains($category->id)) selected="selected"
-                                              @endif
-                                            >{{ $category->name }}</option>
+                                        <option value="">Select Child Category..</option>
+                                        <option value="new">New Child Category...</option>
+                                        @foreach($children as $child)
+                                            <option value="{{ $child->id }}" @if ($child->id == old('child_category_id')) selected="selected" @endif>{{ $child->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                        @endif
+
+                            <div
+                                class="form-group select-or-new__new {{ $errors->has('new_child_category')? 'has-error':'' }}"
+                                data-element="new"
+                            >
+                                <label for="new_child_category" class="col-sm-4 control-label">New Child Category</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="new_child_category" value="{{ old('new_child_category') ?? $product->child->id ?? '' }}" name="new_child_category" placeholder="" />
+                                    {!! $errors->has('new_child_category')? '<p class="help-block">'.$errors->first('new_child_category').'</p>':'' !!}
+                                </div>
+                            </div>
+                        </div> <!-- .child-wrapper -->
 
                         <div
-                          class="form-group select-or-new__new {{ $errors->has('new_category')? 'has-error':'' }}"
-                          data-element="new"
+                          id="grandchild-wrapper"
+                          data-component="grand-child-select-component"
                         >
-                            <label for="category" class="col-sm-4 control-label">New Category</label>
-                            <div class="col-sm-8">
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="new_category"
-                                  value="{{ old('new_category') ?? request('new_category') ?? '' }}"
-                                  name="new_category"
-                                  placeholder=""
+                            <legend>Product Grandchild Category</legend>
+                            <div class="select-or-new" data-component="select-or-new">
+                                <div class="form-group" id="grandchild_category_id"
+                                     data-component="select-or-new">
+                                    <label for="grandchild_category_id" class="col-sm-4 control-label">Grandchild Category</label>
+                                    <div class="col-sm-8">
+                                        <select
+                                          class="form-control select2 select-or-new__select"
+                                          name="grandchild_category_id"
+                                          id="grandchild_category_id"
+                                          data-selected="{{ !is_null($product->grandChildCategory) ? $product->grandChildCategory->id : '' }}"
+                                          data-element="select"
+                                        >
+                                            <option value="">Select Grandchild Category...</option>
+                                            <option value="new">New Grandchild Category...</option>
+                                            @foreach($grandchildren as $grandchild)
+                                                <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('grandchild_category_id')) selected="selected" @endif>{{ $grandchild->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div
+                                  class="form-group select-or-new__new{{ $errors->has('new_grandchild_category')? 'has-error':'' }}"
+                                  data-element="new"
                                 >
-                                {!! $errors->has('category')? '<p class="help-block">'.$errors->first('new_category').'</p>':'' !!}
+                                    <label for="new_grandchild_category" class="col-sm-4 control-label">New Grandchild Category</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="new_grandchild_category" value="{{ old('new_grandchild_category') ?? $product['grandchild'] ?? '' }}" name="new_grandchild_category" placeholder="" />
+                                        {!! $errors->has('new_grandchild_category')? '<p class="help-block">'.$errors->first('new_grandchild_category').'</p>':'' !!}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </div> <!-- .grandchild-wrapper -->
                     </div>
-
-                    <div id="child-wrapper" style="display: none;" class="select-or-new" data-component="select-or-new">
-                        <legend>Product Child Category</legend>
-
-                        <div class="form-group" id="child-category" >
-                            <label for="child_category_id" class="col-sm-4 control-label">Child Category</label>
-                            <div class="col-sm-8">
-                                <select
-                                  class="form-control select2 select-or-new__select"
-                                  name="child_category_id"
-                                  id="child_category_id"
-                                  data-selected="{{ !is_null($product->child_category) ? $product->child_category->id : '' }}"
-                                  data-element="select"
-                                  data-component="select-with-child"
-                                  data-child-wrapper="#grandchild-wrapper"
-                                  data-child-data-url="{{ route("getProductCategoryChildren") }}"
-                                  data-url-parameter="category_id"
-                                  data-child-name="Grandchild Category"
-                                >
-                                    <option value="">Select Child Category..</option>
-                                    <option value="new">New Child Category...</option>
-                                    @foreach($children as $child)
-                                        <option value="{{ $child->id }}" @if ($child->id == old('child_category_id')) selected="selected" @endif>{{ $child->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div
-                            class="form-group select-or-new__new {{ $errors->has('new_child_category')? 'has-error':'' }}"
-                            data-element="new"
-                        >
-                            <label for="new_child_category" class="col-sm-4 control-label">New Child Category</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="new_child_category" value="{{ old('new_child_category') ?? $product->child->id ?? '' }}" name="new_child_category" placeholder="" />
-                                {!! $errors->has('new_child_category')? '<p class="help-block">'.$errors->first('new_child_category').'</p>':'' !!}
-                            </div>
-                        </div>
-                    </div> <!-- .child-wrapper -->
-
-                    <div
-                      id="grandchild-wrapper"
-                      data-component="select-or-new"
-                      class="select-or-new"
-                    >
-                        <legend>Product Grandchild Category</legend>
-                        <div class="form-group" id="grandchild_category_id">
-                            <label for="grandchild_category_id" class="col-sm-4 control-label">Grandchild Category</label>
-                            <div class="col-sm-8">
-                                <select
-                                  class="form-control select2 select-or-new__select"
-                                  name="grandchild_category_id"
-                                  id="grandchild_category_id"
-                                  data-selected="{{ !is_null($product->grandChildCategory) ? $product->grandChildCategory->id : '' }}"
-                                  data-element="select"
-                                >
-                                    <option value="">Select Grandchild Category...</option>
-                                    <option value="new">New Grandchild Category...</option>
-                                    @foreach($grandchildren as $grandchild)
-                                        <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('grandchild_category_id')) selected="selected" @endif>{{ $grandchild->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div
-                          class="form-group select-or-new__new{{ $errors->has('new_grandchild_category')? 'has-error':'' }}"
-                          data-element="new"
-                        >
-                            <label for="new_grandchild_category" class="col-sm-4 control-label">New Grandchild Category</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="new_grandchild_category" value="{{ old('new_grandchild_category') ?? $product['grandchild'] ?? '' }}" name="new_grandchild_category" placeholder="" />
-                                {!! $errors->has('new_grandchild_category')? '<p class="help-block">'.$errors->first('new_grandchild_category').'</p>':'' !!}
-                            </div>
-                        </div>
-                    </div> <!-- .grandchild-wrapper -->
-
                     <legend>Product Images</legend>
 
                     <div class="images-wrapper" data-component="lister-product-image-wrapper">

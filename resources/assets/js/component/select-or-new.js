@@ -4,8 +4,8 @@ export default class SelectOrNew {
 
     constructor(element, options = {}) {
         this.$component = selectComponent(element)
-        this.$select = this.$component.elements.select
-        this.$new = this.$component.elements['new']
+        this.$select = this.$component.find('select')
+        this.$new = this.$component.find('[data-element="new"]')
         this.$select.on('change', this.handleChange)
         this.$select.trigger('change');
     }

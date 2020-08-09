@@ -505,6 +505,18 @@ img.mfp-img {
   justify-content: space-between;
 }
 
+#listingPostForm #child-wrapper,
+#listingPostForm #grandchild-wrapper {
+  max-height: 0;
+  transition: max-height 0.2s;
+  overflow: hidden;
+}
+
+#listingPostForm #child-wrapper.visible,
+#listingPostForm #grandchild-wrapper.visible {
+  max-height: 400px;
+}
+
 .select-or-new__new {
   magrin-bottom: 0;
   max-height: 0;

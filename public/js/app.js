@@ -14459,6 +14459,196 @@ var NewProductImage = function NewProductImage(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/product-categories-child.js":
+/*!*******************************************************************!*\
+  !*** ./resources/assets/js/component/product-categories-child.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductCategoriesChild; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var ProductCategoriesChild = /*#__PURE__*/function () {
+  function ProductCategoriesChild(element) {
+    var _this = this;
+
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    _classCallCheck(this, ProductCategoriesChild);
+
+    this.handleChange = function (e) {
+      if (!_this.hasChildComponent) {
+        return;
+      }
+
+      _this.childComponent.setOptions(_this.getNewChildren());
+
+      if (_this.$select.val() === 'new' && _this.hasChildComponent) {
+        _this.childComponent.value('new');
+      }
+
+      if (_this.$select.val() != '') {
+        _this.childComponent.addClass('visible');
+      } else {
+        _this.childComponent.removeClass('visible');
+      }
+
+      console.log(_this.childComponent);
+
+      _this.childComponent.trigger('change');
+    };
+
+    this.getNewChildren = function () {
+      if (!(_this.$select.val() in _this.options)) {
+        return {};
+      }
+
+      return _this.options[_this.$select.val()].children;
+    };
+
+    this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+    this.$select = this.$component.find('select');
+    this.prettyName = 'Child Category';
+
+    if (typeof this.$component.attr('data-my-child-hierarchy-component') !== 'undefined') {
+      this.hasChildComponent = true;
+      this.childComponent = new ProductCategoriesChild($(this.$component.attr('data-my-child-hierarchy-component')));
+    } else {
+      this.hasChildComponent = false;
+    }
+
+    this.$select.on('change', this.handleChange);
+  }
+
+  _createClass(ProductCategoriesChild, [{
+    key: "setOptions",
+    value: function setOptions(options) {
+      this.options = options;
+      this.replaceOptions();
+    }
+  }, {
+    key: "addClass",
+    value: function addClass(the_class) {
+      this.$component.addClass(the_class);
+    }
+  }, {
+    key: "removeClass",
+    value: function removeClass(the_class) {
+      this.$component.removeClass(the_class);
+    }
+  }, {
+    key: "replaceOptions",
+    value: function replaceOptions() {
+      var options = '';
+      options += "<option value=\"\">Select ".concat(this.prettyName, "...</option>");
+      options += "<option value=\"new\">New ".concat(this.prettyName, "...</option>");
+
+      for (var i in this.options) {
+        options += "<option value=\"".concat(this.options[i].id, "\">").concat(this.options[i].name, "</option>");
+      }
+
+      this.$select.html(options);
+      this.$select.val(this.$select.attr('data-selected'));
+
+      if (this.hasChildComponent) {
+        this.childComponent.setOptions(this.getNewChildren());
+      }
+    }
+  }, {
+    key: "value",
+    value: function value(_value) {
+      if (typeof _value === 'undefined') {
+        return this.$select.val();
+      }
+
+      this.$select.val(_value);
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(eventName) {
+      this.$select.trigger(eventName);
+    }
+  }]);
+
+  return ProductCategoriesChild;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/component/product-categories-hierarchy.js":
+/*!***********************************************************************!*\
+  !*** ./resources/assets/js/component/product-categories-hierarchy.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductCategoriesHierarchy; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var _product_categories_child__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./product-categories-child */ "./resources/assets/js/component/product-categories-child.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_2__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+
+var ProductCategoriesHierarchy = function ProductCategoriesHierarchy(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ProductCategoriesHierarchy);
+
+  this.handleChange = function (e) {
+    _this.$childProductCategoriesComponent.setOptions(_this.getNewChildren());
+
+    if (_this.$topSelect.val() != '') {
+      _this.$childProductCategoriesComponent.addClass('visible');
+    } else {
+      _this.$childProductCategoriesComponent.removeClass('visible');
+    }
+
+    if (_this.$topSelect.val() === 'new') {
+      _this.$childProductCategoriesComponent.value('new');
+    }
+
+    _this.$childProductCategoriesComponent.trigger('change');
+  };
+
+  this.getNewChildren = function () {
+    if (!(_this.$topSelect.val() in _this.categories)) {
+      return {};
+    }
+
+    return _this.categories[_this.$topSelect.val()].children;
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.categories = window.categoryHierarchy;
+  this.$topSelect = this.$component.find('[data-product-categories-hierarchy-element="topSelect"]');
+  this.$topSelect.on('change', this.handleChange);
+  this.$childProductCategoriesComponent = new _product_categories_child__WEBPACK_IMPORTED_MODULE_1__["default"](jquery__WEBPACK_IMPORTED_MODULE_2__('[data-product-categories-hierarchy-element="child-select"]'));
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/component/product-image.js":
 /*!********************************************************!*\
   !*** ./resources/assets/js/component/product-image.js ***!
@@ -14584,115 +14774,10 @@ var SelectOrNew = function SelectOrNew(element) {
   };
 
   this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
-  this.$select = this.$component.elements.select;
-  this.$new = this.$component.elements['new'];
+  this.$select = this.$component.find('select');
+  this.$new = this.$component.find('[data-element="new"]');
   this.$select.on('change', this.handleChange);
   this.$select.trigger('change');
-};
-
-
-
-/***/ }),
-
-/***/ "./resources/assets/js/component/select-with-child.js":
-/*!************************************************************!*\
-  !*** ./resources/assets/js/component/select-with-child.js ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SelectWithChild; });
-/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _select_or_new__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./select-or-new */ "./resources/assets/js/component/select-or-new.js");
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-
-
-
-
-var SelectWithChild = function SelectWithChild(element) {
-  var _this = this;
-
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  _classCallCheck(this, SelectWithChild);
-
-  this.handleChange = function (e) {
-    var formData = {};
-
-    var the_value = _this.$component.val();
-
-    formData[_this.$component.attr('data-url-parameter')] = the_value;
-
-    if (the_value == '' || the_value == 'new') {
-      _this.emptyAndHideChild();
-
-      return;
-    }
-
-    jquery__WEBPACK_IMPORTED_MODULE_1__["ajax"]({
-      type: 'GET',
-      url: _this.$component.attr('data-child-data-url'),
-      data: formData,
-      success: function success(jsonData) {
-        _this.generateOptionsFromJson(jsonData);
-      }
-    });
-  };
-
-  this.emptyAndHideChild = function () {
-    _this.$childSelect.html('');
-
-    _this.$childSelect.hide();
-
-    _this.$childWrapper.hide();
-  };
-
-  this.generateOptionsFromJson = function (jsonData) {
-    var option = '';
-    option += '<option value="" selected>Select ' + _this.childName + '...</option>';
-    option += '<option value="new">New ' + _this.childName + '...</option>';
-
-    for (var i in jsonData) {
-      option += '<option value="' + jsonData[i].id + '"> ' + jsonData[i].name + ' </option>';
-    }
-
-    _this.$childSelect.html(option);
-
-    _this.$childSelect.show();
-
-    _this.$childWrapper.show();
-
-    var $selectOrNew = _this.$childSelect.closest('[data-component="select-or-new"]');
-
-    if ($selectOrNew.length > 0) {
-      new _select_or_new__WEBPACK_IMPORTED_MODULE_2__["default"]($selectOrNew.get(0));
-    }
-
-    if (jsonData.length === 0) {
-      _this.$childSelect.val('new');
-    } else if (_this.$childSelect.attr('data-selected') && _this.$childSelect.find('[value="' + _this.$childSelect.attr('data-selected') + '"]').length > 0) {
-      _this.$childSelect.val(_this.$childSelect.attr('data-selected'));
-    }
-
-    _this.$childSelect.trigger('change');
-  };
-
-  jquery__WEBPACK_IMPORTED_MODULE_1__["ajaxSetup"]({
-    headers: {
-      'X-CSRF-TOKEN': jquery__WEBPACK_IMPORTED_MODULE_1__('meta[name="csrf-token"]').attr('content')
-    }
-  });
-  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
-  this.$childWrapper = jquery__WEBPACK_IMPORTED_MODULE_1__(this.$component.attr('data-child-wrapper'));
-  this.$childSelect = this.$childWrapper.find('select');
-  this.childName = this.$component.attr('data-child-name');
-  this.$component.on('change', this.handleChange);
-  this.$component.trigger('change');
 };
 
 
@@ -14713,10 +14798,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_barcode_reader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component/barcode-reader */ "./resources/assets/js/component/barcode-reader.js");
 /* harmony import */ var _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./component/product-suggestion */ "./resources/assets/js/component/product-suggestion.js");
 /* harmony import */ var _component_select_or_new__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./component/select-or-new */ "./resources/assets/js/component/select-or-new.js");
-/* harmony import */ var _component_select_with_child__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./component/select-with-child */ "./resources/assets/js/component/select-with-child.js");
-/* harmony import */ var _component_new_product_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/new-product-image */ "./resources/assets/js/component/new-product-image.js");
-/* harmony import */ var _component_product_image__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/product-image */ "./resources/assets/js/component/product-image.js");
-/* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
+/* harmony import */ var _component_new_product_image__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./component/new-product-image */ "./resources/assets/js/component/new-product-image.js");
+/* harmony import */ var _component_product_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/product-image */ "./resources/assets/js/component/product-image.js");
+/* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
+/* harmony import */ var _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/product-categories-hierarchy */ "./resources/assets/js/component/product-categories-hierarchy.js");
 
 
 
@@ -14737,20 +14822,20 @@ function Site() {
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('product-suggestion').each(function (index, element) {
       return new _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__["default"](element);
     });
-    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('select-with-child').each(function (index, element) {
-      return new _component_select_with_child__WEBPACK_IMPORTED_MODULE_4__["default"](element);
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('product-categories-hierarchy').each(function (index, element) {
+      return new _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('select-or-new').each(function (index, element) {
       return new _component_select_or_new__WEBPACK_IMPORTED_MODULE_3__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('new-product-image').each(function (index, element) {
-      return new _component_new_product_image__WEBPACK_IMPORTED_MODULE_5__["default"](element);
+      return new _component_new_product_image__WEBPACK_IMPORTED_MODULE_4__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('lister-product-image').each(function (index, element) {
-      return new _component_product_image__WEBPACK_IMPORTED_MODULE_6__["default"](element);
+      return new _component_product_image__WEBPACK_IMPORTED_MODULE_5__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('listing-type-select').each(function (index, element) {
-      return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_7__["default"](element);
+      return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__["default"](element);
     });
   };
 
