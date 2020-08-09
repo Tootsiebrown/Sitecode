@@ -1,0 +1,13 @@
+.select-or-new {
+    &__new {
+        magrin-bottom: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .2s, margin-bottom .2s;
+
+        &.visible {
+            max-height: 48px;
+            margin-bottom: 15px;
+        }
+    }
+}

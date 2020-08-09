@@ -8,10 +8,10 @@
     }
 @endphp
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ $mapApiKey }}&extension=.js"></script>
-<script src="{{ mix('js/manifest.js') }}"></script>
-<script src="{{ mix('js/app.js') }}"></script>
-<script src="{{ mix('js/vendor.js') }}"></script>
-<script src="{{ mix('js/bundle.js') }}"></script>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-{!! BugHerd::draw() !!}
+{{--<script src="https://maps.googleapis.com/maps/api/js?key={{ $mapApiKey }}&extension=.js"></script>--}}
+{{--<script src="{{ mix('js/manifest.js') }}"></script>--}}
+{{--<script src="{{ mix('js/app.js') }}"></script>--}}
+{{--<script src="{{ mix('js/vendor.js') }}"></script>--}}
+{{--<script src="{{ mix('js/bundle.js') }}"></script>--}}
+{{--<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>--}}
+{{--{!! BugHerd::draw() !!}--}}

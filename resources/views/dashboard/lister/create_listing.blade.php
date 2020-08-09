@@ -21,63 +21,84 @@
                     @include('dashboard.flash_msg')
 
                     <form action="{{ route('lister.saveListing') }}" id="listingPostForm" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                        <input type="hidden" name="product_id" value="{{ $product->id }}" />
 
-                    <legend> <span class="ad_text"> Listing </span> Info for {{ $product->name }} </legend>
+                        <legend> <span class="ad_text"> Listing </span> Info for {{ $product->name }} </legend>
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-                    <div class="form-group {{ $errors->has('ad_title')? 'has-error':'' }}">
-                        <label for="ad_title" class="col-sm-4 control-label"> <span class="ad_text"> Listing </span> @lang('app.title')</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="ad_title" value="{{ old('ad_title') }}" name="ad_title" placeholder="Listing Title">
-                            {!! $errors->has('ad_title')? '<p class="help-block">'.$errors->first('ad_title').'</p>':'' !!}
-                            <p class="text-info"> @lang('app.great_title_info')</p>
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('sku')? 'has-error':'' }}">
-                        <label for="sku" class="col-sm-4 control-label"> <span class="text"> Listing </span> SKU</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="sku" value="{{ old('sku') }}" name="sku" placeholder="Listing sku">
-                            {!! $errors->has('sku')? '<p class="help-block">'.$errors->first('sku').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('bid_deadline')? 'has-error':'' }}">
-                        <label for="bid_deadline" class="col-sm-4 control-label"> @lang('app.bid_deadline')</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="bid_deadline" value="{{ old('bid_deadline') }}" name="bid_deadline" placeholder="@lang('app.bid_deadline')">
-                            {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    @if(get_option('enable_recaptcha_post_ad') == 1)
-                        <div class="form-group {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="g-recaptcha" data-sitekey="{{get_option('recaptcha_site_key')}}"></div>
-                                @if ($errors->has('g-recaptcha-response'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
-                                        </span>
-                                @endif
+                        <div class="form-group {{ $errors->has('ad_title')? 'has-error':'' }}">
+                            <label for="ad_title" class="col-sm-4 control-label"> <span class="ad_text"> Listing </span> @lang('app.title')</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="ad_title" value="{{ old('ad_title') }}" name="ad_title" placeholder="Listing Title">
+                                {!! $errors->has('ad_title')? '<p class="help-block">'.$errors->first('ad_title').'</p>':'' !!}
+                                <p class="text-info"> @lang('app.great_title_info')</p>
                             </div>
                         </div>
-                    @endif
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-8">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save New Listing</button>
+                        <div class="listing-type-select" data-component="listing-type-select">
+                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                                <label for="type" class="col-sm-4 control-label">Listing Type</label>
+                                <div class="col-sm-8">
+                                    <select name="type" data-element="select" class="select2">
+                                        <option value="">Select Listing Type...</option>
+                                        <option value="auction">Auction</option>
+                                        <option value="buy-it-now">Buy it Now</option>
+                                    </select>
+                                    {!! $errors->has('ad_title')? '<p class="help-block">'.$errors->first('ad_title').'</p>':'' !!}
+                                </div>
+                            </div>
+
+                            <div
+                              class="form-group {{ $errors->has('quantity') ? 'has-error' : '' }} listing-type-select__quantity"
+                              data-element="quantity"
+                            >
+                                <label for="quantity" class="col-sm-4 control-label">Quantity</label>
+                                <div class="col-sm-8">
+                                    <input name="quantity" type="text" class="form-control">
+                                    {!! $errors->has('quantity')? '<p class="help-block">'.$errors->first('quantity').'</p>':'' !!}
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
+
+                        <div class="form-group {{ $errors->has('bid_deadline')? 'has-error':'' }}">
+                            <label for="bid_deadline" class="col-sm-4 control-label"> @lang('app.bid_deadline')</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="bid_deadline" value="{{ old('bid_deadline') }}" name="bid_deadline" placeholder="@lang('app.bid_deadline')">
+                                {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
+                            </div>
+                        </div>
+
+                        @if(get_option('enable_recaptcha_post_ad') == 1)
+                            <div class="form-group {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <div class="g-recaptcha" data-sitekey="{{get_option('recaptcha_site_key')}}"></div>
+                                    @if ($errors->has('g-recaptcha-response'))
+                                        <span class="help-block">
+                                                <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                                            </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save New Listing</button>
+                            </div>
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <p>Note: listings are not yet feature complete. Please do not yet depend on this feature.</p>
+                            </div>
+                        </div>
                     </form>
                 </div>
 

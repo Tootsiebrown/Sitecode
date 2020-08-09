@@ -14109,11 +14109,6 @@ __webpack_require__.r(__webpack_exports__);
 
 $(document).ready(function () {
   Object(_site__WEBPACK_IMPORTED_MODULE_0__["default"])().init();
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
 });
 
 /***/ }),
@@ -14320,6 +14315,388 @@ var BarcodeReader = function BarcodeReader(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/listing-type-select.js":
+/*!**************************************************************!*\
+  !*** ./resources/assets/js/component/listing-type-select.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ListingTypeSelect; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var ListingTypeSelect = function ListingTypeSelect(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ListingTypeSelect);
+
+  this.handleChange = function (e) {
+    if (_this.$select.val() === 'buy-it-now') {
+      _this.$quantity.addClass('visible');
+    } else {
+      _this.$quantity.removeClass('visible');
+    }
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$select = this.$component.elements.select;
+  this.$quantity = this.$component.elements.quantity;
+  this.$select.on('change', this.handleChange);
+  this.$select.trigger('change');
+};
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/component/new-product-image.js":
+/*!************************************************************!*\
+  !*** ./resources/assets/js/component/new-product-image.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return NewProductImage; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _product_image__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./product-image */ "./resources/assets/js/component/product-image.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+
+var NewProductImage = function NewProductImage(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, NewProductImage);
+
+  this.handleChange = function () {
+    _this.startSpinner();
+
+    jquery__WEBPACK_IMPORTED_MODULE_1__["ajax"]({
+      type: 'POST',
+      url: _this.$input.attr('data-action'),
+      data: _this.getFormData(),
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function success(data) {
+        console.log("success");
+        console.log(data);
+
+        _this.appendImage(data.filename, data.url);
+
+        _this.stopSpinner();
+
+        _this.resetInput();
+      },
+      error: function error(data) {
+        console.log("error");
+        console.log(data);
+
+        _this.stopSpinner();
+
+        _this.showMessage();
+      }
+    });
+  };
+
+  this.getFormData = function () {
+    var tmpFormData = new FormData(_this.$component.closest('form').get(0));
+    var formData = new FormData();
+    formData.set('image', tmpFormData.get('new_image'));
+    return formData;
+  };
+
+  this.startSpinner = function () {
+    _this.$component.addClass('loading');
+  };
+
+  this.stopSpinner = function () {
+    _this.$component.removeClass('loading');
+  };
+
+  this.appendImage = function (filename, url) {
+    var $element = jquery__WEBPACK_IMPORTED_MODULE_1__("<div class=\"lister-product-image clearfix\" data-component=\"lister-product-image\" data-saved=\"false\">\n            <input\n                type=\"hidden\"\n                name=\"new_images[]\"\n                value=\"".concat(filename, "\"\n            />\n            <label class=\"col-sm-4 control-label\"></label>\n            <div class=\"col-sm-8 lister-product-image__display-container\">\n                <div class=\"lister-product-image__image-wrapper\"><img src=\"").concat(url, "\"></div>\n                <a href=\"#\" data-element=\"delete\"><i class=\"fa fa-trash\"></i> Delete</a>\n            </div>\n        </div>"));
+    jquery__WEBPACK_IMPORTED_MODULE_1__('.images-wrapper').append($element);
+    new _product_image__WEBPACK_IMPORTED_MODULE_2__["default"]($element);
+  };
+
+  this.resetInput = function () {
+    _this.$input.val('');
+  };
+
+  this.showMessage = function (message) {
+    _this.$message.html(message);
+  };
+
+  jquery__WEBPACK_IMPORTED_MODULE_1__["ajaxSetup"]({
+    headers: {
+      'X-CSRF-TOKEN': jquery__WEBPACK_IMPORTED_MODULE_1__('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$input = this.$component.elements.input;
+  this.$spinner = this.$component.elements.spinner;
+  this.$message = this.$component.elements.message;
+  this.$input.on('change', this.handleChange);
+};
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/component/product-categories-child.js":
+/*!*******************************************************************!*\
+  !*** ./resources/assets/js/component/product-categories-child.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductCategoriesChild; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var ProductCategoriesChild = /*#__PURE__*/function () {
+  function ProductCategoriesChild(element) {
+    var _this = this;
+
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    _classCallCheck(this, ProductCategoriesChild);
+
+    this.handleChange = function (e) {
+      if (!_this.hasChildComponent) {
+        return;
+      }
+
+      _this.childComponent.setOptions(_this.getNewChildren());
+
+      if (_this.$select.val() === 'new' && _this.hasChildComponent) {
+        _this.childComponent.value('new');
+      }
+
+      if (_this.$select.val() != '') {
+        _this.childComponent.addClass('visible');
+      } else {
+        _this.childComponent.removeClass('visible');
+      }
+
+      console.log(_this.childComponent);
+
+      _this.childComponent.trigger('change');
+    };
+
+    this.getNewChildren = function () {
+      if (!(_this.$select.val() in _this.options)) {
+        return {};
+      }
+
+      return _this.options[_this.$select.val()].children;
+    };
+
+    this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+    this.$select = this.$component.find('select');
+    this.prettyName = 'Child Category';
+
+    if (typeof this.$component.attr('data-my-child-hierarchy-component') !== 'undefined') {
+      this.hasChildComponent = true;
+      this.childComponent = new ProductCategoriesChild($(this.$component.attr('data-my-child-hierarchy-component')));
+    } else {
+      this.hasChildComponent = false;
+    }
+
+    this.$select.on('change', this.handleChange);
+  }
+
+  _createClass(ProductCategoriesChild, [{
+    key: "setOptions",
+    value: function setOptions(options) {
+      this.options = options;
+      this.replaceOptions();
+    }
+  }, {
+    key: "addClass",
+    value: function addClass(the_class) {
+      this.$component.addClass(the_class);
+    }
+  }, {
+    key: "removeClass",
+    value: function removeClass(the_class) {
+      this.$component.removeClass(the_class);
+    }
+  }, {
+    key: "replaceOptions",
+    value: function replaceOptions() {
+      var options = '';
+      options += "<option value=\"\">Select ".concat(this.prettyName, "...</option>");
+      options += "<option value=\"new\">New ".concat(this.prettyName, "...</option>");
+
+      for (var i in this.options) {
+        options += "<option value=\"".concat(this.options[i].id, "\">").concat(this.options[i].name, "</option>");
+      }
+
+      this.$select.html(options);
+      this.$select.val(this.$select.attr('data-selected'));
+
+      if (this.hasChildComponent) {
+        this.childComponent.setOptions(this.getNewChildren());
+      }
+    }
+  }, {
+    key: "value",
+    value: function value(_value) {
+      if (typeof _value === 'undefined') {
+        return this.$select.val();
+      }
+
+      this.$select.val(_value);
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(eventName) {
+      this.$select.trigger(eventName);
+    }
+  }]);
+
+  return ProductCategoriesChild;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/component/product-categories-hierarchy.js":
+/*!***********************************************************************!*\
+  !*** ./resources/assets/js/component/product-categories-hierarchy.js ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductCategoriesHierarchy; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var _product_categories_child__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./product-categories-child */ "./resources/assets/js/component/product-categories-child.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_2__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+
+var ProductCategoriesHierarchy = function ProductCategoriesHierarchy(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ProductCategoriesHierarchy);
+
+  this.handleChange = function (e) {
+    _this.$childProductCategoriesComponent.setOptions(_this.getNewChildren());
+
+    if (_this.$topSelect.val() != '') {
+      _this.$childProductCategoriesComponent.addClass('visible');
+    } else {
+      _this.$childProductCategoriesComponent.removeClass('visible');
+    }
+
+    if (_this.$topSelect.val() === 'new') {
+      _this.$childProductCategoriesComponent.value('new');
+    }
+
+    _this.$childProductCategoriesComponent.trigger('change');
+  };
+
+  this.getNewChildren = function () {
+    if (!(_this.$topSelect.val() in _this.categories)) {
+      return {};
+    }
+
+    return _this.categories[_this.$topSelect.val()].children;
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.categories = window.categoryHierarchy;
+  this.$topSelect = this.$component.find('[data-product-categories-hierarchy-element="topSelect"]');
+  this.$topSelect.on('change', this.handleChange);
+  this.$childProductCategoriesComponent = new _product_categories_child__WEBPACK_IMPORTED_MODULE_1__["default"](jquery__WEBPACK_IMPORTED_MODULE_2__('[data-product-categories-hierarchy-element="child-select"]'));
+};
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/component/product-image.js":
+/*!********************************************************!*\
+  !*** ./resources/assets/js/component/product-image.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProductImage; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var ProductImage = function ProductImage(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, ProductImage);
+
+  this.handleClick = function (e) {
+    e.preventDefault();
+
+    if (!confirm("Are you sure you want to delete this image?")) {
+      return;
+    }
+
+    var deletableImage = _this.$component.find('input').val();
+
+    _this.$component.html('');
+
+    if (!_this.alreadySaved) {
+      _this.$component.html('<input type="hidden" name="deletable_images[]" value="' + deletableImage + '">');
+    }
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$delete = this.$component.elements["delete"];
+  this.alreadySaved = this.$component.attr('data-saved') === 'false' ? false : true;
+  this.$delete.on('click', this.handleClick);
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/component/product-suggestion.js":
 /*!*************************************************************!*\
   !*** ./resources/assets/js/component/product-suggestion.js ***!
@@ -14366,6 +14743,47 @@ var ProductSuggestion = function ProductSuggestion(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/select-or-new.js":
+/*!********************************************************!*\
+  !*** ./resources/assets/js/component/select-or-new.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SelectOrNew; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var SelectOrNew = function SelectOrNew(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, SelectOrNew);
+
+  this.handleChange = function (e) {
+    if (_this.$select.val() == 'new') {
+      _this.$new.addClass('visible');
+    } else {
+      _this.$new.removeClass('visible');
+    }
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$select = this.$component.find('select');
+  this.$new = this.$component.find('[data-element="new"]');
+  this.$select.on('change', this.handleChange);
+  this.$select.trigger('change');
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/site.js":
 /*!*************************************!*\
   !*** ./resources/assets/js/site.js ***!
@@ -14379,80 +14797,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
 /* harmony import */ var _component_barcode_reader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component/barcode-reader */ "./resources/assets/js/component/barcode-reader.js");
 /* harmony import */ var _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./component/product-suggestion */ "./resources/assets/js/component/product-suggestion.js");
-// import AjaxForm from 'component/ajax-form'
-// import CustomInput from 'component/custom-input'
-// import GoogleMap from 'component/GoogleMap'
-// import modalMFP from 'component/modal-mfp'
-// import MainNav from 'component/main-nav'
-// import PhotoSwipe from 'component/gallery-photoswipe'
- // import Share from 'component/Share'
-// import SubNav from 'component/subnav'
+/* harmony import */ var _component_select_or_new__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./component/select-or-new */ "./resources/assets/js/component/select-or-new.js");
+/* harmony import */ var _component_new_product_image__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./component/new-product-image */ "./resources/assets/js/component/new-product-image.js");
+/* harmony import */ var _component_product_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/product-image */ "./resources/assets/js/component/product-image.js");
+/* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
+/* harmony import */ var _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/product-categories-hierarchy */ "./resources/assets/js/component/product-categories-hierarchy.js");
 
 
- // const AUTO_MODULES = [
-//     PhotoSwipe
-// ]
+
+
+
+
+
 
 function Site() {
   var init = function init() {
-    //startDefault()
     startCustom();
-  }; //
-  // const startDefault = function() {
-  //     $.each(AUTO_MODULES, (key, Module) => {
-  //         const instance = Module()
-  //         instance.start()
-  //     })
-  // }
-  //
-
+  };
 
   var startCustom = function startCustom() {
-    //
-    //     // selectComponent('ajax-form').each((index, element) => new AjaxForm(element))
-    //     //
-    //     // const mapIcon = {
-    //     //     path: 'M1152 640q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm256 0q0 109-33 179l-364 774q-16 33-47.5 52t-67.5 19-67.5-19-46.5-52l-365-774q-33-70-33-179 0-212 150-362t362-150 362 150 150 362z',
-    //     //     fillColor: '#000',
-    //     //     fillOpacity: 1,
-    //     //     strokeOpacity: 1,
-    //     //     scale: .02,
-    //     //     anchor: new google.maps.Point(896, 1792)
-    //     // }
-    //     //
-    //     // const imageOverlays = [
-    //     //     {
-    //     //         northEast: {
-    //     //             "lat" : 38.2665,
-    //     //             "lng" : -85.6277
-    //     //         },
-    //     //         southWest: {
-    //     //             "lat" : 38.229607,
-    //     //             "lng" : -85.720607
-    //     //         },
-    //     //         image: 'http://via.placeholder.com/400x200',
-    //     //         showBounds: true,
-    //     //         importSVG: false
-    //     //     },
-    //     // ]
-    //     //
-    //     // selectComponent('locations-map').each((index, element) => new GoogleMap(index, element, {locations: window.LOCATIONS, icon: mapIcon, imageOverlays: imageOverlays}))
-    //     //
-    //     // selectComponent('toggle-nav').each((index, element) => new Nav(element))
-    //     //
-    //     // selectComponent('select').each((index, element) => new CustomInput(element))
-    //     //
-    //     // selectComponent('ajax-form').each((index, element) => new AjaxForm(element))
-    //     //
-    //     // selectComponent('main-nav').each((index, element) => new MainNav(element))
-    //     //
-    //     // selectComponent('share').each((index, element) => new Share(element))
-    //
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('barcode-reader').each(function (index, element) {
       return new _component_barcode_reader__WEBPACK_IMPORTED_MODULE_1__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('product-suggestion').each(function (index, element) {
       return new _component_product_suggestion__WEBPACK_IMPORTED_MODULE_2__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('product-categories-hierarchy').each(function (index, element) {
+      return new _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('select-or-new').each(function (index, element) {
+      return new _component_select_or_new__WEBPACK_IMPORTED_MODULE_3__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('new-product-image').each(function (index, element) {
+      return new _component_new_product_image__WEBPACK_IMPORTED_MODULE_4__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('lister-product-image').each(function (index, element) {
+      return new _component_product_image__WEBPACK_IMPORTED_MODULE_5__["default"](element);
+    });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('listing-type-select').each(function (index, element) {
+      return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__["default"](element);
     });
   };
 

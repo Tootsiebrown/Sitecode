@@ -30,7 +30,7 @@
                     @if (Auth::user()->superuser)
                         <li>
                             <a
-                                href="{{ route('lister.productForm', ['product' => $product->id]) }}"
+                                href="{{ route('lister.productForm', ['product' => $product->id, 'action' => 'edit']) }}"
                                 class=""
                             ><i class="fa fa-edit"></i> Edit Existing Product for New Listing</a>
                         </li>

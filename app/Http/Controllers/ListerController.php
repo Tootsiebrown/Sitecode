@@ -9,7 +9,10 @@ use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
 class ListerController extends Controller
@@ -102,20 +105,29 @@ class ListerController extends Controller
                 $request->input('upc'),
                 $request->input('from_profile')
             );
+
+            $action = 'new';
         } elseif (null != $request->input('product')) {
             $product = Product::find($request->input('product'));
 
             if (! $product) {
                 abort(404);
             }
+
+            $action = $request->input('action', 'new') == 'edit'
+                ? 'edit'
+                : 'new';
         } else {
             $product = new Product([
                 'upc' => $request->input('upc'),
                 'name' => $request->input('name')
             ]);
+
+            $action = 'new';
         }
 
         return view('dashboard.lister.product_form', [
+            'categoryHierarchy' => $this->getDenormalizedProductCategories(),
             'brands' => Brand::all(),
             'categories' => ProductCategory::where('parent_id', 0)->get(),
             'children' => ProductCategory::whereIn('parent_id', function ($query) {
@@ -125,7 +137,51 @@ class ListerController extends Controller
             })->get(),
             'grandchildren' => collect(),
             'product' => $product ?? null,
+            'action' => $action,
         ]);
+    }
+
+    protected function getDenormalizedProductCategories()
+    {
+        $categories = ProductCategory::all();
+
+        return $categories
+            ->filter(function ($category) {
+                return $category->parent_id === 0;
+            })
+            ->mapWithKeys(function ($category) use ($categories) {
+                return [
+                    $category->id => [
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'children' => $categories
+                            ->filter(function ($childCategory) use ($category) {
+                                return $childCategory->parent_id === $category->id;
+                            })
+                            ->mapWithKeys(function ($childCategory) use ($categories) {
+                                return [
+                                    $childCategory->id => [
+                                        'id' => $childCategory->id,
+                                        'name' => $childCategory->name,
+                                        'children' => $categories
+                                            ->filter(function ($grandchildCategory) use ($childCategory) {
+                                                return $grandchildCategory->parent_id === $childCategory->id;
+                                            })
+                                            ->mapWithKeys(function ($grandchildCategory) {
+                                                return [
+                                                    $grandchildCategory->id => [
+                                                        'id' => $grandchildCategory->id,
+                                                        'name' => $grandchildCategory->name,
+                                                    ]
+                                                ];
+                                            })
+                                            ->values()
+                                    ]
+                                ];
+                            })
+                    ]
+                ];
+            });
     }
 
     protected function newProductFromDatafiniti($upc, $profileId)
@@ -190,21 +246,38 @@ class ListerController extends Controller
             'upc' => 'required',
             'price' => 'required',
             'description' => 'required',
+
+            'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
+            'brand' => 'exclude_unless:brand_id,new|required',
+
+            'category_id'  => 'exclude_if:category_id,new|required|exists:product_categories,id',
+            'new_category' => 'exclude_unless:category_id,new|required|unique,product_categories,name',
+
+            'child_category_id' => [
+                'exclude_if:child_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('category_id'));
+//                }),
+            ],
+            'new_child_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
+
+
+            'grandchild_category_id' => [
+                'exclude_if:grandchild_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('child_category_id'));
+//                }),
+            ],
+            'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
         ];
 
-        if ($request->input('existing_brand')) {
-            $brand = Brand::find($request->input('existing_brand'));
-        } elseif (!empty($request->input('brand'))) {
-            $brand = Brand::create([
-                'name' => $request->input('brand'),
-            ]);
-        }
-        if (empty($brand)) {
-            $rules['brand'] = 'required';
-        }
 
-        if ($request->input('existing_category')) {
-            $category = ProductCategory::find($request->input('existing_category'));
+        $this->validate($request, $rules);
+
+        if ($request->input('category_id')) {
+            $category = ProductCategory::find($request->input('category_id'));
         } elseif (!empty($request->input('category'))) {
             $category = ProductCategory::create([
                 'breadcrumb' => $request->input('category'),
@@ -213,31 +286,34 @@ class ListerController extends Controller
                 'url_slug' => Str::slug($request->input('category')),
             ]);
         }
-        if (empty($category)) {
-            $rules['category'] = 'required';
-        }
 
-        $this->validate($request, $rules);
-
-        if ($request->input('existing_child')) {
-            $child = ProductCategory::find($request->input('existing_child'));
-        } elseif (!empty($request->input('child'))) {
+        if ($request->input('child_category_id')) {
+            $child = ProductCategory::find($request->input('child_category_id'));
+        } elseif (!empty($request->input('new_child_category'))) {
             $child = ProductCategory::create([
-                'breadcrumb' => $request->input('child'),
-                'name' => $request->input('child'),
+                'breadcrumb' => $category->name . ' » ' . $request->input('new_child_category'),
+                'name' => $request->input('new_child_category'),
                 'parent_id' => $category->id,
-                'url_slug' => Str::slug($request->input('child')),
+                'url_slug' => Str::slug($request->input('new_child_category')),
             ]);
         }
 
-        if ($request->input('existing_grandchild')) {
-            $grandchild = ProductCategory::find($request->input('existing_grandchild'));
-        } elseif (!empty($request->input('grandchild'))) {
+        if ($request->input('grandchild_category_id')) {
+            $grandchild = ProductCategory::find($request->input('grandchild_category_id'));
+        } elseif (!empty($request->input('new_grandchild_category'))) {
             $grandchild = ProductCategory::create([
-                'breadcrumb' => $request->input('grandchild'),
-                'name' => $request->input('grandchild'),
+                'breadcrumb' => $category->name . ' » ' . $child->name . ' » ' . $request->input('new_grandchild_category'),
+                'name' => $request->input('new_grandchild_category'),
                 'parent_id' => $child->id,
-                'url_slug' => Str::slug($request->input('grandchild')),
+                'url_slug' => Str::slug($request->input('new_grandchild_category')),
+            ]);
+        }
+
+        if ($request->input('brand_id') && $request->input('brand_id') !== 'new') {
+            $brand = Brand::find($request->input('brand_id'));
+        } elseif (!empty($request->input('new_brand'))) {
+            $brand = Brand::create([
+                'name' => $request->input('new_brand'),
             ]);
         }
 
@@ -255,7 +331,15 @@ class ListerController extends Controller
             'color' => $request->color,
         ];
 
-        $product = Product::create($data);
+        if ($request->input('action') == 'edit') {
+            $product = Product::find($request->input('product_id'));
+            $product->fill($data);
+            $product->save();
+        } else {
+            $product = Product::create($data);
+        }
+
+        $product->categories()->detach();
 
         if ($product) {
             $product->categories()->attach($category->id);
@@ -265,7 +349,12 @@ class ListerController extends Controller
             if (!empty($grandchild)) {
                 $product->categories()->attach($grandchild->id);
             }
-            $this->uploadProductImages($request, $product->id);
+            $this->syncProductImages(
+                $product,
+                $request->input('existing_images', []),
+                $request->input('deletable_images', [])
+            );
+            $this->addProductImages($product, $request->input('new_images', []));
         }
 
         return redirect(
@@ -276,6 +365,35 @@ class ListerController extends Controller
                 ]
             )
         )->with('success', trans('app.product_created'));
+    }
+
+    protected function syncProductImages(Product $product, array $existingImages, array $deletableImages)
+    {
+        ProductImage::whereNotIn('id', $existingImages)
+            ->where('product_id', $product->id)
+            ->get()
+            ->each(function ($productImage) {
+                // do them each individually so that the delete event fires
+                // so that the corresponding files can be deleted off the disk
+                Log::info('deleting and image');
+                $productImage->delete();
+            });
+
+        foreach ($deletableImages as $deletableImage) {
+            current_disk()->delete(ProductImage::DISK_PATH . $deletableImage);
+            current_disk()->delete(ProductImage::DISK_PATH . 'thumbs/' . $deletableImage);
+        }
+    }
+
+    protected function addProductImages(Product $product, array $newImages)
+    {
+        foreach ($newImages as $newImage) {
+            $created_img_db = ProductImage::create([
+                'product_id' => $product->id,
+                'media_name' => $newImage,
+                'disk' => get_option('default_storage'),
+            ]);
+        }
     }
 
     public function newListing(Request $request)
@@ -295,16 +413,18 @@ class ListerController extends Controller
     {
         $rules = [
             'ad_title' => 'required',
-            'sku' => 'required',
             'bid_deadline' => 'required',
+            'product_id' => 'exists:products,id',
+            'type' => 'required|in:auction,buy-it-now',
+            'quantity' => 'integer'
         ];
+
         $this->validate($request, $rules);
 
         $product = Product::find($request->product_id);
 
         $data = [
             'title' => $request->ad_title,
-            'sku' => $request->sku,
             'expired_at' => $request->bid_deadline,
             'description' => $product->description,
             'features' => $product->features,
@@ -312,6 +432,10 @@ class ListerController extends Controller
             'upc' => $product->upc,
             'price' => $product->price,
             'status' => 1,
+            'type' => $request->input('type'),
+            'quantity' => $request->input('type') == 'auction'
+                ? null
+                : $request->input('quantity')
         ];
 
         $product = Ad::create($data);
@@ -319,43 +443,59 @@ class ListerController extends Controller
         return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
     }
 
-    public function uploadProductImages(Request $request, $product_id = 0)
+    public function uploadImage(Request $request)
     {
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            foreach ($images as $image) {
-                $valid_extensions = ['jpg','jpeg','png'];
-                if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
-                    return redirect()->back()->withInput($request->input())->with('error', 'Only .jpg, .jpeg and .png is allowed extension') ;
-                }
-
-                $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-                $resized = Image::make($image)->resize(640, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->stream();
-                $resized_thumb = Image::make($image)->resize(320, 213)->stream();
-
-                $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
-
-                $imageFileName = 'uploads/images/' . $image_name;
-                $imageThumbName = 'uploads/images/thumbs/' . $image_name;
-
-                try {
-                    //Upload original image
-                    $is_uploaded = current_disk()->put($imageFileName, $resized->__toString(), 'public');
-
-                    if ($is_uploaded) {
-                        //Save image name into db
-                        $created_img_db = ProductImage::create(['product_id' => $product_id, 'media_name' => $image_name, 'type' => 'image', 'storage' => get_option('default_storage'), 'ref' => 'product']);
-
-                        //upload thumb image
-                        current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-                        $img_url = media_url($created_img_db, false);
-                    }
-                } catch (\Exception $e) {
-                    return redirect()->back()->withInput($request->input())->with('error', $e->getMessage()) ;
-                }
-            }
+        if (! $request->hasFile('image')) {
+            abort(400);
         }
+
+        $image = $request->file('image');
+
+        $valid_extensions = ['jpg','jpeg','png'];
+        if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+            return response()
+                ->json(
+                    [
+                        'success' => false,
+                        'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
+                    ],
+                    422,
+                );
+        }
+
+        $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+        $resized = Image::make($image)->resize(640, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->stream();
+        $resized_thumb = Image::make($image)->resize(320, 213)->stream();
+
+        $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+
+        $imageFileName = 'uploads/images/' . $imageName;
+        $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+
+        try {
+            current_disk()->put($imageFileName, $resized->__toString(), 'public');
+            current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
+        } catch (\Exception $e) {
+            Log::info($e);
+            return response()
+                ->json(
+                    [
+                        'success' => false,
+                        'error' => $e->getMessage(),
+                    ],
+                    422
+                );
+        }
+
+        return response()
+            ->json(
+                [
+                    'success' => true,
+                    'filename' => $imageName,
+                    'url' => Storage::url($imageThumbName),
+                ]
+            );
     }
 }
