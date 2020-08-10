@@ -490,7 +490,7 @@ class ListerController extends Controller
             ->stream();
         $resized_thumb = Image::make($image)
             ->resize(320, null, function ($constraint) {
-                $constraint->aspectRatio;
+                $constraint->aspectRatio();
             })
             ->orientate()
             ->stream();
