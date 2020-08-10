@@ -101,7 +101,7 @@
                                               type="text"
                                               class="form-control"
                                               id="datafiniti_upc"
-                                              value="{{ request('datafiniti_upc') ?? request('datafiniti_upc') ?? '' }}"
+                                              value="{{ request('datafiniti_upc') ?? old('datafiniti_upc') ?? $upc ?? '' }}"
                                               name="datafiniti_upc"
                                               placeholder=""
                                               data-element="input"
