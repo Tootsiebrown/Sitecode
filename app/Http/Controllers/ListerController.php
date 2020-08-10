@@ -100,8 +100,13 @@ class ListerController extends Controller
 
     public function productForm(Request $request)
     {
+        $newBrand = null;
+
         if (null !== $request->input('from_profile')) {
-            $product = $this->newProductFromDatafiniti(
+            [
+                $product,
+                $newBrand,
+            ] = $this->newProductFromDatafiniti(
                 $request->input('upc'),
                 $request->input('from_profile')
             );
@@ -137,6 +142,7 @@ class ListerController extends Controller
             })->get(),
             'grandchildren' => collect(),
             'product' => $product ?? null,
+            'newBrand' => $newBrand,
             'action' => $action,
         ]);
     }
@@ -186,6 +192,7 @@ class ListerController extends Controller
 
     protected function newProductFromDatafiniti($upc, $profileId)
     {
+        $newBrand = null;
         $product = new Product();
         $datafinitProducts = $this->datafinitiGateway->barCodeSearch($upc);
         $datafinitiProduct = $datafinitProducts[$profileId];
@@ -195,6 +202,17 @@ class ListerController extends Controller
         }
         if (!empty($datafinitiProduct['descriptions'])) {
             $product->description = implode(' ', $datafinitiProduct['descriptions']);
+        }
+
+        if (!empty($datafinitiProduct['brand'])) {
+            $existingBrand = Brand::where('name', 'like', $datafinitiProduct['brand'])
+                ->first();
+
+            if ($existingBrand) {
+                $product->brand_id = $existingBrand->id;
+            } else {
+                $newBrand = $datafinitiProduct['brand'];
+            }
         }
 
         $productFeatures = '';
@@ -207,7 +225,10 @@ class ListerController extends Controller
         }
         $product->features = $productFeatures;
 
-        return $product;
+        return [
+            $product,
+            $newBrand,
+        ];
     }
 
     public function cloneProduct(Request $request)

@@ -127,7 +127,7 @@
                                       id="brand_id"
                                     >
                                         <option value="">Select Brand...</option>
-                                        <option value="new">New...</option>
+                                        <option value="new" @if (!empty($newBrand)) selected="selected" @endif>New...</option>
                                         @foreach($brands as $brand)
                                             <option
                                               value="{{ $brand->id }}"
@@ -152,7 +152,7 @@
                                   type="text"
                                   class="form-control"
                                   id="new_brand"
-                                  value="{{ old('new_brand') ?? request('new_brand') ?? $product['brand'] ?? '' }}"
+                                  value="{{ old('new_brand') ?? request('new_brand') ?? $newBrand ?? '' }}"
                                   name="new_brand"
                                   placeholder=""
                                 >
