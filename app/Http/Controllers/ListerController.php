@@ -390,15 +390,11 @@ class ListerController extends Controller
 
     protected function syncProductImages(Product $product, array $existingImages, array $deletableImages)
     {
+        // don't delete images files for ProductImages in the database...
+        // product could have been cloned, and that will cause problems.
         ProductImage::whereNotIn('id', $existingImages)
             ->where('product_id', $product->id)
-            ->get()
-            ->each(function ($productImage) {
-                // do them each individually so that the delete event fires
-                // so that the corresponding files can be deleted off the disk
-                Log::info('deleting and image');
-                $productImage->delete();
-            });
+            ->delete();
 
         foreach ($deletableImages as $deletableImage) {
             current_disk()->delete(ProductImage::DISK_PATH . $deletableImage);

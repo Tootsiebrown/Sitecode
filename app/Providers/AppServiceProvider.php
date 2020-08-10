@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Observers\ProductImageObserver;
 use App\Option;
-use App\ProductImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -40,7 +38,5 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with(['lUser' => $loggedUser, 'current_lang' => $current_lang]);
         });
-
-        ProductImage::observe(ProductImageObserver::class);
     }
 }
