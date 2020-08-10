@@ -485,10 +485,16 @@ class ListerController extends Controller
         }
 
         $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-        $resized = Image::make($image)->resize(640, null, function ($constraint) {
-            $constraint->aspectRatio();
-        })->stream();
-        $resized_thumb = Image::make($image)->resize(320, 213)->stream();
+        $resized = Image::make($image)
+            ->resize(640, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->orientate()
+            ->stream();
+        $resized_thumb = Image::make($image)
+            ->resize(320, 213)
+            ->orientate()
+            ->stream();
 
         $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
 
