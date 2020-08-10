@@ -303,6 +303,11 @@
 
                     <div class="images-wrapper" data-component="lister-product-image-wrapper">
                         @foreach($product->images as $image)
+                            @if ($errors->any() && !in_array($image->id, old('existing_images', [])))
+                                {{-- if we already submitted, but this was deleted, don't bring it back.--}}
+                                @continue
+                            @endif
+
                             <div class="lister-product-image clearfix" data-component="lister-product-image">
                                 <input
                                     type="hidden"
@@ -316,6 +321,22 @@
                                 </div>
                             </div>
                         @endforeach
+                        @if (is_array(old('new_images')) && !empty(old('new_images')))
+                            @foreach (old('new_images') as $newImage)
+                                    <div class="lister-product-image clearfix" data-component="lister-product-image" data-saved="false">
+                                        <input
+                                            type="hidden"
+                                            name="new_images[]"
+                                            value="{{ $newImage }}"
+                                        />
+                                        <label class="col-sm-4 control-label"></label>
+                                        <div class="col-sm-8 lister-product-image__display-container">
+                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::URL_PATH . $newImage }}"></div>
+                                            <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
+                                        </div>
+                                    </div>
+                            @endforeach
+                        @endif
                     </div>
 
                     <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
