@@ -482,13 +482,16 @@ class ListerController extends Controller
 
         $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
         $resized = Image::make($image)
-            ->resize(640, null, function ($constraint) {
+            ->resize(2000, null, function ($constraint) {
                 $constraint->aspectRatio();
+                $constraint->upsize();
             })
             ->orientate()
             ->stream();
         $resized_thumb = Image::make($image)
-            ->resize(320, 213)
+            ->resize(320, null, function ($constraint) {
+                $constraint->aspectRatio;
+            })
             ->orientate()
             ->stream();
 
