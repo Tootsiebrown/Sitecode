@@ -30,7 +30,7 @@
                     @csrf
                     <input type="hidden" name="action" value="{{ $action }}">
                     @if ($action == 'edit')
-                        <input type="hidden" name="product_id" {{ $product->id }}
+                        <input type="hidden" name="product_id" {{ $product->id }}>
                     @endif
 
                     @if ($errors->any())
@@ -66,7 +66,7 @@
                     <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Original Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? $product['original_price'] ?? '' }}" name="original_price" placeholder="">
+                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($product->original_price ?? 0, 2) }}" name="original_price" placeholder="">
                             {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                     <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Listing Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? $product['price'] ?? '' }}" name="price" placeholder="">
+                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($product->price ?? 0, 2) }}" name="price" placeholder="">
                             {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
                         </div>
                     </div>
@@ -215,7 +215,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div
                           id="child-wrapper"
                           class="select-or-new"
@@ -232,7 +231,7 @@
                                       class="form-control select2 select-or-new__select"
                                       name="child_category_id"
                                       id="child_category_id"
-                                      data-selected="{{ !is_null($product->child_category) ? $product->child_category->id : '' }}"
+                                      data-selected="{{ old('child_category_id') ?? (!is_null($product->child_category) ? $product->child_category->id : '') }}"
                                       data-element="select"
                                       data-component="select-with-child"
                                       data-child-wrapper="#grandchild-wrapper"
@@ -275,7 +274,7 @@
                                           class="form-control select2 select-or-new__select"
                                           name="grandchild_category_id"
                                           id="grandchild_category_id"
-                                          data-selected="{{ !is_null($product->grandChildCategory) ? $product->grandChildCategory->id : '' }}"
+                                          data-selected="{{ old('grandchild_category_id') ?? (!is_null($product->grandchild_category) ? $product->grandchild_category->id : '') }}"
                                           data-element="select"
                                         >
                                             <option value="">Select Grandchild Category...</option>

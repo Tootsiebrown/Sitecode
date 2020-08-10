@@ -27,7 +27,12 @@ class Product extends Model
 
     public function getCategoryAttribute()
     {
-        return $this->categories()->top()->first();
+        return $this
+            ->categories
+            ->filter(function ($category) {
+                return $category->parent_id === 0;
+            })
+            ->first();
     }
 
     public function getChildCategoryAttribute()
@@ -36,7 +41,12 @@ class Product extends Model
             return null;
         }
 
-        return $this->categories()->where('parent_id', $this->category->id)->first();
+        return $this
+            ->categories
+            ->filter(function ($category) {
+                return $category->parent_id === $this->category->id;
+            })
+            ->first();
     }
 
     public function getGrandchildCategoryAttribute()
@@ -45,7 +55,12 @@ class Product extends Model
             return null;
         }
 
-        return $this->categories()->where('parent_id', $this->child_category->id)->first();
+        return $this
+            ->categories
+            ->filter(function ($category) {
+                return $category->parent_id === $this->child_category->id;
+            })
+            ->first();
     }
 
     public function getFeaturedImageAttribute()

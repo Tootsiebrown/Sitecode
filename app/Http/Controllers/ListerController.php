@@ -265,7 +265,7 @@ class ListerController extends Controller
         $rules = [
             'name' => 'required',
             'upc' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric',
             'description' => 'required',
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
