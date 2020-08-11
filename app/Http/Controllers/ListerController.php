@@ -267,6 +267,10 @@ class ListerController extends Controller
             'upc' => 'required',
             'price' => 'required|numeric',
             'description' => 'required',
+            'condition' => [
+                'required',
+                Rule::in(Product::getConditions()),
+            ],
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
@@ -293,7 +297,6 @@ class ListerController extends Controller
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
 
         ];
-
 
         $this->validate($request, $rules);
 
@@ -344,7 +347,7 @@ class ListerController extends Controller
             'name' => $request->name,
             'original_price' => $request->original_price,
             'price' => $request->price,
-            'new' => (int)($request->new),
+            'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
             'gender' => $request->gender,

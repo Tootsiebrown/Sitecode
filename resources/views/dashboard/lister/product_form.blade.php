@@ -79,18 +79,15 @@
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('new')? 'has-error':'' }}">
+                    <div class="form-group {{ $errors->has('ondition')? 'has-error':'' }}">
                         <label for="new" class="col-sm-4 control-label">Condition</label>
                         <div class="col-sm-8">
                             <label>
-                                <input
-                                  type="checkbox"
-                                  name="new"
-                                  value="1"
-                                  @if (old('new') !== null) {{ old('new') == true ? 'checked="checked"':'' }}
-                                  @elseif (request('new') !== null) {{ request('new') == true ? 'checked="checked"' : '' }}
-                                  @elseif ($product->new) checked="checked"
-                                  @endif > New
+                                <select name="condition" class="select2">
+                                    @foreach ($product::getConditions() as $condition)
+                                        <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>{{ $condition }}</option>
+                                    @endforeach
+                                </select>
                             </label>
 
                             {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}

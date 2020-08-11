@@ -8,17 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
+    use HasCondition;
+
     protected $guarded = [];
-
-    public function scopeNew($query)
-    {
-        return $query->whereNew(true);
-    }
-
-    public function scopeUsed($query)
-    {
-        return $query->whereNew(false);
-    }
 
     public function categories()
     {
