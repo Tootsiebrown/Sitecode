@@ -27,14 +27,12 @@
                         ><i class="fa fa-clone"></i> Clone Product for Listing</a>
                     </li>
 
-                    @if (Auth::user()->superuser)
-                        <li>
-                            <a
-                                href="{{ route('lister.productForm', ['product' => $product->id, 'action' => 'edit']) }}"
-                                class=""
-                            ><i class="fa fa-edit"></i> Edit Existing Product for New Listing</a>
-                        </li>
-                    @endif
+                    <li>
+                        <a
+                            href="{{ route('lister.productForm', ['product' => $product->id, 'action' => 'edit']) }}"
+                            class=""
+                        ><i class="fa fa-edit"></i> Edit Existing Product for New Listing</a>
+                    </li>
                 </ul>
 
                 <div id="modal-product-details-{{ $product->id }}" class="white-popup mfp-hide">

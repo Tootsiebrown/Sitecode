@@ -30,7 +30,7 @@
                     @csrf
                     <input type="hidden" name="action" value="{{ $action }}">
                     @if ($action == 'edit')
-                        <input type="hidden" name="product_id" {{ $product->id }}
+                        <input type="hidden" name="product_id" {{ $product->id }}>
                     @endif
 
                     @if ($errors->any())
@@ -66,7 +66,7 @@
                     <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Original Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? $product['original_price'] ?? '' }}" name="original_price" placeholder="">
+                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($product->original_price ?? 0, 2) }}" name="original_price" placeholder="">
                             {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
                         </div>
                     </div>
@@ -74,23 +74,20 @@
                     <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Listing Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? $product['price'] ?? '' }}" name="price" placeholder="">
+                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($product->price ?? 0, 2) }}" name="price" placeholder="">
                             {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('new')? 'has-error':'' }}">
+                    <div class="form-group {{ $errors->has('ondition')? 'has-error':'' }}">
                         <label for="new" class="col-sm-4 control-label">Condition</label>
                         <div class="col-sm-8">
                             <label>
-                                <input
-                                  type="checkbox"
-                                  name="new"
-                                  value="1"
-                                  @if (old('new') !== null) {{ old('new') == true ? 'checked="checked"':'' }}
-                                  @elseif (request('new') !== null) {{ request('new') == true ? 'checked="checked"' : '' }}
-                                  @elseif ($product->new) checked="checked"
-                                  @endif > New
+                                <select name="condition" class="select2">
+                                    @foreach ($product::getConditions() as $condition)
+                                        <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>{{ $condition }}</option>
+                                    @endforeach
+                                </select>
                             </label>
 
                             {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}
@@ -215,7 +212,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div
                           id="child-wrapper"
                           class="select-or-new"
@@ -232,7 +228,7 @@
                                       class="form-control select2 select-or-new__select"
                                       name="child_category_id"
                                       id="child_category_id"
-                                      data-selected="{{ !is_null($product->child_category) ? $product->child_category->id : '' }}"
+                                      data-selected="{{ old('child_category_id') ?? (!is_null($product->child_category) ? $product->child_category->id : '') }}"
                                       data-element="select"
                                       data-component="select-with-child"
                                       data-child-wrapper="#grandchild-wrapper"
@@ -275,7 +271,7 @@
                                           class="form-control select2 select-or-new__select"
                                           name="grandchild_category_id"
                                           id="grandchild_category_id"
-                                          data-selected="{{ !is_null($product->grandChildCategory) ? $product->grandChildCategory->id : '' }}"
+                                          data-selected="{{ old('grandchild_category_id') ?? (!is_null($product->grandchild_category) ? $product->grandchild_category->id : '') }}"
                                           data-element="select"
                                         >
                                             <option value="">Select Grandchild Category...</option>
@@ -304,6 +300,11 @@
 
                     <div class="images-wrapper" data-component="lister-product-image-wrapper">
                         @foreach($product->images as $image)
+                            @if ($errors->any() && !in_array($image->id, old('existing_images', [])))
+                                {{-- if we already submitted, but this was deleted, don't bring it back.--}}
+                                @continue
+                            @endif
+
                             <div class="lister-product-image clearfix" data-component="lister-product-image">
                                 <input
                                     type="hidden"
@@ -317,6 +318,22 @@
                                 </div>
                             </div>
                         @endforeach
+                        @if (is_array(old('new_images')) && !empty(old('new_images')))
+                            @foreach (old('new_images') as $newImage)
+                                    <div class="lister-product-image clearfix" data-component="lister-product-image" data-saved="false">
+                                        <input
+                                            type="hidden"
+                                            name="new_images[]"
+                                            value="{{ $newImage }}"
+                                        />
+                                        <label class="col-sm-4 control-label"></label>
+                                        <div class="col-sm-8 lister-product-image__display-container">
+                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::URL_PATH . $newImage }}"></div>
+                                            <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
+                                        </div>
+                                    </div>
+                            @endforeach
+                        @endif
                     </div>
 
                     <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
