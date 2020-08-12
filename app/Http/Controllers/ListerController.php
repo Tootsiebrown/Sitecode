@@ -266,6 +266,7 @@ class ListerController extends Controller
             'name' => 'required',
             'upc' => 'required',
             'price' => 'required|numeric',
+            'original_price' => 'required|numeric',
             'description' => 'required',
             'condition' => [
                 'required',
