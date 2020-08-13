@@ -38,7 +38,7 @@
                         <div class="form-group {{ $errors->has('ad_title')? 'has-error':'' }}">
                             <label for="ad_title" class="col-sm-4 control-label"> <span class="ad_text"> Listing </span> @lang('app.title')</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="ad_title" value="{{ old('ad_title') }}" name="ad_title" placeholder="Listing Title">
+                                <input type="text" class="form-control" id="ad_title" value="{{ old('ad_title') ?? $product->title }}" name="ad_title" placeholder="Listing Title">
                                 {!! $errors->has('ad_title')? '<p class="help-block">'.$errors->first('ad_title').'</p>':'' !!}
                                 <p class="text-info"> @lang('app.great_title_info')</p>
                             </div>
