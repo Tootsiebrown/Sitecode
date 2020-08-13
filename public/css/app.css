@@ -452,6 +452,7 @@ img.mfp-img {
 .mfp-inline-holder .mfp-content {
   width: auto;
   height: auto;
+  max-width: 100%;
 }
 
 .select2-container {
