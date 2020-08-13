@@ -14396,8 +14396,9 @@ var NewProductImage = function NewProductImage(element) {
       success: function success(data) {
         console.log("success");
         console.log(data);
-
-        _this.appendImage(data.filename, data.url);
+        jquery__WEBPACK_IMPORTED_MODULE_1__["each"](data.images, function (i, image) {
+          _this.appendImage(image.filename, image.url);
+        });
 
         _this.stopSpinner();
 
@@ -14415,9 +14416,10 @@ var NewProductImage = function NewProductImage(element) {
   };
 
   this.getFormData = function () {
-    var tmpFormData = new FormData(_this.$component.closest('form').get(0));
     var formData = new FormData();
-    formData.set('image', tmpFormData.get('new_image'));
+    jquery__WEBPACK_IMPORTED_MODULE_1__["each"](_this.$input.get(0).files, function (i, file) {
+      formData.append('image[]', file);
+    });
     return formData;
   };
 
