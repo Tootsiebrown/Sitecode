@@ -54,7 +54,7 @@
                             @endforeach
                         </ul>
                         <p class="product-suggestion__label">Images</p>
-                        <ul>
+                        <ul class="product-suggestion__images">
                             @foreach($product->images as $image)
                                 <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"></li>
                             @endforeach

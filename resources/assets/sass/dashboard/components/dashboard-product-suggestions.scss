@@ -3,6 +3,12 @@
         padding: 36px;
     }
 
+    &__images {
+        img {
+            max-width: 100%;
+        }
+    }
+
     p.product-suggestion__label {
         margin-bottom: 2px;
     }
