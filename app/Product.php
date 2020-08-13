@@ -70,4 +70,9 @@ class Product extends Model
     {
         return $this->hasMany(Ad::class)->orderBy('id', 'desc');
     }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }
