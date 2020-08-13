@@ -198,7 +198,7 @@ class ListerController extends Controller
         $datafinitiProduct = $datafinitProducts[$profileId];
 
         if (!empty($datafinitiProduct['prices'])) {
-            $product->original_price = $datafinitiProduct['prices'][0]['amountMax'];
+            $product->original_price = str_replace(',', '', $datafinitiProduct['prices'][0]['amountMax']);
         }
         if (!empty($datafinitiProduct['descriptions'])) {
             $product->description = implode(' ', $datafinitiProduct['descriptions']);

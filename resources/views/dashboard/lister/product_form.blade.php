@@ -66,7 +66,7 @@
                     <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Original Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($product->original_price ?? 0, 2) }}" name="original_price" placeholder="">
+                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($product->original_price ?? 0, 2, '.', '') }}" name="original_price" placeholder="">
                             {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                     <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
                         <label for="state_name" class="col-sm-4 control-label">Listing Price</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($product->price ?? 0, 2) }}" name="price" placeholder="">
+                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($product->price ?? 0, 2, '.', '') }}" name="price" placeholder="">
                             {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
                         </div>
                     </div>
@@ -348,7 +348,6 @@
                                       data-element="input"
                                       class="form-control new-product-image__input"
                                       data-action="{{ route('lister.upload-image') }}"
-                                      multiple
                                     />
                                     <div class="new-product-image__spinner" data-element="spinner">
                                         <img src="/assets/img/loading-spinner.gif" alt="loading">
