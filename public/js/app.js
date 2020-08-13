@@ -14503,8 +14503,6 @@ var ProductCategoriesChild = /*#__PURE__*/function () {
         _this.childComponent.removeClass('visible');
       }
 
-      console.log(_this.childComponent);
-
       _this.childComponent.trigger('change');
     };
 
@@ -14525,6 +14523,10 @@ var ProductCategoriesChild = /*#__PURE__*/function () {
       this.childComponent = new ProductCategoriesChild($(this.$component.attr('data-my-child-hierarchy-component')));
     } else {
       this.hasChildComponent = false;
+    }
+
+    if (!this.hasChildComponent) {
+      this.prettyName = 'Grandchild Category';
     }
 
     this.$select.on('change', this.handleChange);
@@ -14947,8 +14949,8 @@ function selectComponent(target) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /ofs/home/catchndealz/catchndealz.com/resources/assets/js/app.js */"./resources/assets/js/app.js");
-module.exports = __webpack_require__(/*! /ofs/home/catchndealz/catchndealz.com/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
+__webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/js/app.js */"./resources/assets/js/app.js");
+module.exports = __webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
 
 
 /***/ })
