@@ -348,6 +348,7 @@
                                       data-element="input"
                                       class="form-control new-product-image__input"
                                       data-action="{{ route('lister.upload-image') }}"
+                                      multiple
                                     />
                                     <div class="new-product-image__spinner" data-element="spinner">
                                         <img src="/assets/img/loading-spinner.gif" alt="loading">

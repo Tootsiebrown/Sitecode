@@ -470,61 +470,72 @@ class ListerController extends Controller
             abort(400);
         }
 
-        $image = $request->file('image');
-
-        $valid_extensions = ['jpg','jpeg','png'];
-        if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
-            return response()
-                ->json(
-                    [
-                        'success' => false,
-                        'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
-                    ],
-                    422,
-                );
+        $images = $request->file('image');
+        if (!is_array($images)) {
+            $images = [$images];
         }
 
-        $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-        $resized = Image::make($image)
-            ->resize(2000, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->orientate()
-            ->stream();
-        $resized_thumb = Image::make($image)
-            ->resize(320, null, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->orientate()
-            ->stream();
+        $valid_extensions = ['jpg','jpeg','png'];
+        $returnImages = [];
 
-        $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+        foreach ($images as $image) {
+            if (!in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+                return response()
+                    ->json(
+                        [
+                            'success' => false,
+                            'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
+                        ],
+                        422,
+                    );
+            }
 
-        $imageFileName = 'uploads/images/' . $imageName;
-        $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+            $resized = Image::make($image)
+                ->resize(2000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->orientate()
+                ->stream();
+            $resized_thumb = Image::make($image)
+                ->resize(320, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->orientate()
+                ->stream();
 
-        try {
-            current_disk()->put($imageFileName, $resized->__toString(), 'public');
-            current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-        } catch (\Exception $e) {
-            Log::info($e);
-            return response()
-                ->json(
-                    [
-                        'success' => false,
-                        'error' => $e->getMessage(),
-                    ],
-                    422
-                );
+            $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+
+            $imageFileName = 'uploads/images/' . $imageName;
+            $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+
+            try {
+                current_disk()->put($imageFileName, $resized->__toString(), 'public');
+                current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
+            } catch (\Exception $e) {
+                Log::info($e);
+                return response()
+                    ->json(
+                        [
+                            'success' => false,
+                            'error' => $e->getMessage(),
+                        ],
+                        422
+                    );
+            }
+
+            $returnImages[] = [
+                'filename' => $imageName,
+                'url' => Storage::url($imageThumbName),
+            ];
         }
 
         return response()
             ->json(
                 [
                     'success' => true,
-                    'filename' => $imageName,
-                    'url' => Storage::url($imageThumbName),
+                    'images' => $returnImages
                 ]
             );
     }
