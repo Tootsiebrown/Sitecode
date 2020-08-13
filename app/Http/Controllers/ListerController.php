@@ -301,18 +301,18 @@ class ListerController extends Controller
 
         $this->validate($request, $rules);
 
-        if ($request->input('category_id')) {
+        if ($request->input('category_id') && $request->input('category_id') !== 'new') {
             $category = ProductCategory::find($request->input('category_id'));
-        } elseif (!empty($request->input('category'))) {
+        } elseif ($request->has('new_category')) {
             $category = ProductCategory::create([
-                'breadcrumb' => $request->input('category'),
-                'name' => $request->input('category'),
+                'breadcrumb' => $request->input('new_category'),
+                'name' => $request->input('new_category'),
                 'parent_id' => 0,
-                'url_slug' => Str::slug($request->input('category')),
+                'url_slug' => Str::slug($request->input('new_category')),
             ]);
         }
 
-        if ($request->input('child_category_id')) {
+        if ($request->input('child_category_id') && $request->input('child_category_id') !== 'new') {
             $child = ProductCategory::find($request->input('child_category_id'));
         } elseif (!empty($request->input('new_child_category'))) {
             $child = ProductCategory::create([
@@ -323,7 +323,7 @@ class ListerController extends Controller
             ]);
         }
 
-        if ($request->input('grandchild_category_id')) {
+        if ($request->input('grandchild_category_id') && $request->input('grandchild_category_id') !== 'new') {
             $grandchild = ProductCategory::find($request->input('grandchild_category_id'));
         } elseif (!empty($request->input('new_grandchild_category'))) {
             $grandchild = ProductCategory::create([
