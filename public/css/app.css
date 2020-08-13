@@ -534,6 +534,10 @@ img.mfp-img {
   padding: 36px;
 }
 
+.product-suggestion__images img {
+  max-width: 100%;
+}
+
 .product-suggestion p.product-suggestion__label {
   margin-bottom: 2px;
 }
