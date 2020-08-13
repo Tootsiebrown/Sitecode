@@ -433,7 +433,7 @@ class ListerController extends Controller
     public function saveListing(Request $request)
     {
         $rules = [
-            'ad_title' => 'required',
+            'title' => 'required',
             'bid_deadline' => 'required',
             'product_id' => 'exists:products,id',
             'type' => 'required|in:auction,buy-it-now',
@@ -444,22 +444,33 @@ class ListerController extends Controller
 
         $product = Product::find($request->product_id);
 
-        $data = [
-            'title' => $request->ad_title,
+        $ad = Ad::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
             'expired_at' => $request->bid_deadline,
-            'description' => $product->description,
-            'features' => $product->features,
-            'product_id' => $product->id,
-            'upc' => $product->upc,
-            'price' => $product->price,
-            'status' => 1,
-            'type' => $request->input('type'),
             'quantity' => $request->input('type') == 'auction'
                 ? null
-                : $request->input('quantity')
-        ];
+                : $request->input('quantity'),
+            'type' => $request->input('type'),
+            'status' => "1", // published automatically
 
-        $product = Ad::create($data);
+            // really just for historical purposes
+            'product_id' => $product->id,
+
+            // copy over from the product
+            'description' => $product->description,
+            'features' => $product->features,
+            'brand_id' => $product->brand_id,
+            'upc' => $product->upc,
+            'price' => $product->price,
+            'meta_description' => $product->meta_description,
+            'meta_keywords' => $product->meta_keywords,
+            'color' => $product->color,
+            'gender' => $product->gender,
+            'model_number' => $product->model_number,
+            'original_price' => $product->original_price,
+            'condition' => $product->condition,
+        ]);
 
         return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
     }

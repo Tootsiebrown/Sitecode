@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Ad extends Model
 {
+    use HasCondition;
+
     protected $guarded = [];
 
     public function user()

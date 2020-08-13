@@ -66,7 +66,7 @@ return [
     'state'                 => 'State',
     'city'                  => 'City',
     'address'               => 'Address',
-    'great_title_info'      => '70-100 character will be great title',
+    'great_title_info'      => 'Ideally 70-100 characters.',
     'address_line_help_text' => 'Address line will help buyer to know about your location more specifically',
     'skip_brand_text'       => 'Skip brand selection if you need',
     'ad_description'        => 'Auction description',
