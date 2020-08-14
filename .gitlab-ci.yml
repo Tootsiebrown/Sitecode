@@ -20,6 +20,9 @@ stages:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
+code_quality:
+  image: docker:latest
+
 cache:
   key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
 
