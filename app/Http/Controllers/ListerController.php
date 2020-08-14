@@ -266,7 +266,7 @@ class ListerController extends Controller
     public function saveProduct(Request $request)
     {
         $rules = [
-            'name' => 'required',
+            'name' => 'required|max:255',
             'upc' => 'required',
             'price' => 'required|numeric',
             'original_price' => 'required|numeric',
@@ -436,7 +436,7 @@ class ListerController extends Controller
     public function saveListing(Request $request)
     {
         $rules = [
-            'title' => 'required',
+            'title' => 'required|max:255',
             'bid_deadline' => 'required',
             'product_id' => 'exists:products,id',
             'type' => 'required|in:auction,buy-it-now',
