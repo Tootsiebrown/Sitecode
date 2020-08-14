@@ -8,6 +8,7 @@ use App\Gateways\DatafinitiGateway;
 use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -81,7 +82,7 @@ class ListerController extends Controller
                 $productsQuery = Product::where('upc', $upc);
                 break;
             default:
-                throw new \Exception('Invalid search method:' . $searchBy);
+                throw new Exception('Invalid search method:' . $searchBy);
         }
 
         return $productsQuery
