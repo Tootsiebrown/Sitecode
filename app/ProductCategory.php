@@ -4,6 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ProductCategory
+ * @package App
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
 class ProductCategory extends Model
 {
     protected $guarded = [];

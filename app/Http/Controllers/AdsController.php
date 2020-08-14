@@ -381,15 +381,15 @@ class AdsController extends Controller
             $media = Media::whereAdId($ad->id)->get();
             if ($media->count() > 0) {
                 foreach ($media as $m) {
-                    $storage = Storage::disk($m->storage);
-                    if ($storage->has('uploads/images/' . $m->media_name)) {
-                        $storage->delete('uploads/images/' . $m->media_name);
-                    }
-                    if ($m->type == 'image') {
-                        if ($storage->has('uploads/images/thumbs/' . $m->media_name)) {
-                            $storage->delete('uploads/images/thumbs/' . $m->media_name);
-                        }
-                    }
+//                    $storage = Storage::disk($m->storage);
+//                    if ($storage->has('uploads/images/' . $m->media_name)) {
+//                        $storage->delete('uploads/images/' . $m->media_name);
+//                    }
+//                    if ($m->type == 'image') {
+//                        if ($storage->has('uploads/images/thumbs/' . $m->media_name)) {
+//                            $storage->delete('uploads/images/thumbs/' . $m->media_name);
+//                        }
+//                    }
                     $m->delete();
                 }
             }
@@ -490,6 +490,7 @@ class AdsController extends Controller
 
     public function deleteMedia(Request $request)
     {
+        abort(400);
         $media_id = $request->media_id;
         $media = Media::find($media_id);
 
