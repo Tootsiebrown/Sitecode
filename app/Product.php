@@ -2,10 +2,13 @@
 
 namespace App;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Product
+ * @package App
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
 class Product extends Model
 {
     use HasCondition;

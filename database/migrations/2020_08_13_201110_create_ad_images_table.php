@@ -16,6 +16,10 @@ class CreateAdImagesTable extends Migration
         Schema::create('ad_images', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->integer('ad_id')->unsigned();
+            $table->string('media_name');
+            $table->boolean('featured')->default(0);
+            $table->string('disk')->default('public');
         });
     }
 

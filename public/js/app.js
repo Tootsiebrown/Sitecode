@@ -14947,8 +14947,8 @@ function selectComponent(target) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /ofs/home/catchndealz/catchndealz.com/resources/assets/js/app.js */"./resources/assets/js/app.js");
-module.exports = __webpack_require__(/*! /ofs/home/catchndealz/catchndealz.com/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
+__webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/js/app.js */"./resources/assets/js/app.js");
+module.exports = __webpack_require__(/*! /Volumes/dev/oohology/catchndealz/resources/assets/sass/app.scss */"./resources/assets/sass/app.scss");
 
 
 /***/ })
