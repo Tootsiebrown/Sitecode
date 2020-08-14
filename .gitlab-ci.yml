@@ -23,6 +23,7 @@ include:
 code_quality:
   variables:
     SOURCE_CODE: "/app"
+    
 cache:
   key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
 
