@@ -328,7 +328,7 @@
                                         />
                                         <label class="col-sm-4 control-label"></label>
                                         <div class="col-sm-8 lister-product-image__display-container">
-                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::URL_PATH . $newImage }}"></div>
+                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::getUrlPath() . $newImage }}"></div>
                                             <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
                                         </div>
                                     </div>
