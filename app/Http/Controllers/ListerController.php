@@ -199,7 +199,7 @@ class ListerController extends Controller
         $datafinitiProduct = $datafinitProducts[$profileId];
 
         if (!empty($datafinitiProduct['prices'])) {
-            $product->original_price = $datafinitiProduct['prices'][0]['amountMax'];
+            $product->original_price = str_replace(',', '', $datafinitiProduct['prices'][0]['amountMax']);
         }
         if (!empty($datafinitiProduct['descriptions'])) {
             $product->description = implode(' ', $datafinitiProduct['descriptions']);
@@ -302,18 +302,18 @@ class ListerController extends Controller
 
         $this->validate($request, $rules);
 
-        if ($request->input('category_id')) {
+        if ($request->input('category_id') && $request->input('category_id') !== 'new') {
             $category = ProductCategory::find($request->input('category_id'));
-        } elseif (!empty($request->input('category'))) {
+        } elseif ($request->has('new_category')) {
             $category = ProductCategory::create([
-                'breadcrumb' => $request->input('category'),
-                'name' => $request->input('category'),
+                'breadcrumb' => $request->input('new_category'),
+                'name' => $request->input('new_category'),
                 'parent_id' => 0,
-                'url_slug' => Str::slug($request->input('category')),
+                'url_slug' => Str::slug($request->input('new_category')),
             ]);
         }
 
-        if ($request->input('child_category_id')) {
+        if ($request->input('child_category_id') && $request->input('child_category_id') !== 'new') {
             $child = ProductCategory::find($request->input('child_category_id'));
         } elseif (!empty($request->input('new_child_category'))) {
             $child = ProductCategory::create([
@@ -324,7 +324,7 @@ class ListerController extends Controller
             ]);
         }
 
-        if ($request->input('grandchild_category_id')) {
+        if ($request->input('grandchild_category_id') && $request->input('grandchild_category_id') !== 'new') {
             $grandchild = ProductCategory::find($request->input('grandchild_category_id'));
         } elseif (!empty($request->input('new_grandchild_category'))) {
             $grandchild = ProductCategory::create([
@@ -482,61 +482,72 @@ class ListerController extends Controller
             abort(400);
         }
 
-        $image = $request->file('image');
-
-        $valid_extensions = ['jpg','jpeg','png'];
-        if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
-            return response()
-                ->json(
-                    [
-                        'success' => false,
-                        'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
-                    ],
-                    422,
-                );
+        $images = $request->file('image');
+        if (!is_array($images)) {
+            $images = [$images];
         }
 
-        $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-        $resized = Image::make($image)
-            ->resize(2000, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->orientate()
-            ->stream();
-        $resized_thumb = Image::make($image)
-            ->resize(320, null, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->orientate()
-            ->stream();
+        $valid_extensions = ['jpg','jpeg','png'];
+        $returnImages = [];
 
-        $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+        foreach ($images as $image) {
+            if (!in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
+                return response()
+                    ->json(
+                        [
+                            'success' => false,
+                            'errors' => 'Only .jpg, .jpeg and .png is allowed extension',
+                        ],
+                        422,
+                    );
+            }
 
-        $imageFileName = 'uploads/images/' . $imageName;
-        $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+            $resized = Image::make($image)
+                ->resize(2000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->orientate()
+                ->stream();
+            $resized_thumb = Image::make($image)
+                ->resize(320, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->orientate()
+                ->stream();
 
-        try {
-            current_disk()->put($imageFileName, $resized->__toString(), 'public');
-            current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-        } catch (\Exception $e) {
-            Log::info($e);
-            return response()
-                ->json(
-                    [
-                        'success' => false,
-                        'error' => $e->getMessage(),
-                    ],
-                    422
-                );
+            $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+
+            $imageFileName = 'uploads/images/' . $imageName;
+            $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+
+            try {
+                current_disk()->put($imageFileName, $resized->__toString(), 'public');
+                current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
+            } catch (\Exception $e) {
+                Log::info($e);
+                return response()
+                    ->json(
+                        [
+                            'success' => false,
+                            'error' => $e->getMessage(),
+                        ],
+                        422
+                    );
+            }
+
+            $returnImages[] = [
+                'filename' => $imageName,
+                'url' => Storage::url($imageThumbName),
+            ];
         }
 
         return response()
             ->json(
                 [
                     'success' => true,
-                    'filename' => $imageName,
-                    'url' => Storage::url($imageThumbName),
+                    'images' => $returnImages
                 ]
             );
     }

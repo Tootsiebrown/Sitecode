@@ -29,7 +29,9 @@ export default class NewProductImage {
             success:(data) => {
                 console.log("success");
                 console.log(data);
-                this.appendImage(data.filename, data.url)
+                $.each(data.images, (i, image) => {
+                    this.appendImage(image.filename, image.url)
+                });
                 this.stopSpinner()
                 this.resetInput()
             },
@@ -43,9 +45,11 @@ export default class NewProductImage {
     }
 
     getFormData = () => {
-        let tmpFormData = new FormData(this.$component.closest('form').get(0))
         let formData = new FormData()
-        formData.set('image', tmpFormData.get('new_image'));
+
+        $.each(this.$input.get(0).files, function (i, file) {
+            formData.append('image[]', file);
+        });
 
         return formData;
     }

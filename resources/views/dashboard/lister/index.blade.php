@@ -84,6 +84,12 @@
                         @include('dashboard.lister.product-suggestions', ['products' => $products])
                     @else
                         <p>@lang('app.there_is_no_products', ['search' => $searchString])</p>
+                        <p>
+                            <a
+                                href="{{ route('lister.productForm', ['upc' => $upc, 'name' => $name]) }}"
+                                class="btn btn-primary"
+                            >Create New Product From Scratch</a>
+                        </p>
                         <h2>Search Datafiniti</h2>
                         <form class="form-horizontal" method="POST" action="{{ route('lister.index') }}">
                             @csrf

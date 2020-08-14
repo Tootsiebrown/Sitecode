@@ -14,6 +14,10 @@ export default class ProductCategoriesChild {
             this.hasChildComponent = false
         }
 
+        if (! this.hasChildComponent) {
+            this.prettyName = 'Grandchild Category';
+        }
+
         this.$select.on('change', this.handleChange)
     }
 
@@ -66,8 +70,6 @@ export default class ProductCategoriesChild {
         } else {
             this.childComponent.removeClass('visible')
         }
-
-        console.log(this.childComponent)
 
         this.childComponent.trigger('change')
     }

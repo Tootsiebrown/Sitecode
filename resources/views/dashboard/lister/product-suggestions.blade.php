@@ -41,7 +41,7 @@
                         <p>UPC: {{ $product->upc }}</p>
                         <p>Original Price: {{ $product->original_price }}</p>
                         <p>Listing Price: {{ $product->price }}</p>
-                        <p>Condition: {{ $product->new ? 'New' : 'Used' }}</p>
+                        <p>Condition: {{ $product->condition }}</p>
                         <p class="product-suggestion__label">Description</p>
                         <div class="product-suggestion__wysiwyg"><p>{!! $product->description !!}</p></div>
                         <p class="product-suggestion__label">Features</p>
@@ -54,7 +54,7 @@
                             @endforeach
                         </ul>
                         <p class="product-suggestion__label">Images</p>
-                        <ul>
+                        <ul class="product-suggestion__images">
                             @foreach($product->images as $image)
                                 <li><img src="{{ Storage::url('uploads/images/' . $image->media_name) }}"></li>
                             @endforeach
