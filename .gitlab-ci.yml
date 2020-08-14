@@ -17,8 +17,8 @@ stages:
   - test # Code-Quality include requires a stage named test
 
 # Note: using a default before_script messes with this include
-include:
-  - template: Code-Quality.gitlab-ci.yml
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
 
 cache:
   key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
