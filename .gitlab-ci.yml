@@ -22,7 +22,7 @@ include:
 
 code_quality:
   variables:
-    CODE_QUALITY_IMAGE: "registry.gitlab.com/gitlab-org/ci-cd/codequality:0.85.13"
+    CODE_QUALITY_IMAGE: "registry.gitlab.com/gitlab-org/ci-cd/codequality:0.85.10-gitlab.1"
 
 cache:
   key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
