@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Storage;
 
 trait HasDiskImage
 {
-    static public function getDiskPath()
+    public static function getDiskPath()
     {
         return 'uploads/images/';
     }
 
-    static public function getUrlPath()
+    public static function getUrlPath()
     {
         return 'storage/uploads/images/';
     }
