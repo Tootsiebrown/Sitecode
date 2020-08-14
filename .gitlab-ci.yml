@@ -17,13 +17,8 @@ stages:
   - test # Code-Quality include requires a stage named test
 
 # Note: using a default before_script messes with this include
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
-code_quality:
-  plugins:
-    csslint:
-      enabled: false
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
 
 
 cache:
