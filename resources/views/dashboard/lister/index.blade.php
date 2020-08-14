@@ -155,7 +155,7 @@
 
                                                     <a
                                                       class="btn btn-primary"
-                                                      href="{{ route('lister.productForm', ['name' => $profile['name'], 'upc' => $profile['upca'], 'from_profile' => $key]) }}"
+                                                      href="{{ route('lister.productForm', ['name' => $profile['name'], 'upc' => $upc, 'from_profile' => $key]) }}"
                                                     >Create Product From This Profile</a>
                                                 </td>
                                             </tr>
