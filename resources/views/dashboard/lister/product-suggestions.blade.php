@@ -39,6 +39,7 @@
                     <div class="product-suggestion__details-container">
                         <h1>{{ $product->name }}</h1>
                         <p>UPC: {{ $product->upc }}</p>
+                        <p>Bin: {{ $product->bin }}</p>
                         <p>Original Price: {{ $product->original_price }}</p>
                         <p>Listing Price: {{ $product->price }}</p>
                         <p>Condition: {{ $product->condition }}</p>

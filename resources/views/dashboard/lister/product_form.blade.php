@@ -362,7 +362,7 @@
                     <legend>Optional Attributes</legend>
 
                     <div class="form-group {{ $errors->has('gender')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Gender</label>
+                        <label for="gender" class="col-sm-4 control-label">Gender</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="gender" value="{{ old('gender') ?? $product['gender'] ?? '' }}" name="gender" placeholder="">
                             {!! $errors->has('gender')? '<p class="help-block">'.$errors->first('gender').'</p>':'' !!}
@@ -370,7 +370,7 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('model_number')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Model Number</label>
+                        <label for="model_number" class="col-sm-4 control-label">Model Number</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="model_number" value="{{ old('model_number') ?? $product['model_number'] ?? '' }}" name="model_number" placeholder="">
                             {!! $errors->has('model_number')? '<p class="help-block">'.$errors->first('model_number').'</p>':'' !!}
@@ -378,10 +378,18 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('color')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Color</label>
+                        <label for="color" class="col-sm-4 control-label">Color</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="color" value="{{ old('color') ?? $product['color'] ?? '' }}" name="color" placeholder="">
                             {!! $errors->has('color')? '<p class="help-block">'.$errors->first('color').'</p>':'' !!}
+                        </div>
+                    </div>
+
+                    <div class="form-group {{ $errors->has('bin')? 'has-error':'' }}">
+                        <label for="bin" class="col-sm-4 control-label">Bin</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="bin" value="{{ old('bin') ?? $product->bin ?? '' }}" name="bin" placeholder="">
+                            {!! $errors->has('bin')? '<p class="help-block">'.$errors->first('bin').'</p>':'' !!}
                         </div>
                     </div>
 

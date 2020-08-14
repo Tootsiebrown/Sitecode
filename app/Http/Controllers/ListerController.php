@@ -300,6 +300,7 @@ class ListerController extends Controller
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
 
+            'bin' => 'max:255',
         ];
 
         $this->validate($request, $rules);
@@ -357,6 +358,7 @@ class ListerController extends Controller
             'gender' => $request->gender,
             'model_number' => $request->model_number,
             'color' => $request->color,
+            'bin' => $request->bin,
         ];
 
         if ($request->input('action') == 'edit') {
