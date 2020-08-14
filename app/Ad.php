@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class Ad extends Model
 {
     use HasCondition;
+    use HasProductCategories;
 
     protected $guarded = [];
 
@@ -21,23 +22,15 @@ class Ad extends Model
     {
         return $this->belongsTo(City::class);
     }
+
     public function state()
     {
         return $this->belongsTo(State::class);
     }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function sub_category()
-    {
-        return $this->belongsTo(Sub_Category::class);
     }
 
     public function scopeActive($query)
@@ -45,17 +38,14 @@ class Ad extends Model
         return $query->whereStatus('1');
     }
 
-    public function feature_img()
+    public function getFeaturedImageAttribute()
     {
-        $feature_img = $this->hasOne(Media::class)->whereIsFeature('1');
-        if (! $feature_img) {
-            $feature_img = $this->hasOne(Media::class)->first();
-        }
-        return $this->hasOne(Media::class);
+        return $this->images()->orderBy('featured', 'desc')->first();
     }
-    public function media_img()
+
+    public function images()
     {
-        return $this->hasMany(Media::class)->whereType('image');
+        return $this->hasMany(AdImage::class);
     }
 
     /**
@@ -211,5 +201,15 @@ class Ad extends Model
             $html = '<img src="' . asset('assets/img/premium-icon.png') . '" alt="" />';
             return $html;
         }
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(ProductCategory::class, 'ad_category_links', 'ad_id', 'category_id');
     }
 }

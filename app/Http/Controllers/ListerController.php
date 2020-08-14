@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\AdImage;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Product;
@@ -10,6 +11,7 @@ use App\ProductCategory;
 use App\ProductImage;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -445,33 +447,53 @@ class ListerController extends Controller
 
         $product = Product::find($request->product_id);
 
-        $ad = Ad::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'expired_at' => $request->bid_deadline,
-            'quantity' => $request->input('type') == 'auction'
-                ? null
-                : $request->input('quantity'),
-            'type' => $request->input('type'),
-            'status' => "1", // published automatically
+        DB::transaction(function () use ($request, $product) {
+            $ad = Ad::create([
+                'title' => $request->title,
+                'slug' => Str::slug($request->title),
+                'expired_at' => $request->bid_deadline,
+                'quantity' => $request->input('type') == 'auction'
+                    ? null
+                    : $request->input('quantity'),
+                'type' => $request->input('type'),
+                'status' => "1", // published automatically
 
-            // really just for historical purposes
-            'product_id' => $product->id,
+                // really just for historical purposes
+                'product_id' => $product->id,
 
-            // copy over from the product
-            'description' => $product->description,
-            'features' => $product->features,
-            'brand_id' => $product->brand_id,
-            'upc' => $product->upc,
-            'price' => $product->price,
-            'meta_description' => $product->meta_description,
-            'meta_keywords' => $product->meta_keywords,
-            'color' => $product->color,
-            'gender' => $product->gender,
-            'model_number' => $product->model_number,
-            'original_price' => $product->original_price,
-            'condition' => $product->condition,
-        ]);
+                // copy over from the product
+                'description' => $product->description,
+                'features' => $product->features,
+                'brand_id' => $product->brand_id,
+                'upc' => $product->upc,
+                'price' => $product->price,
+                'meta_description' => $product->meta_description,
+                'meta_keywords' => $product->meta_keywords,
+                'color' => $product->color,
+                'gender' => $product->gender,
+                'model_number' => $product->model_number,
+                'original_price' => $product->original_price,
+                'condition' => $product->condition,
+            ]);
+
+            $product
+                ->images
+                ->each(function ($image) use ($ad) {
+                    AdImage::create([
+                        'ad_id' => $ad->id,
+                        'media_name' => $image->media_name,
+                        'featured' => $image->featured,
+                        'disk' => $image->disk,
+                    ]);
+                });
+
+            $ad->categories()->attach(
+                $product
+                    ->categories
+                    ->pluck('id')
+            );
+        }, 3);
+
 
         return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
     }
