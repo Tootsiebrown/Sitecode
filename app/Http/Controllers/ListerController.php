@@ -405,9 +405,10 @@ class ListerController extends Controller
             ->where('product_id', $product->id)
             ->delete();
 
+        // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
-            current_disk()->delete(ProductImage::DISK_PATH . $deletableImage);
-            current_disk()->delete(ProductImage::DISK_PATH . 'thumbs/' . $deletableImage);
+            current_disk()->delete(ProductImage::getDiskPath() . $deletableImage);
+            current_disk()->delete(ProductImage::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
