@@ -14184,7 +14184,7 @@ var BarcodeReader = function BarcodeReader(element) {
       },
       numOfWorkers: navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4,
       decoder: {
-        readers: ["code_128_reader", 'upc_reader']
+        readers: ["code_128_reader", 'upc_reader', 'ean_reader', 'ean_8_reader']
       }
     }, function (err) {
       if (err) {
