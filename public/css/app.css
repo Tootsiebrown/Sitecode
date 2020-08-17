@@ -504,6 +504,18 @@ img.mfp-img {
   border-style: solid;
 }
 
+.input-group.focusable input:focus {
+  border-bottom: none;
+}
+
+.input-group.focusable.focused {
+  border-bottom-color: #7a7256;
+}
+
+.input-group.focusable.focused input {
+  box-shadow: none;
+}
+
 .form-control {
   border: none;
 }

@@ -65,7 +65,7 @@
                       enctype="multipart/form-data"
                     >
                         @csrf
-                        <div class="input-group" data-component="focusable-input-group">
+                        <div class="input-group focusable" data-component="focusable-input-group">
                             <input
                               type="text"
                               class="form-control searchKeyword"
@@ -74,7 +74,7 @@
                               data-element="input"
                             >
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">Go!</button>
+                                <button class="btn btn-default" type="button">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
                             </span>
                         </div>
 

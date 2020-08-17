@@ -3,6 +3,18 @@
     border-width: 0 0 2px;
     border-color: $color-tan-dark;
     border-style: solid;
+
+    &.focusable input:focus {
+        border-bottom: none;
+    }
+
+    &.focusable.focused {
+        border-bottom-color: $color-brown;
+
+        input {
+            box-shadow: none;
+        }
+    }
 }
 
 .form-control {

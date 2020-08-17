@@ -1,0 +1,7 @@
+textarea:focus,
+input:focus {
+    outline: none;
+
+    border-bottom: 2px $color-brown solid;
+}
+

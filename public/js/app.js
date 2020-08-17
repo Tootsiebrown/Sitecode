@@ -14315,6 +14315,49 @@ var BarcodeReader = function BarcodeReader(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/focusable-input-group.js":
+/*!****************************************************************!*\
+  !*** ./resources/assets/js/component/focusable-input-group.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FocusableInputGroup; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var FocusableInputGroup = function FocusableInputGroup(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, FocusableInputGroup);
+
+  this.handleFocus = function (e) {
+    _this.$component.addClass('focused');
+  };
+
+  this.handleBlur = function (e) {
+    _this.$component.removeClass('focused');
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$input = this.$component.elements.input;
+  this.$input.on('focus', this.handleFocus);
+  this.$input.on('blur', this.handleBlur);
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/component/listing-type-select.js":
 /*!**************************************************************!*\
   !*** ./resources/assets/js/component/listing-type-select.js ***!
@@ -14806,6 +14849,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_product_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./component/product-image */ "./resources/assets/js/component/product-image.js");
 /* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
 /* harmony import */ var _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/product-categories-hierarchy */ "./resources/assets/js/component/product-categories-hierarchy.js");
+/* harmony import */ var _component_focusable_input_group__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/focusable-input-group */ "./resources/assets/js/component/focusable-input-group.js");
+
 
 
 
@@ -14842,7 +14887,7 @@ function Site() {
       return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__["default"](element);
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('focusable-input-group').each(function (index, element) {
-      return new FocusableInputGroup(element);
+      return new _component_focusable_input_group__WEBPACK_IMPORTED_MODULE_8__["default"](element);
     });
   };
 

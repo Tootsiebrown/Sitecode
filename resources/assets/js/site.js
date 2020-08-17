@@ -6,6 +6,7 @@ import NewProductImage from "./component/new-product-image";
 import ProductImage from "./component/product-image";
 import ListingTypeSelect from "./component/listing-type-select";
 import ProductCategoriesHierarchy from "./component/product-categories-hierarchy";
+import FocusableInputGroup from "./component/focusable-input-group";
 
 export default function Site() {
 
