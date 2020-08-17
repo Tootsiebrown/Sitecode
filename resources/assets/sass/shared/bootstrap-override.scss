@@ -1,0 +1,16 @@
+.input-group {
+    background-color: $color-tan-light;
+    border-width: 0 0 2px;
+    border-color: $color-tan-dark;
+    border-style: solid;
+}
+
+.form-control {
+    border: none;
+}
+
+.input-group-btn {
+    .btn-default {
+        border: none;
+    }
+}

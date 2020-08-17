@@ -5,10 +5,11 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default login-form">
-                    <div class="panel-heading">Login</div>
+                    <div class="panel-heading">
+                        @include('auth.login_register_nav')
+                    </div>
                     <div class="panel-body">
                         @include('dashboard.flash_msg')
-                        @include('auth.social_login')
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                             {{ csrf_field() }}

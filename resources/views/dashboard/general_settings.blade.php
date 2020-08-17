@@ -131,17 +131,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group {{ $errors->has('logo_settings')? 'has-error':'' }}">
-                            <label for="email_address" class="col-sm-4 control-label">@lang('app.logo_settings')</label>
-                            <div class="col-sm-8">
-                                <fieldset>
-                                    <label><input type="radio" value="show_site_name" name="logo_settings" {{ get_option('logo_settings') == 'show_site_name'? 'checked':'' }}> @lang('app.show_site_name') </label> <br />
-                                    <label><input type="radio" value="show_image" name="logo_settings" {{ get_option('logo_settings') == 'show_image'? 'checked':'' }}> @lang('app.show_image') </label> <br />
-                                </fieldset>
-                            </div>
-                        </div>
-
-
                         <div class="form-group {{ $errors->has('verification_email_after_registration')? 'has-error':'' }}">
                             <label for="email_address" class="col-sm-4 control-label">@lang('app.verification_email_after_registration')</label>
                             <div class="col-sm-8">

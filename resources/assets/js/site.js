@@ -21,6 +21,7 @@ export default function Site() {
         selectComponent('new-product-image').each((index, element) => new NewProductImage(element))
         selectComponent('lister-product-image').each((index, element) => new ProductImage(element))
         selectComponent('listing-type-select').each((index, element) => new ListingTypeSelect(element))
+        selectComponent('focusable-input-group').each((index, element) => new FocusableInputGroup(element))
     }
 
     return {

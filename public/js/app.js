@@ -14841,6 +14841,9 @@ function Site() {
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('listing-type-select').each(function (index, element) {
       return new _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__["default"](element);
     });
+    Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('focusable-input-group').each(function (index, element) {
+      return new FocusableInputGroup(element);
+    });
   };
 
   return {

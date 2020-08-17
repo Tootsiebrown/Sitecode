@@ -169,7 +169,7 @@ class Ad extends Model
     public function is_bid_active()
     {
         $status = true;
-        if ($this->category_type == 'auction') {
+        if ($this->type == 'auction') {
             $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
             if ($is_accepted_bid) {
                 $status = false;
@@ -186,7 +186,7 @@ class Ad extends Model
     public function is_bid_accepted()
     {
         $status = false;
-        if ($this->category_type == 'auction') {
+        if ($this->type == 'auction') {
             $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
             if ($is_accepted_bid) {
                 $status = true;

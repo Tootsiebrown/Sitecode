@@ -60,7 +60,7 @@
                                         @if(! empty($ad->video_url))
                                                 <i class="fa fa-file-video-o"></i>
                                             @else
-                                                <i class="fa fa-file-image-o"> {{ $ad->media_img->count() }}</i>
+                                                <i class="fa fa-file-image-o"> {{ $ad->images->count() }}</i>
                                             @endif
                                     </span>
                                     </a>

@@ -1,0 +1,38 @@
+.navbar-static-top.navbar-default {
+    background-color: $color-tan-med;
+
+    .navbar-header {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 0;
+        margin-right: 0;
+
+        &::before,
+        &::after {
+            display: none;
+        }
+    }
+
+    .navbar-brand {
+        margin-bottom: -6px;
+
+        & > img {
+            max-height: 38px;
+        }
+    }
+
+    .navbar-toggle {
+        margin-right: 0;
+        float: none;
+    }
+
+    .navbar-search-wrap {
+        padding: 10px 0;
+        margin-right: 15px;
+    }
+    .navbar-collapse {
+        .navbar-search-wrap {
+            display: none;
+        }
+    }
+}

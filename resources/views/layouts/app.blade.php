@@ -47,98 +47,39 @@
 </head>
 <body class="@if(is_rtl()) rtl @endif">
 <div id="app">
-
-    <div id="sub-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="social-icons">
-                        @php
-                            $facebook_url = get_option('facebook_url');
-                            $twitter_url = get_option('twitter_url');
-                            $linked_in_url = get_option('linked_in_url');
-                            $dribble_url = get_option('dribble_url');
-                            $google_plus_url = get_option('google_plus_url');
-                            $youtube_url = get_option('youtube_url');
-                        @endphp
-                        <ul>
-                            @if($facebook_url)
-                                <li><a href="{{$facebook_url}}"><i class="fa fa-facebook"></i> </a> </li>
-                            @endif
-                            @if($twitter_url)
-                                <li><a href="{{$twitter_url}}"><i class="fa fa-twitter"></i> </a> </li>
-                            @endif
-                            @if($google_plus_url)
-                                <li><a href="{{$google_plus_url}}"><i class="fa fa-google-plus"></i> </a> </li>
-                            @endif
-                            @if($youtube_url)
-                                <li><a href="{{$youtube_url}}"><i class="fa fa-youtube"></i> </a> </li>
-                            @endif
-                            @if($linked_in_url)
-                                <li><a href="{{$linked_in_url}}"><i class="fa fa-linkedin"></i> </a> </li>
-                            @endif
-                            @if($dribble_url)
-                                <li><a href="{{$dribble_url}}"><i class="fa fa-dribbble"></i> </a> </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="right-info">
-                        <ul>
-                            @if(get_option('enable_language_switcher') == 1)
-
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> @if($current_lang) {{$current_lang->language_name}} @else @lang('app.language') @endif <span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ route('switch_language', 'en') }}">English</a></li>
-                                        @foreach(get_languages() as $lang)
-                                            <li><a href="{{ route('switch_language', $lang->language_code) }}">{{ $lang->language_name }}</a></li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @endif
-
-
-                            @if (Auth::guest())
-                                <li><a href="{{ route('login') }}">@lang('app.login')</a></li>
-                                <li><a href="{{ route('register') }}">@lang('app.register')</a></li>
-                            @else
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        {{ auth()->user()->name }} <span class="headerAvatar"> <img src="{{auth()->user()->get_gravatar()}}" /> </span> <span class="caret"></span>
-                                    </a>
-
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{route('dashboard')}}"> @lang('app.dashboard') </a> </li>
-                                        <li>
-                                            <a href="{{ route('logout') }}"
-                                               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                                @lang('app.logout')
-                                            </a>
-
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                {{ csrf_field() }}
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endif
-
-
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
+
+                <!-- Branding Image -->
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    <img src="/assets/img/catchndealz.svg" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
+                </a>
+
+                <!-- Search -->
+                <div class="navbar-search-wrap" class="more mobile-search">
+                    <form
+                      action="{{route('search_redirect')}}"
+                      class="form-inline"
+                      method="get"
+                      enctype="multipart/form-data"
+                    >
+                        @csrf
+                        <div class="input-group" data-component="focusable-input-group">
+                            <input
+                              type="text"
+                              class="form-control searchKeyword"
+                              name="q"
+                              placeholder="@lang('app.what_are_u_looking_short')"
+                              data-element="input"
+                            >
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+
+                    </form>
+                </div>
 
                 <!-- Collapsed Hamburger -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -148,10 +89,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    <img src="{{ logo_url() }}" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
-                </a>
+
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -167,13 +105,27 @@
 
 
                     <li>
-                        <div id="navbar-search-wrap" class="more">
+                        <div class="navbar-search-wrap" class="more">
                             <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data"> @csrf
-
-                                <input type="text" class="form-control" id="searchKeyword" name="q" placeholder="@lang('app.what_are_u_looking')">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchKeyword" name="q" placeholder="@lang('app.what_are_u_looking')">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">Go!</button>
+                                    </span>
+                                </div>
                             </form>
                         </div>
                     </li>
+
+                    @if (Auth::guest())
+                        <li><a href="{{ route('login') }}">@lang('app.login')</a></li>
+                    @else
+                        <li>
+                            <a href="{{ route('dashboard') }}">
+                                {{ auth()->user()->name }} <span class="headerAvatar"> <img src="{{auth()->user()->get_gravatar()}}" /> </span>
+                            </a>
+                        </li>
+                    @endif
 
                 </ul>
             </div>

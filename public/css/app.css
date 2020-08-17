@@ -459,6 +459,59 @@ img.mfp-img {
   width: 100% !important;
 }
 
+.navbar-static-top.navbar-default {
+  background-color: #ecead5;
+}
+
+.navbar-static-top.navbar-default .navbar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.navbar-static-top.navbar-default .navbar-header::before,
+.navbar-static-top.navbar-default .navbar-header::after {
+  display: none;
+}
+
+.navbar-static-top.navbar-default .navbar-brand {
+  margin-bottom: -6px;
+}
+
+.navbar-static-top.navbar-default .navbar-brand > img {
+  max-height: 38px;
+}
+
+.navbar-static-top.navbar-default .navbar-toggle {
+  margin-right: 0;
+  float: none;
+}
+
+.navbar-static-top.navbar-default .navbar-search-wrap {
+  padding: 10px 0;
+  margin-right: 15px;
+}
+
+.navbar-static-top.navbar-default .navbar-collapse .navbar-search-wrap {
+  display: none;
+}
+
+.input-group {
+  background-color: #f7f6f0;
+  border-width: 0 0 2px;
+  border-color: #d2ce9e;
+  border-style: solid;
+}
+
+.form-control {
+  border: none;
+}
+
+.input-group-btn .btn-default {
+  border: none;
+}
+
 #quagga-popup {
   margin: 36px;
   max-width: 90%;

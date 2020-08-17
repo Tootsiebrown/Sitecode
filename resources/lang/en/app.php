@@ -518,6 +518,7 @@ return [
     'add_more'                => 'Add More',
     'more_categories'                => 'More Categories',
     'what_are_u_looking'                => 'What are you looking for?',
+    'what_are_u_looking_short'          => 'looking for...',
     'search_ads'                    => 'Search Ads',
     'more_countries'                    => 'More Countries',
     'find_local_ads'                    => 'Find Local Auctions Ads',
