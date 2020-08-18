@@ -57,7 +57,7 @@
                 </a>
 
                 <!-- Search -->
-                <div class="navbar-search-wrap" class="more mobile-search">
+                <div class="navbar-search-wrap more mobile-search">
                     <form
                       action="{{route('search_redirect')}}"
                       class="form-inline"
@@ -95,7 +95,7 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <div class="navbar-left">
-                    <div class="navbar-search-wrap" class="more">
+                    <div class="navbar-search-wrap more desktop-search ">
                         <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data">
                             @csrf
                             <div class="input-group focusable" data-component="focusable-input-group">

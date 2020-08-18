@@ -1,12 +1,8 @@
-textarea,
-input {
-    border-bottom: 2px solid $color-tan-dark;
-}
+a {
+    color: $color-navy;
 
-textarea:focus,
-input:focus {
-    outline: none;
-
-    border-bottom: 2px $color-brown solid;
+    &:hover {
+        color: $color-black;
+    }
 }
 

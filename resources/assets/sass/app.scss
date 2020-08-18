@@ -4,11 +4,13 @@
 //magnific popup
 @import "node_modules/magnific-popup/src/css/main";
 
+// overrides
+@import "shared/base";
 @import "shared/mfp";
 @import "shared/select2";
-@import "shared/nav.scss";
 @import "shared/bootstrap-override.scss";
 
+
+@import "shared/nav.scss";
+
 @import "dashboard/dashboard";
-
-

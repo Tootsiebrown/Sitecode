@@ -14831,6 +14831,79 @@ var SelectOrNew = function SelectOrNew(element) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/component/taxonomy-nav.js":
+/*!*******************************************************!*\
+  !*** ./resources/assets/js/component/taxonomy-nav.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TaxonomyNav; });
+/* harmony import */ var _utilities_select_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utilities/select-component */ "./resources/assets/js/utilities/select-component.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var TaxonomyNav = function TaxonomyNav(element) {
+  var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  _classCallCheck(this, TaxonomyNav);
+
+  this.handleClick = function (event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (_this.isOpen) {
+      _this.close();
+    } else {
+      _this.open();
+    }
+  };
+
+  this.handleWindowClick = function (event) {
+    if (_this.isOpen) {
+      _this.close();
+    }
+  };
+
+  this.setOtherNavs = function (others) {
+    _this.otherNavs = others;
+  };
+
+  this.close = function () {
+    _this.$component.removeClass('open');
+
+    _this.isOpen = false;
+  };
+
+  this.open = function () {
+    _this.$component.addClass('open');
+
+    _this.isOpen = true;
+    jquery__WEBPACK_IMPORTED_MODULE_1__["each"](_this.otherNavs, function (i, otherNav) {
+      otherNav.close();
+    });
+  };
+
+  this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
+  this.$link = this.$component.elements.link;
+  this.isOpen = false;
+  this.otherNavs = [];
+  this.$link.on('click', this.handleClick);
+  jquery__WEBPACK_IMPORTED_MODULE_1__(window).on('click', this.handleWindowClick);
+};
+
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/site.js":
 /*!*************************************!*\
   !*** ./resources/assets/js/site.js ***!
@@ -14850,6 +14923,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _component_listing_type_select__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./component/listing-type-select */ "./resources/assets/js/component/listing-type-select.js");
 /* harmony import */ var _component_product_categories_hierarchy__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./component/product-categories-hierarchy */ "./resources/assets/js/component/product-categories-hierarchy.js");
 /* harmony import */ var _component_focusable_input_group__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/focusable-input-group */ "./resources/assets/js/component/focusable-input-group.js");
+/* harmony import */ var _component_taxonomy_nav__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./component/taxonomy-nav */ "./resources/assets/js/component/taxonomy-nav.js");
+
 
 
 
@@ -14888,6 +14963,18 @@ function Site() {
     });
     Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('focusable-input-group').each(function (index, element) {
       return new _component_focusable_input_group__WEBPACK_IMPORTED_MODULE_8__["default"](element);
+    });
+    var taxonomyNavs = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])('taxonomy-nav').map(function (index, element) {
+      return new _component_taxonomy_nav__WEBPACK_IMPORTED_MODULE_9__["default"](element);
+    });
+    taxonomyNavs.each(function (index, thisNav) {
+      var otherTaxonomyNavs = [];
+      $.each(taxonomyNavs, function (i, e) {
+        if (i !== index) {
+          otherTaxonomyNavs.push(e);
+        }
+      });
+      thisNav.setOtherNavs(otherTaxonomyNavs);
     });
   };
 
