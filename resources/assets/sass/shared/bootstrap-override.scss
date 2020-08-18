@@ -1,8 +1,25 @@
+.form-control {
+    border-color: $color-tan-dark;
+    border-style: solid;
+    border-width: 0 0 2px 0;
+    font-size: 16px;
+    font-weight: 800;
+
+    &:focus {
+        box-shadow: none;
+        border-bottom-color: $color-brown;
+    }
+}
+
 .input-group {
     background-color: $color-tan-light;
     border-width: 0 0 2px;
     border-color: $color-tan-dark;
     border-style: solid;
+
+    .form-control {
+        border-bottom-width: 0;
+    }
 
     &.focusable input:focus {
         border-bottom: none;
@@ -14,15 +31,50 @@
         input {
             box-shadow: none;
         }
+
+        .btn {
+            background-color: $color-tan-dark;
+        }
     }
 }
 
+
+
 .form-control {
-    border: none;
+    background-color: $color-tan-light;
+    color: $color-brown;
 }
 
 .input-group-btn {
-    .btn-default {
+    .btn-link {
         border: none;
+        background-color: transparent;
     }
+}
+
+.navbar-default .navbar-toggle {
+    border: none;
+
+    .icon-bar {
+        background-color: $color-brown;
+    }
+
+    &:hover {
+        background-color: $color-turquise;
+
+        .icon-bar {
+            background: $color-tan-light;
+        }
+    }
+
+    &:active,
+    &[aria-expanded="true"] {
+        background-color: $color-orange-light;
+
+        .icon-bar {
+            background: $color-tan-light;
+        }
+    }
+
+
 }

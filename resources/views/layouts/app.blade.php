@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-theme.min.css') }}">
 
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <!-- Font awesome 4.4.0 -->
     <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.4.0/css/font-awesome.min.css') }}">
     <!-- load page specific css -->
@@ -32,6 +31,7 @@
 
 <!-- main style.css -->
     <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @if(is_rtl())
         <link rel="stylesheet" href="{{ asset("assets/css/rtl.css") }}">
@@ -74,7 +74,7 @@
                               data-element="input"
                             >
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
+                                <button class="btn btn-link" type="submit">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
                             </span>
                         </div>
 
@@ -94,35 +94,53 @@
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    &nbsp;<li><a href="{{route('home')}}">@lang('app.home')</a> </li>
-                    &nbsp;<li><a href="{{route('create_ad')}}">@lang('app.post_an_ad')</a> </li>
-                </ul>
+                <div class="navbar-left">
+                    <div class="navbar-search-wrap" class="more">
+                        <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data">
+                            @csrf
+                            <div class="input-group focusable" data-component="focusable-input-group">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="searchKeyword"
+                                  name="q"
+                                  placeholder="@lang('app.what_are_u_looking')"
+                                  data-element="input"
+                                >
+                                <span class="input-group-btn">
+                                    <button class="btn btn-link" type="submit">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    @render(App\ViewComponents\TaxonomiesComponent::class)
+                </div>
+
+
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right nav-sarchbar">
-                    <!-- Authentication Links -->
-
-
                     <li>
-                        <div class="navbar-search-wrap" class="more">
-                            <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data"> @csrf
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchKeyword" name="q" placeholder="@lang('app.what_are_u_looking')">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">Go!</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
+                        <a href="/cart" class="btn btn-link">
+                            @php include(public_path('assets/img/cart.svg')) @endphp
+                            <span>my cart</span>
+                        </a>
                     </li>
 
+                    <!-- Authentication Links -->
                     @if (Auth::guest())
-                        <li><a href="{{ route('login') }}">@lang('app.login')</a></li>
+                        <li>
+                            <a href="{{ route('login') }}">
+                                person head
+                                <span>@lang('app.login')</span>
+                            </a>
+                        </li>
                     @else
                         <li>
                             <a href="{{ route('dashboard') }}">
-                                {{ auth()->user()->name }} <span class="headerAvatar"> <img src="{{auth()->user()->get_gravatar()}}" /> </span>
+                                <img src="{{auth()->user()->get_gravatar()}}" />
+                                <span>My Profile</span>
                             </a>
                         </li>
                     @endif

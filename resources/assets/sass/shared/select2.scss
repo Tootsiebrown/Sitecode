@@ -1,3 +1,23 @@
 .select2-container {
     width: 100% !important;
 }
+
+.select2-container--default .select2-selection--single {
+    background-color: $color-tan-light;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 0 0 2px 0;
+    border-color: $color-tan-dark;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    height: auto !important;
+
+    .select2-selection__rendered {
+        color: $color-brown;
+        font-weight: 800;
+    }
+
+    .select2-selection__arrow {
+        top: 3px;
+    }
+}

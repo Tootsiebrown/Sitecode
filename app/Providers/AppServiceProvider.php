@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Option;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Blade::directive('render', function ($component) {
+            return "<?php echo (app($component))->toHtml(); ?>";
+        });
     }
 
     /**

@@ -38,6 +38,13 @@ class Ad extends Model
         return $query->whereStatus('1');
     }
 
+    public function scopeInCategory($query, $categoryId)
+    {
+        return $query->whereHas('category', function ($query) use ($categoryId) {
+            $query->where('id', $categoryId);
+        });
+    }
+
     public function getFeaturedImageAttribute()
     {
         return $this->images()->orderBy('featured', 'desc')->first();

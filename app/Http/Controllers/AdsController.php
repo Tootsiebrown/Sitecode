@@ -735,9 +735,9 @@ class AdsController extends Controller
             }
         }
         if ($category_id) {
-            $query_category = Category::find($category_id);
+            $query_category = ProductCategory::find($category_id);
             if ($query_category) {
-                $ads = $ads->whereSubCategoryId($category_id);
+                $ads = $ads->inCategory($category_id);
 
                 $pagination_params[] = 'cat-' . $category_id . '-' . $query_category->category_slug;
                 $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_category->category_name}</a>";
