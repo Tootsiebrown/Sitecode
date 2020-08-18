@@ -10,8 +10,8 @@ export default class BarcodeReader {
     constructor(element, options = {}) {
         this.$component = selectComponent(element)
 
-        this.$input = this.$component.elements.input
-        this.$button = this.$component.elements.button
+        this.$input = this.$component.find('input')
+        this.$button = this.$component.find('button')
         this.$parentForm = this.$input.closest('form')
 
         this.$modalContainer = $('#quagga-popup')

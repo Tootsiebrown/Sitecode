@@ -14300,8 +14300,8 @@ var BarcodeReader = function BarcodeReader(element) {
   };
 
   this.$component = Object(_utilities_select_component__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
-  this.$input = this.$component.elements.input;
-  this.$button = this.$component.elements.button;
+  this.$input = this.$component.find('input');
+  this.$button = this.$component.find('button');
   this.$parentForm = this.$input.closest('form');
   this.$modalContainer = jquery__WEBPACK_IMPORTED_MODULE_2__('#quagga-popup');
   this.$barcodeInput = jquery__WEBPACK_IMPORTED_MODULE_2__('#barcode-reader-input');

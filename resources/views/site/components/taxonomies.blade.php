@@ -1,6 +1,6 @@
 <ul class="nav-taxonomies">
     <li>
-        <a href="#">Shop By Category</a>
+        <a href="#">Shop By Category <i class="fa fa-sort-desc"></i></a>
         <ul>
             @foreach($categories as $category)
                 <li>
@@ -19,7 +19,7 @@
         </ul>
     </li>
     <li>
-        <a href="#">Shop By Brand</a>
+        <a href="#">Shop By Brand <i class="fa fa-sort-desc"></i></a>
         <ul>
 
         </ul>

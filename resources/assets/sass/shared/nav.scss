@@ -90,6 +90,8 @@
             display: flex;
         }
         .navbar-header {
+            float: none;
+
             .navbar-search-wrap {
                 display: none;
             }
@@ -101,6 +103,31 @@
         }
         #app-navbar-collapse {
             display: flex;
+        }
+    }
+
+    .nav-taxonomies {
+        display: flex;
+        margin: 0;
+        padding: 0;
+
+        & > li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            & > a {
+                color: $color-brown;
+                display: block;
+                font-weight: 400;
+                padding: 0 8px;
+                white-space: nowrap;
+                & > i {
+                    position: relative;
+                    bottom: 3px;
+                    padding-left: 4px;
+                }
+            }
         }
     }
 }

@@ -29,7 +29,7 @@
                         <label for="state_name" class="col-sm-4 control-label">UPC</label>
                         <div class="col-sm-8">
                             <div data-component="barcode-reader">
-                                <div class="input-group mb-3">
+                                <div class="input-group mb-3 focusable" data-component="focusable-input-group">
                                     <input
                                       type="text"
                                       class="form-control"
@@ -41,10 +41,10 @@
                                     >
                                     <span class="input-group-btn">
                                         <button
-                                          class="btn btn-primary"
+                                          class="btn btn-link"
                                           type="button"
                                           data-element="button"
-                                        ><i class="fa fa-camera"></i> &nbsp;Scan</button>
+                                        ><i class="fa fa-camera"></i></button>
                                     </span>
                                 </div>
                             </div>
