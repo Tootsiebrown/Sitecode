@@ -5,6 +5,9 @@
 /public/sitemap
 .phpunit.result.cache
 
+/storage/app
+/storage/logs
+
 ## Cloned from elsewhere
 /vendor
 /node_modules
