@@ -85,10 +85,6 @@
             }
         }
 
-        .btn {
-
-        }
-
 
     }
     .navbar-collapse {
@@ -97,12 +93,32 @@
         }
     }
 
+    .navbar-nav > .open > a {
+        background-image: none;
+        background-color: $color-turquoise;
+        color: $color-white;
+    }
+
+    .scroll-container {
+        background-color: $color-tan-dark;
+        color: $color-turquoise-faded;
+    }
+
     @media(min-width: $bp-tablet) {
         height: 128px;
         .container {
             display: flex;
             height: 100%;
             position: relative;
+
+            &::before,
+            &::after {
+                display: none;
+            }
+
+            & > * {
+                flex-grow: 1;
+            }
         }
         .navbar-header {
             float: none;
@@ -118,6 +134,12 @@
         }
         #app-navbar-collapse {
             display: flex;
+            justify-content: space-between;
+
+            &::before,
+            &::after {
+                display: none;
+            }
         }
 
         .navbar-search-wrap.desktop-search {
@@ -140,96 +162,193 @@
     }
 
     .nav-taxonomies {
-        display: flex;
-        margin: 0 0 -6px;
-        padding: 0;
-        line-height: 48px;
+        & > li > a > i {
+            position: relative;
+            bottom: 3px;
+            padding-left: 12px;
+        }
 
-        & > li {
+        ul {
             list-style: none;
-            margin: 0;
             padding: 0;
+            margin: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .2s,
+                margin .2s;
+        }
 
+        li {
+            float: none;
+            position: static;
+        }
 
+        .top-cat ul {
+            display: none;
+        }
 
-            a {
-                padding: 2px 0;
-                display: block;
-            }
-
-            .top-cat > a {
-                font-weight: bold;
-            }
-
-            &.open {
-
-                & > a {
-                    color: $color-white;
-                    background-color: $color-turquoise-dark;
-                    border-bottom-color: $color-turquoise-faded;
-                }
-
-                .scroll-container {
-                    max-height: calc(100vh - #{$desktop-header-height});
-                    max-width: 100%;
-                    overflow-y: scroll;
-                    border-bottom-width: 6px;
-                    padding: 24px;
-                }
-            }
-
+        li.open {
             ul {
-                list-style: none;
-                padding: 0;
-                margin: 0 0 12px;
-            }
-
-            & > a {
-                 color: $color-brown;
-                 display: block;
-                 font-weight: 400;
-                 padding: 0 12px;
-                 white-space: nowrap;
-                 font-size: 18px;
-                 border-bottom: 6px solid $color-brown;
-
-                 & > i {
-                     position: relative;
-                     bottom: 3px;
-                     padding-left: 12px;
-                 }
-
-                 &:hover {
-                     background-color: $color-turquoise;
-                     color: $color-white;
-                     border-bottom-color: $color-turquoise-dark;
-                 }
+                max-height: 400px;
+                margin-bottom: 12px;
+                overflow-y: scroll;
             }
 
             .scroll-container {
-                background-color: $color-tan-light;
-                border-bottom: 0 solid $color-tan-med;
+                padding: 0 15px;
+            }
+        }
 
-                line-height: 1.2;
-                max-height: 0;
+        @media(min-width: $bp-tablet) {
+            display: flex;
+            line-height: 48px;
+            list-style: none;
+            margin: 0 0 -6px;
+            padding: 0;
+
+            .top-cat {
+                ul {
+                    display: block;
+                }
+
+                & > a {
+                    font-weight: bold;
+                }
+            }
+
+            & > li {
+                list-style: none;
+                margin: 0;
                 padding: 0;
-                position: absolute;
-                overflow: hidden;
-                top: calc(100% + 6px);
-                left: 0;
-                right: 0;
-                transition:
-                    max-height .2s,
-                    border-bottom-width .2s,
-                    padding .2s;
+                position: static;
 
-                & > ul {
-                    columns: 260px 4;
-                    column-fill: balance;
-                    column-gap: 24px;
-                    width: 100%;
-                    > li {
-                        break-inside: avoid;
+                & > a {
+                    line-height: 48px;
+                }
+
+                a {
+                    padding: 2px 0;
+                    display: block;
+                }
+
+
+                &.open {
+
+                    & > a {
+                        color: $color-white;
+                        background-color: $color-turquoise-dark;
+                        border-bottom-color: $color-turquoise-faded;
+                    }
+
+                    ul {
+                        max-height: initial;
+                    }
+
+                    .scroll-container {
+                        max-height: calc(100vh - #{$desktop-header-height});
+                        max-width: 100%;
+                        overflow-y: scroll;
+                        border-bottom-width: 6px;
+                        padding: 24px;
+                    }
+                }
+
+                ul {
+                }
+
+                & > a {
+                    color: $color-brown;
+                    display: block;
+                    font-weight: 400;
+                    padding: 0 12px;
+                    white-space: nowrap;
+                    font-size: 18px;
+                    border-bottom: 6px solid $color-brown;
+
+
+
+                    &:hover {
+                        background-color: $color-turquoise;
+                        color: $color-white;
+                        border-bottom-color: $color-turquoise-dark;
+                    }
+                }
+
+                .scroll-container {
+                    background-color: $color-tan-light;
+                    border-bottom: 0 solid $color-tan-med;
+
+                    line-height: 1.2;
+                    max-height: 0;
+                    padding: 0;
+                    position: absolute;
+                    overflow: hidden;
+                    top: calc(100% + 6px);
+                    left: 0;
+                    right: 0;
+                    transition: max-height .2s,
+                        border-bottom-width .2s,
+                        padding .2s;
+
+                    & > ul {
+                        columns: 260px 4;
+                        column-fill: balance;
+                        column-gap: 24px;
+                        width: 100%;
+
+                        > li {
+                            break-inside: avoid;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .navbar-right {
+        a {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            svg {
+                display: block;
+                margin-right: 12px;
+            }
+        }
+
+        @media(min-width: $bp-tablet) {
+            display:flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &::before,
+            &::after {
+                display: none;
+            }
+            li:first-child {
+                margin-right: 12px;
+            }
+
+            a {
+                display: flex;
+                flex-direction: column;
+
+                svg {
+                    margin-right: 0;
+                    margin-bottom: 12px;
+                }
+
+                &.profile svg {
+                    margin-bottom: 20px;
+                }
+
+                &:hover {
+                    background-color: $color-orange-light;
+                    color: white;
+
+                    svg path {
+                        fill: $color-tan-light;
                     }
                 }
             }

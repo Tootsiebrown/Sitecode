@@ -1,50 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.app', ['bodyClass' => 'home'])
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
 @section('content')
 
-    @if($top_categories->count())
-        <div class="home-category">
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="front-ads-head">
-                            <h2>@lang('app.categories')</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="container">
-                <div class="row equal">
-                    @foreach($top_categories as $top_cat)
-                        <div class="col-md-3">
-                            <div class="home-cat-box">
-                                <div class="home-cat-box-title">
-                                    <h3> <a href="{{ route('search', [ 'category' => 'cat-'.$top_cat->id.'-'.$top_cat->category_slug]) }}"> <i class="fa fa-folder-open-o"></i>  {{$top_cat->category_name}}
-                                        </a>
-                                    </h3>
-                                </div>
-
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
-
+    <p>
+        A featured section up here...
+    </p>
 
     @if($ads->count())
-        <div id="regular-ads-container">
+        <div id="regular-ads-container ads-slider-container">
             <div class="container">
                 <div class="row">
 
                     <div class="col-md-12">
                         <div class="front-ads-head">
                             <h2>@lang('app.new_regular_ads')</h2>
+                            <h3>Don't miss out on the best catch of the daty!</h3>
                         </div>
                     </div>
 
@@ -54,14 +25,9 @@
                             <div class="ad-box">
                                 <div class="ads-thumbnail">
                                     <a href="{{ route('single_ad', [$ad->id, $ad->slug]) }}">
-                                        <img itemprop="image"  src="{{ media_url($ad->feature_img) }}" class="img-responsive" alt="{{ $ad->title }}">
-                                        <span class="modern-img-indicator">
-                                        @if(! empty($ad->video_url))
-                                                <i class="fa fa-file-video-o"></i>
-                                            @else
-                                                <i class="fa fa-file-image-o"> {{ $ad->images->count() }}</i>
-                                            @endif
-                                    </span>
+                                        @if ($ad->featured_image)
+                                            <img itemprop="image"  src="{{ $ad->featured_image->url }}" class="img-responsive" alt="{{ $ad->title }}">
+                                        @endif
                                     </a>
                                 </div>
                                 <div class="caption">

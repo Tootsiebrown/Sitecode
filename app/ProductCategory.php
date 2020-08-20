@@ -27,4 +27,10 @@ class ProductCategory extends Model
     {
         return $this->children->count() > 0;
     }
+
+    public function getUrlAttribute()
+    {
+        return route('search', [
+            'category' => 'cat-' . $this->id . '-' . $this->url_slug]);
+    }
 }

@@ -20,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('render', function ($component) {
             return "<?php echo (app($component))->toHtml(); ?>";
         });
+
+        Blade::directive('svg', function ($component) {
+            return "<?php include(public_path('assets/img/" . $component . ".svg')) ?>";
+        });
     }
 
     /**

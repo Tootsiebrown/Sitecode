@@ -735,6 +735,7 @@ class AdsController extends Controller
             }
         }
         if ($category_id) {
+            dd($category_id);
             $query_category = ProductCategory::find($category_id);
             if ($query_category) {
                 $ads = $ads->inCategory($category_id);

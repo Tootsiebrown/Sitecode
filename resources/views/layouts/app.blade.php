@@ -17,7 +17,10 @@
 
     <!-- Font awesome 4.4.0 -->
     <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.4.0/css/font-awesome.min.css') }}">
-    <!-- load page specific css -->
+
+
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- main select2.css -->
     <link href="{{ asset('assets/select2-4.0.3/css/select2.css') }}" rel="stylesheet" />
@@ -29,7 +32,7 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.css') }}">
     @endif
 
-<!-- main style.css -->
+    <!-- main style.css -->
     <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
@@ -37,6 +40,7 @@
         <link rel="stylesheet" href="{{ asset("assets/css/rtl.css") }}">
     @endif
 
+    <!-- load page specific css -->
     @yield('page-css')
 
     <script src="{{ asset('assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js') }}"></script>
@@ -45,7 +49,7 @@
     </script>
 
 </head>
-<body class="@if(is_rtl()) rtl @endif">
+<body class="@if(is_rtl()) rtl @endif @if(isset($bodyClass)) {{ $bodyClass }} @endif">
 <div id="app">
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
@@ -108,7 +112,7 @@
                                   data-element="input"
                                 >
                                 <span class="input-group-btn">
-                                    <button class="btn btn-link" type="submit">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
+                                    <button class="btn btn-link" type="submit">@svg(magnifying-glass)</button>
                                 </span>
                             </div>
                         </form>
@@ -123,28 +127,18 @@
                 <ul class="nav navbar-nav navbar-right nav-sarchbar">
                     <li>
                         <a href="/cart" class="btn btn-link">
-                            @php include(public_path('assets/img/cart.svg')) @endphp
-                            <span>my cart</span>
+                            @svg(cart)
+                            <span>My Cart</span>
                         </a>
                     </li>
 
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li>
-                            <a href="{{ route('login') }}">
-                                person head
-                                <span>@lang('app.login')</span>
-                            </a>
-                        </li>
-                    @else
-                        <li>
-                            <a href="{{ route('dashboard') }}">
-                                <img src="{{auth()->user()->get_gravatar()}}" />
-                                <span>My Profile</span>
-                            </a>
-                        </li>
-                    @endif
-
+                    <li>
+                        <a href="{{ Auth::guest() ? route('login') : route('dashboard') }}" class="btn btn-link profile">
+                            @svg(profile)
+                            <span>{{ Auth::guest() ? trans('app.login') : 'My Profile' }}</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
