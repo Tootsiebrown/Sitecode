@@ -253,7 +253,7 @@ class ListerController extends Controller
             $clone->images()->save($image->replicate());
         }
 
-        return redirect(route('lister.productForm', ['product' => $clone->id]));
+        return redirect(route('lister.productForm', ['product' => $clone->id, 'action=edit']));
     }
 
     public function getCategoryChildren(Request $request)
