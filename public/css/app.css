@@ -706,11 +706,6 @@ a:hover {
   color: #ffffff;
 }
 
-.navbar-static-top.navbar-default .scroll-container {
-  background-color: #d2ce9e;
-  color: #6fa287;
-}
-
 @media (min-width: 768px) {
   .navbar-static-top.navbar-default {
     height: 128px;
@@ -798,13 +793,17 @@ a:hover {
 }
 
 .navbar-static-top.navbar-default .nav-taxonomies li.open ul {
-  max-height: 400px;
+  max-height: 1500px;
   margin-bottom: 12px;
-  overflow-y: scroll;
 }
 
 .navbar-static-top.navbar-default .nav-taxonomies li.open .scroll-container {
-  padding: 0 15px;
+  padding: 8px 15px;
+  background-color: #f7f6f0;
+}
+
+.navbar-static-top.navbar-default .nav-taxonomies .nav-brands ul li:nth-child(n+25) {
+  display: none;
 }
 
 @media (min-width: 768px) {
@@ -822,6 +821,10 @@ a:hover {
 
   .navbar-static-top.navbar-default .nav-taxonomies .top-cat > a {
     font-weight: bold;
+  }
+
+  .navbar-static-top.navbar-default .nav-taxonomies .nav-brands ul li:nth-child(n+25) {
+    display: block;
   }
 
   .navbar-static-top.navbar-default .nav-taxonomies > li {

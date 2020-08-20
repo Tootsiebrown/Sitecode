@@ -20,7 +20,7 @@
             </ul>
         </div>
     </li>
-    <li data-component="taxonomy-nav">
+    <li data-component="taxonomy-nav" class="nav-brands">
         <a href="#" data-element="link">Shop By Brand <i class="fa fa-sort-desc"></i></a>
         <div class="scroll-container">
             <ul>
