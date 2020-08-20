@@ -181,7 +181,7 @@
 
 
     </div> <!-- /#container -->
-    @include('site.components.quagga-popup');
+    @include('site.components.quagga-popup')
 @endsection
 
 @section('page-js')
