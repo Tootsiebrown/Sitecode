@@ -4,7 +4,6 @@
 /public/hot
 /public/sitemap
 .phpunit.result.cache
-/storage
 
 ## Cloned from elsewhere
 /vendor
