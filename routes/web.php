@@ -24,12 +24,12 @@ if (App::environment() == 'dev') {
     );
 }
 
-Route::get(
-    '/site-information',
-    function () {
-        return view('site.pages.site-info');
-    }
-);
+//Route::get(
+//    '/site-information',
+//    function () {
+//        return view('site.pages.site-info');
+//    }
+//);
 
 /**
  * @project: LaraBid
