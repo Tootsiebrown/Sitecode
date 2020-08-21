@@ -6,7 +6,6 @@
 .phpunit.result.cache
 
 /storage/app
-/storage/logs
 
 ## Cloned from elsewhere
 /vendor
