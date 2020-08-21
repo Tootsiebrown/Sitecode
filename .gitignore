@@ -3,6 +3,8 @@
 /public/storage
 /public/hot
 /public/sitemap
+/public/css/app.css
+/public/js/app.js
 .phpunit.result.cache
 
 /storage/app
