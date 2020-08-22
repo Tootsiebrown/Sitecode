@@ -21,38 +21,12 @@
 
 @section('content')
 
-    <div class="page-header search-page-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>{{safe_output($ad->title)}}</h2>
-                    <div class="btn-group btn-breadcrumb">
-                        <a href="{{ route('home') }}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
-
-{{--                        <a href="{{ route('search', [$ad->country->country_code] ) }}" class="btn btn-warning">{{$ad->country->country_code}}</a>--}}
-
-                        @if($ad->category)
-{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->category->id.'-'.$ad->category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->category->category_name }} </a>--}}
-                        @endif
-                        @if($ad->sub_category)
-{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->sub_category->id.'-'.$ad->sub_category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->sub_category->category_name }} </a>--}}
-                        @endif
-
-                        <a href="{{  route('single_ad', [$ad->id, $ad->slug]) }}" class="btn btn-warning">{{ safe_output($ad->title) }}</a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <div class="single-auction-wrap">
 
         <div class="container">
-            <div class="row">
-                <div class="col-sm-8 col-xs-12">
-
+            <div class="single-ad__header">
+                <div class="single-ad__info">
+                    <h3>{{ safe_output($ad->title) }}</h3>
                     @include('dashboard.flash_msg')
 
                     @if ($errors->any())
@@ -71,6 +45,66 @@
                         </div>
                     @endif
 
+                    <div class="single-ad__condition">{{ $ad->condition }}</div>
+                    @if ($ad->type === 'auction')
+                        @if($ad->is_bid_active())
+                            <p class="single-ad__time-limit">
+                                {{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}
+                            </p>
+                        @else
+                            @if($ad->is_bid_accepted())
+                                <p>@lang('app.bid_accepted')</p>
+                            @else
+                                <p>{{sprintf(trans('app.bid_deadline_closed_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
+                            @endif
+
+                            <div class="alert alert-warning">
+                                <h4>@lang('app.bid_closed')</h4>
+                                <p>@lang('app.cant_bid_anymore')</p>
+                            </div>
+                        @endif
+
+                        <p class="single-ad__current-bid-headline">
+                            @lang('app.highest_bid')
+                        </p>
+
+                        <p class="single-ad__current-bid-amount">
+                            {!! themeqx_price($ad->current_bid()) !!}
+                        </p>
+
+                        <p class="single-ad__minimum-new-bid-amount">
+                            Enter a bid of ${{ $ad->current_bid() + 1 }} or higher
+                        </p>
+
+                        @if($ad->type == 'auction' && ! auth()->check())
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
+                            </div>
+                        @else
+                            <form action="{{route('post_bid', $ad->id)}}" class="form-inline" method="post" enctype="multipart/form-data"> @csrf
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">{!! currency_sign() !!}</div>
+                                        <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
+                                        <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">@lang('app.place_bid')</button>
+                                </span>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
+
+                    @endif
+
+                    <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
+                        @if( ! $ad->is_my_favorite())
+                            <i class="fa fa-eye"></i> @lang('app.save_ad_as_favorite')
+                        @else
+                            <i class="fa fa-eye-slash"></i> @lang('app.remove_from_favorite')
+                        @endif
+                    </a>
+                </div>
+                <div class="single-ad__images">
                     <div class="auction-img-video-wrap">
                         @if ( ! $ad->is_published())
                             <div class="alert alert-warning"> <i class="fa fa-warning"></i> @lang('app.ad_not_published_warning')</div>
@@ -103,6 +137,13 @@
                         @endif
 
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-xs-12">
+
+
+
 
                     <div class="ads-detail">
                         @lang('app.description')</h4>
@@ -275,22 +316,13 @@
 
                         @if($ad->type == 'auction')
                             <div class="widget">
-                                <h3>@lang('app.highest_bid') {!! themeqx_price($ad->current_bid()) !!}</h3>
+                                <h3> </h3>
                                 @if($ad->is_bid_active())
 
                                     <p>{{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
                                     <p>@lang('app.total_bids'): {{$ad->bids->count()}}, <a href="#bid_history">@lang('app.bid_history')</a> </p>
 
-                                    <form action="{{route('post_bid', $ad->id)}}" class="form-inline" method="post" enctype="multipart/form-data"> @csrf
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-addon">{{currency_sign()}}</div>
-                                                <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
-                                                <div class="input-group-addon">.00</div>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">@lang('app.place_bid')</button>
-                                    </form>
+
 
                                 @else
                                     @if($ad->is_bid_accepted())
@@ -312,7 +344,7 @@
 
                         <div class="widget">
 
-                            <h3>@lang('app.general_info')</h3>
+                            <h3>{{ safe_output($ad->title) }}</h3>
                             <p><span class="ad-info-name"><i class="fa fa-money"></i> @lang('app.price')</span> <span class="ad-info-value">{!! themeqx_price_ng($ad->price) !!}</span></p>
 
                             @if(! empty($ad->country))

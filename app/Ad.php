@@ -40,9 +40,15 @@ class Ad extends Model
 
     public function scopeInCategory($query, $categoryId)
     {
-        return $query->whereHas('category', function ($query) use ($categoryId) {
-            $query->where('id', $categoryId);
-        });
+        if (is_int($categoryId)) {
+            return $query->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('product_categories.id', $categoryId);
+            });
+        } elseif (is_array($categoryId)) {
+            return $query->whereHas('categories', function ($query) use ($categoryId) {
+                $query->whereIn('product_categories.id', $categoryId);
+            });
+        }
     }
 
     public function getFeaturedImageAttribute()

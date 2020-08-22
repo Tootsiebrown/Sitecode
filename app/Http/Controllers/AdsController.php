@@ -10,6 +10,7 @@ use App\Comment;
 use App\Country;
 use App\Media;
 use App\Payment;
+use App\ProductCategory;
 use App\State;
 use App\Sub_Category;
 use App\User;
@@ -551,7 +552,7 @@ class AdsController extends Controller
     {
         $query_category = null;
 
-        $title = null;
+        $title = '';
         $pagination_output = null;
         $pagination_params = [];
 
@@ -564,7 +565,6 @@ class AdsController extends Controller
         if ($search_terms) {
             $ads = $ads->where('title', 'like', "%{$search_terms}%")->orWhere('description', 'like', "%{$search_terms}%");
         }
-
 
         $country_id = null;
         $state_id = null;
@@ -711,6 +711,10 @@ class AdsController extends Controller
             }
         }
 
+        if (request('category') && is_array('category')) {
+            $ads = $ads->inCategory(request('category'));
+        }
+
         //dd('Country = '.$country_id.', State = '.$state_id.', City = '.$city_id. ', Cat = '.$category_id.', Brand = '.$brand_id);
         if ($country_id) {
             $ads = $ads->whereCountryId($country->id);
@@ -735,7 +739,6 @@ class AdsController extends Controller
             }
         }
         if ($category_id) {
-            dd($category_id);
             $query_category = ProductCategory::find($category_id);
             if ($query_category) {
                 $ads = $ads->inCategory($category_id);
@@ -743,7 +746,7 @@ class AdsController extends Controller
                 $pagination_params[] = 'cat-' . $category_id . '-' . $query_category->category_slug;
                 $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_category->category_name}</a>";
 
-                $title .= ' ' . $query_category->category_name . ' ' . trans('app.in');
+                $title .= ' ' . $query_category->name;
             }
         }
 
