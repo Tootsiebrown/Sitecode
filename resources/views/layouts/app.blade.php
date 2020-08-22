@@ -15,10 +15,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-theme.min.css') }}">
 
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <!-- Font awesome 4.4.0 -->
     <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.4.0/css/font-awesome.min.css') }}">
-    <!-- load page specific css -->
+
+
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- main select2.css -->
     <link href="{{ asset('assets/select2-4.0.3/css/select2.css') }}" rel="stylesheet" />
@@ -30,13 +32,15 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.css') }}">
     @endif
 
-<!-- main style.css -->
+    <!-- main style.css -->
     <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @if(is_rtl())
         <link rel="stylesheet" href="{{ asset("assets/css/rtl.css") }}">
     @endif
 
+    <!-- load page specific css -->
     @yield('page-css')
 
     <script src="{{ asset('assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js') }}"></script>
@@ -45,100 +49,41 @@
     </script>
 
 </head>
-<body class="@if(is_rtl()) rtl @endif">
+<body class="@if(is_rtl()) rtl @endif @if(isset($bodyClass)) {{ $bodyClass }} @endif">
 <div id="app">
-
-    <div id="sub-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="social-icons">
-                        @php
-                            $facebook_url = get_option('facebook_url');
-                            $twitter_url = get_option('twitter_url');
-                            $linked_in_url = get_option('linked_in_url');
-                            $dribble_url = get_option('dribble_url');
-                            $google_plus_url = get_option('google_plus_url');
-                            $youtube_url = get_option('youtube_url');
-                        @endphp
-                        <ul>
-                            @if($facebook_url)
-                                <li><a href="{{$facebook_url}}"><i class="fa fa-facebook"></i> </a> </li>
-                            @endif
-                            @if($twitter_url)
-                                <li><a href="{{$twitter_url}}"><i class="fa fa-twitter"></i> </a> </li>
-                            @endif
-                            @if($google_plus_url)
-                                <li><a href="{{$google_plus_url}}"><i class="fa fa-google-plus"></i> </a> </li>
-                            @endif
-                            @if($youtube_url)
-                                <li><a href="{{$youtube_url}}"><i class="fa fa-youtube"></i> </a> </li>
-                            @endif
-                            @if($linked_in_url)
-                                <li><a href="{{$linked_in_url}}"><i class="fa fa-linkedin"></i> </a> </li>
-                            @endif
-                            @if($dribble_url)
-                                <li><a href="{{$dribble_url}}"><i class="fa fa-dribbble"></i> </a> </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="right-info">
-                        <ul>
-                            @if(get_option('enable_language_switcher') == 1)
-
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> @if($current_lang) {{$current_lang->language_name}} @else @lang('app.language') @endif <span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ route('switch_language', 'en') }}">English</a></li>
-                                        @foreach(get_languages() as $lang)
-                                            <li><a href="{{ route('switch_language', $lang->language_code) }}">{{ $lang->language_name }}</a></li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @endif
-
-
-                            @if (Auth::guest())
-                                <li><a href="{{ route('login') }}">@lang('app.login')</a></li>
-                                <li><a href="{{ route('register') }}">@lang('app.register')</a></li>
-                            @else
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        {{ auth()->user()->name }} <span class="headerAvatar"> <img src="{{auth()->user()->get_gravatar()}}" /> </span> <span class="caret"></span>
-                                    </a>
-
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{route('dashboard')}}"> @lang('app.dashboard') </a> </li>
-                                        <li>
-                                            <a href="{{ route('logout') }}"
-                                               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                                @lang('app.logout')
-                                            </a>
-
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                {{ csrf_field() }}
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endif
-
-
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
+
+                <!-- Branding Image -->
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    <img src="/assets/img/catchndealz.svg" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
+                </a>
+
+                <!-- Search -->
+                <div class="navbar-search-wrap more mobile-search">
+                    <form
+                      action="{{route('search_redirect')}}"
+                      class="form-inline"
+                      method="get"
+                      enctype="multipart/form-data"
+                    >
+                        @csrf
+                        <div class="input-group focusable" data-component="focusable-input-group">
+                            <input
+                              type="text"
+                              class="form-control searchKeyword"
+                              name="q"
+                              placeholder="@lang('app.what_are_u_looking_short')"
+                              data-element="input"
+                            >
+                            <span class="input-group-btn">
+                                <button class="btn btn-link" type="submit">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
+                            </span>
+                        </div>
+
+                    </form>
+                </div>
 
                 <!-- Collapsed Hamburger -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -148,33 +93,52 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    <img src="{{ logo_url() }}" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
-                </a>
+
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    &nbsp;<li><a href="{{route('home')}}">@lang('app.home')</a> </li>
-                    &nbsp;<li><a href="{{route('create_ad')}}">@lang('app.post_an_ad')</a> </li>
-                </ul>
+                <div class="navbar-left">
+                    <div class="navbar-search-wrap more desktop-search ">
+                        <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data">
+                            @csrf
+                            <div class="input-group focusable" data-component="focusable-input-group">
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="searchKeyword"
+                                  name="q"
+                                  placeholder="@lang('app.what_are_u_looking')"
+                                  data-element="input"
+                                >
+                                <span class="input-group-btn">
+                                    <button class="btn btn-link" type="submit">@svg(magnifying-glass)</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                    @render(App\ViewComponents\TaxonomiesComponent::class)
+                </div>
+
+
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right nav-sarchbar">
-                    <!-- Authentication Links -->
-
-
                     <li>
-                        <div id="navbar-search-wrap" class="more">
-                            <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data"> @csrf
-
-                                <input type="text" class="form-control" id="searchKeyword" name="q" placeholder="@lang('app.what_are_u_looking')">
-                            </form>
-                        </div>
+                        <a href="/cart" class="btn btn-link">
+                            @svg(cart)
+                            <span>My Cart</span>
+                        </a>
                     </li>
 
+                    <!-- Authentication Links -->
+                    <li>
+                        <a href="{{ Auth::guest() ? route('login') : route('dashboard') }}" class="btn btn-link profile">
+                            @svg(profile)
+                            <span>{{ Auth::guest() ? trans('app.login') : 'My Profile' }}</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

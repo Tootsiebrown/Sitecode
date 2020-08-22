@@ -68,7 +68,6 @@
                         <li> <a href="{{ route('file_storage_settings') }}">@lang('app.file_storage_settings')</a> </li>
                         <li> <a href="{{ route('social_settings') }}">@lang('app.social_settings')</a> </li>
                         <li> <a href="{{ route('re_captcha_settings') }}">@lang('app.re_captcha_settings')</a> </li>
-                        <li> <a href="{{ route('other_settings') }}">@lang('app.other_settings')</a> </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
@@ -81,6 +80,19 @@
             <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
             <li> <a href="{{ route('profile') }}"><i class="fa fa-user"></i> @lang('app.profile')</a>  </li>
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
+            <li>
+                <a href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();"
+                >
+                    <i class="fa fa-sign-out"></i>
+                    @lang('app.logout')
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+            </li>
 
 
         </ul>

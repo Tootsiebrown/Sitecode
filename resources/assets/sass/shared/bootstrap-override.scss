@@ -1,0 +1,108 @@
+.form-control {
+    background-color: $color-tan-light;
+    border-color: $color-tan-dark;
+    border-style: solid;
+    border-width: 0 0 2px 0;
+    color: $color-brown;
+    font-size: 16px;
+    font-weight: 800;
+
+    &:focus {
+        box-shadow: none;
+        border-bottom-color: $color-brown;
+    }
+
+    &::placeholder {
+        color: $color-tan-dark;
+    }
+}
+
+.btn {
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: $color-turquoise;
+}
+
+.input-group {
+    background-color: $color-tan-light;
+    border-width: 0 0 2px;
+    border-color: $color-tan-dark;
+    border-style: solid;
+
+    .form-control {
+        border-bottom-width: 0;
+    }
+
+    .btn {
+        //padding-top: 8px;
+        border-radius: 0;
+        height: 34px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .btn-link {
+        color: $color-tan-dark;
+    }
+
+    &.focusable input:focus {
+        border-bottom: none;
+    }
+
+    &.focusable.focused {
+        border-bottom-color: $color-brown;
+
+        input {
+            box-shadow: none;
+        }
+
+        .btn {
+            background-color: $color-tan-dark;
+            color: $color-brown;
+        }
+    }
+
+
+}
+
+.input-group-btn {
+    .btn-link {
+        border: none;
+        background-color: transparent;
+    }
+    & > .btn:hover {
+        z-index: auto;
+    }
+}
+
+.navbar-default .navbar-toggle {
+    border: none;
+
+    .icon-bar {
+        background-color: $color-brown;
+    }
+
+    &:hover {
+        background-color: $color-turquoise;
+
+        .icon-bar {
+            background: $color-tan-light;
+        }
+    }
+
+    &:active,
+    &[aria-expanded="true"] {
+        background-color: $color-orange-light;
+
+        .icon-bar {
+            background: $color-tan-light;
+        }
+    }
+
+
+}

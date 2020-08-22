@@ -4,8 +4,8 @@
 @section('social-meta')
     <meta property="og:title" content="{{ safe_output($ad->title) }}">
     <meta property="og:description" content="{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($ad->description) )),0,160) }}">
-    @if($ad->media_img->first())
-        <meta property="og:image" content="{{ media_url($ad->media_img->first(), true) }}">
+    @if($ad->images->first())
+        <meta property="og:image" content="{{ $ad->images->first()->url }}">
     @else
         <meta property="og:image" content="{{ asset('uploads/placeholder.png') }}">
     @endif
@@ -29,13 +29,13 @@
                     <div class="btn-group btn-breadcrumb">
                         <a href="{{ route('home') }}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
 
-                        <a href="{{ route('search', [$ad->country->country_code] ) }}" class="btn btn-warning">{{$ad->country->country_code}}</a>
+{{--                        <a href="{{ route('search', [$ad->country->country_code] ) }}" class="btn btn-warning">{{$ad->country->country_code}}</a>--}}
 
                         @if($ad->category)
-                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->category->id.'-'.$ad->category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->category->category_name }} </a>
+{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->category->id.'-'.$ad->category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->category->category_name }} </a>--}}
                         @endif
                         @if($ad->sub_category)
-                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->sub_category->id.'-'.$ad->sub_category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->sub_category->category_name }} </a>
+{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->sub_category->id.'-'.$ad->sub_category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->sub_category->category_name }} </a>--}}
                         @endif
 
                         <a href="{{  route('single_ad', [$ad->id, $ad->slug]) }}" class="btn btn-warning">{{ safe_output($ad->title) }}</a>
@@ -65,7 +65,7 @@
                         </div>
                     @endif
 
-                    @if($ad->category_type == 'auction' && ! auth()->check())
+                    @if($ad->type == 'auction' && ! auth()->check())
                         <div class="alert alert-warning">
                             <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
                         </div>
@@ -95,8 +95,8 @@
                         @else
                             <div class="ads-gallery">
                                 <div class="fotorama"  data-nav="thumbs" data-allowfullscreen="true" data-width="100%">
-                                    @foreach($ad->media_img as $img)
-                                        <img src="{{ media_url($img, true) }}" alt="{{ $ad->title }}">
+                                    @foreach($ad->images as $img)
+                                        <img src="{{ $img->url }}" alt="{{ $ad->title }}">
                                     @endforeach
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                     </div>
 
 
-                    @if($ad->category_type == 'auction')
+                    @if($ad->type == 'auction')
                         <hr />
                         <div id="bid_history">
                             <h2>@lang('app.bid_history')</h2>
@@ -273,7 +273,7 @@
                 <div class="col-sm-4 col-xs-12">
                     <div class="sidebar-widget">
 
-                        @if($ad->category_type == 'auction')
+                        @if($ad->type == 'auction')
                             <div class="widget">
                                 <h3>@lang('app.highest_bid') {!! themeqx_price($ad->current_bid()) !!}</h3>
                                 @if($ad->is_bid_active())
@@ -364,7 +364,7 @@
 
                             <div class="sidebar-user-link">
 
-                                @if( ! $ad->category_type== 'jobs')
+                                @if( ! $ad->type== 'jobs')
                                     <button class="btn btn-block" id="onClickShowPhone">
                                         <strong> <span id="ShowPhoneWrap"></span> </strong> <br />
                                         <span class="text-muted">@lang('app.click_to_show_phone_number')</span>
@@ -373,7 +373,7 @@
 
                                 <ul class="ad-action-list">
                                     @if( ! empty($ad->user))
-                                        <li><a href="{{ route('ads_by_user', ['user_id' => $ad->user_id]) }}"><i class="fa fa-user"></i> @lang('app.view_all_ad_of_this') @if($ad->category_type== 'jobs') @lang('app.employer') @else @lang('app.seller') @endif </a></li>
+                                        <li><a href="{{ route('ads_by_user', ['user_id' => $ad->user_id]) }}"><i class="fa fa-user"></i> @lang('app.view_all_ad_of_this') @if($ad->type== 'jobs') @lang('app.employer') @else @lang('app.seller') @endif </a></li>
                                     @endif
 
                                     <li>
@@ -386,7 +386,7 @@
                                         </a>
                                     </li>
 
-                                    @if( ! $ad->category_type== 'jobs')
+                                    @if( ! $ad->type== 'jobs')
                                         @if(! empty($ad->user) && $ad->user->email)
                                             <li><a href="#" data-toggle="modal" data-target="#replyByEmail"><i class="fa fa-envelope-o"></i> @lang('app.reply_by_email')</a></li>
                                         @endif
@@ -582,8 +582,8 @@
             title: '{{ $ad->title }}', // title for share message
             text: '{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($ad->description) )),0,160) }}', // text for share message
 
-            @if($ad->media_img->first())
-            image: '{{ media_url($ad->media_img->first(), true) }}', // optional image for share message (not for all networks)
+            @if($ad->images->first())
+            image: '{{ $ad->images->first()->url }}', // optional image for share message (not for all networks)
             @else
             image: '{{ asset('uploads/placeholder.png') }}', // optional image for share message (not for all networks)
             @endif

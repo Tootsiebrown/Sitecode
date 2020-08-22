@@ -735,9 +735,10 @@ class AdsController extends Controller
             }
         }
         if ($category_id) {
-            $query_category = Category::find($category_id);
+            dd($category_id);
+            $query_category = ProductCategory::find($category_id);
             if ($query_category) {
-                $ads = $ads->whereSubCategoryId($category_id);
+                $ads = $ads->inCategory($category_id);
 
                 $pagination_params[] = 'cat-' . $category_id . '-' . $query_category->category_slug;
                 $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_category->category_name}</a>";
@@ -852,7 +853,7 @@ class AdsController extends Controller
         $title = $ad->title;
 
         //Get Related Ads, add [->whereCountryId($ad->country_id)] for more specific results
-        $related_ads = Ad::active()->whereCategoryId($ad->category_id)->where('id', '!=', $ad->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
+        $related_ads = collect(); //Ad::active()->whereCategoryId($ad->category_id)->where('id', '!=', $ad->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
 
         return view('single_ad', compact('ad', 'title', 'related_ads'));
     }

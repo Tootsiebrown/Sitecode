@@ -17,4 +17,20 @@ class ProductCategory extends Model
     {
         return $query->where('parent_id', 0);
     }
+
+    public function children()
+    {
+        return $this->hasMany(static::class, 'parent_id');
+    }
+
+    public function hasChildren()
+    {
+        return $this->children->count() > 0;
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('search', [
+            'category' => 'cat-' . $this->id . '-' . $this->url_slug]);
+    }
 }

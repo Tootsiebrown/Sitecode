@@ -75,26 +75,6 @@ function avatar_img_url($img = null, $source = null)
 }
 
 /**
- * @return string
- *
- * @return logo url
- */
-function logo_url()
-{
-    $url_path = '';
-    $img = get_option('logo');
-    $source = get_option('logo_storage');
-
-    if ($source == 'public') {
-        $url_path = asset('uploads/logo/' . $img);
-    } elseif ($source == 's3') {
-        $url_path = \Illuminate\Support\Facades\Storage::disk('s3')->url('uploads/logo/' . $img);
-    }
-
-    return $url_path;
-}
-
-/**
  * @return mixed
  */
 function current_disk()

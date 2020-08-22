@@ -5,11 +5,11 @@
    url: classifieds.themeqx.com
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:300,300i,400,400i,500,500i,700,700i');
+/*@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans:300,300i,400,400i,500,500i,700,700i');*/
 
 body {
     /*background: #e9eaed;*/
-    font-family: 'Alegreya Sans', sans-serif;
+    /*font-family: 'Alegreya Sans', sans-serif;*/
     font-weight:300;
     font-size: 16px;
 }

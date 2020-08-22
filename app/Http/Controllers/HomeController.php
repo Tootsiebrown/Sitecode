@@ -11,8 +11,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        $top_categories = ProductCategory::top()->orderBy('name', 'asc')->get();
-
         $limit_regular_ads = get_option('number_of_free_ads_in_home');
 
         $ads = Ad::active()->with('categories', 'city', 'state', 'country')
@@ -21,7 +19,10 @@ class HomeController extends Controller
 
         $total_ads_count = Ad::active()->count();
 
-        return view('index', compact('top_categories', 'ads', 'total_ads_count'));
+        return view('index', [
+            'ads' => $ads,
+            'total_ads_count' => $total_ads_count
+        ]);
     }
 
     /**
