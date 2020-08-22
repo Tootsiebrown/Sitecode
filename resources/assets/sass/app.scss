@@ -11,7 +11,9 @@
 @import "shared/select2";
 @import "shared/bootstrap-override.scss";
 
-
+// shared
 @import "shared/nav.scss";
 
+// pages / modules
 @import "dashboard/dashboard";
+@import "pages/single-ad";

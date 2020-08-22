@@ -21,38 +21,12 @@
 
 @section('content')
 
-    <div class="page-header search-page-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>{{safe_output($ad->title)}}</h2>
-                    <div class="btn-group btn-breadcrumb">
-                        <a href="{{ route('home') }}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
-
-{{--                        <a href="{{ route('search', [$ad->country->country_code] ) }}" class="btn btn-warning">{{$ad->country->country_code}}</a>--}}
-
-                        @if($ad->category)
-{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->category->id.'-'.$ad->category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->category->category_name }} </a>--}}
-                        @endif
-                        @if($ad->sub_category)
-{{--                            <a href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->sub_category->id.'-'.$ad->sub_category->category_slug] ) }}" class="btn btn-warning">  {{ $ad->sub_category->category_name }} </a>--}}
-                        @endif
-
-                        <a href="{{  route('single_ad', [$ad->id, $ad->slug]) }}" class="btn btn-warning">{{ safe_output($ad->title) }}</a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <div class="single-auction-wrap">
 
         <div class="container">
-            <div class="row">
-                <div class="col-sm-8 col-xs-12">
-
+            <div class="single-ad__header">
+                <div class="single-ad__info">
+                    <h3>{{ safe_output($ad->title) }}</h3>
                     @include('dashboard.flash_msg')
 
                     @if ($errors->any())
@@ -71,6 +45,66 @@
                         </div>
                     @endif
 
+                    <div class="single-ad__condition">{{ $ad->condition }}</div>
+                    @if ($ad->type === 'auction')
+                        @if($ad->is_bid_active())
+                            <p class="single-ad__time-limit">
+                                {{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}
+                            </p>
+                        @else
+                            @if($ad->is_bid_accepted())
+                                <p>@lang('app.bid_accepted')</p>
+                            @else
+                                <p>{{sprintf(trans('app.bid_deadline_closed_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
+                            @endif
+
+                            <div class="alert alert-warning">
+                                <h4>@lang('app.bid_closed')</h4>
+                                <p>@lang('app.cant_bid_anymore')</p>
+                            </div>
+                        @endif
+
+                        <p class="single-ad__current-bid-headline">
+                            @lang('app.highest_bid')
+                        </p>
+
+                        <p class="single-ad__current-bid-amount">
+                            {!! themeqx_price($ad->current_bid()) !!}
+                        </p>
+
+                        <p class="single-ad__minimum-new-bid-amount">
+                            Enter a bid of ${{ $ad->current_bid() + 1 }} or higher
+                        </p>
+
+                        @if($ad->type == 'auction' && ! auth()->check())
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
+                            </div>
+                        @else
+                            <form action="{{route('post_bid', $ad->id)}}" class="form-inline" method="post" enctype="multipart/form-data"> @csrf
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">{!! currency_sign() !!}</div>
+                                        <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
+                                        <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">@lang('app.place_bid')</button>
+                                </span>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
+
+                    @endif
+
+                    <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
+                        @if( ! $ad->is_my_favorite())
+                            <i class="fa fa-eye"></i> @lang('app.save_ad_as_favorite')
+                        @else
+                            <i class="fa fa-eye-slash"></i> @lang('app.remove_from_favorite')
+                        @endif
+                    </a>
+                </div>
+                <div class="single-ad__images">
                     <div class="auction-img-video-wrap">
                         @if ( ! $ad->is_published())
                             <div class="alert alert-warning"> <i class="fa fa-warning"></i> @lang('app.ad_not_published_warning')</div>
@@ -103,45 +137,15 @@
                         @endif
 
                     </div>
+                </div>
+            </div>
 
-                    <div class="ads-detail">
-                        @lang('app.description')</h4>
-                        {!! nl2br(safe_output($ad->description)) !!}
-                    </div>
+            <div class="single-ad__detail">
+                @lang('app.description')</h4>
+                {!! nl2br(safe_output($ad->description)) !!}
+            </div>
 
-
-                    @if($ad->type == 'auction')
-                        <hr />
-                        <div id="bid_history">
-                            <h2>@lang('app.bid_history')</h2>
-
-                            @if($ad->bids->count())
-                                <table class="table table-striped">
-                                    <tr>
-                                        <th>@lang('app.bidder')</th>
-                                        <th>@lang('app.bid_amount')</th>
-                                        <th>@lang('app.date_time')</th>
-                                    </tr>
-                                    @foreach($ad->bids as $bid)
-                                        <tr>
-                                            <td>@lang('app.bidder') #{{$bid->user_id}}</td>
-                                            <td>{!! themeqx_price($bid->bid_amount) !!}</td>
-                                            <td>{{$bid->posting_datetime() }}</td>
-                                        </tr>
-                                    @endforeach
-
-                                </table>
-                            @else
-                                <p>@lang('app.there_is_no_bids')</p>
-                            @endif
-                        </div>
-                    @endif
-
-                    @if(get_option('enable_fb_comments') == 1)
-                        <hr />
-                        <div class="fb-comments" data-href="{{route('single_ad', [$ad->id, $ad->slug])}}" data-width="100%"></div>
-                    @endif
-
+            <div>
                     @if(get_option('enable_comments') == 1)
                         <hr />
                         @php $comments = \App\Comment::approved()->parent()->whereAdId($ad->id)->with('childs_approved')->orderBy('id', 'desc')->get();
@@ -270,198 +274,69 @@
 
                 </div>
 
-                <div class="col-sm-4 col-xs-12">
-                    <div class="sidebar-widget">
 
-                        @if($ad->type == 'auction')
-                            <div class="widget">
-                                <h3>@lang('app.highest_bid') {!! themeqx_price($ad->current_bid()) !!}</h3>
-                                @if($ad->is_bid_active())
+                <div class="related-ads">
+                    @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
+                        <div class="widget similar-ads">
+                            <h3>@lang('app.similar_ads')</h3>
 
-                                    <p>{{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
-                                    <p>@lang('app.total_bids'): {{$ad->bids->count()}}, <a href="#bid_history">@lang('app.bid_history')</a> </p>
+                            @foreach($related_ads as $rad)
+                                <div class="item-loop">
 
-                                    <form action="{{route('post_bid', $ad->id)}}" class="form-inline" method="post" enctype="multipart/form-data"> @csrf
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-addon">{{currency_sign()}}</div>
-                                                <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
-                                                <div class="input-group-addon">.00</div>
-                                            </div>
+                                    <div class="ad-box">
+                                        <div class="ads-thumbnail">
+                                            <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
+                                                <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
+                                                <span class="modern-img-indicator">
+                                    @if(! empty($rad->video_url))
+                                                        <i class="fa fa-file-video-o"></i>
+                                                    @else
+                                                        <i class="fa fa-file-image-o"> {{ $rad->media_img->count() }}</i>
+                                                    @endif
+                                </span>
+                                            </a>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">@lang('app.place_bid')</button>
-                                    </form>
-
-                                @else
-                                    @if($ad->is_bid_accepted())
-                                        <p>@lang('app.bid_accepted')</p>
-                                    @else
-                                        <p>{{sprintf(trans('app.bid_deadline_closed_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
-                                    @endif
-
-                                    <p>@lang('app.total_bids'): {{$ad->bids->count()}} </p>
-
-                                    <div class="alert alert-warning">
-                                        <h4>@lang('app.bid_closed')</h4>
-                                        <p>@lang('app.cant_bid_anymore')</p>
-                                    </div>
-
-                                @endif
-                            </div>
-                        @endif
-
-                        <div class="widget">
-
-                            <h3>@lang('app.general_info')</h3>
-                            <p><span class="ad-info-name"><i class="fa fa-money"></i> @lang('app.price')</span> <span class="ad-info-value">{!! themeqx_price_ng($ad->price) !!}</span></p>
-
-                            @if(! empty($ad->country))
-                                <p><span class="ad-info-name"><i class="fa fa-globe"></i>  @lang('app.country') </span> <span class="ad-info-value"> {!! $ad->country->country_name !!} </span> </p>
-                            @endif
-
-                            @if(! empty($ad->state))
-                                <p><span class="ad-info-name"><i class="fa fa-flag-o"></i>  @lang('app.state') </span> <span class="ad-info-value"> {!! $ad->state->state_name !!} </span> </p>
-                            @endif
-
-                            @if(! empty($ad->city))
-                                <p><span class="ad-info-name"><i class="fa fa-area-chart"></i>  @lang('app.city') </span> <span class="ad-info-value"> {!! $ad->city->city_name !!} </span> </p>
-                            @endif
-
-                            <p><span class="ad-info-name"><i class="fa fa-map-marker"></i>  @lang('app.address') </span> <span class="ad-info-value"> {!! safe_output($ad->address) !!} </span> </p>
-
-
-                            <p><span class="ad-info-name"><i class="fa fa-calendar-check-o"></i> @lang('app.posted_at')</span> <span class="ad-info-value">{{$ad->posted_date()}}</span></p>
-                            <p><span class="ad-info-name"><i class="fa fa-calendar-check-o"></i> @lang('app.expired_at')</span> <span class="ad-info-value">{{$ad->expired_date()}}</span></p>
-
-                            <div class="modern-social-share-btn-group">
-                                <h4>@lang('app.share_this_ad')</h4>
-                                <a href="#" class="btn btn-default share s_facebook"><i class="fa fa-facebook"></i> </a>
-                                <a href="#" class="btn btn-default share s_plus"><i class="fa fa-google-plus"></i> </a>
-                                <a href="#" class="btn btn-default share s_twitter"><i class="fa fa-twitter"></i> </a>
-                                <a href="#" class="btn btn-default share s_linkedin"><i class="fa fa-linkedin"></i> </a>
-                            </div>
-
-                        </div>
-
-                        <div class="widget">
-
-                            {{--<h3>@lang('app.seller_info')</h3>--}}
-                            @if( ! empty($ad->user))
-                                <div class="sidebar-user-info">
-                                    <div class="ad-single-user-avatar">
-                                        <img src="{{ $ad->user->get_gravatar() }}" class="img-circle img-responsive" />
-                                    </div>
-
-                                    <div class="ad-single-user-info">
-                                        <h5>{{ $ad->user->name }}</h5>
-                                        @php $user_address = $ad->user->get_address(); @endphp
-                                        @if($user_address)
-                                            <p class="text-muted"><i class="fa fa-map-marker"></i> {!! $user_address !!}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="sidebar-user-link">
-
-                                @if( ! $ad->type== 'jobs')
-                                    <button class="btn btn-block" id="onClickShowPhone">
-                                        <strong> <span id="ShowPhoneWrap"></span> </strong> <br />
-                                        <span class="text-muted">@lang('app.click_to_show_phone_number')</span>
-                                    </button>
-                                @endif
-
-                                <ul class="ad-action-list">
-                                    @if( ! empty($ad->user))
-                                        <li><a href="{{ route('ads_by_user', ['user_id' => $ad->user_id]) }}"><i class="fa fa-user"></i> @lang('app.view_all_ad_of_this') @if($ad->type== 'jobs') @lang('app.employer') @else @lang('app.seller') @endif </a></li>
-                                    @endif
-
-                                    <li>
-                                        <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}">
-                                            @if( ! $ad->is_my_favorite())
-                                                <i class="fa fa-star-o"></i> @lang('app.save_ad_as_favorite')
-                                            @else
-                                                <i class="fa fa-star"></i> @lang('app.remove_from_favorite')
-                                            @endif
-                                        </a>
-                                    </li>
-
-                                    @if( ! $ad->type== 'jobs')
-                                        @if(! empty($ad->user) && $ad->user->email)
-                                            <li><a href="#" data-toggle="modal" data-target="#replyByEmail"><i class="fa fa-envelope-o"></i> @lang('app.reply_by_email')</a></li>
-                                        @endif
-                                    @endif
-
-                                </ul>
-
-                            </div>
-
-                        </div>
-
-                        @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
-                            <div class="widget similar-ads">
-                                <h3>@lang('app.similar_ads')</h3>
-
-                                @foreach($related_ads as $rad)
-                                    <div class="item-loop">
-
-                                        <div class="ad-box">
-                                            <div class="ads-thumbnail">
-                                                <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
-                                                    <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
-                                                    <span class="modern-img-indicator">
-                                        @if(! empty($rad->video_url))
-                                                            <i class="fa fa-file-video-o"></i>
-                                                        @else
-                                                            <i class="fa fa-file-image-o"> {{ $rad->media_img->count() }}</i>
-                                                        @endif
-                                    </span>
+                                        <div class="caption">
+                                            <div class="ad-box-caption-title">
+                                                <a class="ad-box-title" href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
+                                                    {{ str_limit($rad->title, 40) }}
                                                 </a>
                                             </div>
-                                            <div class="caption">
-                                                <div class="ad-box-caption-title">
-                                                    <a class="ad-box-title" href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
-                                                        {{ str_limit($rad->title, 40) }}
-                                                    </a>
-                                                </div>
 
-                                                <div class="ad-box-category">
-                                                    @if($rad->sub_category)
-                                                        <a class="price text-muted" href="{{ route('search', [ $rad->country->country_code,  'category' => 'cat-'.$rad->sub_category->id.'-'.$rad->sub_category->category_slug]) }}"> <i class="fa fa-folder-o"></i> {{ $rad->sub_category->category_name }} </a>
-                                                    @endif
-                                                    @if($rad->city)
-                                                        <a class="location text-muted" href="{{ route('search', [$rad->country->country_code, 'state' => 'state-'.$rad->state->id, 'city' => 'city-'.$rad->city->id]) }}"> <i class="fa fa-map-marker"></i> {{ $rad->city->city_name }} </a>
-                                                    @endif
-                                                </div>
-                                            </div>
-
-                                            <div class="ad-box-footer">
-                                                <span class="ad-box-price">@lang('app.starting_price') {!! themeqx_price($rad->price) !!},</span>
-                                                <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($rad->current_bid()) !!}</span>
-
-                                                @if($rad->price_plan == 'premium')
-                                                    <div class="ad-box-premium" data-toggle="tooltip" title="@lang('app.premium_ad')">
-                                                        {!! $rad->premium_icon() !!}
-                                                    </div>
+                                            <div class="ad-box-category">
+                                                @if($rad->sub_category)
+                                                    <a class="price text-muted" href="{{ route('search', [ $rad->country->country_code,  'category' => 'cat-'.$rad->sub_category->id.'-'.$rad->sub_category->category_slug]) }}"> <i class="fa fa-folder-o"></i> {{ $rad->sub_category->category_name }} </a>
+                                                @endif
+                                                @if($rad->city)
+                                                    <a class="location text-muted" href="{{ route('search', [$rad->country->country_code, 'state' => 'state-'.$rad->state->id, 'city' => 'city-'.$rad->city->id]) }}"> <i class="fa fa-map-marker"></i> {{ $rad->city->city_name }} </a>
                                                 @endif
                                             </div>
+                                        </div>
+
+                                        <div class="ad-box-footer">
+                                            <span class="ad-box-price">@lang('app.starting_price') {!! themeqx_price($rad->price) !!},</span>
+                                            <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($rad->current_bid()) !!}</span>
+
+                                            @if($rad->price_plan == 'premium')
+                                                <div class="ad-box-premium" data-toggle="tooltip" title="@lang('app.premium_ad')">
+                                                    {!! $rad->premium_icon() !!}
+                                                </div>
+                                            @endif
+                                        </div>
 
 
-                                            <div class="countdown" data-expire-date="{{$rad->expired_at}}" ></div>
-                                            <div class="place-bid-btn">
-                                                <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
-                                            </div>
-
+                                        <div class="countdown" data-expire-date="{{$rad->expired_at}}" ></div>
+                                        <div class="place-bid-btn">
+                                            <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
                                         </div>
 
                                     </div>
-                                @endforeach
-                            </div>
 
-                        @endif
+                                </div>
+                            @endforeach
+                        </div>
 
-
-                    </div>
+                    @endif
 
                 </div>
             </div>

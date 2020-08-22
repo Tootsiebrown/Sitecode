@@ -31,6 +31,7 @@ class ProductCategory extends Model
     public function getUrlAttribute()
     {
         return route('search', [
-            'category' => 'cat-' . $this->id . '-' . $this->url_slug]);
+            'category[]' => $this->id
+        ]);
     }
 }
