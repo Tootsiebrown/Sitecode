@@ -1,0 +1,44 @@
+.single-ad {
+
+    &__info {
+        .form-inline .form-group {
+            width: 256px;
+        }
+    }
+
+    &__header {
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid $color-tan-dark;
+    }
+
+    @media(min-width: $bp-tablet) {
+        &__header {
+            display: flex;
+        }
+
+        &__info {
+            /* extra width stuff to keep the image gallery from bugging out */
+            flex-basis: 60%;
+            width: 60%;
+            flex-shrink: 0;
+
+            .form-inline .form-group {
+                width: auto;
+            }
+        }
+
+        &__images {
+            /* extra width stuff to keep the image gallery from bugging out */
+            flex-basis: 40%;
+            width: 40%;
+            max-width: 40%;
+            margin-left: 16px;
+            flex-grow: 0;
+        }
+
+        &__detail {
+            width: 60%;
+        }
+    }
+}
