@@ -23,7 +23,9 @@ include:
 code_quality:
   variables:
     SOURCE_CODE: "/app"
-    
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
 cache:
   key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
 
