@@ -368,7 +368,7 @@ class ListerController extends Controller
             'features' => $request->features,
         ];
 
-        foreach($this->optionalFields as $fieldName => $fieldLabel) {
+        foreach ($this->optionalFields as $fieldName => $fieldLabel) {
             $data[$fieldName] = $request->input($fieldName);
         }
 
@@ -489,7 +489,7 @@ class ListerController extends Controller
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
-               $data[$fieldName] = $product->$fieldName;
+                $data[$fieldName] = $product->$fieldName;
             }
 
             $ad = Ad::create($data);
