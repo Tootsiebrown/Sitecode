@@ -39,7 +39,6 @@
                     <div class="product-suggestion__details-container">
                         <h1>{{ $product->name }}</h1>
                         <p>UPC: {{ $product->upc }}</p>
-                        <p>Bin: {{ $product->bin }}</p>
                         <p>Original Price: {{ $product->original_price }}</p>
                         <p>Listing Price: {{ $product->price }}</p>
                         <p>Condition: {{ $product->condition }}</p>
@@ -52,6 +51,22 @@
                         <ul>
                             @foreach($product->categories as $category)
                                 <li>{{ $category->name }}</li>
+                            @endforeach
+                        </ul>
+
+                        <p class="product-suggestion__label">Optional Fields:</p>
+                        <ul>
+                            @foreach ([
+                                'gender' => 'Gender',
+                                'model_number' => 'Model Number',
+                                'color' => 'Color',
+                                'bin' => 'Bin',
+                                'expiration_date' => 'Expiration Date',
+                                'dimensions' => 'Dimensions',
+                            ] as $fieldName => $fieldLabel)
+                                @if( $product->$fieldName)
+                                    <li>{{ $fieldLabel }}: {{ $product->$fieldName }}</li>
+                                @endif
                             @endforeach
                         </ul>
                         <p class="product-suggestion__label">Images</p>
