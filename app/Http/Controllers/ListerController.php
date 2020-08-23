@@ -22,6 +22,16 @@ class ListerController extends Controller
 {
     protected $datafinitiGateway;
 
+    protected $optionalFields = [
+        'gender' => 'Gender',
+        'model_number' => 'Model Number',
+        'color' => 'Color',
+        'bin' => 'Bin',
+        'expiration_date' => 'Expiration Date',
+        'dimensions' => 'Dimensions',
+        'size' => 'Size',
+    ];
+
     public function __construct(DatafinitiGateway $datafinitiGateway)
     {
         $this->datafinitiGateway = $datafinitiGateway;
@@ -147,6 +157,7 @@ class ListerController extends Controller
             'product' => $product ?? null,
             'newBrand' => $newBrand,
             'action' => $action,
+            'optionalFields' => $this->optionalFields,
         ]);
     }
 
@@ -355,13 +366,13 @@ class ListerController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
-            'gender' => $request->gender,
-            'model_number' => $request->model_number,
-            'color' => $request->color,
-            'bin' => $request->bin,
         ];
 
-        if ($request->input('action') == 'edit') {
+        foreach($this->optionalFields as $fieldName => $fieldLabel) {
+            $data[$fieldName] = $request->input($fieldName);
+        }
+
+        if ($request->input('action') === 'edit') {
             $product = Product::find($request->input('product_id'));
             $product->fill($data);
             $product->save();
@@ -451,7 +462,8 @@ class ListerController extends Controller
         $product = Product::find($request->product_id);
 
         DB::transaction(function () use ($request, $product) {
-            $ad = Ad::create([
+
+            $data = [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'expired_at' => $request->bid_deadline,
@@ -472,12 +484,15 @@ class ListerController extends Controller
                 'price' => $product->price,
                 'meta_description' => $product->meta_description,
                 'meta_keywords' => $product->meta_keywords,
-                'color' => $product->color,
-                'gender' => $product->gender,
-                'model_number' => $product->model_number,
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
-            ]);
+            ];
+
+            foreach ($this->optionalFields as $fieldName => $fieldLabel) {
+               $data[$fieldName] = $product->$fieldName;
+            }
+
+            $ad = Ad::create($data);
 
             $product
                 ->images

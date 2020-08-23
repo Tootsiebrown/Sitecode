@@ -361,37 +361,15 @@
 
                     <legend>Optional Attributes</legend>
 
-                    <div class="form-group {{ $errors->has('gender')? 'has-error':'' }}">
-                        <label for="gender" class="col-sm-4 control-label">Gender</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="gender" value="{{ old('gender') ?? $product['gender'] ?? '' }}" name="gender" placeholder="">
-                            {!! $errors->has('gender')? '<p class="help-block">'.$errors->first('gender').'</p>':'' !!}
+                    @foreach ($optionalFields as $optionalFieldName => $optionalFieldLabel)
+                        <div class="form-group {{ $errors->has($optionalFieldName)? 'has-error':'' }}">
+                            <label for="{{ $optionalFieldName }}" class="col-sm-4 control-label">{{ $optionalFieldLabel }}</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="{{ $optionalFieldName }}" value="{{ old($optionalFieldName) ?? $product[$optionalFieldName] ?? '' }}" name="{{ $optionalFieldName }}" placeholder="">
+                                {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('model_number')? 'has-error':'' }}">
-                        <label for="model_number" class="col-sm-4 control-label">Model Number</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="model_number" value="{{ old('model_number') ?? $product['model_number'] ?? '' }}" name="model_number" placeholder="">
-                            {!! $errors->has('model_number')? '<p class="help-block">'.$errors->first('model_number').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('color')? 'has-error':'' }}">
-                        <label for="color" class="col-sm-4 control-label">Color</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="color" value="{{ old('color') ?? $product['color'] ?? '' }}" name="color" placeholder="">
-                            {!! $errors->has('color')? '<p class="help-block">'.$errors->first('color').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('bin')? 'has-error':'' }}">
-                        <label for="bin" class="col-sm-4 control-label">Bin</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="bin" value="{{ old('bin') ?? $product->bin ?? '' }}" name="bin" placeholder="">
-                            {!! $errors->has('bin')? '<p class="help-block">'.$errors->first('bin').'</p>':'' !!}
-                        </div>
-                    </div>
+                    @endforeach
 
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-8">
