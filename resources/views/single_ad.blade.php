@@ -20,7 +20,28 @@
 @endsection
 
 @section('content')
+    <div class="page-header search-page-header">
+         <div class="container">
+             <div class="row">
+                 <div class="col-md-12">
+                     <div class="breadcrumbs">
+                         <a href="{{ route('home') }}">Home</a>
+                         @if($ad->category)
+                             <a href="{{ $ad->category->url }}"> {{ $ad->category->name }}</a>
+                         @endif
 
+                         @if($ad->child_category)
+                             <a href="{{ $ad->child_category->url }}"> {{ $ad->child_category->name }}</a>
+                         @endif
+
+                         @if($ad->grandchild_category)
+                             <a href="{{ $ad->grandchild_category->url }}"> {{ $ad->grandchild_category->name }}</a>
+                         @endif
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
     <div class="single-auction-wrap">
 
         <div class="container">
@@ -81,7 +102,7 @@
                                 <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
                             </div>
                         @else
-                            <form action="{{route('post_bid', $ad->id)}}" class="form-inline" method="post" enctype="multipart/form-data"> @csrf
+                            <form action="{{route('post_bid', $ad->id)}}" class="form-inline place-bid" method="post" enctype="multipart/form-data"> @csrf
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">{!! currency_sign() !!}</div>
@@ -96,11 +117,16 @@
 
                     @endif
 
+                    @if ($ad->type === 'auction')
+                        <p>Or buy now for ${{ $ad->price }}</p>
+                    @endif
+
+                    <button class="btn btn-primary">Add to Cart @svg(cart)</button>
                     <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
                         @if( ! $ad->is_my_favorite())
-                            <i class="fa fa-eye"></i> @lang('app.save_ad_as_favorite')
+                            @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
                         @else
-                            <i class="fa fa-eye-slash"></i> @lang('app.remove_from_favorite')
+                            @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
                         @endif
                     </a>
                 </div>
@@ -140,208 +166,226 @@
                 </div>
             </div>
 
-            <div class="single-ad__detail">
-                @lang('app.description')</h4>
-                {!! nl2br(safe_output($ad->description)) !!}
+            <div class="single-ad__general-area">
+                @if ($ad->hasOptionalFieldsForDisplay())
+                    <div class="single-ad__details">
+                        <h4>Specifications</h4>
+                        <ul>
+                            @foreach($ad::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel)
+                                @if (!is_null($ad->$fieldName))
+                                    <li><span class="single-ad__details-item">{{ $fieldLabel }}</span>: {{ $ad->$fieldName }}</li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="single-ad__description">
+                    <h4>@lang('app.description')</h4>
+                    {!! nl2br(safe_output($ad->description)) !!}
+                </div>
+            </div>
+
+            <div class="single-ad__meta">
+                <p>Product SKU: {{ $ad->product_id }}</p>
+                <p>Listing SKU: {{ $ad->id }}</p>
             </div>
 
             <div>
-                    @if(get_option('enable_comments') == 1)
-                        <hr />
-                        @php $comments = \App\Comment::approved()->parent()->whereAdId($ad->id)->with('childs_approved')->orderBy('id', 'desc')->get();
-                        $comments_count = \App\Comment::approved()->whereAdId($ad->id)->count();
-                        @endphp
-                        <div class="comments-container">
-                            @if($comments_count < 1)
-                                <h2>@lang('app.no_comment_found')</h2>
-                            @elseif($comments_count == 1)
-                                <h2>{{$comments_count}} @lang('app.comment_found')</h2>
-                            @elseif($comments_count > 1)
-                                <h2>{{$comments_count}} @lang('app.comments_found')</h2>
-                            @endif
+                @if(get_option('enable_comments') == 1)
+                    <hr />
+                    @php $comments = \App\Comment::approved()->parent()->whereAdId($ad->id)->with('childs_approved')->orderBy('id', 'desc')->get();
+                    $comments_count = \App\Comment::approved()->whereAdId($ad->id)->count();
+                    @endphp
+                    <div class="comments-container">
+                        @if($comments_count < 1)
+                            <h2>@lang('app.no_comment_found')</h2>
+                        @elseif($comments_count == 1)
+                            <h2>{{$comments_count}} @lang('app.comment_found')</h2>
+                        @elseif($comments_count > 1)
+                            <h2>{{$comments_count}} @lang('app.comments_found')</h2>
+                        @endif
 
-                            <div class="post-comments-form">
+                        <div class="post-comments-form">
 
-                                <form action="{{route('post_comments', $ad->id)}}" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                            <form action="{{route('post_comments', $ad->id)}}" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
 
-                                    @if( ! auth()->check())
-                                        <div class="form-group {{ $errors->has('author_name')? 'has-error':'' }}">
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="author_name" value="@if(auth()->check() ) {{auth()->user()->name}}@else{{old('author_name')}}@endif" name="author_name" placeholder="@lang('app.author_name')">
-                                                {!! $errors->has('author_name')? '<p class="help-block">'.$errors->first('author_name').'</p>':'' !!}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group {{ $errors->has('author_email')? 'has-error':'' }}">
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="author_email" value="@if(auth()->check() ) {{auth()->user()->email}}@else{{old('author_email')}}@endif" name="author_email" placeholder="@lang('app.author_email')">
-                                                {!! $errors->has('author_email')? '<p class="help-block">'.$errors->first('author_email').'</p>':'' !!}
-                                                <p class="text-info">@lang('app.email_secured')</p>
-                                            </div>
-                                        </div>
-                                    @endif
-
-                                    <div class="form-group {{ $errors->has('comment')? 'has-error':'' }}">
+                                @if( ! auth()->check())
+                                    <div class="form-group {{ $errors->has('author_name')? 'has-error':'' }}">
                                         <div class="col-sm-8">
-                                            <textarea class="form-control" name="comment" rows="8" placeholder="@lang('app.write_your_comment')"></textarea>
-                                            {!! $errors->has('comment')? '<p class="help-block">'.$errors->first('comment').'</p>':'' !!}
+                                            <input type="text" class="form-control" id="author_name" value="@if(auth()->check() ) {{auth()->user()->name}}@else{{old('author_name')}}@endif" name="author_name" placeholder="@lang('app.author_name')">
+                                            {!! $errors->has('author_name')? '<p class="help-block">'.$errors->first('author_name').'</p>':'' !!}
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group {{ $errors->has('author_email')? 'has-error':'' }}">
                                         <div class="col-sm-8">
-                                            <input type="hidden" value="" class="comment_id" name="comment_id">
-                                            <button type="submit" class="btn btn-success" name="post_comment"><i class="fa fa-pencil-square"></i> @lang('app.post_comment') </button>
+                                            <input type="text" class="form-control" id="author_email" value="@if(auth()->check() ) {{auth()->user()->email}}@else{{old('author_email')}}@endif" name="author_email" placeholder="@lang('app.author_email')">
+                                            {!! $errors->has('author_email')? '<p class="help-block">'.$errors->first('author_email').'</p>':'' !!}
+                                            <p class="text-info">@lang('app.email_secured')</p>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
+                                @endif
 
-                            @if($comments->count())
-                                <ul id="comments-list" class="comments-list">
+                                <div class="form-group {{ $errors->has('comment')? 'has-error':'' }}">
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" name="comment" rows="8" placeholder="@lang('app.write_your_comment')"></textarea>
+                                        {!! $errors->has('comment')? '<p class="help-block">'.$errors->first('comment').'</p>':'' !!}
+                                    </div>
+                                </div>
 
-                                    @foreach($comments as $comment)
-                                        <li id="comment-{{$comment->id}}">
-                                            <div class="comment-main-level">
-                                                <!-- Avatar -->
-                                                <div class="comment-avatar">
-                                                    @if($comment->user_id)
-                                                        <img src="{{$comment->author->get_gravatar()}}" alt="{{$comment->author_name}}">
-                                                    @else
-                                                        <img src="{{avatar_by_email($comment->author_email)}}" alt="{{$comment->author_name}}">
-                                                    @endif
-                                                </div>
-                                                <!-- Contenedor del Comentario -->
-                                                <div class="comment-box" data-comment-id="{{$comment->id}}">
-                                                    <div class="comment-head">
-                                                        <h6 class="comment-name by-author">{{$comment->author_name}}</h6>
-                                                        <span>{{$comment->created_at->diffForHumans()}}</span>
-                                                        <i class="fa fa-reply"></i>
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        {!! safe_output(nl2br($comment->comment)) !!}
-                                                    </div>
-
-                                                    <div class="reply_form_box" style="display: none;"></div>
-                                                </div>
-                                            </div>
-
-                                        @if($comment->childs_approved)
-                                            @foreach($comment->childs_approved as $childComment)
-                                                <!-- Respuestas de los comentarios -->
-                                                    <ul class="comments-list reply-list">
-                                                        <li id="comment-{{$childComment->id}}">
-                                                            <!-- Avatar -->
-                                                            <div class="comment-avatar">
-                                                                @if($childComment->user_id)
-                                                                    <img src="{{$childComment->author->get_gravatar()}}" alt="{{$childComment->author_name}}">
-                                                                @else
-                                                                    <img src="{{avatar_by_email($childComment->author_email)}}" alt="{{$childComment->author_name}}">
-                                                                @endif
-                                                            </div>
-                                                            <!-- Contenedor del Comentario -->
-                                                            <div class="comment-box" data-comment-id="{{$comment->id}}">
-                                                                <div class="comment-head">
-                                                                    <h6 class="comment-name by-author">{{$childComment->author_name}}</h6>
-                                                                    <span>{{$childComment->created_at->diffForHumans()}}</span>
-                                                                    <i class="fa fa-reply"></i>
-                                                                </div>
-                                                                <div class="comment-content">
-                                                                    {!! safe_output(nl2br($childComment->comment)) !!}
-                                                                </div>
-                                                                <div class="reply_form_box" style="display: none;"></div>
-                                                            </div>
-                                                        </li>
-
-                                                    </ul>
-
-                                                @endforeach
-                                            @endif
-                                        </li>
-
-                                    @endforeach
-
-
-                                </ul>
-
-                            @else
-
-                            @endif
-
-
+                                <div class="form-group">
+                                    <div class="col-sm-8">
+                                        <input type="hidden" value="" class="comment_id" name="comment_id">
+                                        <button type="submit" class="btn btn-success" name="post_comment"><i class="fa fa-pencil-square"></i> @lang('app.post_comment') </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    @endif
 
-                </div>
+                        @if($comments->count())
+                            <ul id="comments-list" class="comments-list">
+
+                                @foreach($comments as $comment)
+                                    <li id="comment-{{$comment->id}}">
+                                        <div class="comment-main-level">
+                                            <!-- Avatar -->
+                                            <div class="comment-avatar">
+                                                @if($comment->user_id)
+                                                    <img src="{{$comment->author->get_gravatar()}}" alt="{{$comment->author_name}}">
+                                                @else
+                                                    <img src="{{avatar_by_email($comment->author_email)}}" alt="{{$comment->author_name}}">
+                                                @endif
+                                            </div>
+                                            <!-- Contenedor del Comentario -->
+                                            <div class="comment-box" data-comment-id="{{$comment->id}}">
+                                                <div class="comment-head">
+                                                    <h6 class="comment-name by-author">{{$comment->author_name}}</h6>
+                                                    <span>{{$comment->created_at->diffForHumans()}}</span>
+                                                    <i class="fa fa-reply"></i>
+                                                </div>
+                                                <div class="comment-content">
+                                                    {!! safe_output(nl2br($comment->comment)) !!}
+                                                </div>
+
+                                                <div class="reply_form_box" style="display: none;"></div>
+                                            </div>
+                                        </div>
+
+                                    @if($comment->childs_approved)
+                                        @foreach($comment->childs_approved as $childComment)
+                                            <!-- Respuestas de los comentarios -->
+                                                <ul class="comments-list reply-list">
+                                                    <li id="comment-{{$childComment->id}}">
+                                                        <!-- Avatar -->
+                                                        <div class="comment-avatar">
+                                                            @if($childComment->user_id)
+                                                                <img src="{{$childComment->author->get_gravatar()}}" alt="{{$childComment->author_name}}">
+                                                            @else
+                                                                <img src="{{avatar_by_email($childComment->author_email)}}" alt="{{$childComment->author_name}}">
+                                                            @endif
+                                                        </div>
+                                                        <!-- Contenedor del Comentario -->
+                                                        <div class="comment-box" data-comment-id="{{$comment->id}}">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name by-author">{{$childComment->author_name}}</h6>
+                                                                <span>{{$childComment->created_at->diffForHumans()}}</span>
+                                                                <i class="fa fa-reply"></i>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {!! safe_output(nl2br($childComment->comment)) !!}
+                                                            </div>
+                                                            <div class="reply_form_box" style="display: none;"></div>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+
+                                            @endforeach
+                                        @endif
+                                    </li>
+
+                                @endforeach
 
 
-                <div class="related-ads">
-                    @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
-                        <div class="widget similar-ads">
-                            <h3>@lang('app.similar_ads')</h3>
+                            </ul>
 
-                            @foreach($related_ads as $rad)
-                                <div class="item-loop">
+                        @else
 
-                                    <div class="ad-box">
-                                        <div class="ads-thumbnail">
-                                            <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
-                                                <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
-                                                <span class="modern-img-indicator">
-                                    @if(! empty($rad->video_url))
-                                                        <i class="fa fa-file-video-o"></i>
-                                                    @else
-                                                        <i class="fa fa-file-image-o"> {{ $rad->media_img->count() }}</i>
-                                                    @endif
-                                </span>
+                        @endif
+
+
+                    </div>
+                @endif
+
+            </div>
+
+
+            <div class="related-ads">
+                @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
+                    <div class="widget similar-ads">
+                        <h3>@lang('app.similar_ads')</h3>
+
+                        @foreach($related_ads as $rad)
+                            <div class="item-loop">
+
+                                <div class="ad-box">
+                                    <div class="ads-thumbnail">
+                                        <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
+                                            <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
+                                            <span class="modern-img-indicator">
+                                @if(! empty($rad->video_url))
+                                                    <i class="fa fa-file-video-o"></i>
+                                                @else
+                                                    <i class="fa fa-file-image-o"> {{ $rad->media_img->count() }}</i>
+                                                @endif
+                            </span>
+                                        </a>
+                                    </div>
+                                    <div class="caption">
+                                        <div class="ad-box-caption-title">
+                                            <a class="ad-box-title" href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
+                                                {{ str_limit($rad->title, 40) }}
                                             </a>
                                         </div>
-                                        <div class="caption">
-                                            <div class="ad-box-caption-title">
-                                                <a class="ad-box-title" href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
-                                                    {{ str_limit($rad->title, 40) }}
-                                                </a>
-                                            </div>
 
-                                            <div class="ad-box-category">
-                                                @if($rad->sub_category)
-                                                    <a class="price text-muted" href="{{ route('search', [ $rad->country->country_code,  'category' => 'cat-'.$rad->sub_category->id.'-'.$rad->sub_category->category_slug]) }}"> <i class="fa fa-folder-o"></i> {{ $rad->sub_category->category_name }} </a>
-                                                @endif
-                                                @if($rad->city)
-                                                    <a class="location text-muted" href="{{ route('search', [$rad->country->country_code, 'state' => 'state-'.$rad->state->id, 'city' => 'city-'.$rad->city->id]) }}"> <i class="fa fa-map-marker"></i> {{ $rad->city->city_name }} </a>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="ad-box-footer">
-                                            <span class="ad-box-price">@lang('app.starting_price') {!! themeqx_price($rad->price) !!},</span>
-                                            <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($rad->current_bid()) !!}</span>
-
-                                            @if($rad->price_plan == 'premium')
-                                                <div class="ad-box-premium" data-toggle="tooltip" title="@lang('app.premium_ad')">
-                                                    {!! $rad->premium_icon() !!}
-                                                </div>
+                                        <div class="ad-box-category">
+                                            @if($rad->sub_category)
+                                                <a class="price text-muted" href="{{ route('search', [ $rad->country->country_code,  'category' => 'cat-'.$rad->sub_category->id.'-'.$rad->sub_category->category_slug]) }}"> <i class="fa fa-folder-o"></i> {{ $rad->sub_category->category_name }} </a>
+                                            @endif
+                                            @if($rad->city)
+                                                <a class="location text-muted" href="{{ route('search', [$rad->country->country_code, 'state' => 'state-'.$rad->state->id, 'city' => 'city-'.$rad->city->id]) }}"> <i class="fa fa-map-marker"></i> {{ $rad->city->city_name }} </a>
                                             @endif
                                         </div>
+                                    </div>
+
+                                    <div class="ad-box-footer">
+                                        <span class="ad-box-price">@lang('app.starting_price') {!! themeqx_price($rad->price) !!},</span>
+                                        <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($rad->current_bid()) !!}</span>
+
+                                        @if($rad->price_plan == 'premium')
+                                            <div class="ad-box-premium" data-toggle="tooltip" title="@lang('app.premium_ad')">
+                                                {!! $rad->premium_icon() !!}
+                                            </div>
+                                        @endif
+                                    </div>
 
 
-                                        <div class="countdown" data-expire-date="{{$rad->expired_at}}" ></div>
-                                        <div class="place-bid-btn">
-                                            <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
-                                        </div>
-
+                                    <div class="countdown" data-expire-date="{{$rad->expired_at}}" ></div>
+                                    <div class="place-bid-btn">
+                                        <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
                                     </div>
 
                                 </div>
-                            @endforeach
-                        </div>
 
-                    @endif
+                            </div>
+                        @endforeach
+                    </div>
 
-                </div>
+                @endif
+
             </div>
         </div>
-
     </div>
 
 

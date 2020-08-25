@@ -4,12 +4,77 @@
         .form-inline .form-group {
             width: 256px;
         }
+
+        h3 {
+            color: $color-turquoise;
+        }
+
+        form.place-bid {
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            border: 2px solid $color-tan-dark;
+            border-radius: 4px;
+
+            .form-control {
+                height: 40px;
+            }
+
+            .input-group-btn {
+                padding: 3px;
+                button.btn {
+                    border-radius: 2px;
+                }
+            }
+        }
     }
 
     &__header {
         padding-bottom: 24px;
         margin-bottom: 24px;
         border-bottom: 2px solid $color-tan-dark;
+    }
+
+    &__condition {
+        margin: 24px 0;
+        color: $color-navy;
+        font-weight: bold;
+    }
+
+    &__time-limit {
+        width: 50%;
+    }
+
+    &__current-bid-headline {
+        color: $color-navy;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 0;
+        margin-top: 16px;
+    }
+
+    &__current-bid-amount {
+        color: $color-turquoise;
+        font-size: 36px;
+        margin-bottom: 16px;
+        margin-top: 0;
+    }
+
+    &__minimum-new-bid-amount {
+        font-size: 14px;
+    }
+
+    &__details {
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        &-item {
+            font-weight: bold;
+        }
     }
 
     @media(min-width: $bp-tablet) {
@@ -37,8 +102,18 @@
             flex-grow: 0;
         }
 
-        &__detail {
+        &__general-area {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        &__description {
             width: 60%;
+        }
+
+        &__details {
+            width: 40%;
+            margin-left: 16px;
         }
     }
 }

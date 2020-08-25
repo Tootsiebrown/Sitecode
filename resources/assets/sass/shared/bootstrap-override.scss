@@ -25,63 +25,48 @@
 
 .btn-primary {
     background-color: $color-turquoise;
+    svg  {
+        height: 18px;
+        vertical-align: middle;
+        path {
+            fill: $color-tan-light;
+        }
+    }
+}
+
+.btn-default {
+    background-color: $color-navy;
+    color: $color-tan-light;
+
+    &:hover {
+        background-color: $color-turquoise;
+    }
+    &:focus {
+        background-color: $color-navy;
+    }
+}
+
+.form-control {
+    background-color: $color-tan-light;
+    border-radius: 4px;
+    border: none;
 }
 
 .input-group {
-    background-color: $color-tan-light;
-    border-width: 0 0 2px;
-    border-color: $color-tan-dark;
-    border-style: solid;
+
 
     .form-control {
-        border-bottom-width: 0;
-    }
-
-    .btn {
-        //padding-top: 8px;
-        border-radius: 0;
-        height: 34px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .btn-link {
-        color: $color-tan-dark;
-    }
-
-    &.focusable input:focus {
-        border-bottom: none;
-    }
-
-    &.focusable.focused {
-        border-bottom-color: $color-brown;
-
-        input {
-            box-shadow: none;
-        }
-
-        .btn {
-            background-color: $color-tan-dark;
-            color: $color-brown;
-        }
+        background-color: $color-tan-light;
+        border: none;
     }
 
     .input-group-addon {
-        border-radius: 0;
+        background-color: $color-tan-light;
         border: none;
-        background-color: inherit;
-        color: inherit;
     }
-}
 
-.input-group-btn {
     .btn-link {
-        border: none;
-        background-color: transparent;
-    }
-    & > .btn:hover {
-        z-index: auto;
+        background-color: $color-tan-light;
     }
 }
 

@@ -650,7 +650,7 @@ return [
     'bid_history'                       => 'Bid history',
     'bidder'                            => 'Bidder',
     'there_is_no_bids'                  => 'No bids found',
-    'highest_bid'                       => 'Current bid',
+    'highest_bid'                       => 'The current bid is',
     'total_bids'                        => 'Total Bids',
     'enter_min_bid_amount'              => 'Please enter bid amount that is not less then or equal to %s',
     'posted_at'                         => 'Posted at',

@@ -35,6 +35,14 @@
                             </div>
                         @endif
 
+                        <div class="form-group">
+                            <label for="product_sku" class="col-sm-4 control-label">Product SKU</label>
+                            <div class="col-sm-8">
+                                <input type="text" value="{{ $product->id }}" readonly>
+                                <p class="text-info">(Listing will have a different unique SKU, too.</p>
+                            </div>
+                        </div>
+
                         <div class="form-group {{ $errors->has('title')? 'has-error':'' }}">
                             <label for="title" class="col-sm-4 control-label"> <span class="ad_text"> Listing </span> @lang('app.title')</label>
                             <div class="col-sm-8">
