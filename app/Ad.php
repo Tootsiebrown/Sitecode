@@ -226,7 +226,7 @@ class Ad extends Model
         return $this->belongsToMany(ProductCategory::class, 'ad_category_links', 'ad_id', 'category_id');
     }
 
-    static public function getOptionalFieldsForDisplay()
+    public static function getOptionalFieldsForDisplay()
     {
         return [
             'gender' => 'Gender',

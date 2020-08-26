@@ -50,6 +50,10 @@
     background-color: $color-tan-light;
     border-radius: 4px;
     border: none;
+
+    &[disabled], &[readonly], fieldset[disabled] & {
+        background-color: $color-tan-med;
+    }
 }
 
 .input-group {

@@ -45,10 +45,17 @@
 
                     @if($product->id)
                         <input name="product_id" value="{{ $product->id }}" type="hidden">
+
+                        <div class="form-group">
+                            <label for="sku" class="col-sm-4 control-label">Product Sku</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="name" value="{{ $product->id }}" name="sku" placeholder="" readonly disabled>
+                            </div>
+                        </div>
                     @endif
 
                     <div class="form-group {{ $errors->has('name')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Product Name</label>
+                        <label for="name" class="col-sm-4 control-label">Product Name</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="name" value="{{ old('name') ?? request('name') ?? $product->name ?? '' }}" name="name" placeholder="">
                             {!! $errors->has('name')? '<p class="help-block">'.$errors->first('name').'</p>':'' !!}
@@ -56,7 +63,7 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">UPC</label>
+                        <label for="upc" class="col-sm-4 control-label">UPC</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') ?? $product->upc ?? '' }}" name="upc" placeholder="">
                             {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
@@ -64,7 +71,7 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Original Price</label>
+                        <label for="original_price" class="col-sm-4 control-label">Original Price</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($product->original_price ?? 0, 2, '.', '') }}" name="original_price" placeholder="">
                             {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
@@ -72,20 +79,22 @@
                     </div>
 
                     <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
-                        <label for="state_name" class="col-sm-4 control-label">Listing Price</label>
+                        <label for="price" class="col-sm-4 control-label">Listing Price</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($product->price ?? 0, 2, '.', '') }}" name="price" placeholder="">
                             {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('ondition')? 'has-error':'' }}">
-                        <label for="new" class="col-sm-4 control-label">Condition</label>
+                    <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
+                        <label for="condition" class="col-sm-4 control-label">Condition</label>
                         <div class="col-sm-8">
                             <label>
                                 <select name="condition" class="select2">
                                     @foreach ($product::getConditions() as $condition)
-                                        <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>{{ $condition }}</option>
+                                        <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>
+                                            {{ $condition }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </label>
