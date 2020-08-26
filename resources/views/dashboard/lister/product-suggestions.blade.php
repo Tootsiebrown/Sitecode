@@ -10,6 +10,7 @@
                   href="#modal-product-details-{{ $product->id }}"
                   data-element="modalTrigger"
                 >{{ $product-> name }} <i class="fa fa-info-circle"></i></a>
+                <p>Product SKU: {{ $product->id }}</p>
                 <hr />
 
                 <ul class="product-suggestion__actions">
@@ -38,6 +39,7 @@
                 <div id="modal-product-details-{{ $product->id }}" class="white-popup mfp-hide">
                     <div class="product-suggestion__details-container">
                         <h1>{{ $product->name }}</h1>
+                        <p>Product SKU: {{ $product->id }}</p>
                         <p>UPC: {{ $product->upc }}</p>
                         <p>Original Price: {{ $product->original_price }}</p>
                         <p>Listing Price: {{ $product->price }}</p>

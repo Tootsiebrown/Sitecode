@@ -225,4 +225,27 @@ class Ad extends Model
     {
         return $this->belongsToMany(ProductCategory::class, 'ad_category_links', 'ad_id', 'category_id');
     }
+
+    public static function getOptionalFieldsForDisplay()
+    {
+        return [
+            'gender' => 'Gender',
+            'model_number' => 'Model Number',
+            'color' => 'Color',
+            'expiration_date' => 'Expiration Date',
+            'dimensions' => 'Dimensions',
+            'size' => 'Size',
+        ];
+    }
+
+    public function hasOptionalFieldsForDisplay()
+    {
+        foreach (static::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel) {
+            if (!is_null($this->$fieldName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

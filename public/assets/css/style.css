@@ -387,12 +387,6 @@ Category page
     padding: 5px 0;
 }
 /** Post ad */
-#post-new-ad .form-control{
-    background: #f9f9f9;
-}
-#post-new-ad label{
-    font-weight: 300;
-}
 .no-login-info{
     margin-top: 20px;
 }

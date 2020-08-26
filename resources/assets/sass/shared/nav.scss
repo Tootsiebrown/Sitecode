@@ -2,6 +2,68 @@
     background-color: $color-tan-med;
     border-bottom: 6px solid $color-brown;
 
+    .input-group {
+        background-color: $color-tan-light;
+        border-width: 0 0 2px;
+        border-color: $color-tan-dark;
+        border-radius: 0;
+        border-style: solid;
+
+        .form-control {
+            border-bottom-width: 0;
+            background-color: $color-tan-light;
+        }
+
+        .btn {
+            //padding-top: 8px;
+            border-radius: 0;
+            height: 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn-link {
+            color: $color-tan-dark;
+        }
+
+        &.focusable input:focus {
+            border-bottom: none;
+        }
+
+        &.focusable.focused {
+            border-bottom-color: $color-brown;
+
+            input {
+                box-shadow: none;
+            }
+
+            .btn {
+                background-color: $color-tan-dark;
+                color: $color-brown;
+            }
+        }
+
+        .input-group-addon {
+            border-radius: 0;
+            border: none;
+            background-color: inherit;
+            color: inherit;
+        }
+    }
+
+    .input-group-btn {
+        padding: 0;
+
+        .btn-link {
+            border: none;
+            background-color: transparent;
+        }
+        & > .btn:hover {
+            z-index: auto;
+        }
+    }
+
     .navbar-header {
         display: flex;
         justify-content: space-between;

@@ -461,7 +461,7 @@ class ListerController extends Controller
 
         $product = Product::find($request->product_id);
 
-        DB::transaction(function () use ($request, $product) {
+        $ad = DB::transaction(function () use ($request, $product) {
 
             $data = [
                 'title' => $request->title,
@@ -510,10 +510,12 @@ class ListerController extends Controller
                     ->categories
                     ->pluck('id')
             );
+
+            return $ad;
         }, 3);
 
 
-        return redirect(route('lister.index'))->with('success', 'Listing successfully saved');
+        return redirect(route('lister.index'))->with('success', 'Listing successfully saved. Listing SKU: ' . $ad->id . '. Product SKU: ' . $product->id . '.');
     }
 
     public function uploadImage(Request $request)

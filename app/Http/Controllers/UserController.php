@@ -353,10 +353,10 @@ class UserController extends Controller
             $get_previous_favorite = Favorite::whereUserId($user->id)->whereAdId($ad->id)->first();
             if (! $get_previous_favorite) {
                 Favorite::create(['user_id' => $user->id, 'ad_id' => $ad->id]);
-                return ['status' => 1, 'action' => 'added', 'msg' => '<i class="fa fa-star"></i> ' . trans('app.remove_from_favorite')];
+                return ['status' => 1, 'action' => 'added', 'msg' => trans('app.remove_from_favorite') . '<i class="fa fa-eye-slash"></i> '];
             } else {
                 $get_previous_favorite->delete();
-                return ['status' => 1, 'action' => 'removed', 'msg' => '<i class="fa fa-star-o"></i> ' . trans('app.save_ad_as_favorite')];
+                return ['status' => 1, 'action' => 'removed', 'msg' => trans('app.save_ad_as_favorite') . '<i class="fa fa-eye"></i> '];
             }
         }
         return ['status' => 0, 'msg' => trans('app.error_msg')];

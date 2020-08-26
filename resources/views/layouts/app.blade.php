@@ -26,15 +26,17 @@
     <link href="{{ asset('assets/select2-4.0.3/css/select2.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 
+
+
+    <!-- main style.css -->
+    <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
     <!-- Conditional page load script -->
     @if(request()->segment(1) === 'dashboard')
         <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.css') }}">
     @endif
-
-    <!-- main style.css -->
-    <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @if(is_rtl())
         <link rel="stylesheet" href="{{ asset("assets/css/rtl.css") }}">
@@ -78,7 +80,7 @@
                               data-element="input"
                             >
                             <span class="input-group-btn">
-                                <button class="btn btn-link" type="submit">@php include(public_path('assets/img/magnifying-glass.svg')) @endphp</button>
+                                <button class="btn btn-link" type="submit">@svg(magnifying-glass)</button>
                             </span>
                         </div>
 
