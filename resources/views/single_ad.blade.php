@@ -102,7 +102,7 @@
                                 <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
                             </div>
                         @else
-                            <form action="{{route('post_bid', $ad->id)}}" class="form-inline place-bid" method="post" enctype="multipart/form-data"> @csrf
+                            <form action="{{ route('post_bid', $ad->id)}}" class="form-inline place-bid" method="post" enctype="multipart/form-data"> @csrf
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">{!! currency_sign() !!}</div>
@@ -176,6 +176,9 @@
                                     <li><span class="single-ad__details-item">{{ $fieldLabel }}</span>: {{ $ad->$fieldName }}</li>
                                 @endif
                             @endforeach
+                            @if ($ad->brand)
+                                <li><span class="single-ad__details-item">Brand</span>: {{ $ad->brand->name }}</
+                            @endif
                         </ul>
                     </div>
                 @endif
@@ -183,6 +186,7 @@
                 <div class="single-ad__description">
                     <h4>@lang('app.description')</h4>
                     {!! nl2br(safe_output($ad->description)) !!}
+                    {!! nl2br(safe_output($ad->features)) !!}
                 </div>
             </div>
 
