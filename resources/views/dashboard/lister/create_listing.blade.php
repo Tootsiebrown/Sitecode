@@ -2,7 +2,7 @@
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
 @section('page-css')
-    <link href="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -87,7 +87,15 @@
                                     <div class="form-group {{ $errors->has('bid_deadline')? 'has-error':'' }}">
                                         <label for="bid_deadline" class="col-sm-4 control-label"> @lang('app.bid_deadline')</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="bid_deadline" value="{{ old('bid_deadline') }}" name="bid_deadline" placeholder="@lang('app.bid_deadline')">
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              id="bid_deadline"
+                                              value="{{ old('bid_deadline') }}"
+                                              name="bid_deadline"
+                                              placeholder="@lang('app.bid_deadline')"
+                                              data-component="datetime-picker"
+                                            >
                                             {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
                                         </div>
                                     </div>
@@ -127,16 +135,6 @@
 @endsection
 
 @section('page-js')
-    <script src="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js')}}"></script>
-    <script type="text/javascript">
-        $('#bid_deadline').datepicker({
-                format: "yyyy-mm-dd",
-                todayHighlight: true,
-                startDate: new Date(),
-                autoclose: true
-        });
-    </script>
-
     <script>
         @if(session('success'))
         toastr.success('{{ session('success') }}', '<?php echo trans('app.success') ?>', toastr_options);

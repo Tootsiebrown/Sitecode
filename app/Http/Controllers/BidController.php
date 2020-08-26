@@ -28,6 +28,7 @@ class BidController extends Controller
 
     public function postBid(Request $request, $ad_id)
     {
+
         if (! Auth::check()) {
             return redirect(route('login'))->with('error', trans('app.login_first_to_post_bid'));
         }
@@ -35,7 +36,16 @@ class BidController extends Controller
         $bid_amount = $request->bid_amount;
 
         $ad = Ad::find($ad_id);
+        if (! $ad) {
+            abort(404);
+        }
+
         $current_max_bid = $ad->current_bid();
+        $rules = [
+            'bid_amount' => 'required|gt:' . (string)($current_max_bid + 1),
+        ];
+
+        $this->validate($request, $rules);
 
         if ($bid_amount <= $current_max_bid) {
             return back()->with('error', sprintf(trans('app.enter_min_bid_amount'), themeqx_price($current_max_bid)));

@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
-
-@section('page-css')
-    <link href="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker3.css')}}" rel="stylesheet">
-@endsection
-
 @section('content')
 
     <div class="container">
@@ -73,10 +68,10 @@
                             <div class="col-sm-12">
 
                                 <div id="uploaded-ads-image-wrap">
-                                    @if($ad->media_img->count() > 0)
-                                        @foreach($ad->media_img as $img)
+                                    @if($ad->images->count() > 0)
+                                        @foreach($ad->images as $img)
                                             <div class="creating-ads-img-wrap">
-                                                <img src="{{ media_url($img, false) }}" class="img-responsive" />
+                                                <img src="{{ $img->url }}" class="img-responsive" />
                                                 <div class="img-action-wrap" id="{{ $img->id }}">
                                                     <a href="javascript:;" class="imgDeleteBtn"><i class="fa fa-trash-o"></i> </a>
                                                 </div>
@@ -227,21 +222,7 @@
     </script>
 
 
-    <script src="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js')}}"></script>
-    <script type="text/javascript">
-        $('#application_deadline').datepicker({
-            format: "yyyy-mm-dd",
-            todayHighlight: true,
-            startDate: new Date(),
-            autoclose: true
-        });
-        $('#build_year').datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years",
-            autoclose: true
-        });
-    </script>
+
 
     <script>
 

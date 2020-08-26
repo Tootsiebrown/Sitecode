@@ -1,5 +1,6 @@
 import selectComponent from './utilities/select-component'
 import BarcodeReader from "./component/barcode-reader";
+import DateTimePickerWrapper from "./component/datetime-picker";
 import ProductSuggestion from "./component/product-suggestion";
 import SelectOrNew from "./component/select-or-new";
 import NewProductImage from "./component/new-product-image";
@@ -24,6 +25,8 @@ export default function Site() {
         selectComponent('lister-product-image').each((index, element) => new ProductImage(element))
         selectComponent('listing-type-select').each((index, element) => new ListingTypeSelect(element))
         selectComponent('focusable-input-group').each((index, element) => new FocusableInputGroup(element))
+        selectComponent('datetime-picker').each((index, element) => new DateTimePickerWrapper(element))
+
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

@@ -12,6 +12,10 @@ class Ad extends Model
     use HasProductCategories;
 
     protected $guarded = [];
+    protected $casts = [
+        'price' => 'float',
+        'expired_at' => 'datetime'
+    ];
 
     public function user()
     {
@@ -49,6 +53,21 @@ class Ad extends Model
                 $query->whereIn('product_categories.id', $categoryId);
             });
         }
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->where('expired_at', '<=', Carbon::now()->toDateTimeString());
+    }
+
+    public function scopeTypeIsAuction($query)
+    {
+        return $query->where('type', 'auction');
+    }
+
+    public function scopeEndEventNotFired($query)
+    {
+        return $query->where('end_event_fired', false);
     }
 
     public function getFeaturedImageAttribute()
@@ -101,12 +120,6 @@ class Ad extends Model
     public function posted_date()
     {
         $created_date_time = $this->created_at->timezone(get_option('default_timezone'))->format(get_option('date_format_custom'));
-        return $created_date_time;
-    }
-
-    public function expired_date()
-    {
-        $created_date_time = date(get_option('date_format_custom'), strtotime($this->expired_at));
         return $created_date_time;
     }
 
@@ -168,7 +181,7 @@ class Ad extends Model
         return false;
     }
 
-    public function current_bid()
+    public function current_bid() : float
     {
         $last_bid = $this->price;
 

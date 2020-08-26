@@ -102,7 +102,8 @@
                                 <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
                             </div>
                         @else
-                            <form action="{{ route('post_bid', $ad->id)}}" class="form-inline place-bid" method="post" enctype="multipart/form-data"> @csrf
+                            <form action="{{ route('post_bid', $ad->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                                @csrf
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">{!! currency_sign() !!}</div>
@@ -498,7 +499,7 @@
 
     <script src="{{ asset('assets/plugins/fotorama-4.6.4/fotorama.js') }}"></script>
     <script src="{{ asset('assets/plugins/SocialShare/SocialShare.js') }}"></script>
-    <script src="{{ asset('assets/plugins/form-validator/form-validator.min.js') }}"></script>
+{{--    <script src="{{ asset('assets/plugins/form-validator/form-validator.min.js') }}"></script>--}}
 
     <script>
         $('.share').ShareLink({
@@ -516,9 +517,9 @@
             height: 480 // optional popup initial height
         })
     </script>
-    <script>
-        $.validate();
-    </script>
+{{--    <script>--}}
+{{--        $.validate();--}}
+{{--    </script>--}}
 
     <script>
         $(function(){
