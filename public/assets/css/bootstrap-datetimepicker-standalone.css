@@ -96,3 +96,15 @@
     padding-left: 0;
     list-style: none;
 }
+
+.picker-switch table {
+    margin: 12px auto;
+}
+
+.timepicker-picker .table-condensed {
+    margin: 0 auto;
+}
+
+.timepicker-picker td {
+    text-align: center;
+}

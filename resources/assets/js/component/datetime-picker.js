@@ -14,7 +14,5 @@ export default class DateTimePickerWrapper {
             defaultDate,
             format: 'YYYY-MM-DD HH:mm'
         })
-
-        console.log(this.$component.val())
     }
 }
