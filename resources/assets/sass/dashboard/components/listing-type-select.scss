@@ -1,5 +1,6 @@
 .listing-type-select {
-    &__quantity {
+    &__quantity,
+    &__bid-deadline{
         display: none;
 
         &.visible {
