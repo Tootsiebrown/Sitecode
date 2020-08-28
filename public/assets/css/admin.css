@@ -127,11 +127,13 @@
   display: none;
 }
 
-.listing-type-select__quantity {
+.listing-type-select__quantity,
+.listing-type-select__bid-deadline {
   display: none;
 }
 
-.listing-type-select__quantity.visible {
+.listing-type-select__quantity.visible,
+.listing-type-select__bid-deadline.visible {
   display: block;
 }
 
