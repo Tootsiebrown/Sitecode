@@ -21,7 +21,6 @@
 
                 @include('dashboard.flash_msg')
 
-
                 <h2>Search by UPC</h2>
                 <form class="form-horizontal" method="GET" action="{{ route('lister.index') }}">
                     <input type="hidden" name="search_by" value="upc">
@@ -79,8 +78,28 @@
                     </div>
                 </form>
 
+                <h2>Search by SKU</h2>
+                <form class="form-horizontal" method="GET" action="{{ route('lister.index') }}">
+                    <input type="hidden" name="search_by" value="sku">
+
+                    <div class="form-group {{ $errors->has('sku')? 'has-error':'' }}">
+                        <label for="sku" class="col-sm-4 control-label">SKU</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="sku" value="{{ request('sku') }}" name="sku" placeholder="">
+                            {!! $errors->has('sku')? '<p class="help-block">'.$errors->first('sku').'</p>':'' !!}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+
                 @if(! is_null($searchBy))
                     @if(! $products->isEmpty())
+                        <h2>Suggestions</h2>
                         @include('dashboard.lister.product-suggestions', ['products' => $products])
                     @else
                         <p>@lang('app.there_is_no_products', ['search' => $searchString])</p>

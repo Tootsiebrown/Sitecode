@@ -41,6 +41,7 @@ class ListerController extends Controller
     {
         $upc = $request->input('upc');
         $name = $request->input('name');
+        $sku = $request->input('sku');
         $searchBy = $request->input('search_by');
         $datafinitiUpc = $request->input('datafiniti_upc');
 
@@ -51,6 +52,8 @@ class ListerController extends Controller
             case 'upc':
                 $searchString = $upc;
                 break;
+            case 'sku':
+                $searchString = $sku;
             default:
                 $searchString = null;
         }
@@ -66,7 +69,8 @@ class ListerController extends Controller
                 'products' => $this->productSearch(
                     $searchBy,
                     $upc,
-                    $name
+                    $name,
+                    $sku,
                 ),
                 'datafinitiUpc' => $datafinitiUpc,
                 'datafinitiProfiles' => $this->datafinitiSearch($datafinitiUpc),
@@ -74,7 +78,7 @@ class ListerController extends Controller
         );
     }
 
-    private function productSearch($searchBy, $upc, $name)
+    private function productSearch($searchBy, $upc, $name, $sku)
     {
         if (is_null($searchBy)) {
             return collect();
@@ -92,6 +96,12 @@ class ListerController extends Controller
                     return collect();
                 }
                 $productsQuery = Product::where('upc', $upc);
+                break;
+            case 'sku':
+                if (empty($sku)) {
+                    return collect();
+                }
+                $productsQuery = Product::where('id', $sku);
                 break;
             default:
                 throw new Exception('Invalid search method:' . $searchBy);
@@ -451,10 +461,10 @@ class ListerController extends Controller
     {
         $rules = [
             'title' => 'required|max:255',
-            'bid_deadline' => 'required',
+            'bid_deadline' => 'required_if:type,auction',
             'product_id' => 'exists:products,id',
-            'type' => 'required|in:auction,buy-it-now',
-            'quantity' => 'integer'
+            'type' => 'required|in:auction,set-price',
+            'quantity' => 'integer|required_if:type,set-price'
         ];
 
         $this->validate($request, $rules);
@@ -466,7 +476,9 @@ class ListerController extends Controller
             $data = [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
-                'expired_at' => $request->bid_deadline,
+                'expired_at' => $request->input('type') == 'auction'
+                    ? $request->bid_deadline
+                    : null,
                 'quantity' => $request->input('type') == 'auction'
                     ? null
                     : $request->input('quantity'),
