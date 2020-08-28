@@ -54,6 +54,7 @@ class ListerController extends Controller
                 break;
             case 'sku':
                 $searchString = $sku;
+                break;
             default:
                 $searchString = null;
         }
