@@ -197,6 +197,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Wax\Shop\Providers\ShopServiceProvider::class,
+
         /**
          *  LaraBid
          */

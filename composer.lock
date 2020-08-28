@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4d4d40e4a810c8e7c1c8e0ae8176e9a",
+    "content-hash": "dd1a684ca9d0ef794b5e5ba4b42b7eff",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2816,16 +2816,16 @@
         },
         {
             "name": "oohology/wax-cms",
-            "version": "dev-bugfix/routes-serializable",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:oohology/wax-cms.git",
-                "reference": "ff1c9822baf8a83a0b8170156a20ea476c3446ee"
+                "reference": "12e46a4be259d7d378d79ef06fb5e36887d0b56e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-cms/repository/archive.zip?sha=ff1c9822baf8a83a0b8170156a20ea476c3446ee",
-                "reference": "ff1c9822baf8a83a0b8170156a20ea476c3446ee",
+                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-cms/repository/archive.zip?sha=12e46a4be259d7d378d79ef06fb5e36887d0b56e",
+                "reference": "12e46a4be259d7d378d79ef06fb5e36887d0b56e",
                 "shasum": ""
             },
             "require": {
@@ -2893,7 +2893,71 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/2142177/issues"
             },
-            "time": "2020-08-21T10:49:40+00:00"
+            "time": "2020-08-27T00:43:17+00:00"
+        },
+        {
+            "name": "oohology/wax-shop",
+            "version": "dev-cnd",
+            "source": {
+                "type": "git",
+                "url": "git@gitlab.com:oohology/wax-shop.git",
+                "reference": "03c476afc29dc4239d81e040adb084510c0fb8bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-shop/repository/archive.zip?sha=03c476afc29dc4239d81e040adb084510c0fb8bc",
+                "reference": "03c476afc29dc4239d81e040adb084510c0fb8bc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^2.5",
+                "laravel/framework": "6.*",
+                "oohology/wax-cms": "1.x-dev",
+                "php": ">=7.1.0",
+                "symfony/event-dispatcher": "~4.0"
+            },
+            "require-dev": {
+                "avalara/avataxclient": "dev-visibility",
+                "fzaninotto/faker": "^1.4",
+                "league/omnipay": "^3.0",
+                "mockery/mockery": "^1.0",
+                "omnipay/authorizenet": "3.x@dev",
+                "oohology/wax-app": "dev-1.x",
+                "phpunit/phpunit": "~7.0.0",
+                "predis/predis": "~1.0",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wax\\Shop\\Providers\\ShopServiceProvider",
+                        "Wax\\Shop\\Payment\\Providers\\PaymentServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wax\\Shop\\": "src",
+                    "Tests\\Shop\\": "tests",
+                    "Tests\\": "vendor/oohology/wax-app/tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "OOHology",
+                    "email": "hello@oohology.com"
+                }
+            ],
+            "description": "E-Commerce for Wax",
+            "homepage": "https://www.oohology.com",
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/4485490/issues"
+            },
+            "time": "2020-08-27T22:30:38+00:00"
         },
         {
             "name": "opis/closure",
@@ -8567,7 +8631,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "oohology/wax-cms": 20
+        "oohology/wax-cms": 20,
+        "oohology/wax-shop": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

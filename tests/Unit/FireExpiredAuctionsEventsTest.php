@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Tests\WaxAppTestCase;
 
-class FireExpiredAuctionsEventsTestTest extends WaxAppTestCase
+class FireExpiredAuctionsEventsTest extends WaxAppTestCase
 {
     public function setUp(): void
     {

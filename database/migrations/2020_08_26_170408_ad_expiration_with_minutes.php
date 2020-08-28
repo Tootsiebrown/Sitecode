@@ -25,9 +25,14 @@ class AdExpirationWithMinutes extends Migration
         });
 
         foreach($ads as $ad) {
+            $expiration = $ad->expired_at
+                ->setHour(23)
+                ->setMinute(59)
+                ->setSecond(0);
+
             Db::table('ads')
                 ->where('id', $ad->id)
-                ->update(['expired_at' => $ad->expired_at . ' 23:59:00']);
+                ->update(['expired_at' => $expiration->toDateTimeString()]);
         }
     }
 

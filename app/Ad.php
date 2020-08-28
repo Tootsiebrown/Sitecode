@@ -192,33 +192,29 @@ class Ad extends Model
         return $last_bid;
     }
 
+    public function getWinningBidAttribute()
+    {
+        return $this->bids->sortByDesc('bid_amount')->first();
+    }
+
     public function is_bid_active()
     {
-        $status = true;
-        if ($this->type == 'auction') {
-            $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
-            if ($is_accepted_bid) {
-                $status = false;
-            }
-
-            $expired_date = Carbon::createFromTimestamp(strtotime($this->expired_at));
-            if ($expired_date->isPast()) {
-                $status = false;
-            }
+        if ($this->type == 'auction'
+            && $this->expired_at->isPast()
+        ) {
+            return false;
         }
-        return $status;
+
+        return true;
     }
 
     public function is_bid_accepted()
     {
-        $status = false;
-        if ($this->type == 'auction') {
-            $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
-            if ($is_accepted_bid) {
-                $status = true;
-            }
+        if ($this->type == 'auction' && $this->bids->isNotEmpty()) {
+            return true;
         }
-        return $status;
+
+        return false;
     }
 
     public function premium_icon()

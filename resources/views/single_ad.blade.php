@@ -20,6 +20,7 @@
 @endsection
 
 @section('content')
+    @php /* @var App\Ad $ad */ @endphp
     <div class="page-header search-page-header">
          <div class="container">
              <div class="row">
@@ -73,63 +74,76 @@
                                 {{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}
                             </p>
                         @else
-                            @if($ad->is_bid_accepted())
-                                <p>@lang('app.bid_accepted')</p>
-                            @else
-                                <p>{{sprintf(trans('app.bid_deadline_closed_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}</p>
-                            @endif
-
                             <div class="alert alert-warning">
                                 <h4>@lang('app.bid_closed')</h4>
                                 <p>@lang('app.cant_bid_anymore')</p>
                             </div>
                         @endif
 
+
                         <p class="single-ad__current-bid-headline">
-                            @lang('app.highest_bid')
+                            @if($ad->is_bid_active())
+                                @lang('app.highest_bid')
+                            @else
+                                The final price was
+                            @endif
                         </p>
 
                         <p class="single-ad__current-bid-amount">
                             {!! themeqx_price($ad->current_bid()) !!}
                         </p>
 
-                        <p class="single-ad__minimum-new-bid-amount">
-                            Enter a bid of ${{ $ad->current_bid() + 1 }} or higher
-                        </p>
-
-                        @if($ad->type == 'auction' && ! auth()->check())
-                            <div class="alert alert-warning">
-                                <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
-                            </div>
+                        @if (!$ad->is_bid_active() && $ad->is_bid_accepted())
+                            @if(Auth::check() && $ad->winning_bid->user_id == Auth::user()->id)
+                                <a
+                                  href="{{ route('payForEndedAuction', ['id' => $ad->id]) }}"
+                                  class="btn btn-default"
+                                >
+                                    Pay now!
+                                </a>
+                            @endif
                         @else
-                            <form action="{{ route('post_bid', $ad->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
-                                @csrf
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">{!! currency_sign() !!}</div>
-                                        <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
-                                        <span class="input-group-btn">
+                                <p class="single-ad__minimum-new-bid-amount">
+                                    Enter a bid of ${{ $ad->current_bid() + 1 }} or higher
+                                </p>
+
+                                @if($ad->type == 'auction' && ! auth()->check())
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
+                                    </div>
+                                @else
+                                    <form action="{{ route('post_bid', $ad->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                                        @csrf
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">{!! currency_sign() !!}</div>
+                                                <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
+                                                <span class="input-group-btn">
                                     <button class="btn btn-primary" type="submit">@lang('app.place_bid')</button>
                                 </span>
-                                    </div>
-                                </div>
-                            </form>
+                                            </div>
+                                        </div>
+                                    </form>
+                                @endif
                         @endif
+
 
                     @endif
 
-                    @if ($ad->type === 'auction')
-                        <p>Or buy now for ${{ $ad->price }}</p>
-                    @endif
-
-                    <button class="btn btn-primary">Add to Cart @svg(cart)</button>
-                    <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
-                        @if( ! $ad->is_my_favorite())
-                            @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
-                        @else
-                            @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
+                    @if ($ad->is_bid_active())
+                        @if ($ad->type === 'auction')
+                            <p>Or buy now for ${{ $ad->price }}</p>
                         @endif
-                    </a>
+
+                        <button class="btn btn-primary">Add to Cart @svg(cart)</button>
+                        <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
+                            @if( ! $ad->is_my_favorite())
+                                @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
+                            @else
+                                @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
+                            @endif
+                        </a>
+                    @endif
                 </div>
                 <div class="single-ad__images">
                     <div class="auction-img-video-wrap">

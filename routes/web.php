@@ -72,7 +72,7 @@ Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentCo
 
 
 // Password reset routes...
-Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses' => 'Auth\PasswordController@postEmail']);
+//Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses' => 'Auth\PasswordController@postEmail']);
 
 //Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 //Route::post('password/reset', ['as'=>'password_reset_post', 'uses'=>'Auth\PasswordController@postReset']);
@@ -95,19 +95,24 @@ Route::post('post-new', ['uses' => 'AdsController@store']);
 //Post bid
 Route::post('{id}/post-new', ['as' => 'post_bid', 'uses' => 'BidController@postBid']);
 
+Route::get('pay-for-auction', 'PayForItController@endedAuction')
+    ->middleware('auth')
+    ->name('payForEndedAuction');
+
 
 //Checkout payment
-Route::get('checkout/{transaction_id}', ['as' => 'payment_checkout', 'uses' => 'PaymentController@checkout']);
-Route::post('checkout/{transaction_id}', ['uses' => 'PaymentController@chargePayment']);
-//Payment success url
-Route::any(
-    'checkout/{transaction_id}/payment-success',
-    ['as' => 'payment_success_url', 'uses' => 'PaymentController@paymentSuccess']
-);
-Route::any(
-    'checkout/{transaction_id}/paypal-notify',
-    ['as' => 'paypal_notify_url', 'uses' => 'PaymentController@paypalNotify']
-);
+// disabled in favor of WAX's.
+//Route::get('checkout/{transaction_id}', ['as' => 'payment_checkout', 'uses' => 'PaymentController@checkout']);
+//Route::post('checkout/{transaction_id}', ['uses' => 'PaymentController@chargePayment']);
+////Payment success url
+//Route::any(
+//    'checkout/{transaction_id}/payment-success',
+//    ['as' => 'payment_success_url', 'uses' => 'PaymentController@paymentSuccess']
+//);
+//Route::any(
+//    'checkout/{transaction_id}/paypal-notify',
+//    ['as' => 'paypal_notify_url', 'uses' => 'PaymentController@paypalNotify']
+//);
 
 
 Route::group(
@@ -370,3 +375,12 @@ Route::group(
         //Route::get('logout', ['as'=>'logout', 'uses' => 'DashboardController@logout']);
     }
 );
+
+Route::prefix('shop')
+    ->group(function () {
+        Route::get('checkout', '\App\Wax\Shop\Controllers\CheckoutController@showCheckout')
+            ->name('checkout');
+
+        Route::get('checkout-complete', '\App\Wax\Shop\Controllers\CheckoutController@showCheckoutComplete')
+            ->name('checkoutComplete');
+    });

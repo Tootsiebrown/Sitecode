@@ -11,6 +11,10 @@
         {
             "type": "vcs",
             "url": "https://gitlab.com/oohology/wax-cms.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://gitlab.com/oohology/wax-shop.git"
         }
     ],
     "require": {
@@ -27,7 +31,8 @@
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "oohology/wax-cms": "dev-bugfix/routes-serializable",
+        "oohology/wax-cms": "1.x-dev",
+        "oohology/wax-shop": "dev-cnd",
         "stripe/stripe-php": "^7.2"
     },
     "require-dev": {
@@ -47,7 +52,8 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "s-ichikawa/laravel-sendgrid-driver"
+                "s-ichikawa/laravel-sendgrid-driver",
+                "oohology/wax-shop"
             ]
         }
     },
