@@ -3,12 +3,14 @@
     <div class="sidebar-nav">
         <ul class="nav" id="side-menu">
 
-            <li>
-                <a href="{{ route('dashboard') }}">
-                    <i class="fa fa-dashboard fa-fw"></i>
-                    @lang('app.dashboard')
-                </a>
-            </li>
+
+            <li> <a href="{{ route('profile') }}"><i class="fa fa-user"></i> @lang('app.profile')</a>  </li>
+{{--            <li>--}}
+{{--                <a href="{{ route('dashboard') }}">--}}
+{{--                    <i class="fa fa-dashboard fa-fw"></i>--}}
+{{--                    @lang('app.dashboard')--}}
+{{--                </a>--}}
+{{--            </li>--}}
 
             @if($lUser->hasPrivilege('Lister'))
                 <li>
@@ -16,6 +18,17 @@
                         <i class="fa fa-barcode"></i>
                         Product Catalog
                     </a>
+                </li>
+            @endif
+
+            @if($lUser->hasPrivilege('Listings'))
+                <li>
+                    <a href="{{ route('dashboard.listings.index') }}"><i class="fa fa-bullhorn"></i> Listings</a>
+                    {{--                    <a href="#"><i class="fa fa-bullhorn"></i> @lang('app.ads')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span>  </a>--}}
+                    {{--                    <ul class="nav nav-second-level">--}}
+                    {{--                        <li>  <a href="{{ route('approved_ads') }}">@lang('app.approved_ads')</a> </li>--}}
+                    {{--                        <li>  <a href="{{ route('admin_pending_ads') }}">@lang('app.pending_for_approval')</a> </li>--}}
+                    {{--                    </ul>--}}
                 </li>
             @endif
 
@@ -30,7 +43,7 @@
 
                 <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
                 <li>
-                    <a href="{{ route('approved_ads') }}"><i class="fa fa-bullhorn"></i> Listings</a>
+                    <a href="{{ route('dashboard.listings.index') }}"><i class="fa fa-bullhorn"></i> Listings</a>
 {{--                    <a href="#"><i class="fa fa-bullhorn"></i> @lang('app.ads')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span>  </a>--}}
 {{--                    <ul class="nav nav-second-level">--}}
 {{--                        <li>  <a href="{{ route('approved_ads') }}">@lang('app.approved_ads')</a> </li>--}}
@@ -79,7 +92,6 @@
             @endif
 
             <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
-            <li> <a href="{{ route('profile') }}"><i class="fa fa-user"></i> @lang('app.profile')</a>  </li>
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
             <li>
                 <a href="{{ route('logout') }}"
