@@ -8,6 +8,7 @@ import ListingTypeSelect from "./component/listing-type-select";
 import ProductCategoriesHierarchy from "./component/product-categories-hierarchy";
 import FocusableInputGroup from "./component/focusable-input-group";
 import TaxonomyNav from "./component/taxonomy-nav";
+import ListingResult from "./component/listing-result";
 
 export default function Site() {
 
@@ -24,6 +25,7 @@ export default function Site() {
         selectComponent('lister-product-image').each((index, element) => new ProductImage(element))
         selectComponent('listing-type-select').each((index, element) => new ListingTypeSelect(element))
         selectComponent('focusable-input-group').each((index, element) => new FocusableInputGroup(element))
+        selectComponent('listing-result').each((index, element) => new ListingResult(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []
