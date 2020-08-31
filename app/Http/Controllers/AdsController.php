@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\AdImage;
 use App\Brand;
 use App\Category;
 use App\City;
@@ -19,21 +20,294 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
 class AdsController extends Controller
 {
+    use GetsDenormalizedProductCategories;
+
+    protected $optionalFields = [
+        'gender' => 'Gender',
+        'model_number' => 'Model Number',
+        'color' => 'Color',
+        'bin' => 'Bin',
+        'expiration_date' => 'Expiration Date',
+        'dimensions' => 'Dimensions',
+        'size' => 'Size',
+    ];
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $title = trans('app.all_ads');
-        $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
+//    public function index()
+//    {
+//        $title = trans('app.all_ads');
+//        $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
+//
+//        return view('dashboard.all_ads', compact('title', 'ads'));
+//    }
 
-        return view('dashboard.all_ads', compact('title', 'ads'));
+    public function index(Request $request)
+    {
+        $upc = $request->input('upc');
+        $name = $request->input('name');
+        $sku = $request->input('sku');
+        $searchBy = $request->input('search_by');
+        $datafinitiUpc = $request->input('datafiniti_upc');
+
+        switch ($searchBy) {
+            case 'name':
+                $searchString = $name;
+                break;
+            case 'upc':
+                $searchString = $upc;
+                break;
+            case 'sku':
+                $searchString = $sku;
+                break;
+            default:
+                $searchString = null;
+        }
+
+        return view(
+            'dashboard.listings.index',
+            [
+                'title' => 'Listings',
+                'upc' => $upc,
+                'name' => $name,
+                'searchBy' => $searchBy,
+                'searchString' => $searchString,
+                'listings' => $this->listingSearch(
+                    $searchBy,
+                    $upc,
+                    $name,
+                    $sku,
+                ),
+            ]
+        );
+    }
+
+    private function listingSearch($searchBy, $upc, $name, $sku)
+    {
+        if (is_null($searchBy)) {
+            return collect();
+        }
+
+        switch ($searchBy) {
+            case 'name':
+                if (empty($name)) {
+                    return collect();
+                }
+                $adQuery = Ad::where('title', 'like', "%$name%");
+                break;
+            case 'upc':
+                if (empty($upc)) {
+                    return collect();
+                }
+                $adQuery = Ad::where('upc', $upc);
+                break;
+            case 'sku':
+                if (empty($sku)) {
+                    return collect();
+                }
+                $adQuery = Ad::where('id', $sku);
+                break;
+            default:
+                throw new Exception('Invalid search method:' . $searchBy);
+        }
+
+        return $adQuery
+            ->orderBy('title', 'asc')
+            ->paginate(20);
+    }
+
+    public function showEdit(Request $request, $id)
+    {
+        $listing = Ad::find($id);
+
+        if (! $listing) {
+            abort(404);
+        }
+
+        return view('dashboard.listings.edit', [
+            'listing' => $listing,
+            'categoryHierarchy' => $this->getDenormalizedProductCategories(),
+            'brands' => Brand::all(),
+            'categories' => ProductCategory::where('parent_id', 0)->get(),
+            'children' => ProductCategory::whereIn('parent_id', function ($query) {
+                $query->select('id')
+                    ->from('product_categories')
+                    ->where('parent_id', 0);
+            })->get(),
+            'grandchildren' => collect(),
+            'optionalFields' => $this->optionalFields,
+
+        ]);
+    }
+
+    public function saveEdit(Request $request, $id)
+    {
+        $listing = Ad::find($id);
+
+        if (!$listing) {
+            abort(404);
+        }
+
+        $rules = [
+            'title' => 'required|max:255',
+            'upc' => 'required',
+            'price' => 'required|numeric',
+            'original_price' => 'required|numeric',
+            'description' => 'required',
+            'condition' => [
+                'required',
+                Rule::in(Ad::getConditions()),
+            ],
+
+            'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
+            'brand' => 'exclude_unless:brand_id,new|required',
+
+            'category_id'  => 'exclude_if:category_id,new|required|exists:product_categories,id',
+            'new_category' => 'exclude_unless:category_id,new|required|unique,product_categories,name',
+
+            'child_category_id' => [
+                'exclude_if:child_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('category_id'));
+//                }),
+            ],
+            'new_child_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
+
+
+            'grandchild_category_id' => [
+                'exclude_if:grandchild_category_id,new',
+//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+//                    $query->where('parent_id', $request->input('child_category_id'));
+//                }),
+            ],
+            'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+
+            'bin' => 'max:255',
+        ];
+
+        $this->validate($request, $rules);
+
+        if ($request->input('category_id') && $request->input('category_id') !== 'new') {
+            $category = ProductCategory::find($request->input('category_id'));
+        } elseif ($request->has('new_category')) {
+            $category = ProductCategory::create([
+                'breadcrumb' => $request->input('new_category'),
+                'name' => $request->input('new_category'),
+                'parent_id' => 0,
+                'url_slug' => Str::slug($request->input('new_category')),
+            ]);
+        }
+
+        if ($request->input('child_category_id') && $request->input('child_category_id') !== 'new') {
+            $child = ProductCategory::find($request->input('child_category_id'));
+        } elseif (!empty($request->input('new_child_category'))) {
+            $child = ProductCategory::create([
+                'breadcrumb' => $category->name . ' » ' . $request->input('new_child_category'),
+                'name' => $request->input('new_child_category'),
+                'parent_id' => $category->id,
+                'url_slug' => Str::slug($request->input('new_child_category')),
+            ]);
+        }
+
+        if ($request->input('grandchild_category_id') && $request->input('grandchild_category_id') !== 'new') {
+            $grandchild = ProductCategory::find($request->input('grandchild_category_id'));
+        } elseif (!empty($request->input('new_grandchild_category'))) {
+            $grandchild = ProductCategory::create([
+                'breadcrumb' => $category->name . ' » ' . $child->name . ' » ' . $request->input('new_grandchild_category'),
+                'name' => $request->input('new_grandchild_category'),
+                'parent_id' => $child->id,
+                'url_slug' => Str::slug($request->input('new_grandchild_category')),
+            ]);
+        }
+
+        if ($request->input('brand_id') && $request->input('brand_id') !== 'new') {
+            $brand = Brand::find($request->input('brand_id'));
+        } elseif (!empty($request->input('new_brand'))) {
+            $brand = Brand::create([
+                'name' => $request->input('new_brand'),
+            ]);
+        }
+
+        $data = [
+            'brand_id' => $brand->id,
+            'upc' => $request->upc,
+            'title' => $request->title,
+            'original_price' => $request->original_price,
+            'price' => $request->price,
+            'condition' => $request->condition,
+            'description' => $request->description,
+            'features' => $request->features,
+        ];
+
+        foreach ($this->optionalFields as $fieldName => $fieldLabel) {
+            $data[$fieldName] = $request->input($fieldName);
+        }
+
+        $listing->fill($data);
+        $listing->save();
+
+        $listing->categories()->detach();
+
+        if ($listing) {
+            $listing->categories()->attach($category->id);
+            if (!empty($child)) {
+                $listing->categories()->attach($child->id);
+            }
+            if (!empty($grandchild)) {
+                $listing->categories()->attach($grandchild->id);
+            }
+            $this->syncListingImages(
+                $listing,
+                $request->input('existing_images', []),
+                $request->input('deletable_images', [])
+            );
+            $this->addProductImages($listing, $request->input('new_images', []));
+        }
+
+        return redirect(
+            route(
+                'dashboard.listings.showEdit',
+                [
+                    'id' => $listing->id,
+                ]
+            )
+        )->with('success', 'Listing Edited.');
+    }
+
+    protected function syncListingImages(Ad $listing, array $existingImages, array $deletableImages)
+    {
+        // don't delete images files for ProductImages in the database...
+        // product could have been cloned, and that will cause problems.
+        AdImage::whereNotIn('id', $existingImages)
+            ->where('ad_id', $listing->id)
+            ->delete();
+
+        // but delete any images that were uploaded and then discarded.
+        foreach ($deletableImages as $deletableImage) {
+            current_disk()->delete(AdImage::getDiskPath() . $deletableImage);
+            current_disk()->delete(AdImage::getDiskPath() . 'thumbs/' . $deletableImage);
+        }
+    }
+
+    protected function addProductImages(Ad $listing, array $newImages)
+    {
+        foreach ($newImages as $newImage) {
+            $created_img_db = AdImage::create([
+                'ad_id' => $listing->id,
+                'media_name' => $newImage,
+                'disk' => get_option('default_storage'),
+            ]);
+        }
     }
 
     public function adminPendingAds()
