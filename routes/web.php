@@ -155,6 +155,24 @@ Route::group(
                 Route::post('upload-image', ['as' => 'lister.upload-image', 'uses' => 'ListerController@uploadImage']);
             });
 
+        Route::prefix('listings')
+            ->name('dashboard.listings.')
+            ->middleware('privilege:Listings')
+            ->group(function() {
+                Route::get('/')
+                    ->uses('AdsController@index')
+                    ->name('index');
+                Route::get('{id}')
+                    ->uses('AdsController@showEdit')
+                    ->name('showEdit');
+                Route::post('{id}')
+                    ->uses('AdsController@saveEdit')
+                    ->name('saveEdit');
+                Route::delete('{id}')
+                    ->uses('AdsController@delete')
+                    ->name('delete');
+            });
+
         Route::middleware('privilege:Administrator')
             ->group(function () {
                 Route::group(
@@ -257,9 +275,8 @@ Route::group(
                     }
                 );
 
-                Route::get('approved', ['as' => 'approved_ads', 'uses' => 'AdsController@index']);
-                Route::get('pending', ['as' => 'admin_pending_ads', 'uses' => 'AdsController@adminPendingAds']);
-                Route::post('status-change', ['as' => 'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
+//                Route::get('pending', ['as' => 'admin_pending_ads', 'uses' => 'AdsController@adminPendingAds']);
+//                Route::post('status-change', ['as' => 'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
                 Route::get('users', ['as' => 'users', 'uses' => 'UserController@index']);
                 Route::get('users-info/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);

@@ -136,7 +136,7 @@
 
                     <!-- Authentication Links -->
                     <li>
-                        <a href="{{ Auth::guest() ? route('login') : route('dashboard') }}" class="btn btn-link profile">
+                        <a href="{{ Auth::guest() ? route('login') : route('profile') }}" class="btn btn-link profile">
                             @svg(profile)
                             <span>{{ Auth::guest() ? trans('app.login') : 'My Profile' }}</span>
                         </a>

@@ -11,6 +11,10 @@ class Ad extends Model
     use HasCondition;
     use HasProductCategories;
 
+    protected $casts = [
+        'expired_at' => 'datetime',
+    ];
+
     protected $guarded = [];
     protected $casts = [
         'price' => 'float',

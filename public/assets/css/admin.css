@@ -77,15 +77,20 @@
   margin-bottom: 15px;
 }
 
-.product-suggestion__details-container {
+.product-suggestion__details-container,
+.listing-result__details-container {
   padding: 36px;
 }
 
-.product-suggestion__images img {
+.product-suggestion__images img,
+.listing-result__images img {
   max-width: 100%;
 }
 
-.product-suggestion p.product-suggestion__label {
+.product-suggestion p.product-suggestion__label,
+.product-suggestion p.listing-result__lable,
+.listing-result p.product-suggestion__label,
+.listing-result p.listing-result__lable {
   margin-bottom: 2px;
 }
 
