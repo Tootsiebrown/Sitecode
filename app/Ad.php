@@ -13,13 +13,10 @@ class Ad extends Model
 
     protected $casts = [
         'expired_at' => 'datetime',
+        'price' => 'float',
     ];
 
     protected $guarded = [];
-    protected $casts = [
-        'price' => 'float',
-        'expired_at' => 'datetime'
-    ];
 
     public function user()
     {
