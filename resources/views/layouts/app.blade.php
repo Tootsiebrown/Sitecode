@@ -206,6 +206,8 @@
 <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('assets/select2-4.0.3/js/select2.min.js') }}"></script>
 
+@yield('page-js')
+
 <!-- Conditional page load script -->
 @if(request()->segment(1) === 'dashboard')
     <script src="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.js') }}"></script>
@@ -221,6 +223,5 @@
     var toastr_options = {closeButton : true};
 </script>
 
-@yield('page-js')
 </body>
 </html>

@@ -376,10 +376,23 @@ Route::group(
     }
 );
 
-Route::prefix('shop')
+Route::name('shop.')
     ->group(function () {
-        Route::get('checkout', '\App\Wax\Shop\Controllers\CheckoutController@showCheckout')
+        Route::get('cart', '\App\Wax\Shop\Controllers\CartController@showCart')
+            ->name('cart');
+
+        Route::get('checkout', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
             ->name('checkout');
+
+        Route::get('checkout/shipping', '\App\Wax\Shop\Controllers\CheckoutController@showShipping')
+            ->name('checkout.showShipping');
+        Route::post('checkout/shipping', '\App\Wax\Shop\Controllers\CheckoutController@saveShipping')
+            ->name('checkout.saveShipping');
+
+        Route::get('checkout/billing', '\App\Wax\Shop\Controllers\CheckoutController@showBilling')
+            ->name('checkout.showBilling');
+        Route::post('checkout/billing', '\App\Wax\Shop\Controllers\CheckoutController@saveBilling')
+            ->name('checkout.saveBilling');
 
         Route::get('checkout-complete', '\App\Wax\Shop\Controllers\CheckoutController@showCheckoutComplete')
             ->name('checkoutComplete');

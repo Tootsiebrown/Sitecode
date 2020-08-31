@@ -112,8 +112,6 @@ class Handler extends ExceptionHandler
      * Redirect to the login page if the token doesn't match.
      * Save the intent so for redirection after login.
      *
-     * @todo  flash input to the session so that upon redirect, the form has the input data
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function renderTokenMismatchException($request, TokenMismatchException $exception)

@@ -257,4 +257,12 @@ class Ad extends Model
 
         return false;
     }
+
+    public function getUrlAttribute()
+    {
+        return route('single_ad', [
+            'id' => $this->id,
+            'slug' => $this->slug,
+        ]);
+    }
 }

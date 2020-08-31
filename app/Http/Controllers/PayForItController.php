@@ -24,10 +24,12 @@ class PayForItController extends Controller
             ]
         );
 
-        ShopServiceFacade::addOrderItem(1, 1, [], [
-            1 => $request->input('id')
-        ]);
+        $customizations = [1 => $request->input('id')];
 
-        return redirect()->route('checkout');
+        if (! ShopServiceFacade::getActiveOrder()->default_shipment->findItem(1, [], $customizations)) {
+            ShopServiceFacade::addOrderItem(1, 1, [], $customizations);
+        }
+
+        return redirect()->route('shop.checkout');
     }
 }

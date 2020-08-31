@@ -32,6 +32,10 @@
             fill: $color-tan-light;
         }
     }
+
+    &:hover {
+        background-color: $color-navy;
+    }
 }
 
 .btn-default {
@@ -97,6 +101,32 @@
             background: $color-tan-light;
         }
     }
+}
 
+.nav-tabs-start-empty {
+    border-bottom: none;
 
+    & li {
+        & > a.btn {
+            border-radius: 4px;
+            width: 180px;
+            margin-right: 12px;
+
+            &:hover {
+                &.btn-primary {
+                    background-color: $color-navy;
+                }
+            }
+        }
+
+        &.active {
+            & > a.btn {
+                &.btn-primary {
+                    background-color: $color-orange-light;
+                    color: $color-tan-light;
+                    border-radius: 4px 4px 0 0;
+                }
+            }
+        }
+    }
 }

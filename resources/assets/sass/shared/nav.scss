@@ -2,6 +2,9 @@
     background-color: $color-tan-med;
     border-bottom: 6px solid $color-brown;
 
+    form {
+        padding: 0;
+    }
     .input-group {
         background-color: $color-tan-light;
         border-width: 0 0 2px;

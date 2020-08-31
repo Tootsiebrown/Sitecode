@@ -1,0 +1,15 @@
+form {
+    background-color: $color-tan-med;
+    padding: 24px;
+
+    .row {
+        margin-bottom: 12px;
+        label {
+            margin-bottom: 0;
+        }
+
+        &-right {
+            text-align: right;
+        }
+    }
+}

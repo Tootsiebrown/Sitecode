@@ -1,0 +1,42 @@
+.checkout {
+    &__body {
+        padding-bottom: 36px;
+
+        @media (min-width: $bp-tablet) {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+    }
+    &__cart {
+        flex-basis: 300px;
+    }
+
+    &__main {
+        margin-right: 12px;
+        flex-grow: 1;
+    }
+
+    &__shipping {
+        #free-delivery {
+            @media (min-width: $bp-laptop) {
+                margin-left: 192px;
+                max-width: 480px;
+            }
+        }
+
+        .nav-tabs {
+            & > li > a {
+                border: none;
+            }
+        }
+
+        #in-store-pickup {
+            background-color: $color-tan-med;
+            padding: 24px;
+
+            form {
+                padding: 0;
+            }
+        }
+    }
+}

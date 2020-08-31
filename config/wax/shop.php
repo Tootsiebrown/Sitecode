@@ -4,7 +4,7 @@ return [
     'models' => [
         'product' => App\Wax\Shop\Models\Product::class,
         'payment_method' => Wax\Shop\Models\User\PaymentMethod::class,
-        'order' => Wax\Shop\Models\Order::class,
+        'order' => App\Wax\Shop\Models\Order::class,
     ],
     'inventory' => [
         'track' => false,
@@ -13,5 +13,20 @@ return [
          * Limits how many of a single item can be added to cart by putting a ceiling on the "effective inventory".
          */
         'max_cart_quantity' => 10000,
+    ],
+    'payment' => [
+        'auth_capture' => true,
+        'drivers' => [
+            'stripe' => [
+                'publishable_key' => env('STRIPE_PUBLISHABLE_KEY'),
+                'secret_key' => env('STRIPE_SECRET_KEY'),
+            ]
+        ],
+        'stored_payment_driver' => \Wax\Shop\Payment\Drivers\StripeDriver::class,
+        'credit_card_payment_driver' => \Wax\Shop\Payment\Drivers\StripeDriver::class,
+        'types' => [
+            'credit_card' => \Wax\Shop\Payment\Types\CreditCard::class,
+            'stored_credit_card' => \Wax\Shop\Payment\Types\StoredCreditCard::class,
+        ],
     ],
 ];
