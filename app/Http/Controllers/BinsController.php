@@ -65,7 +65,7 @@ class BinsController extends Controller
         $listing = Listing::with(['items'])
             ->findOrFail($listingId);
 
-        $listing->items->each(function($item) {
+        $listing->items->each(function ($item) {
             $item->bin = request('bin.' . $item->id);
             $item->save();
         });

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    protected $table = 'listing_images';
     use HasDiskImage;
 
+    protected $table = 'listing_images';
     protected $guarded = [];
 }

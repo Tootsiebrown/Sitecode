@@ -12,7 +12,7 @@ class BuyItNowToSetPrice extends Migration
      */
     public function up()
     {
-        Listing::where('type', 'buy-it-now')
+        DB::table('ads')->where('type', 'buy-it-now')
             ->update(['type' => 'set-price']);
     }
 
@@ -23,7 +23,7 @@ class BuyItNowToSetPrice extends Migration
      */
     public function down()
     {
-        Listing::where('type', 'set-price')
+        DB::table('ads')->where('type', 'set-price')
             ->update(['type' => 'buy-it-now']);
     }
 }
