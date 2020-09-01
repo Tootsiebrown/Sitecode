@@ -2,41 +2,41 @@
 
 namespace App\Wax\Shop\Models\Order;
 
-use App\Ad;
+use App\Models\Listing;
 use Wax\Shop\Models\Order\Item as WaxItem;
 
 class Item extends WaxItem
 {
-    protected $memoizedAd = null;
+    protected $memoizedListing = null;
 
-    public function getAdIdAttribute()
+    public function getListingIdAttribute()
     {
         return (int) $this
             ->customizations
-            ->filter(fn($customization) => $customization->customization === 'ad_id')
+            ->filter(fn($customization) => $customization->customization === 'listing_id')
             ->first()
             ->value;
     }
 
-    public function getAdAttribute()
+    public function getListingAttribute()
     {
-        if ($this->memoizedAd) {
-            return $this->memoizedAd;
+        if ($this->memoizedListing) {
+            return $this->memoizedListing;
         }
 
-        $this->memoizedAd = Ad::find($this->ad_id);
+        $this->memoizedListing = Listing::find($this->listing_id);
 
-        return $this->memoizedAd;
+        return $this->memoizedListing;
     }
 
     public function getUrlAttribute(): ?string
     {
-        return $this->ad->url;
+        return $this->listing->url;
     }
 
     public function getNameAttribute($value): string
     {
-        return $value ?? $this->ad->title;
+        return $value ?? $this->listing->title;
     }
 
     public function getGrossUnitPriceAttribute(): float
@@ -45,10 +45,10 @@ class Item extends WaxItem
             return $this->price;
         }
 
-        if ($this->ad->type === 'auction') {
-            return $this->ad->current_bid();
+        if ($this->listing->type === 'auction') {
+            return $this->listing->current_bid();
         }
 
-        throw new \Exception('Ad id: ' . $this->ad->id . 'of type ' . $this->ad->type . ' cannot have price calcualted properly.');
+        throw new Exception('Listing id: ' . $this->listing->id . 'of type ' . $this->listing->type . ' cannot have price calcualted properly.');
     }
 }

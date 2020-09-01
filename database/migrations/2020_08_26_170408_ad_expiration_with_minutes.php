@@ -1,6 +1,6 @@
 <?php
 
-use App\Ad;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,7 +15,7 @@ class AdExpirationWithMinutes extends Migration
      */
     public function up()
     {
-        $ads = Ad::all();
+        $ads = Db::table('ads')->select('*')->get();
         Schema::table('ads', function (Blueprint $table) {
             $table->dropColumn('expired_at');
         });
@@ -25,7 +25,11 @@ class AdExpirationWithMinutes extends Migration
         });
 
         foreach($ads as $ad) {
-            $expiration = $ad->expired_at
+            if (is_null($ad->expired_at)) {
+                continue;
+            }
+
+            $expiration = Carbon::createFromFormat('Y-m-d', $ad->expired_at)
                 ->setHour(23)
                 ->setMinute(59)
                 ->setSecond(0);
@@ -43,7 +47,7 @@ class AdExpirationWithMinutes extends Migration
      */
     public function down()
     {
-        $ads = Ad::all();
+        $ads = Db::table('ads')->select('*')->get();
         Schema::table('ads', function (Blueprint $table) {
             $table->dropColumn('expired_at');
         });

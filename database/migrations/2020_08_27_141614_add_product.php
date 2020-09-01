@@ -26,7 +26,7 @@ class AddProduct extends Migration
         Customization::create([
             'id' => 1,
             'product_id' => 1,
-            'name' => 'ad_id',
+            'name' => 'listing_id',
             'type' => 'number',
         ]);
     }
