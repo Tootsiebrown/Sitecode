@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Ad;
 use App\Events\AuctionEndedEvent;
+use App\Models\Listing;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
@@ -19,7 +19,7 @@ class FireExpiredAuctionsEventsTest extends WaxAppTestCase
 
     public function testExpiredAuctionHandled()
     {
-        $ad = factory(Ad::class)->create([
+        $ad = factory(Listing::class)->create([
             'expired_at' => Carbon::now()->subMinute(),
         ]);
 
