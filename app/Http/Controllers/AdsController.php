@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\Image;
+use App\Models\Listing\Image as ListingImage;
 use App\Brand;
 use App\Category;
 use App\City;
@@ -41,7 +41,7 @@ class AdsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
 //    public function index()
 //    {
@@ -287,22 +287,22 @@ class AdsController extends Controller
     {
         // don't delete images files for ProductImages in the database...
         // product could have been cloned, and that will cause problems.
-        Image::whereNotIn('id', $existingImages)
-            ->where('ad_id', $listing->id)
+        ListingImage::whereNotIn('id', $existingImages)
+            ->where('listing_id', $listing->id)
             ->delete();
 
         // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
-            current_disk()->delete(Image::getDiskPath() . $deletableImage);
-            current_disk()->delete(Image::getDiskPath() . 'thumbs/' . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
     protected function addProductImages(Listing $listing, array $newImages)
     {
         foreach ($newImages as $newImage) {
-            $created_img_db = Image::create([
-                'ad_id' => $listing->id,
+            $created_img_db = ListingImage::create([
+                'listing_id' => $listing->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
             ]);
