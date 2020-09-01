@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\AdImage;
+use App\Image;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Models\Listing;
@@ -476,7 +476,7 @@ class ListerController extends Controller
             $product
                 ->images
                 ->each(function ($image) use ($ad) {
-                    AdImage::create([
+                    Image::create([
                         'ad_id' => $ad->id,
                         'media_name' => $image->media_name,
                         'featured' => $image->featured,

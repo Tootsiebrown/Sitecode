@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\AdImage;
 use App\Bid;
 use App\Brand;
 use App\City;
@@ -10,6 +9,7 @@ use App\Country;
 use App\Favorite;
 use App\HasCondition;
 use App\HasProductCategories;
+use App\Models\Listing\Image;
 use App\Models\Listing\Item;
 use App\ProductCategory;
 use App\State;
@@ -74,7 +74,7 @@ class Listing extends Model
 
     public function images()
     {
-        return $this->hasMany(AdImage::class);
+        return $this->hasMany(Image::class);
     }
 
     /**

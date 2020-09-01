@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
-use App\AdImage;
+use App\Image;
 use App\Brand;
 use App\Category;
 use App\City;
@@ -287,21 +287,21 @@ class AdsController extends Controller
     {
         // don't delete images files for ProductImages in the database...
         // product could have been cloned, and that will cause problems.
-        AdImage::whereNotIn('id', $existingImages)
+        Image::whereNotIn('id', $existingImages)
             ->where('ad_id', $listing->id)
             ->delete();
 
         // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
-            current_disk()->delete(AdImage::getDiskPath() . $deletableImage);
-            current_disk()->delete(AdImage::getDiskPath() . 'thumbs/' . $deletableImage);
+            current_disk()->delete(Image::getDiskPath() . $deletableImage);
+            current_disk()->delete(Image::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
     protected function addProductImages(Listing $listing, array $newImages)
     {
         foreach ($newImages as $newImage) {
-            $created_img_db = AdImage::create([
+            $created_img_db = Image::create([
                 'ad_id' => $listing->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
