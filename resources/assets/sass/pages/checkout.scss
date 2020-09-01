@@ -40,3 +40,11 @@
         }
     }
 }
+
+#card-element {
+    display: inline-block;
+    min-width: 320px;
+    background-color: $color-tan-light;
+    border-radius: 4px;
+    padding: 8px;
+}

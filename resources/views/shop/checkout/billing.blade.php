@@ -19,13 +19,19 @@
             @render(App\ViewComponents\CheckoutCartComponent::class)
             <div class="checkout__main checkout__billing">
                 <form method="POST" action="{{ route('shop.checkout.saveBilling') }}" data-component="stripe-form">
+                    @csrf
+
                     <div id="card-element">
                         <!-- A Stripe Element will be inserted here. -->
                     </div>
 
                     <!-- Used to display Element errors. -->
                     <div id="card-errors" role="alert"></div>
-                    <input type="hidden" name="token" value="" data-element="tokenField"/>
+                    <input type="hidden" name="token" value="" data-element="tokenField">
+                    <input type="hidden" name="last_four" value="" data-element="lastFourField">
+                    <button class="btn btn-primary" type="submit" name="submit" value="submit">
+                        Pay
+                    </button>
                 </form>
             </div>
         </div>

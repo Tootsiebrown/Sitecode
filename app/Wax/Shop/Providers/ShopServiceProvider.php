@@ -9,6 +9,7 @@ use Wax\Shop\Filters\CatalogFilterAggregator;
 use Wax\Shop\Providers\ShopServiceProvider as WaxShopServiceProvider;
 use Wax\Shop\Repositories\ProductRepository;
 use Wax\Shop\Services\ShopService;
+use Wax\Shop\Tax\Contracts\TaxDriverContract;
 
 class ShopServiceProvider extends WaxShopServiceProvider
 {
@@ -26,6 +27,14 @@ class ShopServiceProvider extends WaxShopServiceProvider
         $this->app->when(ProductRepository::class)
             ->needs(FilterAggregatorContract::class)
             ->give(CatalogFilterAggregator::class);
+
+        $this->app->bind(
+            TaxDriverContract::class,
+            function ($app) {
+                return $app->make(config('wax.shop.tax.driver'));
+            }
+        );
+
     }
 
     public function boot ()

@@ -398,19 +398,24 @@ Route::name('shop.')
         Route::get('cart', '\App\Wax\Shop\Controllers\CartController@showCart')
             ->name('cart');
 
-        Route::get('checkout', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
-            ->name('checkout');
+        Route::prefix('checkout')
+            ->name('checkout.')
+            ->group(function() {
+                Route::get('', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
+                    ->name('start');
 
-        Route::get('checkout/shipping', '\App\Wax\Shop\Controllers\CheckoutController@showShipping')
-            ->name('checkout.showShipping');
-        Route::post('checkout/shipping', '\App\Wax\Shop\Controllers\CheckoutController@saveShipping')
-            ->name('checkout.saveShipping');
+                Route::get('shipping', '\App\Wax\Shop\Controllers\CheckoutController@showShipping')
+                    ->name('showShipping');
+                Route::post('shipping', '\App\Wax\Shop\Controllers\CheckoutController@saveShipping')
+                    ->name('saveShipping');
 
-        Route::get('checkout/billing', '\App\Wax\Shop\Controllers\CheckoutController@showBilling')
-            ->name('checkout.showBilling');
-        Route::post('checkout/billing', '\App\Wax\Shop\Controllers\CheckoutController@saveBilling')
-            ->name('checkout.saveBilling');
+                Route::get('billing', '\App\Wax\Shop\Controllers\CheckoutController@showBilling')
+                    ->name('showBilling');
+                Route::post('billing', '\App\Wax\Shop\Controllers\CheckoutController@pay')
+                    ->name('saveBilling');
 
-        Route::get('checkout-complete', '\App\Wax\Shop\Controllers\CheckoutController@showCheckoutComplete')
-            ->name('checkoutComplete');
+                Route::get('confirmation', '\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
+                    ->name('checkout');
+            });
+
     });

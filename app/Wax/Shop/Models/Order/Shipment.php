@@ -11,4 +11,22 @@ class Shipment extends WaxShipment
     {
         return $this->hasMany(Item::class);
     }
+
+    public function isAddressSet()
+    {
+        if ($this->in_store_pickup) {
+            return true;
+        }
+
+        return !is_null(
+            $this->firstname
+            ?? $this->lastname
+            ?? $this->address1
+            ?? $this->address2
+            ?? $this->city
+            ?? $this->state
+            ?? $this->zip
+            ?? $this->country
+        );
+    }
 }

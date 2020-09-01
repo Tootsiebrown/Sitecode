@@ -31,6 +31,8 @@
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "league/omnipay": "^3.0",
+        "omnipay/stripe": "^3.1",
         "oohology/wax-cms": "1.x-dev",
         "oohology/wax-shop": "dev-cnd",
         "stripe/stripe-php": "^7.2"

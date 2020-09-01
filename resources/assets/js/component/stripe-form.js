@@ -3,12 +3,14 @@ import selectComponent from "../utilities/select-component";
 export default class StripeForm
 {
     constructor(element, options = {}) {
-        this.form = element;
-        this.$component = selectComponent(element);
-        this.$tokenField = this.$component.elements.tokenField;
+        this.form = element
+        this.$component = selectComponent(element)
+        this.$tokenField = this.$component.elements.tokenField
+        this.$lastFourField = this.$component.elements.lastFourField
+
+        this.stripeElements = stripe.elements();
 
         this.mountCard()
-
         this.$component.on('submit', this.handleSubmit);
     }
 
@@ -23,7 +25,7 @@ export default class StripeForm
         };
 
         // Create an instance of the card Element.
-        this.card = elements.create('card', {style: style});
+        this.card = this.stripeElements.create('card', {style: style});
 
         // Add an instance of the card Element into the `card-element` <div>.
         this.card.mount('#card-element');
@@ -32,7 +34,7 @@ export default class StripeForm
     handleSubmit = (event) => {
         event.preventDefault();
 
-        stripe.createToken(this.card).then(function(result) {
+        stripe.createToken(this.card).then((result) => {
             if (result.error) {
                 // Inform the customer that there was an error.
                 var errorElement = document.getElementById('card-errors');
@@ -45,7 +47,9 @@ export default class StripeForm
     }
 
     handleStripeToken = (token) => {
-        this.$component.off('submit');
-        this.$tokenField.val(token);
+        this.$component.off('submit', this.handleSubmit)
+        this.$tokenField.val(token.id)
+        this.$lastFourField.val(token.card.last4)
+        this.$component.submit()
     }
 }

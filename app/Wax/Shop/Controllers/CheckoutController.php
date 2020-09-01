@@ -3,9 +3,11 @@
 namespace App\Wax\Shop\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Wax\Shop\Exceptions\ValidationException;
+use Wax\Shop\Payment\Types\CreditCard;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -15,20 +17,6 @@ class CheckoutController extends Controller
     public function __construct(ShopService $shopService)
     {
         $this->shopService = $shopService;
-    }
-
-    /**
-     * Place an order. This would be used when the order is completely set up and payments/discounts have been
-     * applied to bring the balance due to $0.00.
-     *
-     * @return Response
-     * @throws ValidationException
-     */
-    public function placeOrder()
-    {
-        $this->shopService->placeOrder();
-
-        return response()->json(true);
     }
 
     public function checkout()
@@ -42,6 +30,9 @@ class CheckoutController extends Controller
 
     public function showShipping()
     {
+        $order = $this->shopService->getActiveOrder();
+        $order->calculateTax();
+
         if ($this->shopService->getActiveOrder()->item_count === 0) {
             return redirect()->route('shop.cart');
         }
@@ -82,8 +73,29 @@ class CheckoutController extends Controller
 
     public function showBilling(Request $request)
     {
+        // just in case...
+        $order = $this->shopService->getActiveOrder();
+        $order->calculateTax();
+
         return view('shop.checkout.billing', [
-            'stripePublishableKey' => config('wax.shop.payments.drivers.stripe.publishable_key'),
+            'stripePublishableKey' => config('wax.shop.payment.drivers.stripe.publishable_key'),
         ]);
+    }
+
+    public function pay(Request $request)
+    {
+        $order = $this->shopService->getActiveOrder();
+        $order->calculateTax();
+        $token = new TokenPaymentType();
+        $token->loadData([
+            'token' => $request->input('token'),
+            'lastFour' => $request->input('last_four'),
+        ]);
+
+        $this->shopService->applyPayment(
+            $token
+        );
+
+        return redirect()->route('shop.checkout.confirmation');
     }
 }
