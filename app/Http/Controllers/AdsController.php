@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
-use App\AdImage;
+use App\Models\Listing;
+use App\Models\Listing\Image as ListingImage;
 use App\Brand;
 use App\Category;
 use App\City;
@@ -16,6 +16,7 @@ use App\State;
 use App\Sub_Category;
 use App\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -32,24 +33,10 @@ class AdsController extends Controller
         'gender' => 'Gender',
         'model_number' => 'Model Number',
         'color' => 'Color',
-        'bin' => 'Bin',
         'expiration_date' => 'Expiration Date',
         'dimensions' => 'Dimensions',
         'size' => 'Size',
     ];
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-//    public function index()
-//    {
-//        $title = trans('app.all_ads');
-//        $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
-//
-//        return view('dashboard.all_ads', compact('title', 'ads'));
-//    }
 
     public function index(Request $request)
     {
@@ -102,19 +89,19 @@ class AdsController extends Controller
                 if (empty($name)) {
                     return collect();
                 }
-                $adQuery = Ad::where('title', 'like', "%$name%");
+                $adQuery = Listing::where('title', 'like', "%$name%");
                 break;
             case 'upc':
                 if (empty($upc)) {
                     return collect();
                 }
-                $adQuery = Ad::where('upc', $upc);
+                $adQuery = Listing::where('upc', $upc);
                 break;
             case 'sku':
                 if (empty($sku)) {
                     return collect();
                 }
-                $adQuery = Ad::where('id', $sku);
+                $adQuery = Listing::where('id', $sku);
                 break;
             default:
                 throw new Exception('Invalid search method:' . $searchBy);
@@ -127,7 +114,7 @@ class AdsController extends Controller
 
     public function showEdit(Request $request, $id)
     {
-        $listing = Ad::find($id);
+        $listing = Listing::find($id);
 
         if (! $listing) {
             abort(404);
@@ -151,7 +138,7 @@ class AdsController extends Controller
 
     public function saveEdit(Request $request, $id)
     {
-        $listing = Ad::find($id);
+        $listing = Listing::find($id);
 
         if (!$listing) {
             abort(404);
@@ -165,7 +152,7 @@ class AdsController extends Controller
             'description' => 'required',
             'condition' => [
                 'required',
-                Rule::in(Ad::getConditions()),
+                Rule::in(Listing::getConditions()),
             ],
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
@@ -192,7 +179,6 @@ class AdsController extends Controller
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
 
-            'bin' => 'max:255',
         ];
 
         $this->validate($request, $rules);
@@ -284,26 +270,26 @@ class AdsController extends Controller
         )->with('success', 'Listing Edited.');
     }
 
-    protected function syncListingImages(Ad $listing, array $existingImages, array $deletableImages)
+    protected function syncListingImages(Listing $listing, array $existingImages, array $deletableImages)
     {
         // don't delete images files for ProductImages in the database...
         // product could have been cloned, and that will cause problems.
-        AdImage::whereNotIn('id', $existingImages)
-            ->where('ad_id', $listing->id)
+        ListingImage::whereNotIn('id', $existingImages)
+            ->where('listing_id', $listing->id)
             ->delete();
 
         // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
-            current_disk()->delete(AdImage::getDiskPath() . $deletableImage);
-            current_disk()->delete(AdImage::getDiskPath() . 'thumbs/' . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
-    protected function addProductImages(Ad $listing, array $newImages)
+    protected function addProductImages(Listing $listing, array $newImages)
     {
         foreach ($newImages as $newImage) {
-            $created_img_db = AdImage::create([
-                'ad_id' => $listing->id,
+            $created_img_db = ListingImage::create([
+                'listing_id' => $listing->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
             ]);
@@ -313,7 +299,7 @@ class AdsController extends Controller
     public function adminPendingAds()
     {
         $title = trans('app.pending_ads');
-        $ads = Ad::with('city', 'country', 'state')->whereStatus('0')->orderBy('id', 'desc')->paginate(20);
+        $ads = Listing::with('city', 'country', 'state')->whereStatus('0')->orderBy('id', 'desc')->paginate(20);
 
         return view('dashboard.all_ads', compact('title', 'ads'));
     }
@@ -455,7 +441,7 @@ class AdsController extends Controller
             $data['price_plan'] = 'regular';
         }
 
-        $created_ad = Ad::create($data);
+        $created_ad = Listing::create($data);
 
         /**
          * iF add created
@@ -529,7 +515,7 @@ class AdsController extends Controller
         $user_id = $user->id;
 
         $title = trans('app.edit_ad');
-        $ad = Ad::find($id);
+        $ad = Listing::find($id);
 
         if (!$ad) {
             return view('dashboard.error.error_404');
@@ -558,7 +544,7 @@ class AdsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $ad = Ad::find($id);
+        $ad = Listing::find($id);
         $user = Auth::user();
         $user_id = $user->id;
 
@@ -624,7 +610,7 @@ class AdsController extends Controller
     public function adStatusChange(Request $request)
     {
         $slug = $request->slug;
-        $ad = Ad::whereSlug($slug)->first();
+        $ad = Listing::whereSlug($slug)->first();
         if ($ad) {
             $value = $request->value;
 
@@ -651,7 +637,7 @@ class AdsController extends Controller
     public function destroy(Request $request)
     {
         $slug = $request->slug;
-        $ad = Ad::whereSlug($slug)->first();
+        $ad = Listing::whereSlug($slug)->first();
         if ($ad) {
             $media = Media::whereAdId($ad->id)->get();
             if ($media->count() > 0) {
@@ -830,7 +816,7 @@ class AdsController extends Controller
         $pagination_output = null;
         $pagination_params = [];
 
-        $ads = Ad::active();
+        $ads = Listing::active();
 
         //Search Keyword
         $search_terms = request('q');
@@ -1107,7 +1093,7 @@ class AdsController extends Controller
     {
         $limit_regular_ads = get_option('number_of_free_ads_in_home');
         //$ad = Ad::whereSlug($slug)->first();
-        $ad = Ad::find($id);
+        $ad = Listing::find($id);
 
         if (! $ad) {
             return view('error_404');

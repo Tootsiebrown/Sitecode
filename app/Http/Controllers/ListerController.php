@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
-use App\AdImage;
+use App\Listing\Image as ListingImage;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
+use App\Models\Listing;
+use App\Models\Listing\Item;
 use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
@@ -28,7 +29,6 @@ class ListerController extends Controller
         'gender' => 'Gender',
         'model_number' => 'Model Number',
         'color' => 'Color',
-        'bin' => 'Bin',
         'expiration_date' => 'Expiration Date',
         'dimensions' => 'Dimensions',
         'size' => 'Size',
@@ -282,8 +282,6 @@ class ListerController extends Controller
 //                }),
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
-
-            'bin' => 'max:255',
         ];
 
         $this->validate($request, $rules);
@@ -442,7 +440,7 @@ class ListerController extends Controller
                     ? $request->bid_deadline
                     : null,
                 'quantity' => $request->input('type') == 'auction'
-                    ? null
+                    ? 1
                     : $request->input('quantity'),
                 'type' => $request->input('type'),
                 'status' => "1", // published automatically
@@ -466,13 +464,20 @@ class ListerController extends Controller
                 $data[$fieldName] = $product->$fieldName;
             }
 
-            $ad = Ad::create($data);
+            $ad = Listing::create($data);
+
+            $listingItems = [];
+            for ($i = 1; $i <= $ad->quantity; $i++) {
+                $listingItems[] = ['listing_id' => $ad->id];
+            }
+
+            Item::insert($listingItems);
 
             $product
                 ->images
                 ->each(function ($image) use ($ad) {
-                    AdImage::create([
-                        'ad_id' => $ad->id,
+                    ListingImage::create([
+                        'listing_id' => $ad->id,
                         'media_name' => $image->media_name,
                         'featured' => $image->featured,
                         'disk' => $image->disk,
@@ -489,7 +494,18 @@ class ListerController extends Controller
         }, 3);
 
 
-        return redirect(route('lister.index'))->with('success', 'Listing successfully saved. Listing SKU: ' . $ad->id . '. Product SKU: ' . $product->id . '.');
+        return redirect(route('lister.finished', ['id' => $ad->id]));
+    }
+
+    public function listingFinished($id)
+    {
+        $listing = Listing::find($id);
+
+        if (!$listing) {
+            abort(404);
+        }
+
+        return view('dashboard.lister.finished', ['listing' => $listing]);
     }
 
     public function uploadImage(Request $request)

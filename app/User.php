@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,7 +67,7 @@ class User extends UserBase
 
     public function favourite_ads()
     {
-        return $this->belongsToMany(Ad::class, 'favorites');
+        return $this->belongsToMany(Listing::class, 'favorites');
     }
 
     public function signed_up_datetime()

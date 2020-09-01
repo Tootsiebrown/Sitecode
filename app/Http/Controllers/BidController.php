@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\Model\Listing;
 use App\Bid;
 use App\User;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class BidController extends Controller
     {
         $user = Auth::user();
         $user_id = $user->id;
-        $ad = Ad::find($ad_id);
+        $ad = Listing::find($ad_id);
 
         $title = trans('app.bids_for') . ' ' . $ad->title;
 
@@ -35,11 +35,10 @@ class BidController extends Controller
         $user = Auth::user();
         $bid_amount = $request->bid_amount;
 
-        $ad = Ad::find($ad_id);
+        $ad = Listing::find($ad_id);
         if (! $ad) {
             abort(404);
         }
-
         $current_max_bid = $ad->current_bid();
         $rules = [
             'bid_amount' => 'required|gt:' . (string)($current_max_bid + 1),
@@ -71,7 +70,7 @@ class BidController extends Controller
 
         $user = Auth::user();
         $user_id = $user->id;
-        $ad = Ad::find($ad_id);
+        $ad = Listing::find($ad_id);
 
         if (! $user->isAdmin()) {
             if ($ad->user_id != $user_id) {
@@ -99,7 +98,7 @@ class BidController extends Controller
 
         $auth_user = Auth::user();
         $user_id = $auth_user->id;
-        $ad = Ad::find($bid->ad_id);
+        $ad = Listing::find($bid->ad_id);
 
         if (! $auth_user->isAdmin()) {
             if ($ad->user_id != $user_id) {

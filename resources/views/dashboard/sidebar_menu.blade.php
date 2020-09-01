@@ -32,6 +32,12 @@
                 </li>
             @endif
 
+            @if($lUser->hasPrivilege('Bins'))
+                <li>
+                    <a href="{{ route('dashboard.bins.index') }}"><i class="fa fa-archive"></i> Bins</a>
+                </li>
+            @endif
+
             <li>
                 <a href="{{ route('favorite_ads') }}">
                     <i class="fa fa-star"></i>
@@ -42,14 +48,6 @@
             @if($lUser->isAdmin())
 
                 <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
-                <li>
-                    <a href="{{ route('dashboard.listings.index') }}"><i class="fa fa-bullhorn"></i> Listings</a>
-{{--                    <a href="#"><i class="fa fa-bullhorn"></i> @lang('app.ads')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span>  </a>--}}
-{{--                    <ul class="nav nav-second-level">--}}
-{{--                        <li>  <a href="{{ route('approved_ads') }}">@lang('app.approved_ads')</a> </li>--}}
-{{--                        <li>  <a href="{{ route('admin_pending_ads') }}">@lang('app.pending_for_approval')</a> </li>--}}
-{{--                    </ul>--}}
-                </li>
 
                 <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
                 <li> <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>  </li>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\Models\Listing;
 use App\Category;
 use App\ProductCategory;
 
@@ -13,11 +13,11 @@ class HomeController extends Controller
     {
         $limit_regular_ads = get_option('number_of_free_ads_in_home');
 
-        $ads = Ad::active()->with('categories', 'city', 'state', 'country')
+        $ads = Listing::active()->with('categories', 'city', 'state', 'country')
             ->limit($limit_regular_ads)
             ->orderBy('id', 'desc')->get();
 
-        $total_ads_count = Ad::active()->count();
+        $total_ads_count = Listing::active()->count();
 
         return view('index', [
             'ads' => $ads,

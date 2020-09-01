@@ -204,48 +204,6 @@
 @endsection
 
 @section('page-js')
-
-    <script>
-        $(document).ready(function() {
-            $('.deleteAds').on('click', function () {
-                if (!confirm('{{ trans('app.are_you_sure') }}')) {
-                    return '';
-                }
-                var selector = $(this);
-                var slug = selector.data('slug');
-                $.ajax({
-                    url: '{{ route('delete_ads') }}',
-                    type: "POST",
-                    data: {slug: slug, _token: '{{ csrf_token() }}'},
-                    success: function (data) {
-                        if (data.success == 1) {
-                            selector.closest('tr').hide('slow');
-                            toastr.success(data.msg, '@lang('app.success')', toastr_options);
-                        }
-                    }
-                });
-            });
-
-            $('.approveAds, .blockAds').on('click', function () {
-                var selector = $(this);
-                var slug = selector.data('slug');
-                var value = selector.data('value');
-                $.ajax({
-                    url: '{{ route('ads_status_change') }}',
-                    type: "POST",
-                    data: {slug: slug, value: value, _token: '{{ csrf_token() }}'},
-                    success: function (data) {
-                        if (data.success == 1) {
-                            selector.closest('tr').hide('slow');
-                            toastr.success(data.msg, '@lang('app.success')', toastr_options);
-                        }
-                    }
-                });
-            });
-        });
-
-    </script>
-
     <script>
         @if(session('success'))
             toastr.success('{{ session('success') }}', '{{ trans('app.success') }}', toastr_options);
