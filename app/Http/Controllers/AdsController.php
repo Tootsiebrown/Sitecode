@@ -38,19 +38,6 @@ class AdsController extends Controller
         'size' => 'Size',
     ];
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
-     */
-//    public function index()
-//    {
-//        $title = trans('app.all_ads');
-//        $ads = Ad::with('city', 'country', 'state')->whereStatus('1')->orderBy('id', 'desc')->paginate(20);
-//
-//        return view('dashboard.all_ads', compact('title', 'ads'));
-//    }
-
     public function index(Request $request)
     {
         $upc = $request->input('upc');
