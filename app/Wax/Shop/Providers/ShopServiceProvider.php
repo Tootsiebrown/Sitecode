@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Wax\Shop\Providers;
 
 use Illuminate\Database\Eloquent\Model;
@@ -34,10 +33,9 @@ class ShopServiceProvider extends WaxShopServiceProvider
                 return $app->make(config('wax.shop.tax.driver'));
             }
         );
-
     }
 
-    public function boot ()
+    public function boot()
     {
         $this->registerConsoleCommands();
 

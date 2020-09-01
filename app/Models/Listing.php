@@ -194,7 +194,7 @@ class Listing extends Model
         return false;
     }
 
-    public function current_bid() : float
+    public function current_bid(): float
     {
         $last_bid = $this->price;
 
@@ -212,7 +212,8 @@ class Listing extends Model
 
     public function is_bid_active()
     {
-        if ($this->type == 'auction'
+        if (
+            $this->type == 'auction'
             && $this->expired_at->isPast()
         ) {
             return false;

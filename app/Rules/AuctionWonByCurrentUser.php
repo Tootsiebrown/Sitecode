@@ -54,4 +54,3 @@ class AuctionWonByCurrentUser implements Rule
         return 'This is not an auction that you won.';
     }
 }
-

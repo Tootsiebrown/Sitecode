@@ -18,7 +18,7 @@ class TokenPaymentType implements PaymentTypeContract
 
     public function authorize($order, $amount): Payment
     {
-        throw new Exception ('Prior auth / Capture is not an implemented payment method');
+        throw new Exception('Prior auth / Capture is not an implemented payment method');
     }
 
     public function purchase($order, $amount): Payment
@@ -28,7 +28,7 @@ class TokenPaymentType implements PaymentTypeContract
 
     public function capture(Payment $payment)
     {
-        throw new Exception ('Prior auth / Capture is not an implemented payment method');
+        throw new Exception('Prior auth / Capture is not an implemented payment method');
     }
 
     public function loadData($data)

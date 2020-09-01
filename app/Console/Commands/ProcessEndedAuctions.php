@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Ad;
 use App\Events\AuctionEndedEvent;
+use App\Models\Listing;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Event;
 
@@ -40,16 +40,15 @@ class ProcessEndedAuctions extends Command
      */
     public function handle()
     {
-        Ad
+        Listing
             ::expired()
             ->typeIsAuction()
             ->endEventNotFired()
             ->get()
-            ->each(function($ad) {
-                $ad->end_event_fired = true;
-                $ad->save();
-                Event::dispatch(new AuctionEndedEvent($ad));
+            ->each(function ($listing) {
+                $listing->end_event_fired = true;
+                $listing->save();
+                Event::dispatch(new AuctionEndedEvent($listing));
             });
     }
 }
-

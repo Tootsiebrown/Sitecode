@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Wax\Shop\Models;
 
 use Wax\Shop\Models\Product as WaxProduct;

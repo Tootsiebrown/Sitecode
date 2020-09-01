@@ -12,7 +12,7 @@ class Order extends WaxOrder
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
     }
 
-    public function validateShipping() : bool
+    public function validateShipping(): bool
     {
         if (!$this->shipments->count()) {
             return false;
