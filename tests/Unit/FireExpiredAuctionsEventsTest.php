@@ -19,18 +19,18 @@ class FireExpiredAuctionsEventsTest extends WaxAppTestCase
 
     public function testExpiredAuctionHandled()
     {
-        $ad = factory(Listing::class)->create([
+        $listing = factory(Listing::class)->create([
             'expired_at' => Carbon::now()->subMinute(),
         ]);
 
         Artisan::call('auction:process-ended');
 
-        Event::assertDispatched(AuctionEndedEvent::class, function($event) use ($ad) {
-            return $event->ad_id = $ad->id;
+        Event::assertDispatched(AuctionEndedEvent::class, function($event) use ($listing) {
+            return $event->listing->id = $listing->id;
         });
 
-        $ad->refresh();
-        $this->assertEquals(true, $ad->end_event_fired);
+        $listing->refresh();
+        $this->assertEquals(true, $listing->end_event_fired);
     }
 
 }

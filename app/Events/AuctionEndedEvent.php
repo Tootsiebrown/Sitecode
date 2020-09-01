@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Ad;
+use App\Models\Listing;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -13,14 +13,14 @@ use Illuminate\Queue\SerializesModels;
 
 class AuctionEndedEvent
 {
-    public $ad;
+    public $listing;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Ad $ad)
+    public function __construct(Listing $listing)
     {
-        $this->ad = $ad;
+        $this->listing = $listing;
     }
 }
