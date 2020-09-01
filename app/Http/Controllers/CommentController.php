@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\Models\Listing;
 use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +57,7 @@ class CommentController extends Controller
         $approved = 0;
         if (Auth::check()) {
             $user_id = Auth::user()->id;
-            $ad = Ad::find($id);
+            $ad = Listing::find($id);
             if ($user_id == $ad->user_id) {
                 $approved = 1;
             }
@@ -93,7 +93,7 @@ class CommentController extends Controller
 
         //Preventing unauthorised action
         $comment = Comment::find($request->comment_id);
-        $comment_ad = Ad::find($comment->ad_id);
+        $comment_ad = Listing::find($comment->ad_id);
 
         if ($user->id != $comment_ad->user_id &&  ! $user->isAdmin()) {
             return ['success' => false];

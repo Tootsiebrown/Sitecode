@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\Models\Listing;
 use App\Payment;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($user->isAdmin()) {
-            $approved_ads = Ad::whereStatus('1')->count();
+            $approved_ads = Listing::whereStatus('1')->count();
             $total_users = User::count();
 
             $total_payments = Payment::whereStatus('success')->count();

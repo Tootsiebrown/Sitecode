@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -10,7 +11,7 @@ class Category extends Model
 
     public function ads()
     {
-        return $this->hasMany(Ad::class);
+        return $this->hasMany(Listing::class);
     }
     public function sub_categories()
     {
@@ -24,6 +25,6 @@ class Category extends Model
 
     public function product_count()
     {
-        return $this->hasMany(Ad::class)->whereStatus('1')->count();
+        return $this->hasMany(Listing::class)->whereStatus('1')->count();
     }
 }

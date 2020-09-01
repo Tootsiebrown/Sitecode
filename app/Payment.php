@@ -2,18 +2,19 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
     protected $guarded = [];
-    
+
     public function ad()
     {
-        return $this->belongsTo(Ad::class);
+        return $this->belongsTo(Listing::class);
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

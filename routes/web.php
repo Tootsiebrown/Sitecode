@@ -135,19 +135,21 @@ Route::group(
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@dashboard']);
 
         Route::middleware('privilege:Lister')
-            ->prefix('l')
+            ->prefix('lister')
+            ->name('lister.')
             ->group(function () {
-                Route::get('/', ['as' => 'lister.index', 'uses' => 'ListerController@index']);
-                Route::post('/', ['as' => 'lister.datafiniti', 'uses' => 'ListerController@index']);
+                Route::get('/', ['as' => 'index', 'uses' => 'ListerController@index']);
+                Route::post('/', ['as' => 'datafiniti', 'uses' => 'ListerController@index']);
 
-                Route::get('/product', ['as' => 'lister.productForm', 'uses' => 'ListerController@productForm']);
-                Route::post('/product', ['as' => 'lister.saveProduct', 'uses' => 'ListerController@saveProduct']);
-                Route::get("/product-clone", ['as' => 'lister.cloneProduct', 'uses' => 'ListerController@cloneProduct']);
+                Route::get('product', ['as' => 'productForm', 'uses' => 'ListerController@productForm']);
+                Route::post('product', ['as' => 'saveProduct', 'uses' => 'ListerController@saveProduct']);
+                Route::get("product-clone", ['as' => 'cloneProduct', 'uses' => 'ListerController@cloneProduct']);
 
-                Route::get('/listing', ['as' => 'lister.newListing', 'uses' => 'ListerController@newListing']);
-                Route::post('/listing', ['as' => 'lister.saveListing', 'uses' => 'ListerController@saveListing']);
+                Route::get('listing', ['as' => 'newListing', 'uses' => 'ListerController@newListing']);
+                Route::post('listing', ['as' => 'saveListing', 'uses' => 'ListerController@saveListing']);
+                Route::get('listing/{id}', ['as' => 'finished', 'uses' => 'ListerController@listingFinished']);
 
-                Route::post('upload-image', ['as' => 'lister.upload-image', 'uses' => 'ListerController@uploadImage']);
+                Route::post('upload-image', ['as' => 'upload-image', 'uses' => 'ListerController@uploadImage']);
             });
 
         Route::prefix('listings')
@@ -166,6 +168,28 @@ Route::group(
                 Route::delete('{id}')
                     ->uses('AdsController@delete')
                     ->name('delete');
+            });
+
+        Route::prefix('bins')
+            ->name('dashboard.bins.')
+            ->middleware('privilege:Bins')
+            ->group(function () {
+                Route::get('/')
+                    ->uses('BinsController@index')
+                    ->name('index');
+                Route::get('item/{id}')
+                    ->uses('BinsController@showItemBin')
+                    ->name('showItemBin');
+                Route::post('item/{id}')
+                    ->uses('BinsController@saveItemBins')
+                    ->name('saveItemBin');
+                Route::get('listing/{id}')
+                    ->uses('BinsController@showListingBins')
+                    ->name('showListingBins');
+                Route::post('/listing/{id}')
+                    ->uses('BinsController@saveListingBins')
+                    ->name('saveListingBins');
+
             });
 
         Route::middleware('privilege:Administrator')

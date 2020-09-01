@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Listing;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class BuyItNowToSetPrice extends Migration
+class RenameAdsListings extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +13,7 @@ class BuyItNowToSetPrice extends Migration
      */
     public function up()
     {
-        Listing::where('type', 'buy-it-now')
-            ->update(['type' => 'set-price']);
+        Schema::rename('ads', 'listings');
     }
 
     /**
@@ -23,7 +23,6 @@ class BuyItNowToSetPrice extends Migration
      */
     public function down()
     {
-        Listing::where('type', 'set-price')
-            ->update(['type' => 'buy-it-now']);
+        Schema::rename('listings', 'ads');
     }
 }
