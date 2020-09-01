@@ -42,7 +42,7 @@
                         <table class="listing-bins">
                             <tr>
                                 <th>
-                                    Item ID
+                                    Item SKU
                                 </th>
                                 <th>
                                     Bin

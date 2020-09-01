@@ -10,7 +10,7 @@ use App\Country;
 use App\Favorite;
 use App\HasCondition;
 use App\HasProductCategories;
-use App\Models\ListingItem;
+use App\Models\Listing\Item;
 use App\ProductCategory;
 use App\State;
 use App\User;
@@ -267,6 +267,6 @@ class Listing extends Model
 
     public function items()
     {
-        return $this->hasMany(ListingItem::class, 'listing_id');
+        return $this->hasMany(Item::class, 'listing_id');
     }
 }

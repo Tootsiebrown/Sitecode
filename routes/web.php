@@ -181,7 +181,7 @@ Route::group(
                     ->uses('BinsController@showItemBin')
                     ->name('showItemBin');
                 Route::post('item/{id}')
-                    ->uses('BinsController@saveItemBins')
+                    ->uses('BinsController@saveItemBin')
                     ->name('saveItemBin');
                 Route::get('listing/{id}')
                     ->uses('BinsController@showListingBins')

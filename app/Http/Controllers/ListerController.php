@@ -6,7 +6,7 @@ use App\AdImage;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Models\Listing;
-use App\Models\ListingItem;
+use App\Models\Listing\Item;
 use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
@@ -471,7 +471,7 @@ class ListerController extends Controller
                 $listingItems[] = ['listing_id' => $ad->id];
             }
 
-            ListingItem::insert($listingItems);
+            Item::insert($listingItems);
 
             $product
                 ->images
