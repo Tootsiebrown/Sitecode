@@ -28,7 +28,8 @@
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "oohology/wax-cms": "dev-bugfix/routes-serializable",
-        "stripe/stripe-php": "^7.2"
+        "stripe/stripe-php": "^7.2",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
