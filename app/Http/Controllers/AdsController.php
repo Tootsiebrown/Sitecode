@@ -1091,34 +1091,32 @@ class AdsController extends Controller
      */
     public function singleAuction($id, $slug)
     {
-        $limit_regular_ads = get_option('number_of_free_ads_in_home');
-        //$ad = Ad::whereSlug($slug)->first();
-        $ad = Listing::find($id);
+        $listing = Listing::find($id);
 
-        if (! $ad) {
+        if (! $listing) {
             return view('error_404');
         }
 
-        if (! $ad->is_published()) {
+        if (! $listing->is_published()) {
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
-                if ($user_id != $ad->user_id) {
+                if ($user_id != $listing->user_id) {
                     return view('error_404');
                 }
             } else {
                 return view('error_404');
             }
         } else {
-            $ad->view = $ad->view + 1;
-            $ad->save();
+            $listing->view = $listing->view + 1;
+            $listing->save();
         }
 
-        $title = $ad->title;
+        $title = $listing->title;
 
-        //Get Related Ads, add [->whereCountryId($ad->country_id)] for more specific results
-        $related_ads = collect(); //Ad::active()->whereCategoryId($ad->category_id)->where('id', '!=', $ad->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
+        //Get Related Ads, add [->whereCountryId($listing->country_id)] for more specific results
+        $relatedListings = collect(); //Ad::active()->whereCategoryId($listing->category_id)->where('id', '!=', $listing->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
 
-        return view('single_ad', compact('ad', 'title', 'related_ads'));
+        return view('single-listing', compact('listing', 'title', 'relatedListings'));
     }
 
     public function switchGridListView(Request $request)

@@ -419,8 +419,16 @@ Route::group(
 
 Route::name('shop.')
     ->group(function () {
-        Route::get('cart', '\App\Wax\Shop\Controllers\CartController@showCart')
-            ->name('cart');
+        Route::name('cart.')
+            ->prefix('cart')
+            ->group(function () {
+                Route::get('/', 'CartController@index')
+                    ->name('index');
+                Route::post('add')
+                    ->uses('CartController@store')
+                    ->name('add');
+            });
+
 
         Route::prefix('checkout')
             ->name('checkout.')

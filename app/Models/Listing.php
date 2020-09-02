@@ -284,4 +284,14 @@ class Listing extends Model
     {
         return $this->hasMany(Item::class, 'listing_id');
     }
+
+    public function getIsAuctionAttribute(): bool
+    {
+        return $this->type === 'auction';
+    }
+
+    public function getIsSetPriceAttribute(): bool
+    {
+        return $this->type === 'set-price';
+    }
 }

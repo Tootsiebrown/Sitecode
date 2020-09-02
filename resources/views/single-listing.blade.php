@@ -2,14 +2,14 @@
 @section('title') @if( ! empty($title)) {{ strip_tags($title) }} | @endif @parent @endsection
 
 @section('social-meta')
-    <meta property="og:title" content="{{ safe_output($ad->title) }}">
-    <meta property="og:description" content="{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($ad->description) )),0,160) }}">
-    @if($ad->images->first())
-        <meta property="og:image" content="{{ $ad->images->first()->url }}">
+    <meta property="og:title" content="{{ safe_output($listing->title) }}">
+    <meta property="og:description" content="{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}">
+    @if($listing->images->first())
+        <meta property="og:image" content="{{ $listing->images->first()->url }}">
     @else
         <meta property="og:image" content="{{ asset('uploads/placeholder.png') }}">
     @endif
-    <meta property="og:url" content="{{  route('single_ad', [$ad->id, $ad->slug]) }}">
+    <meta property="og:url" content="{{  route('single_ad', [$listing->id, $listing->slug]) }}">
     <meta name="twitter:card" content="summary_large_image">
     <!--  Non-Essential, But Recommended -->
     <meta name="og:site_name" content="{{ get_option('site_name') }}">
@@ -20,23 +20,23 @@
 @endsection
 
 @section('content')
-    @php /* @var App\Ad $ad */ @endphp
+    @php /* @var App\Models\Listing $listing */ @endphp
     <div class="page-header search-page-header">
          <div class="container">
              <div class="row">
                  <div class="col-md-12">
                      <div class="breadcrumbs">
                          <a href="{{ route('home') }}">Home</a>
-                         @if($ad->category)
-                             <a href="{{ $ad->category->url }}"> {{ $ad->category->name }}</a>
+                         @if($listing->category)
+                             <a href="{{ $listing->category->url }}"> {{ $listing->category->name }}</a>
                          @endif
 
-                         @if($ad->child_category)
-                             <a href="{{ $ad->child_category->url }}"> {{ $ad->child_category->name }}</a>
+                         @if($listing->child_category)
+                             <a href="{{ $listing->child_category->url }}"> {{ $listing->child_category->name }}</a>
                          @endif
 
-                         @if($ad->grandchild_category)
-                             <a href="{{ $ad->grandchild_category->url }}"> {{ $ad->grandchild_category->name }}</a>
+                         @if($listing->grandchild_category)
+                             <a href="{{ $listing->grandchild_category->url }}"> {{ $listing->grandchild_category->name }}</a>
                          @endif
                      </div>
                  </div>
@@ -48,7 +48,7 @@
         <div class="container">
             <div class="single-ad__header">
                 <div class="single-ad__info">
-                    <h3>{{ safe_output($ad->title) }}</h3>
+                    <h3>{{ safe_output($listing->title) }}</h3>
                     @include('dashboard.flash_msg')
 
                     @if ($errors->any())
@@ -61,17 +61,17 @@
                         </div>
                     @endif
 
-                    @if($ad->type == 'auction' && ! auth()->check())
+                    @if($listing->is_auction && ! auth()->check())
                         <div class="alert alert-warning">
                             <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
                         </div>
                     @endif
 
-                    <div class="single-ad__condition">{{ $ad->condition }}</div>
-                    @if ($ad->type === 'auction')
-                        @if($ad->is_bid_active())
+                    <div class="single-ad__condition">{{ $listing->condition }}</div>
+                    @if ($listing->is_auction)
+                        @if($listing->is_bid_active())
                             <p class="single-ad__time-limit">
-                                {{sprintf(trans('app.bid_deadline_info'), $ad->bid_deadline(), $ad->bid_deadline_left())}}
+                                {{sprintf(trans('app.bid_deadline_info'), $listing->bid_deadline(), $listing->bid_deadline_left())}}
                             </p>
                         @else
                             <div class="alert alert-warning">
@@ -82,7 +82,7 @@
 
 
                         <p class="single-ad__current-bid-headline">
-                            @if($ad->is_bid_active())
+                            @if($listing->is_bid_active())
                                 @lang('app.highest_bid')
                             @else
                                 The final price was
@@ -90,54 +90,69 @@
                         </p>
 
                         <p class="single-ad__current-bid-amount">
-                            {!! themeqx_price($ad->current_bid()) !!}
+                            {!! themeqx_price($listing->current_bid()) !!}
                         </p>
 
-                        @if (!$ad->is_bid_active() && $ad->is_bid_accepted())
-                            @if(Auth::check() && $ad->winning_bid->user_id == Auth::user()->id)
+                        @if (!$listing->is_bid_active() && $listing->is_bid_accepted())
+                            @if(Auth::check() && $listing->winning_bid->user_id == Auth::user()->id)
                                 <a
-                                  href="{{ route('payForEndedAuction', ['id' => $ad->id]) }}"
+                                  href="{{ route('payForEndedAuction', ['id' => $listing->id]) }}"
                                   class="btn btn-default"
                                 >
                                     Pay now!
                                 </a>
                             @endif
-                        @else
-                                <p class="single-ad__minimum-new-bid-amount">
-                                    Enter a bid of ${{ $ad->current_bid() + 1 }} or higher
-                                </p>
+                        @else)
+                            <p class="single-ad__minimum-new-bid-amount">
+                                Enter a bid of ${{ $listing->current_bid() + 1 }} or higher
+                            </p>
 
-                                @if($ad->type == 'auction' && ! auth()->check())
-                                    <div class="alert alert-warning">
-                                        <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
-                                    </div>
-                                @else
-                                    <form action="{{ route('post_bid', $ad->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
-                                        @csrf
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-addon">{!! currency_sign() !!}</div>
-                                                <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$ad->current_bid() + 1}}" required="required">
-                                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">@lang('app.place_bid')</button>
-                                </span>
-                                            </div>
+                            @if($listing->type == 'auction' && ! auth()->check())
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
+                                </div>
+                            @else
+                                <form action="{{ route('post_bid', $listing->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{!! currency_sign() !!}</div>
+                                            <input type="number" class="form-control" id="bid_amount" name="bid_amount" placeholder="@lang('app.bid_amount')" min="{{$listing->current_bid() + 1}}" required="required">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="submit">@lang('app.place_bid')</button>
+                                            </span>
                                         </div>
-                                    </form>
-                                @endif
+                                    </div>
+                                </form>
+                            @endif
                         @endif
-
-
                     @endif
 
-                    @if ($ad->is_bid_active())
-                        @if ($ad->type === 'auction')
-                            <p>Or buy now for ${{ $ad->price }}</p>
+                    @if ($listing->is_set_price)
+                        <form action="{{ route('shop.cart.add') }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                            @csrf
+                            <input type="hidden" name="customizations[1]" value="{{ $listing->id }}">
+                            <input type="hidden" name="product_id" value="1">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Qty:</div>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" placeholder="#" required="required">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Add to Cart @svg(cart)</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    @endif
+
+                    @if ($listing->is_auction && $listing->is_bid_active())
+                        @if ($listing->type === 'auction')
+                            <p>Or buy now for ${{ $listing->price }}</p>
                         @endif
 
                         <button class="btn btn-primary">Add to Cart @svg(cart)</button>
-                        <a href="javascript:;" id="save_as_favorite" data-slug="{{ $ad->slug }}" class="btn btn-default">
-                            @if( ! $ad->is_my_favorite())
+                        <a href="javascript:;" id="save_as_favorite" data-slug="{{ $listing->slug }}" class="btn btn-default">
+                            @if( ! $listing->is_my_favorite())
                                 @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
                             @else
                                 @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
@@ -147,12 +162,12 @@
                 </div>
                 <div class="single-ad__images">
                     <div class="auction-img-video-wrap">
-                        @if ( ! $ad->is_published())
+                        @if ( ! $listing->is_published())
                             <div class="alert alert-warning"> <i class="fa fa-warning"></i> @lang('app.ad_not_published_warning')</div>
                         @endif
-                        @if( ! empty($ad->video_url))
+                        @if( ! empty($listing->video_url))
                             <?php
-                            $video_url = safe_output($ad->video_url);
+                            $video_url = safe_output($listing->video_url);
                             if (strpos($video_url, 'youtube') > 0) {
                                 preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $video_url, $matches);
                                 if ( ! empty($matches[1])){
@@ -170,8 +185,8 @@
                         @else
                             <div class="ads-gallery">
                                 <div class="fotorama"  data-nav="thumbs" data-allowfullscreen="true" data-width="100%">
-                                    @foreach($ad->images as $img)
-                                        <img src="{{ $img->url }}" alt="{{ $ad->title }}">
+                                    @foreach($listing->images as $img)
+                                        <img src="{{ $img->url }}" alt="{{ $listing->title }}">
                                     @endforeach
                                 </div>
                             </div>
@@ -182,17 +197,17 @@
             </div>
 
             <div class="single-ad__general-area">
-                @if ($ad->hasOptionalFieldsForDisplay())
+                @if ($listing->hasOptionalFieldsForDisplay())
                     <div class="single-ad__details">
                         <h4>Specifications</h4>
                         <ul>
-                            @foreach($ad::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel)
-                                @if (!is_null($ad->$fieldName))
-                                    <li><span class="single-ad__details-item">{{ $fieldLabel }}</span>: {{ $ad->$fieldName }}</li>
+                            @foreach($listing::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel)
+                                @if (!is_null($listing->$fieldName))
+                                    <li><span class="single-ad__details-item">{{ $fieldLabel }}</span>: {{ $listing->$fieldName }}</li>
                                 @endif
                             @endforeach
-                            @if ($ad->brand)
-                                <li><span class="single-ad__details-item">Brand</span>: {{ $ad->brand->name }}</
+                            @if ($listing->brand)
+                                <li><span class="single-ad__details-item">Brand</span>: {{ $listing->brand->name }}</
                             @endif
                         </ul>
                     </div>
@@ -200,21 +215,21 @@
 
                 <div class="single-ad__description">
                     <h4>@lang('app.description')</h4>
-                    {!! nl2br(safe_output($ad->description)) !!}
-                    {!! nl2br(safe_output($ad->features)) !!}
+                    {!! nl2br(safe_output($listing->description)) !!}
+                    {!! nl2br(safe_output($listing->features)) !!}
                 </div>
             </div>
 
             <div class="single-ad__meta">
-                <p>Product SKU: {{ $ad->product_id }}</p>
-                <p>Listing SKU: {{ $ad->id }}</p>
+                <p>Product SKU: {{ $listing->product_id }}</p>
+                <p>Listing SKU: {{ $listing->id }}</p>
             </div>
 
             <div>
                 @if(get_option('enable_comments') == 1)
                     <hr />
-                    @php $comments = \App\Comment::approved()->parent()->whereAdId($ad->id)->with('childs_approved')->orderBy('id', 'desc')->get();
-                    $comments_count = \App\Comment::approved()->whereAdId($ad->id)->count();
+                    @php $comments = \App\Comment::approved()->parent()->whereAdId($listing->id)->with('childs_approved')->orderBy('id', 'desc')->get();
+                    $comments_count = \App\Comment::approved()->whereAdId($listing->id)->count();
                     @endphp
                     <div class="comments-container">
                         @if($comments_count < 1)
@@ -227,7 +242,7 @@
 
                         <div class="post-comments-form">
 
-                            <form action="{{route('post_comments', $ad->id)}}" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
+                            <form action="{{route('post_comments', $listing->id)}}" class="form-horizontal" method="post" enctype="multipart/form-data"> @csrf
 
                                 @if( ! auth()->check())
                                     <div class="form-group {{ $errors->has('author_name')? 'has-error':'' }}">
@@ -317,9 +332,7 @@
                                                             <div class="reply_form_box" style="display: none;"></div>
                                                         </div>
                                                     </li>
-
                                                 </ul>
-
                                             @endforeach
                                         @endif
                                     </li>
@@ -341,11 +354,11 @@
 
 
             <div class="related-ads">
-                @if($related_ads->count() > 0 && get_option('enable_related_ads') == 1)
+                @if($relatedListings->count() > 0 && get_option('enable_related_ads') == 1)
                     <div class="widget similar-ads">
                         <h3>@lang('app.similar_ads')</h3>
 
-                        @foreach($related_ads as $rad)
+                        @foreach($relatedListings as $rad)
                             <div class="item-loop">
 
                                 <div class="ad-box">
@@ -353,12 +366,12 @@
                                         <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
                                             <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
                                             <span class="modern-img-indicator">
-                                @if(! empty($rad->video_url))
+                                                @if(! empty($rad->video_url))
                                                     <i class="fa fa-file-video-o"></i>
                                                 @else
                                                     <i class="fa fa-file-image-o"> {{ $rad->media_img->count() }}</i>
                                                 @endif
-                            </span>
+                                            </span>
                                         </a>
                                     </div>
                                     <div class="caption">
@@ -487,7 +500,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="ad_id" value="{{ $ad->id }}" />
+                        <input type="hidden" name="ad_id" value="{{ $listing->id }}" />
                         <button type="button" class="btn btn-default" data-dismiss="modal">@lang('app.close')</button>
                         <button type="submit" class="btn btn-primary" id="reply_by_email_btn">@lang('app.send_email')</button>
                     </div>
@@ -517,15 +530,15 @@
 
     <script>
         $('.share').ShareLink({
-            title: '{{ $ad->title }}', // title for share message
-            text: '{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($ad->description) )),0,160) }}', // text for share message
+            title: '{{ $listing->title }}', // title for share message
+            text: '{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}', // text for share message
 
-            @if($ad->images->first())
-            image: '{{ $ad->images->first()->url }}', // optional image for share message (not for all networks)
+            @if($listing->images->first())
+            image: '{{ $listing->images->first()->url }}', // optional image for share message (not for all networks)
             @else
             image: '{{ asset('uploads/placeholder.png') }}', // optional image for share message (not for all networks)
             @endif
-            url: '{{  route('single_ad', [$ad->id, $ad->slug]) }}', // link on shared page
+            url: '{{  route('single_ad', [$listing->id, $listing->slug]) }}', // link on shared page
             class_prefix: 's_', // optional class prefix for share elements (buttons or links or everything), default: 's_'
             width: 640, // optional popup initial width
             height: 480 // optional popup initial height
@@ -538,7 +551,7 @@
     <script>
         $(function(){
             $('#onClickShowPhone').click(function(){
-                $('#ShowPhoneWrap').html('<i class="fa fa-phone"></i> {{ $ad->seller_phone }}');
+                $('#ShowPhoneWrap').html('<i class="fa fa-phone"></i> {{ $listing->seller_phone }}');
             });
 
             $('#save_as_favorite').click(function(){
