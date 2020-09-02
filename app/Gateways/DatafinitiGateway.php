@@ -40,33 +40,30 @@ class DatafinitiGateway
         $requestBody = $this->getRequestBody($code);
         $key = $this->getKey($code);
 
-        return collect(
-            json_decode(gzinflate(base64_decode(
-                Cache::store('database')
-                    ->remember($key, now()->addWeeks(2), function () use ($requestBody) {
-//                            dd('no cache hit');
-                        $response = $this->client->post(
-                            'https://api.datafiniti.co/v4/products/search',
-                            [
-                                'headers' => [
-                                    'Authorization' => sprintf("Bearer %s", $this->token),
-                                    'Content-Type' => 'application/json',
-                                ],
-                                'json' => $requestBody,
-                            ]
-                        );
+        return collect(json_decode(gzinflate(base64_decode(
+            Cache::store('database')
+                ->remember($key, now()->addWeeks(2), function () use ($requestBody) {
+                    $response = $this->client->post(
+                        'https://api.datafiniti.co/v4/products/search',
+                        [
+                            'headers' => [
+                                'Authorization' => sprintf("Bearer %s", $this->token),
+                                'Content-Type' => 'application/json',
+                            ],
+                            'json' => $requestBody,
+                        ]
+                    );
 
-                        $json = (string)$response->getBody();
-                        $result = json_decode($json, 1);
+                    $json = (string)$response->getBody();
+                    $result = json_decode($json, 1);
 
-                        return base64_encode(gzdeflate(json_encode(
-                            collect($result['records'])
-                                ->map(fn($record) => $this->processRecord($record))
-                                ->values()
-                        ), 2));
-                    })
-            )), 1)
-        );
+                    return base64_encode(gzdeflate(json_encode(
+                        collect($result['records'])
+                            ->map(fn($record) => $this->processRecord($record))
+                            ->values()
+                    ), 2));
+                })
+        )), 1));
     }
 
     protected function processRecord($record)
