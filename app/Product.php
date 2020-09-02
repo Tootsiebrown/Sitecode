@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,7 +35,7 @@ class Product extends Model
 
     public function ads()
     {
-        return $this->hasMany(Ad::class)->orderBy('id', 'desc');
+        return $this->hasMany(Listing::class)->orderBy('id', 'desc');
     }
 
     public function brand()

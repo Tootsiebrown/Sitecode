@@ -1,12 +1,24 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Bid;
+use App\Brand;
+use App\City;
+use App\Country;
+use App\Favorite;
+use App\HasCondition;
+use App\HasProductCategories;
+use App\Models\Listing\Image;
+use App\Models\Listing\Item;
+use App\ProductCategory;
+use App\State;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Ad extends Model
+class Listing extends Model
 {
     use HasCondition;
     use HasProductCategories;
@@ -62,7 +74,7 @@ class Ad extends Model
 
     public function images()
     {
-        return $this->hasMany(AdImage::class);
+        return $this->hasMany(Image::class);
     }
 
     /**
@@ -251,5 +263,10 @@ class Ad extends Model
         }
 
         return false;
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'listing_id');
     }
 }

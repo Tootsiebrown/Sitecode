@@ -1,6 +1,6 @@
 <?php
 
-use App\Ad;
+use App\Models\Listing;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +19,7 @@ class AdsLikeProducts extends Migration
             $table->unsignedInteger('brand_id')->nullable();
 
             $table->decimal('original_price', 15, 4)->nullable();
-            $table->string('condition')->default(Ad::getConditions()[0]);
+            $table->string('condition')->default(Listing::getConditions()[0]);
             $table->string('gender')->nullable();
             $table->string('model_number')->nullable();
         });

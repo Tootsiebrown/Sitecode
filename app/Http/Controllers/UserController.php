@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Ad;
+use App\Models\Listing;
 use App\Country;
 use App\Favorite;
 use App\User;
@@ -347,7 +347,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         $slug = $request->slug;
-        $ad = Ad::whereSlug($slug)->first();
+        $ad = Listing::whereSlug($slug)->first();
 
         if ($ad) {
             $get_previous_favorite = Favorite::whereUserId($user->id)->whereAdId($ad->id)->first();
@@ -367,7 +367,7 @@ class UserController extends Controller
         $data = $request->all();
         $data['email'];
         $ad_id = $request->ad_id;
-        $ad = Ad::find($ad_id);
+        $ad = Listing::find($ad_id);
         if ($ad) {
             $to_email = $ad->user->email;
             if ($to_email) {

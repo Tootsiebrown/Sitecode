@@ -44,6 +44,7 @@ class AuthenticationJsonTest extends WaxAppTestCase
             'email' => $user->email,
             'password' => $password,
         ]);
+
         $response->assertStatus(200)
             ->assertJson(['email' => $user->email]);
     }

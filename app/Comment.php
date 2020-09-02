@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -36,6 +37,6 @@ class Comment extends Model
 
     public function ad()
     {
-        return $this->belongsTo(Ad::class);
+        return $this->belongsTo(Listing::class);
     }
 }
