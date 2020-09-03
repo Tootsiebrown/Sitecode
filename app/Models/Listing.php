@@ -294,4 +294,9 @@ class Listing extends Model
     {
         return $this->type === 'set-price';
     }
+
+    public function getQuantityAttribute(): int
+    {
+        return $this->items->count();
+    }
 }

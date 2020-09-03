@@ -439,9 +439,7 @@ class ListerController extends Controller
                 'expired_at' => $request->input('type') == 'auction'
                     ? $request->bid_deadline
                     : null,
-                'quantity' => $request->input('type') == 'auction'
-                    ? 1
-                    : $request->input('quantity'),
+
                 'type' => $request->input('type'),
                 'status' => "1", // published automatically
 
@@ -466,8 +464,11 @@ class ListerController extends Controller
 
             $ad = Listing::create($data);
 
+            $quantity = $request->input('type') == 'auction'
+                ? 1
+                : $request->input('quantity');
             $listingItems = [];
-            for ($i = 1; $i <= $ad->quantity; $i++) {
+            for ($i = 1; $i <= $quantity; $i++) {
                 $listingItems[] = ['listing_id' => $ad->id];
             }
 
