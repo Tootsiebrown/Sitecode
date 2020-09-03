@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Listing\Image as ListingImage;
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Models\Listing;
+use App\Models\Listing\Image as ListingImage;
 use App\Models\Listing\Item;
 use App\Product;
 use App\ProductCategory;
