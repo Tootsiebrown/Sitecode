@@ -142,6 +142,15 @@
   display: block;
 }
 
+.listing-bins td,
+.listing-bins th {
+  padding: 8px;
+}
+
+.listing-bins td {
+  text-align: right;
+}
+
 #wrapper {
   width: 100%;
   min-height: 800px;

@@ -29,7 +29,7 @@ class CartController extends Controller
             ->default_shipment
             ->combineDuplicateItems();
 
-        return response()->json($this->shopService->getActiveOrder());
+        return view('shop.cart.index', ['order' => $this->shopService->getActiveOrder()]);
     }
 
     public function store(Request $request)
@@ -44,6 +44,14 @@ class CartController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Item added to cart');
+    }
 
+    public function destroy($itemId)
+    {
+        $this->shopService->deleteOrderItem($itemId);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Item deleted from cart');
     }
 }

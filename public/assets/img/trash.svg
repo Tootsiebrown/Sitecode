@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="20px" viewBox="0 0 17 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Icon/Trash</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Subs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Cart" transform="translate(-624.000000, -315.000000)" fill="#000000">
+            <g id="Group-6" transform="translate(90.000000, 314.000000)">
+                <g id="Group-3">
+                    <g id="Icon/Trash" transform="translate(534.000000, 1.000000)">
+                        <g id="md-trash">
+                            <path d="M1.66767372,17.7827604 C1.66767372,19.0023958 2.66817372,20 3.89125604,20 L12.7855332,20 C14.0085634,20 15.0090634,19.0023958 15.0090634,17.7827604 L15.0090634,5 L1.66767372,5 L1.66767372,17.7827604 Z M16.6767372,1.66666667 L12.5075529,1.66666667 L11.1116579,0 L5.56513142,0 L4.16918429,1.66666667 L0,1.66666667 L0,3.33333333 L16.6767372,3.33333333 L16.6767372,1.66666667 Z" id="Shape" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -17,7 +17,9 @@
 @import "shared/forms";
 
 @import "components/checkout-cart";
+@import "components/checkout-flow";
 
 // pages / modules
 @import "pages/single-ad";
+@import "pages/cart";
 @import "pages/checkout";

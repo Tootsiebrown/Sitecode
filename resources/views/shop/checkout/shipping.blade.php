@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         @include ('shop.checkout.breadcrumbs')
-        @include ('shop.checkout.flow-header', ['step' => 1])
+        @render(App\ViewComponents\CheckoutFlowComponent::class)
 
         <div class="checkout__body">
             @render(App\ViewComponents\CheckoutCartComponent::class)

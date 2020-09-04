@@ -1,0 +1,32 @@
+.checkout__cart-page {
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .checkout-cart-list-item {
+        display: flex;
+
+        &__image-container {
+            width: 200px;
+            img {
+                max-width: 100%;
+            }
+        }
+
+        &__main {
+            margin: 0 16px;
+        }
+
+        &__name {
+            font-weight: bold;
+        }
+
+        &__actions {
+            form {
+                background-color: inherit;
+                padding: 0;
+            }
+        }
+    }
+}

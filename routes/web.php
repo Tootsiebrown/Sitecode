@@ -427,6 +427,9 @@ Route::name('shop.')
                 Route::post('add')
                     ->uses('CartController@store')
                     ->name('add');
+                Route::delete('{itemId}')
+                    ->uses('CartController@destroy')
+                    ->name('delete');
             });
 
 
@@ -446,8 +449,9 @@ Route::name('shop.')
                 Route::post('billing', '\App\Wax\Shop\Controllers\CheckoutController@pay')
                     ->name('saveBilling');
 
-                Route::get('confirmation', '\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
-                    ->name('checkout');
+                Route::get('confirmation')
+                    ->uses('\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
+                    ->name('confirmation');
             });
 
     });

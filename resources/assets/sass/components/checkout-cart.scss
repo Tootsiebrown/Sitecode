@@ -1,8 +1,11 @@
 .checkout {
     &__cart {
+        margin-bottom: 24px;
+
         &-link {
             text-align: right;
         }
+
         h3 {
             margin: 0;
             padding: 12px;
@@ -44,10 +47,28 @@
     }
 
     &__continue {
-        display: block;
+        align-items: center;
         border-radius: 0 0 4px 4px;
         background-color: $color-orange-light;
         color: $color-tan-light;
+        display: flex;
+        justify-content: space-between;
         padding: 12px;
+
+        svg {
+            height: 20px
+        }
+
+        path {
+            fill: $color-tan-light;
+        }
+
+        &:hover {
+            color: $color-tan-light;
+            background-color: $color-turquoise;
+            path {
+                fill: $color-navy;
+            }
+        }
     }
 }

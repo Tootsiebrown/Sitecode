@@ -19,4 +19,9 @@ class Product extends WaxProduct
     {
         return 1000;
     }
+
+    public function images()
+    {
+        return collect();
+    }
 }

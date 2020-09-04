@@ -445,4 +445,30 @@
         flex-direction: column;
         justify-content: flex-end;
     }
+
+    .nav-cart {
+        &__button {
+            position: relative;
+            &:hover {
+                .nav-cart__count {
+                    border-color: $color-orange-light;
+                }
+            }
+        }
+
+        &__count {
+            background-color: $color-turquoise;
+            border-radius: 12px;
+            border: 2px solid $color-tan-med;
+            color: $color-tan-light;
+            font-size: 10px;
+            height: 20px;
+            min-width: 20px;
+            line-height:16px;
+            position: absolute;
+            left: 56px;
+            text-align: center;
+            top: 6px;
+        }
+    }
 }

@@ -1,14 +1,14 @@
 <div class="checkout__cart">
     <div class="checkout__cart-link">
-        <a href="{{ route('shop.cart') }}">
+        <a href="{{ route('shop.cart.index') }}">
             Edit Cart
         </a>
     </div>
     <ul class="checkout-cart">
         @foreach($order->items as $item)
             <li>
-                <a href="{{ $item->ad->url }}">
-                    {{ $item->ad->title }}
+                <a href="{{ $item->listing->url }}">
+                    {{ $item->listing->title }}
                 </a>
                 <div class="checkout-cart__details">
                     <div class="checkout-cart__price">

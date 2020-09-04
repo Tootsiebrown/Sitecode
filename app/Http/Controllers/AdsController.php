@@ -44,7 +44,6 @@ class AdsController extends Controller
         $name = $request->input('name');
         $sku = $request->input('sku');
         $searchBy = $request->input('search_by');
-        $datafinitiUpc = $request->input('datafiniti_upc');
 
         switch ($searchBy) {
             case 'name':

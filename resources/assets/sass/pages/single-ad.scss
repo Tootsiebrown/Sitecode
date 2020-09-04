@@ -1,8 +1,12 @@
 .single-ad {
 
     &__info {
-        .form-inline .form-group {
-            width: 256px;
+        .form-inline {
+            padding: 0;
+            background-color: inherit;
+            .form-group {
+                width: 256px;
+            }
         }
 
         h3 {
@@ -11,9 +15,11 @@
 
         form.place-bid {
             margin-bottom: 24px;
+
         }
 
         .input-group {
+            background-color: $color-tan-light;
             border: 2px solid $color-tan-dark;
             border-radius: 4px;
 

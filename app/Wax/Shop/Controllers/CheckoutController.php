@@ -24,7 +24,7 @@ class CheckoutController extends Controller
         if ($this->shopService->getActiveOrder()->item_count > 0) {
             return redirect()->route('shop.checkout.showShipping');
         } else {
-            return redirect()->route('shop.cart');
+            return redirect()->route('shop.cart.index');
         }
     }
 
@@ -97,5 +97,18 @@ class CheckoutController extends Controller
         );
 
         return redirect()->route('shop.checkout.confirmation');
+    }
+
+    public function showConfirmation()
+    {
+        $order = $this->shopService->getPlacedOrder();
+
+        if (! $order) {
+            return redirect()->route('home');
+        }
+
+        return view('shop.checkout.confirmation', [
+            'order' => $order,
+        ]);
     }
 }

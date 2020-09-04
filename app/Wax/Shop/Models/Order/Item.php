@@ -49,6 +49,10 @@ class Item extends WaxItem
             return $this->listing->current_bid();
         }
 
+        if ($this->listing->type === 'set-price') {
+            return $this->listing->price;
+        }
+
         throw new Exception('Listing id: ' . $this->listing->id . 'of type ' . $this->listing->type . ' cannot have price calcualted properly.');
     }
 }

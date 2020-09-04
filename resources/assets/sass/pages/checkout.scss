@@ -12,7 +12,10 @@
     }
 
     &__main {
-        margin-right: 12px;
+        @media (min-width: $bp-tablet) {
+            margin-right: 12px;
+        }
+
         flex-grow: 1;
     }
 

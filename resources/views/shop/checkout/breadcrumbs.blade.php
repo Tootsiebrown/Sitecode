@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="breadcrumbs">
                     <a href="{{ route('home') }}">Home</a>
-                    <a href="{{ route('shop.cart') }}">Cart</a>
+                    <a href="{{ route('shop.cart.index') }}">My Cart</a>
                 </div>
             </div>
         </div>

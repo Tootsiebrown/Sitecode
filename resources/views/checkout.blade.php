@@ -4,24 +4,20 @@
 @section('content')
 
 
-    <div class="page-header search-page-header">
+    <div class="page-header">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    @if( ! empty($title)) <h2>{{ $title }} </h2> @endif
-                    <div class="btn-group btn-breadcrumb">
-                        <a href="{{route('home')}}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
-                        <a href="{{route('payment_checkout', $payment->local_transaction_id)}}" class="btn btn-warning"> @lang('app.checkout')</a>
-                    </div>
-                </div>
+            <div class="btn-group btn-breadcrumb">
+                <a href="{{route('home')}}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
+                <a href="{{route('payment_checkout', $payment->local_transaction_id)}}" class="btn btn-warning"> @lang('app.checkout')</a>
             </div>
+
+            @render(App\ViewComponents\CheckoutFlowComponent::class)
         </div>
     </div>
 
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
 
 
                 <div class="checkout-wrap">

@@ -23,6 +23,10 @@
     font-size: 16px;
 }
 
+.page-header {
+    border-bottom: none;
+}
+
 .btn-primary {
     background-color: $color-turquoise;
     svg  {
