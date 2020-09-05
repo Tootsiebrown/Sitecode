@@ -54,6 +54,27 @@
     }
 }
 
+.btn-secondary {
+    background-color: $color-orange-light;
+    color: $color-tan-light;
+
+    svg  {
+        height: 18px;
+        vertical-align: middle;
+        path {
+            fill: $color-tan-light;
+        }
+    }
+
+    &:hover {
+        background-color: $color-turquoise !important;
+    }
+
+    &:focus {
+        background-color: $color-navy;
+    }
+}
+
 .form-control {
     background-color: $color-tan-light;
     border-radius: 4px;

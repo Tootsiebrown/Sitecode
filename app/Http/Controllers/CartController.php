@@ -51,7 +51,7 @@ class CartController extends Controller
         $this->shopService->deleteOrderItem($itemId);
 
         return redirect()
-            ->back()
+            ->route('shop.cart.index')
             ->with('success', 'Item deleted from cart');
     }
 }

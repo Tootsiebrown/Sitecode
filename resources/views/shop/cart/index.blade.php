@@ -30,10 +30,10 @@
                     @foreach ($order->items as $item)
                         <li class="checkout-cart-list-item">
                             <div class="checkout-cart-list-item__image-container">
-                                <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->title }}">
+                                <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->name }}">
                             </div>
                             <div class="checkout-cart-list-item__main">
-                                <p class="checkout-cart-list-item__name">{{ $item->name }}</pcheckout-cart-list-item>
+                                <p class="checkout-cart-list-item__name">{{ $item->name }}</p>
                                 <p>${{ $item->gross_unit_price }}</p>
                                 <p>Qty: {{ $item->quantity }}</p>
                             </div>

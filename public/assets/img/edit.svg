@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="20px" viewBox="0 0 18 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>edit-fill</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon/Edit" transform="translate(-3.000000, -2.000000)">
+            <g id="edit-fill">
+                <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                <path d="M7.243,18 L3,18 L3,13.757 L14.435,2.322 C14.8254999,1.93161806 15.4585001,1.93161806 15.849,2.322 L18.678,5.151 C19.0683819,5.54149985 19.0683819,6.17450015 18.678,6.565 L7.243,18 Z M3,20 L21,20 L21,22 L3,22 L3,20 Z" id="Shape" fill="#ECEAD5"></path>
+            </g>
+        </g>
+    </g>
+</svg>
