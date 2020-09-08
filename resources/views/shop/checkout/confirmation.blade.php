@@ -2,6 +2,8 @@
 
 @section('content')
     @php
+        /** @var $order \App\Wax\Shop\Models\Order  */
+
         $shipment = $order->default_shipment;
         $payment = $order->payments->first();
     @endphp
@@ -17,10 +19,10 @@
 
                 <div class="confirmation">
                     <div class="confirmation__details">
-                        <p class="label">Order Number:</p>
+                        <h5>Order Number:</h5>
                         <p>{{ $order->sequence }}</p>
 
-                        <p class="label">Shipping To:</p>
+                        <h5>Shipping To:</h5>
                         @if ($shipment->in_store_pickup)
                             <p>In Store Pickup</p>
                         @else
@@ -34,7 +36,7 @@
                             </p>
                         @endif
 
-                        <p class="label">Payment</p>
+                        <h5>Payment</h5>
                         <p>
                             {{ $payment->firstname }} {{ $payment->lastname }}<br>
                             {{ $payment->address1 }}<br>

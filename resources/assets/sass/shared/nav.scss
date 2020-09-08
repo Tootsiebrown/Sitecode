@@ -171,10 +171,12 @@
         }
     }
 
-    .navbar-nav > .open > a {
-        background-image: none;
-        background-color: $color-turquoise;
-        color: $color-white;
+    @media (min-width: $bp-tablet) {
+        .navbar-nav > .open > a {
+            background-image: none;
+            background-color: $color-turquoise;
+            color: $color-white;
+        }
     }
 
     @media(min-width: $bp-tablet) {
@@ -556,32 +558,34 @@
     }
 
     &__container {
-        &.open {
-            &::after {
-                border-bottom: 15px solid $color-turquoise;
-                border-left: 20px solid transparent;
-                border-right: 20px solid transparent;
-                border-top-width: 0;
-                content: '';
-                display: block;
-                height: 0;
-                width: 0;
-                position: absolute;
-                right: 50%;
-                top: 100%;
-                transform: translateX(50%);
-            }
-
-            .nav-cart__button {
-                .nav-cart__count {
-                    background-color: $color-orange-light;
-                    border-color: $color-turquoise;
+        @media (min-width: $bp-tablet) {
+            &.open {
+                &::after {
+                    border-bottom: 15px solid $color-turquoise;
+                    border-left: 20px solid transparent;
+                    border-right: 20px solid transparent;
+                    border-top-width: 0;
+                    content: '';
+                    display: block;
+                    height: 0;
+                    width: 0;
+                    position: absolute;
+                    right: 50%;
+                    top: 100%;
+                    transform: translateX(50%);
                 }
 
-                &:hover {
+                .nav-cart__button {
                     .nav-cart__count {
-                        background-color: $color-turquoise;
-                        border-color: $color-orange-light;
+                        background-color: $color-orange-light;
+                        border-color: $color-turquoise;
+                    }
+
+                    &:hover {
+                        .nav-cart__count {
+                            background-color: $color-turquoise;
+                            border-color: $color-orange-light;
+                        }
                     }
                 }
             }
