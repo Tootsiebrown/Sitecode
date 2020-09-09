@@ -47,6 +47,8 @@ export default class StripeForm
     }
 
     handleStripeToken = (token) => {
+        console.log(token)
+        // I want the card "brand"... can I get the zip, to?
         this.$component.off('submit', this.handleSubmit)
         this.$tokenField.val(token.id)
         this.$lastFourField.val(token.card.last4)

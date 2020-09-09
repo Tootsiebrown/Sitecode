@@ -55,13 +55,13 @@ class CheckoutController extends Controller
         $shipment->save();
 
         $shipment->setAddress(
-            $request->input('firstName'),
-            $request->input('lastName'),
-            $request->input('company'),
+            $request->input('first_name'),
+            $request->input('last_name'),
+            '',
             $request->input('email'),
             $request->input('phone'),
             $request->input('address1'),
-            $request->input('address2'),
+            $request->input('address2',),
             $request->input('city'),
             $request->input('state'),
             $request->input('zip'),
