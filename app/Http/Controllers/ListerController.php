@@ -414,6 +414,7 @@ class ListerController extends Controller
 
         return view('dashboard.lister.create_listing', [
             'product' => $product,
+            'optionalFields' => $this->optionalFields,
         ]);
     }
 
@@ -426,6 +427,10 @@ class ListerController extends Controller
             'type' => 'required|in:auction,set-price',
             'quantity' => 'integer|required_if:type,set-price'
         ];
+
+        foreach ($this->optionalFields as $fieldName => $fieldLabel) {
+            $rules[$fieldName] = 'max:255';
+        }
 
         $this->validate($request, $rules);
 
@@ -461,7 +466,7 @@ class ListerController extends Controller
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
-                $data[$fieldName] = $product->$fieldName;
+                $data[$fieldName] = $request->input($fieldName, '');
             }
 
             $ad = Listing::create($data);

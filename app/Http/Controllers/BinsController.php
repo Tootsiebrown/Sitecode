@@ -71,7 +71,7 @@ class BinsController extends Controller
         });
 
         return redirect()
-            ->route('dashboard.bins.showListingBins', ['id' => $listing->id])
+            ->route('dashboard.bins.index')
             ->with('success', 'Bins Edited.');
     }
 
@@ -98,7 +98,27 @@ class BinsController extends Controller
         $item->save();
 
         return redirect()
-            ->route('dashboard.bins.showItemBin', ['id' => $item->id])
+            ->route('dashboard.bins.index')
             ->with('success', 'Bin Edited.');
+    }
+
+    public function bulkEditListingBins(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'listing_bulk_bin' => 'required|max:255',
+            ]
+        );
+
+        $listing = Listing::with(['items'])
+            ->findOrFail($request->input('listing_id'));
+
+        Item::where('listing_id', $listing->id)
+            ->update(['bin' => $request->input('listing_bulk_bin')]);
+
+        return redirect()
+            ->route('dashboard.bins.index')
+            ->with('success', 'Bins Edited.');
     }
 }

@@ -9,6 +9,9 @@ import ProductCategoriesHierarchy from "./component/product-categories-hierarchy
 import FocusableInputGroup from "./component/focusable-input-group";
 import TaxonomyNav from "./component/taxonomy-nav";
 import ListingResult from "./component/listing-result";
+import StickyThing from "./component/sticky-thing";
+import AutoSelectOnFocus from "./component/auto-select-on-focus";
+import ListingBinBulkEditor from "./component/listing-bin-bulk-editor";
 
 export default function Site() {
 
@@ -17,6 +20,7 @@ export default function Site() {
     }
 
     const startCustom = () => {
+        new StickyThing()
         selectComponent('barcode-reader').each((index, element) => new BarcodeReader(element))
         selectComponent('product-suggestion').each((index, element) => new ProductSuggestion(element))
         selectComponent('product-categories-hierarchy').each((index, element) => new ProductCategoriesHierarchy(element))
@@ -26,6 +30,8 @@ export default function Site() {
         selectComponent('listing-type-select').each((index, element) => new ListingTypeSelect(element))
         selectComponent('focusable-input-group').each((index, element) => new FocusableInputGroup(element))
         selectComponent('listing-result').each((index, element) => new ListingResult(element))
+        selectComponent('auto-select-on-focus').each((index, element) => new AutoSelectOnFocus(element))
+        selectComponent('listing-bin-bulk-editor').each((index, element) => new ListingBinBulkEditor(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

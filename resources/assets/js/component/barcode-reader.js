@@ -1,5 +1,3 @@
-// import 'velocity-animate'
-// import 'velocity-animate/velocity.ui.min'
 import selectComponent from '../utilities/select-component'
 import Quagga from '@ericblade/quagga2'; // ES6
 import * as $ from 'jquery';
