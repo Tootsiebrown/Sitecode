@@ -191,9 +191,12 @@ Route::group(
                 Route::get('listing/{id}')
                     ->uses('BinsController@showListingBins')
                     ->name('showListingBins');
-                Route::post('/listing/{id}')
+                Route::post('listing/{id}')
                     ->uses('BinsController@saveListingBins')
                     ->name('saveListingBins');
+                Route::post('listing-bulk')
+                    ->uses('BinsController@bulkEditListingBins')
+                    ->name('bulkEditListingBins');
 
             });
 

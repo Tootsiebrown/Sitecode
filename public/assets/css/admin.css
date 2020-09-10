@@ -151,6 +151,10 @@
   text-align: right;
 }
 
+.bulk-edit-listing-bins {
+  margin-bottom: 24px;
+}
+
 #wrapper {
   width: 100%;
   min-height: 800px;

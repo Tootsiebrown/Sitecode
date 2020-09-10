@@ -87,11 +87,11 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
-
         'tmp' => [
             'driver' => 'local',
             'root' => storage_path('app/tmp'),
-        ],
+            'visibility' => 'private',
+        ]
 
     ],
 

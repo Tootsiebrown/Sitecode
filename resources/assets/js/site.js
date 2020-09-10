@@ -12,6 +12,9 @@ import TaxonomyNav from "./component/taxonomy-nav";
 import ListingResult from "./component/listing-result";
 import StripeForm from "./component/stripe-form";
 import NavCart from "./component/nav-cart";
+import StickyThing from "./component/sticky-thing";
+import AutoSelectOnFocus from "./component/auto-select-on-focus";
+import ListingBinBulkEditor from "./component/listing-bin-bulk-editor";
 
 export default function Site() {
 
@@ -20,6 +23,7 @@ export default function Site() {
     }
 
     const startCustom = () => {
+        new StickyThing()
         selectComponent('barcode-reader').each((index, element) => new BarcodeReader(element))
         selectComponent('product-suggestion').each((index, element) => new ProductSuggestion(element))
         selectComponent('product-categories-hierarchy').each((index, element) => new ProductCategoriesHierarchy(element))
@@ -32,6 +36,8 @@ export default function Site() {
         selectComponent('listing-result').each((index, element) => new ListingResult(element))
         selectComponent('stripe-form').each((index, element) => new StripeForm(element))
         selectComponent('nav-cart').each((index,element) => new NavCart(element))
+        selectComponent('auto-select-on-focus').each((index, element) => new AutoSelectOnFocus(element))
+        selectComponent('listing-bin-bulk-editor').each((index, element) => new ListingBinBulkEditor(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

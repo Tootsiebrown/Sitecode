@@ -66,6 +66,7 @@
                                     value="{{ request('item_sku') }}"
                                     name="item_sku"
                                     placeholder=""
+                                    autofocus
                                 >
                                 {!! $errors->has('item_sku')? '<p class="help-block">'.$errors->first('item_sku').'</p>':'' !!}
 

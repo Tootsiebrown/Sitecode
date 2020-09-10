@@ -24,7 +24,13 @@
                 <div class="main-wrapper">
                     <h1>Item SKU: {{ $item->id }}</h1>
 
-                    <p>{{ $item->listing->title }}</p>
+                    <p>
+                        <a
+                          href="{{ route('dashboard.bins.showListingBins', ['id' => $item->listing->id]) }}"
+                        >
+                            {{ $item->listing->title }}
+                        </a>
+                    </p>
                 </div>
 
                 <form action="{{ route('dashboard.bins.saveItemBin', ['id' => $item->id]) }}" method="POST">
@@ -35,6 +41,8 @@
                           type="text"
                           name="bin"
                           value="{{ old('bin') ?? $item->bin }}"
+                          autofocus
+                          data-component="auto-select-on-focus"
                         >
                         {!! $errors->has('bin')? '<p class="help-block">'.$errors->first('bin').'</p>':'' !!}
                     </div>

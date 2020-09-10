@@ -101,7 +101,17 @@
                                         </div>
                                     </div>
 
+                                    <legend>Optional Attributes</legend>
 
+                                    @foreach ($optionalFields as $optionalFieldName => $optionalFieldLabel)
+                                        <div class="form-group {{ $errors->has($optionalFieldName)? 'has-error':'' }}">
+                                            <label for="{{ $optionalFieldName }}" class="col-sm-4 control-label">{{ $optionalFieldLabel }}</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="{{ $optionalFieldName }}" value="{{ old($optionalFieldName) ?? $product[$optionalFieldName] ?? '' }}" name="{{ $optionalFieldName }}" placeholder="">
+                                                {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
+                                            </div>
+                                        </div>
+                                    @endforeach
 
                                     @if(get_option('enable_recaptcha_post_ad') == 1)
                                         <div class="form-group {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
