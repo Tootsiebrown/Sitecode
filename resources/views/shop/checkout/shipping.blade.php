@@ -59,7 +59,7 @@
                                       class="form-control"
                                       name="first_name"
                                       id="first-name"
-                                      value="{{ old('first_name') ?? $lUser->first_name }}"
+                                      value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname }}"
                                     >
                                 </div>
                                 <div class="col-xs-6">
@@ -69,7 +69,7 @@
                                       class="form-control"
                                       name="last_name"
                                       id="last-name"
-                                      value="{{ old('last_name') ?? $lUser->last_name}}"
+                                      value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname}}"
                                     >
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                       class="form-control"
                                       name="email"
                                       id="email"
-                                      value="{{ old('email') ?? $lUser->email }}"
+                                      value="{{ old('email') ?? $shipment->email ?? $lUser->email }}"
                                     >
                                 </div>
                                 <div class="col-xs-6">
@@ -91,7 +91,7 @@
                                       class="form-control"
                                       name="phone"
                                       id="phone"
-                                      value="{{ old('phone') ?? $lUser->phone }}"
+                                      value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone }}"
                                     >
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                                       class="form-control"
                                       name="address1"
                                       id="address1"
-                                      value="{{ old('address1') }}"
+                                      value="{{ old('address1') ?? $shipment->address1 }}"
                                     >
                                 </div>
                                 <div class="col-xs-4">
@@ -113,7 +113,7 @@
                                       class="form-control"
                                       name="address2"
                                       id="address2"
-                                      value="{{ old('address2') }}"
+                                      value="{{ old('address2') ?? $shipment->address2 }}"
                                     >
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                                       class="form-control"
                                       name="city"
                                       id="city"
-                                      value="{{ old('city') }}"
+                                      value="{{ old('city') ?? $shipment->city }}"
                                     >
                                 </div>
                                 <div class="col-xs-3">
@@ -135,7 +135,7 @@
                                       class="form-control"
                                       name="state"
                                       id="state"
-                                      value="{{ old('state') }}"
+                                      value="{{ old('state') ?? $shipment->state }}"
                                     >
                                 </div>
                                 <div class="col-xs-3">
@@ -145,14 +145,14 @@
                                       class="form-control"
                                       name="zip"
                                       id="zip"
-                                      value="{{ old('zip') }}"
+                                      value="{{ old('zip') ?? $shipment->zip}}"
                                     >
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <label>
-                                        <input type="checkbox" name="save_address" value="1">
+                                        <input type="checkbox" name="save_address" value="1" @if (old('save_address')) checked @endif>
                                         Save this address
                                     </label>
                                 </div>

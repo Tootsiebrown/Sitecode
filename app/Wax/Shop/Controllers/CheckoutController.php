@@ -34,10 +34,13 @@ class CheckoutController extends Controller
         $order->calculateTax();
 
         if ($this->shopService->getActiveOrder()->item_count === 0) {
-            return redirect()->route('shop.cart');
+            return redirect()->route('shop.cart.index');
         }
 
-        return view('shop.checkout.shipping');
+        return view('shop.checkout.shipping', [
+            'order' => $order,
+            'shipment' => $order->default_shipment,
+        ]);
     }
 
     public function saveShipping(Request $request)
@@ -65,7 +68,7 @@ class CheckoutController extends Controller
             $request->input('city'),
             $request->input('state'),
             $request->input('zip'),
-            'USA'
+            'US'
         );
 
         return redirect()->route('shop.checkout.showBilling');
