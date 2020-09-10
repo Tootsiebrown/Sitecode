@@ -13,7 +13,7 @@ class AdsEndedEvent extends Migration
      */
     public function up()
     {
-        Schema::table('ads', function (Blueprint $table) {
+        Schema::table('listings', function (Blueprint $table) {
             $table->boolean('end_event_fired')->default(false);
         });
     }
@@ -25,7 +25,7 @@ class AdsEndedEvent extends Migration
      */
     public function down()
     {
-        Schema::table('ads', function (Blueprint $table) {
+        Schema::table('listings', function (Blueprint $table) {
             $table->dropColumn('end_event_fired');
         });
     }
