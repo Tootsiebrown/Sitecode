@@ -212,7 +212,8 @@ return [
         /*
          * Important catch-all route included
          */
-        Wax\Pages\Providers\PagesServiceProvider::class,
+        // Wax\Pages\Providers\PagesServiceProvider::class,
+        App\Providers\PagesServiceProvider::class
 
 
     ],

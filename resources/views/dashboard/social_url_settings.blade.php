@@ -44,6 +44,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="instagram_url" class="col-sm-4 control-label">Instagram URL </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="instagram_url" value="{{ get_option('instagram_url') }}" name="instagram_url" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="dribble_url" class="col-sm-4 control-label">@lang('app.dribble_url') </label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="dribble_url" value="{{ get_option('dribble_url') }}" name="dribble_url" placeholder="@lang('app.dribble_url')">

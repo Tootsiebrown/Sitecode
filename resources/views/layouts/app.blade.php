@@ -57,55 +57,7 @@
 
     @yield('content')
 
-    <div id="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-
-                    <ul class="footer-menu">
-                        <li> <a href="{{ route('home') }}"><i class="fa fa-home"></i> @lang('app.home')</a></li>
-                    </ul>
-
-                    <div class="footer-heading">
-                        <h3>{{get_option('site_name')}}</h3>
-                    </div>
-
-                    <div class="footer-social-links">
-                        @php
-                            $facebook_url = get_option('facebook_url');
-                            $twitter_url = get_option('twitter_url');
-                            $linked_in_url = get_option('linked_in_url');
-                            $dribble_url = get_option('dribble_url');
-                            $google_plus_url = get_option('google_plus_url');
-                            $youtube_url = get_option('youtube_url');
-                        @endphp
-                        <ul>
-                            @if($facebook_url)
-                                <li><a href="{{$facebook_url}}"><i class="fa fa-facebook"></i> </a> </li>
-                            @endif
-                            @if($twitter_url)
-                                <li><a href="{{$twitter_url}}"><i class="fa fa-twitter"></i> </a> </li>
-                            @endif
-                            @if($google_plus_url)
-                                <li><a href="{{$google_plus_url}}"><i class="fa fa-google-plus"></i> </a> </li>
-                            @endif
-                            @if($youtube_url)
-                                <li><a href="{{$youtube_url}}"><i class="fa fa-youtube"></i> </a> </li>
-                            @endif
-                            @if($linked_in_url)
-                                <li><a href="{{$linked_in_url}}"><i class="fa fa-linkedin"></i> </a> </li>
-                            @endif
-                            @if($dribble_url)
-                                <li><a href="{{$dribble_url}}"><i class="fa fa-dribbble"></i> </a> </li>
-                            @endif
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
+    @include('global.footer')
 
 </div>
 
