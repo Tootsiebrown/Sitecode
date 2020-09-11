@@ -7,7 +7,9 @@ export default class AutoSelectOnFocus {
         this.$component.on('focus', this.handleFocus)
 
         if (this.$component.attr('autofocus')) {
-            this.$component.trigger('focus')
+            window.setTimeout(() => {
+                this.$component.trigger('focus')
+            },150)
         }
     }
 

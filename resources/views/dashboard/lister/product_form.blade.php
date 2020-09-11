@@ -89,16 +89,13 @@
                     <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
                         <label for="condition" class="col-sm-4 control-label">Condition</label>
                         <div class="col-sm-8">
-                            <label>
-                                <select name="condition" class="select2">
-                                    @foreach ($product::getConditions() as $condition)
-                                        <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>
-                                            {{ $condition }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </label>
-
+                            <select name="condition" class="select2">
+                                @foreach ($product::getConditions() as $condition)
+                                    <option value="{{ $condition }}" @if ($condition === $product->condition) selected @endif>
+                                        {{ $condition }}
+                                    </option>
+                                @endforeach
+                            </select>
                             {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}
                         </div>
                     </div>
