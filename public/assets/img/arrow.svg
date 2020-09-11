@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="16px" viewBox="0 0 17 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon/Arrow</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Subs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Cart/Payment_Details" transform="translate(-248.000000, -1193.000000)">
+            <g id="Group-2" transform="translate(-136.000000, 966.000000)">
+                <g id="Group-11" transform="translate(0.000000, 6.000000)">
+                    <g id="Footer/Button" transform="translate(257.000000, 210.000000)">
+                        <g id="Group-10">
+                            <g id="icon/Arrow" transform="translate(124.000000, 7.500000)">
+                                <g id="ic-arrow-back-48px" transform="translate(11.500000, 11.500000) rotate(-180.000000) translate(-11.500000, -11.500000) ">
+                                    <polygon id="Path" points="0 0 23 0 23 23 0 23"></polygon>
+                                    <polygon id="Path" fill="#279989" points="19.1666667 10.5416667 7.50375 10.5416667 12.8560417 5.189375 11.5 3.83333333 3.83333333 11.5 11.5 19.1666667 12.8560417 17.810625 7.50375 12.4583333 19.1666667 12.4583333"></polygon>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
