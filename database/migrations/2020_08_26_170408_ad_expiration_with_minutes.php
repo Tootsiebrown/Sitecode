@@ -15,12 +15,16 @@ class AdExpirationWithMinutes extends Migration
      */
     public function up()
     {
-        $ads = Db::table('listings')->select('*')->get();
-        Schema::table('listings', function (Blueprint $table) {
+        $table = Schema::hasTable('listings')
+            ? 'listings'
+            : 'ads';
+
+        $ads = Db::table($table)->select('*')->get();
+        Schema::table($table, function (Blueprint $table) {
             $table->dropColumn('expired_at');
         });
 
-        Schema::table('listings', function (Blueprint $table) {
+        Schema::table($table, function (Blueprint $table) {
             $table->dateTime('expired_at')->nullable();
         });
 
@@ -34,7 +38,7 @@ class AdExpirationWithMinutes extends Migration
                 ->setMinute(59)
                 ->setSecond(0);
 
-            Db::table('listings')
+            Db::table($table)
                 ->where('id', $ad->id)
                 ->update(['expired_at' => $expiration->toDateTimeString()]);
         }
@@ -47,17 +51,17 @@ class AdExpirationWithMinutes extends Migration
      */
     public function down()
     {
-        $ads = Db::table('listings')->select('*')->get();
-        Schema::table('listings', function (Blueprint $table) {
+        $ads = Db::table($table)->select('*')->get();
+        Schema::table($table, function (Blueprint $table) {
             $table->dropColumn('expired_at');
         });
 
-        Schema::table('listings', function (Blueprint $table) {
+        Schema::table($table, function (Blueprint $table) {
             $table->date('expired_at')->nullable();
         });
 
         foreach($ads as $ad) {
-            DB::table('listings')
+            DB::table($table)
                 ->where('id', $ad->id)
                 ->update(['expired_at' => $ad->expired_at]);
         }

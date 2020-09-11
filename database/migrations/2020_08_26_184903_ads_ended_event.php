@@ -13,7 +13,11 @@ class AdsEndedEvent extends Migration
      */
     public function up()
     {
-        Schema::table('listings', function (Blueprint $table) {
+        $table = Schema::hasTable('listings')
+            ? 'listings'
+            : 'ads';
+
+        Schema::table($table, function (Blueprint $table) {
             $table->boolean('end_event_fired')->default(false);
         });
     }

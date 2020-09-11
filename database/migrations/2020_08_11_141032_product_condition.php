@@ -16,6 +16,9 @@ class ProductCondition extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('new');
+        });
+
+        Schema::table('products', function (Blueprint $table) {
             $table->string('condition')->default(Product::getConditions()[0]);
         });
     }

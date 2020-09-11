@@ -2,7 +2,7 @@
 
 namespace App\ViewComponents;
 
-use \Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\View;
 use Wax\Shop\Services\ShopService;
 

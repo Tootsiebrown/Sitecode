@@ -64,7 +64,7 @@ class CheckoutController extends Controller
             $request->input('email'),
             $request->input('phone'),
             $request->input('address1'),
-            $request->input('address2',),
+            $request->input('address2'),
             $request->input('city'),
             $request->input('state'),
             $request->input('zip'),
