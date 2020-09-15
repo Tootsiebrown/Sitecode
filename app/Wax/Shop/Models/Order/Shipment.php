@@ -33,13 +33,14 @@ class Shipment extends WaxShipment
         );
     }
 
-    public function validateShipping() : bool
+    public function validateShipping(): bool
     {
         if ($this->in_store_pickup) {
             return true;
         }
 
-        if ($this->firstname
+        if (
+            $this->firstname
             && $this->lastname
             && $this->email
             && $this->phone
@@ -53,7 +54,7 @@ class Shipment extends WaxShipment
         return false;
     }
 
-    protected function buildTaxRequest() : Request
+    protected function buildTaxRequest(): Request
     {
         if ($this->in_store_pickup) {
             $taxRequest = (new Request())
