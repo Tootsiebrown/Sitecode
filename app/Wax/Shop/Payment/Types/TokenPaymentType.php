@@ -10,6 +10,9 @@ class TokenPaymentType implements PaymentTypeContract
 {
     protected $token;
     protected $lastFour;
+    protected $zip;
+    protected $brand;
+    protected array $address;
 
     protected function getDriver()
     {
@@ -23,7 +26,15 @@ class TokenPaymentType implements PaymentTypeContract
 
     public function purchase($order, $amount): Payment
     {
-        return $this->getDriver()->purchase($order, $this->token, $amount, $this->lastFour);
+        return $this->getDriver()->purchase(
+            $order,
+            $this->token,
+            $amount,
+            $this->lastFour,
+            $this->zip,
+            $this->brand,
+            $this->address,
+        );
     }
 
     public function capture(Payment $payment)
@@ -35,5 +46,8 @@ class TokenPaymentType implements PaymentTypeContract
     {
         $this->token = $data['token'];
         $this->lastFour = $data['lastFour'];
+        $this->zip = $data['zip'];
+        $this->brand = $data['brand'];
+        $this->address = $data['address'];
     }
 }

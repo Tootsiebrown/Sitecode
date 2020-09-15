@@ -275,6 +275,7 @@ return [
         'SeoTags' => Wax\Core\Facades\SeoTags::class,
         'GoogleAnalytics' => Wax\Core\Facades\GoogleAnalytics::class,
         'BugHerd' => Wax\Core\Facades\BugHerd::class,
+        'Currency' => Wax\Core\Support\Localization\Currency::class,
 
         /**
          * LaraBid

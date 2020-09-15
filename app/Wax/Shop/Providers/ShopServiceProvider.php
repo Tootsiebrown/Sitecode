@@ -3,6 +3,7 @@
 namespace App\Wax\Shop\Providers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Wax\Core\Contracts\FilterAggregatorContract;
 use Wax\Shop\Filters\CatalogFilterAggregator;
 use Wax\Shop\Providers\ShopServiceProvider as WaxShopServiceProvider;
@@ -41,5 +42,7 @@ class ShopServiceProvider extends WaxShopServiceProvider
 
         $this->loadViewsFrom(base_path('vendor/oohology/wax-shop/resources/views/'), 'shop');
         $this->loadTranslationsFrom(base_path('vendor/oohology/wax-shop/resources/lang'), 'shop');
+
+        Gate::define('get-order', 'Wax\Shop\Policies\OrderPolicy@get');
     }
 }

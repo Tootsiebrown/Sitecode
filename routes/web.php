@@ -458,3 +458,24 @@ Route::name('shop.')
             });
 
     });
+
+Route::name('shop::')
+    ->prefix('admin')
+    ->middleware('auth.panel')
+    ->group(function () {
+        /**
+         * Order Manager
+         */
+        Route::get('shop/order/{id}', 'Admin\OrdersController@show')
+            ->name('orderDetails');
+        Route::get('shop/order/{id}/print', 'Admin\OrdersController@print')
+            ->name('orderDetails.print');
+        Route::post('shop/order/{id}/add-tracking/{shipmentId}', 'Admin\OrdersController@addTracking')
+            ->name('orderDetails.addTracking');
+        Route::post('shop/order/{id}/capture-payments', 'Admin\OrdersController@capturePayments')
+            ->name('orderDetails.capturePayments');
+        Route::post('shop/order/{id}/mark-processed')
+            ->uses('Admin\OrdersController@markProcessed')
+            ->name('orderDetails.markProcessed');
+    });
+

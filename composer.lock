@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5c511fe81fbd74aa93cc0de6d9d5394",
+    "content-hash": "32aa7a05351ba64a37e626a812b772ef",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3228,12 +3228,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:oohology/wax-shop.git",
-                "reference": "03c476afc29dc4239d81e040adb084510c0fb8bc"
+                "reference": "0be8c96c132c370244ba5dc0ad8ee2740affc53a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-shop/repository/archive.zip?sha=03c476afc29dc4239d81e040adb084510c0fb8bc",
-                "reference": "03c476afc29dc4239d81e040adb084510c0fb8bc",
+                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-shop/repository/archive.zip?sha=0be8c96c132c370244ba5dc0ad8ee2740affc53a",
+                "reference": "0be8c96c132c370244ba5dc0ad8ee2740affc53a",
                 "shasum": ""
             },
             "require": {
@@ -3284,7 +3284,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/4485490/issues"
             },
-            "time": "2020-08-27T22:30:38+00:00"
+            "time": "2020-09-15T01:39:37+00:00"
         },
         {
             "name": "opis/closure",
@@ -9378,7 +9378,8 @@
         "php": "^7.4",
         "ext-imagick": "*",
         "ext-json": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

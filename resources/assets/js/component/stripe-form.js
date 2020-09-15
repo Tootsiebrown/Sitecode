@@ -7,11 +7,15 @@ export default class StripeForm
         this.$component = selectComponent(element)
         this.$tokenField = this.$component.elements.tokenField
         this.$lastFourField = this.$component.elements.lastFourField
+        this.$zipField = this.$component.elements.zipField
+        this.$brandField = this.$component.elements.brandField
+        this.$submitButton = this.$component.elements.submitButton
+        this.$spinner = this.$component.elements.spinner
 
-        this.stripeElements = stripe.elements();
+        this.stripeElements = stripe.elements()
 
         this.mountCard()
-        this.$component.on('submit', this.handleSubmit);
+        this.$component.on('submit', this.handleSubmit)
     }
 
     mountCard = () => {
@@ -25,33 +29,39 @@ export default class StripeForm
         };
 
         // Create an instance of the card Element.
-        this.card = this.stripeElements.create('card', {style: style});
+        this.card = this.stripeElements.create('card', {style: style})
 
         // Add an instance of the card Element into the `card-element` <div>.
-        this.card.mount('#card-element');
+        this.card.mount('#card-element')
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
 
+        this.$component.off('submit', this.handleSubmit)
+        //this.$submitButton.prop('disabled', true)
+        this.$spinner.removeClass('hidden');
+
         stripe.createToken(this.card).then((result) => {
             if (result.error) {
                 // Inform the customer that there was an error.
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
+                var errorElement = document.getElementById('card-errors')
+                errorElement.textContent = result.error.message
+                this.$component.on('submit', this.handleSubmit)
+                this.$spinner.addClass('hidden');
+                this.$submitButton.prop('disabled', false)
             } else {
                 // Send the token to your server.
-                this.handleStripeToken(result.token);
+                this.handleStripeToken(result.token)
             }
         });
     }
 
     handleStripeToken = (token) => {
-        console.log(token)
-        // I want the card "brand"... can I get the zip, to?
-        this.$component.off('submit', this.handleSubmit)
         this.$tokenField.val(token.id)
         this.$lastFourField.val(token.card.last4)
+        this.$zipField.val(token.card.address_zip)
+        this.$brandField.val(token.card.brand)
         this.$component.submit()
     }
 }

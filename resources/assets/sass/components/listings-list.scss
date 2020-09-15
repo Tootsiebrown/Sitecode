@@ -1,0 +1,59 @@
+.listing-boxes {
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        &::before, &::after {
+            display: none;
+        }
+    }
+
+    &__listing {
+        border-radius: 6px;
+        border-top: 6px solid $color-turquoise;
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: column;
+        margin-bottom: 36px;
+        overflow: hidden;
+
+        @media (min-width: $bp-phablet) {
+            flex-basis: 270px;
+        }
+    }
+
+    &__listing-title {
+        background-color: $color-tan-light;
+        flex-grow: 1;
+        padding: 24px;
+
+        a {
+            color: $color-black;
+        }
+    }
+
+    &__listing-prices {
+        background-color: $color-tan-med;
+        padding: 12px;
+
+        .price-row {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    &__listing-bottom {
+        background-color: $color-brown;
+        color: $color-white;
+        font-size: 14px;
+        padding: 4px;
+        text-align: center;
+
+        input[type=submit] {
+            background-color: transparent;
+            border: none;
+            appearance: none;
+        }
+    }
+}

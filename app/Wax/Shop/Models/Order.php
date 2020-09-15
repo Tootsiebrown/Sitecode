@@ -13,16 +13,6 @@ class Order extends WaxOrder
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
     }
 
-    public function validateShipping(): bool
-    {
-        if (!$this->shipments->count()) {
-            return false;
-        }
-
-        // fulfillment will add shipping later,
-        return true;
-    }
-
     protected function applyBundleDiscounts()
     {
         $orderProductIds = $this->items->pluck('product_id');

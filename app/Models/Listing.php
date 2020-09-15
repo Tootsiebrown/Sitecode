@@ -299,4 +299,9 @@ class Listing extends Model
     {
         return $this->items->count();
     }
+
+    public function getBuyItNowPriceAttribute()
+    {
+        return $this->current_bid() * 1.25;
+    }
 }

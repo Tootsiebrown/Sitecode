@@ -1,9 +1,11 @@
 <div class="checkout__cart">
-    <div class="checkout__cart-link">
-        <a href="{{ route('shop.cart.index') }}">
-            Edit Cart
-        </a>
-    </div>
+    @if (is_null($order->placed_at))
+        <div class="checkout__cart-link">
+            <a href="{{ route('shop.cart.index') }}">
+                Edit Cart
+            </a>
+        </div>
+    @endif
     <ul class="checkout-cart">
         @foreach($order->items as $item)
             <li>
@@ -21,9 +23,14 @@
             </li>
         @endforeach
     </ul>
-    <h3>Subtotal</h3>
-    <div class="checkout-cart__subtotal">
-        ${{ $order->item_gross_subtotal }}
+
+    <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
+
+    <h3>Total</h3>
+    <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">
+        ${{ $order->gross_total }}
     </div>
-    <a href="{{ route('shop.checkout.showBilling') }}" class="checkout-cart__continue">Continue to Payment</a>
+    @if (!empty($cta))
+        <a href="{{ $cta['url'] }}" class="checkout-cart__continue">{{ $cta['text'] }}</a>
+    @endif
 </div>
