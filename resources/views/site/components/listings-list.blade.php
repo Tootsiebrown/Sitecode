@@ -1,4 +1,4 @@
-<div class="listing-boxes__container container">
+<div class="listing-boxes__container @if (!isset($container) || $container === true) container @endif">
     @foreach($listings as $listing)
         <div class="listing-boxes__listing">
             <div class="ads-thumbnail">
@@ -17,8 +17,12 @@
 
             <div class="listing-boxes__listing-prices">
                 @if ($listing->is_auction)
-                    <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($listing->current_bid()) !!}</span>
-                    <span class="ad-box-price">Or buy it now for: {!! themeqx_price($listing->buy_it_now_price) !!},</span>
+                    <div class="price-row">
+                        @lang('app.current_bid'): <span class="btn btn-primary">{!! themeqx_price($listing->current_bid()) !!}</span>
+                    </div>
+                    <div class="price-row">
+                        Or buy it now for: <span class="btn btn-primary">{!! themeqx_price($listing->buy_it_now_price) !!}</span>
+                    </div>
                 @else
                     <div class="price-row">
                         Price: <span class="btn btn-primary">${{ $listing->price }}</span>
@@ -34,8 +38,8 @@
             @if ($listing->is_auction)
                 <a
                   class="listing-boxes__listing-bottom listing-boxes__listing-watch"
-                  href="javascript:;"
-                  data-component="listing-box-watch"
+                  href="#"
+                  data-component="watch-listing"
                   data-slug="{{ $listing->slug }}"
                 >
                     @if( ! $listing->is_my_favorite())

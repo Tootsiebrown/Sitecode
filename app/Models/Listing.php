@@ -83,6 +83,11 @@ class Listing extends Model
         return $query->where('end_event_fired', false);
     }
 
+    public function scopeOfBrand($query, $brandId)
+    {
+        return $query->where('brand_id', $brandId);
+    }
+
     public function getFeaturedImageAttribute()
     {
         return $this->images()->orderBy('featured', 'desc')->first();
@@ -162,7 +167,7 @@ class Listing extends Model
         }
         $user = Auth::user();
 
-        $favorite = Favorite::whereUserId($user->id)->whereAdId($this->id)->first();
+        $favorite = Favorite::where('user_id', $user->id)->where('listing_id', $this->id)->first();
         if ($favorite) {
             return true;
         } else {

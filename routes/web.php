@@ -54,10 +54,10 @@ Route::get('set-country/{country_code}', ['uses' => 'LocationController@setCurre
 Route::get('searchCityJson', ['uses' => 'LocationController@searchCityJson'])->name('searchCityJson');
 
 
-Route::get(
-    'search/{country_code?}/{state_id?}/{city_id?}/{category_slug?}/{brand_slug?}',
-    ['as' => 'search', 'uses' => 'AdsController@search']
-);
+Route::get('search')
+    ->uses('AdsController@search')
+    ->name('search');
+
 Route::get('search-redirect', ['as' => 'search_redirect', 'uses' => 'AdsController@searchRedirect']);
 
 Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsController@adsByUser']);
@@ -65,7 +65,9 @@ Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsContr
 Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
 
-Route::post('save-ad-as-favorite', ['as' => 'save_ad_as_favorite', 'uses' => 'UserController@saveAdAsFavorite']);
+Route::post('watch-listing')
+    ->uses('UserController@watchListing')
+    ->name('watchListing');
 
 Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses' => 'UserController@replyByEmailPost']);
 Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentController@postComments']);

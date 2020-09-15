@@ -10,6 +10,8 @@
 
 /storage/app
 
+/resources/assets/js/ziggy.js
+
 ## Cloned from elsewhere
 /vendor
 /node_modules

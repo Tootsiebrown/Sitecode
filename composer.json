@@ -22,6 +22,7 @@
         "ext-imagick": "*",
         "ext-json": "*",
         "ext-pdo": "*",
+        "ext-zlib": "*",
         "barryvdh/laravel-debugbar": "3.2.*",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
@@ -36,7 +37,7 @@
         "oohology/wax-cms": "1.x-dev",
         "oohology/wax-shop": "dev-cnd",
         "stripe/stripe-php": "^7.2",
-        "ext-zlib": "*"
+        "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

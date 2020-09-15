@@ -807,259 +807,105 @@ class AdsController extends Controller
      * Search ads
      */
 
-    public function search($segment_one = null, $segment_two = null, $segment_three = null, $segment_four = null, $segment_five = null)
+    public function search()
     {
-        $query_category = null;
-
-        $title = '';
         $pagination_output = null;
         $pagination_params = [];
+        $title = null;
 
-        $ads = Listing::active();
+        $listings = Listing::active();
 
         //Search Keyword
-        $search_terms = request('q');
+        $search = request('search');
 
         //Search by keyword
-        if ($search_terms) {
-            $ads = $ads->where('title', 'like', "%{$search_terms}%")->orWhere('description', 'like', "%{$search_terms}%");
+        if ($search) {
+            $listings = $listings->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
         }
 
-        $country_id = null;
-        $state_id = null;
-        $city_id = null;
-        $city_name = null;
-        $category_id = null;
-        $brand_id = null;
+        $category = null;
+        $brand = null;
+        $type = null;
 
-        //get first url segment, generally it will be country code
-        $country = Country::whereCountryCode($segment_one)->first();
-        if ($country) {
-            $country_id = $country->id;
-            $pagination_params[] = $country->country_code;
-            $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$country->iso_3166_3}</a>";
-        }
-
-        $segment_one = explode('-', $segment_one);
-        if (! empty($segment_one[0])) {
-            switch (strtolower($segment_one[0])) {
-                case 'state':
-                    if (! empty($segment_one[1])) {
-                        $state_id = $segment_one[1];
-                    }
-                    break;
-                case 'city':
-                    if (! empty($segment_one[1])) {
-                        $city_id = $segment_one[1];
-                    }
-                    break;
-                case 'cat':
-                    if (! empty($segment_one[1])) {
-                        $category_id = $segment_one[1];
-                    }
-                    break;
-                case 'brand':
-                    if (! empty($segment_one[1])) {
-                        $brand_id = $segment_one[1];
-                    }
-                    break;
+        if (request('category')) {
+            $category = ProductCategory::find(request('category'));
+            if ($category) {
+                $listings = $listings->inCategory((int)request('category'));
+                $title = $category->name;
             }
         }
 
-        $segment_two = explode('-', $segment_two);
-        if (! empty($segment_two[0])) {
-            switch (strtolower($segment_two[0])) {
-                case 'state':
-                    if (! empty($segment_two[1])) {
-                        $state_id = $segment_two[1];
-                    }
-                    break;
-                case 'city':
-                    if (! empty($segment_two[1])) {
-                        $city_id = $segment_two[1];
-                    }
-                    break;
-                case 'cat':
-                    if (! empty($segment_two[1])) {
-                        $category_id = $segment_two[1];
-                    }
-                    break;
-                case 'brand':
-                    if (! empty($segment_two[1])) {
-                        $brand_id = $segment_two[1];
-                    }
-                    break;
+        if (request('brand')) {
+            $brand = Brand::find(request('brand'));
+            if ($brand) {
+                $listings = $listings->ofBrand(request('brand'));
             }
         }
 
-        $segment_three = explode('-', $segment_three);
-        if (! empty($segment_three[0])) {
-            switch (strtolower($segment_three[0])) {
-                case 'state':
-                    if (! empty($segment_three[1])) {
-                        $state_id = $segment_three[1];
-                    }
-                    break;
-                case 'city':
-                    if (! empty($segment_three[1])) {
-                        $city_id = $segment_three[1];
-                    }
-                    break;
-                case 'cat':
-                    if (! empty($segment_three[1])) {
-                        $category_id = $segment_three[1];
-                    }
-                    break;
-                case 'brand':
-                    if (! empty($segment_three[1])) {
-                        $brand_id = $segment_three[1];
-                    }
-                    break;
-            }
-        }
-
-        $segment_four = explode('-', $segment_four);
-        if (! empty($segment_four[0])) {
-            switch (strtolower($segment_four[0])) {
-                case 'state':
-                    if (! empty($segment_four[1])) {
-                        $state_id = $segment_four[1];
-                    }
-                    break;
-                case 'city':
-                    if (! empty($segment_four[1])) {
-                        $city_id = $segment_four[1];
-                    }
-                    break;
-                case 'cat':
-                    if (! empty($segment_four[1])) {
-                        $category_id = $segment_four[1];
-                    }
-                    break;
-                case 'brand':
-                    if (! empty($segment_four[1])) {
-                        $brand_id = $segment_four[1];
-                    }
-                    break;
-            }
-        }
-
-        $segment_five = explode('-', $segment_five);
-        if (! empty($segment_five[0])) {
-            switch (strtolower($segment_five[0])) {
-                case 'state':
-                    if (! empty($segment_five[1])) {
-                        $state_id = $segment_five[1];
-                    }
-                    break;
-                case 'city':
-                    if (! empty($segment_five[1])) {
-                        $city_id = $segment_five[1];
-                    }
-                    break;
-                case 'cat':
-                    if (! empty($segment_five[1])) {
-                        $category_id = $segment_five[1];
-                    }
-                    break;
-                case 'brand':
-                    if (! empty($segment_five[1])) {
-                        $brand_id = $segment_five[1];
-                    }
-                    break;
-            }
-        }
-
-        if (request('category') && is_array('category')) {
-            $ads = $ads->inCategory(request('category'));
-        }
-
-        //dd('Country = '.$country_id.', State = '.$state_id.', City = '.$city_id. ', Cat = '.$category_id.', Brand = '.$brand_id);
-        if ($country_id) {
-            $ads = $ads->whereCountryId($country->id);
-        }
-        if ($state_id) {
-            $ads = $ads->whereStateId($state_id);
-            $query_state = State::find($state_id);
-            if ($query_state) {
-                $pagination_params[] = 'state-' . $state_id;
-                $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_state->state_name}</a>";
-            }
-        }
-        if ($city_id) {
-            $ads = $ads->whereCityId($city_id);
-
-            $query_city = City::find($city_id);
-            if ($query_city) {
-                $pagination_params[] = 'city-' . $state_id;
-                $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_city->city_name}</a>";
-
-                $city_name = $query_city->city_name;
-            }
-        }
-        if ($category_id) {
-            $query_category = ProductCategory::find($category_id);
-            if ($query_category) {
-                $ads = $ads->inCategory($category_id);
-
-                $pagination_params[] = 'cat-' . $category_id . '-' . $query_category->category_slug;
-                $pagination_output .= "<a href='" . route('search', $pagination_params) . "' class='btn btn-warning'>{$query_category->category_name}</a>";
-
-                $title .= ' ' . $query_category->name;
-            }
-        }
-
-        if ($city_id) {
-            if ($query_city) {
-                if ($title) {
-                    $title .= ' ' . $query_city->city_name;
-                } else {
-                    $title .= trans('app.ads') . ' ' . trans('app.in') . ' ' . $query_city->city_name;
-                }
-            }
-        }
-
-        if ($state_id) {
-            if ($query_state) {
-                if ($title) {
-                    $title .= ', ' . $query_state->state_name;
-                } else {
-                    $title .= trans('app.ads') . ' ' . trans('app.in') . ' ' . $query_state->state_name;
-                }
-            }
-        }
-
-        if ($country) {
-            if ($title) {
-                $title .= ', ' . $country->country_name;
-            } else {
-                $title .= trans('app.ads') . ' ' . trans('app.in') . ' ' . $country->country_name;
-            }
-        }
         if (! $title) {
-            $title .= trans('app.ads');
+            $title = 'Search Results';
         }
 
         //Sort by filter
-        if (request('shortBy')) {
-            switch (request('shortBy')) {
+        if (request('sortBy')) {
+            switch (request('sortBy')) {
                 case 'price_high_to_low':
-                    $ads = $ads->orderBy('price', 'desc');
+                    $listings = $listings->orderBy('price', 'desc');
                     break;
                 case 'price_low_to_high':
-                    $ads = $ads->orderBy('price', 'asc');
+                    $listings = $listings->orderBy('price', 'asc');
                     break;
                 case 'latest':
-                    $ads = $ads->orderBy('id', 'desc');
+                    $listings = $listings->orderBy('id', 'desc');
                     break;
             }
         } else {
-            $ads = $ads->orderBy('id', 'desc');
+            $listings = $listings->orderBy('id', 'desc');
         }
 
-        $ads = $ads->paginate(20);
+        $listings = $listings->paginate(20);
 
-        return view('search', compact('ads', 'title', 'pagination_output', 'category_id', 'city_id', 'city_name', 'query_category'));
+        $level1Cat = null;
+        $level2Cat = null;
+        $level2Cat = null;
+        $level3Cat = null;
+        $categoryLevel = 1;
+        if ($category) {
+            $level1Cat = $category;
+        }
+        if ($category && $category->parent) {
+            $categoryLevel = 2;
+            $level1Cat = $category->parent;
+            $level2Cat = $category;
+
+            if ($category->parent->parent) {
+                $categoryLevel = 3;
+                $level1Cat = $category->parent->parent;
+                $level2Cat = $category->parent;
+                $level3Cat = $category;
+            }
+        }
+
+        $searchState = [
+            'search' => $search,
+            'category' => request('category'),
+            'brand' => request('brand'),
+            'type' => request('type'),
+        ];
+
+        return view('search', [
+            'ads' => $listings,
+            'title' => $title,
+            'brand' => $brand,
+            'pagination_output' => $pagination_output,
+            'category' => $category,
+            'categories' => $this->getDenormalizedProductCategories(),
+            'categoryLevel' => $categoryLevel,
+            'level1Cat' => $level1Cat,
+            'level2Cat' => $level2Cat,
+            'level3Cat' => $level3Cat,
+            'searchState' => $searchState,
+        ]);
     }
 
     /**

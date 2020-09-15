@@ -48,9 +48,11 @@
 
     &:hover {
         background-color: $color-turquoise;
+        color: $color-tan-light;
     }
     &:focus {
         background-color: $color-navy;
+        color: $color-tan-light;
     }
 }
 

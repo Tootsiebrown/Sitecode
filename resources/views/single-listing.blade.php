@@ -102,7 +102,7 @@
                                     Pay now!
                                 </a>
                             @endif
-                        @else)
+                        @else
                             <p class="single-ad__minimum-new-bid-amount">
                                 Enter a bid of ${{ $listing->current_bid() + 1 }} or higher
                             </p>
@@ -126,9 +126,10 @@
                                 </form>
                             @endif
                         @endif
-                    @endif
-
-                    @if ($listing->is_set_price)
+                    @elseif ($listing->is_set_price)
+                        <p class="single-ad__current-bid-amount">
+                            {!! themeqx_price($listing->price) !!}
+                        </p>
                         <form action="{{ route('shop.cart.add') }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
                             @csrf
                             <input type="hidden" name="customizations[1]" value="{{ $listing->id }}">
@@ -151,7 +152,7 @@
                         @endif
 
                         <button class="btn btn-primary">Add to Cart @svg(cart)</button>
-                        <a href="javascript:;" id="save_as_favorite" data-slug="{{ $listing->slug }}" class="btn btn-default">
+                        <a href="#" data-component="watch-listing" data-slug="{{ $listing->slug }}" class="btn btn-default">
                             @if( ! $listing->is_my_favorite())
                                 @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
                             @else
@@ -202,7 +203,7 @@
                         <h4>Specifications</h4>
                         <ul>
                             @foreach($listing::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel)
-                                @if (!is_null($listing->$fieldName))
+                                @if (!empty($listing->$fieldName))
                                     <li><span class="single-ad__details-item">{{ $fieldLabel }}</span>: {{ $listing->$fieldName }}</li>
                                 @endif
                             @endforeach
@@ -552,26 +553,6 @@
         $(function(){
             $('#onClickShowPhone').click(function(){
                 $('#ShowPhoneWrap').html('<i class="fa fa-phone"></i> {{ $listing->seller_phone }}');
-            });
-
-            $('#save_as_favorite').click(function(){
-                var selector = $(this);
-                var slug = selector.data('slug');
-
-                $.ajax({
-                    type : 'POST',
-                    url : '{{ route('save_ad_as_favorite') }}',
-                    data : { slug : slug, action: 'add',  _token : '{{ csrf_token() }}' },
-                    success : function (data) {
-                        if (data.status == 1){
-                            selector.html(data.msg);
-                        }else {
-                            if (data.redirect_url){
-                                location.href= data.redirect_url;
-                            }
-                        }
-                    }
-                });
             });
 
             $('#replyByEmailForm').submit(function(e){

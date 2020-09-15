@@ -16,6 +16,7 @@ import StickyThing from "./component/sticky-thing";
 import AutoSelectOnFocus from "./component/auto-select-on-focus";
 import ListingBinBulkEditor from "./component/listing-bin-bulk-editor";
 import BillingSameAsShipping from "./component/billing-same-as-shipping";
+import WatchListing from "./component/watch-listing";
 
 export default function Site() {
 
@@ -40,6 +41,7 @@ export default function Site() {
         selectComponent('auto-select-on-focus').each((index, element) => new AutoSelectOnFocus(element))
         selectComponent('listing-bin-bulk-editor').each((index, element) => new ListingBinBulkEditor(element))
         selectComponent('billing-same-as-shipping').each((index, element) => new BillingSameAsShipping(element))
+        selectComponent('watch-listing').each((index, element) => new WatchListing(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []
