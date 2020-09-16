@@ -188,7 +188,6 @@ class CheckoutController extends Controller
 
         $this->inventoryManager->markItemsSold($order);
 
-
         return redirect()->route('shop.checkout.confirmation');
     }
 

@@ -14,6 +14,14 @@ h4 {
     color: $color-navy;
 }
 
+#app {
+    padding-top: 68px;
+
+    @media (min-width: $bp-tablet) {
+        padding-top: 134px;
+    }
+}
+
 .page-header {
     background: none;
 }
