@@ -144,6 +144,9 @@
                                 </div>
                             </div>
                         </form>
+                        <p class="single-ad__available-inventory">
+                            Available Inventory: {{ $listing->availableItems->count() }}
+                        </p>
                     @endif
 
                     @if ($listing->is_auction && $listing->is_bid_active())

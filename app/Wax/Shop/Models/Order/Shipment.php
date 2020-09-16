@@ -2,11 +2,15 @@
 
 namespace App\Wax\Shop\Models\Order;
 
+use Wax\Shop\Events\OrderChanged\CartContentsChangedEvent;
+use Wax\Shop\Exceptions\ValidationException;
+use Wax\Shop\Models\Order\Item;
 use Wax\Shop\Models\Order\Shipment as WaxShipment;
 use Wax\Shop\Tax\Support\Address;
 use Wax\Shop\Tax\Support\LineItem;
 use Wax\Shop\Tax\Support\Request;
 use Wax\Shop\Tax\Support\Shipping;
+use App\Wax\Shop\Validators\OrderItemValidator;
 
 class Shipment extends WaxShipment
 {

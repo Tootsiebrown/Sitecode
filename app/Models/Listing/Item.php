@@ -14,4 +14,9 @@ class Item extends Model
     {
         return $this->belongsTo(Listing::class, 'listing_id');
     }
+
+    public function scopeAvailable($query)
+    {
+        return $query->whereNull('order_item_id');
+    }
 }

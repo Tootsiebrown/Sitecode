@@ -309,4 +309,9 @@ class Listing extends Model
     {
         return $this->current_bid() * 1.25;
     }
+
+    public function availableItems()
+    {
+        return $this->items()->available();
+    }
 }

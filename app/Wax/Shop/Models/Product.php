@@ -15,11 +15,6 @@ class Product extends WaxProduct
         return $this->hasMany(Customization::class);
     }
 
-    public function getEffectiveInventoryAttribute()
-    {
-        return 1000;
-    }
-
     public function images()
     {
         return collect();
