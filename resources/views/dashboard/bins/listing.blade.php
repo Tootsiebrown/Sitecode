@@ -95,6 +95,9 @@
                                     Bin
                                 </th>
                                 <th>
+                                    Sold
+                                </th>
+                                <th>
                                     <!-- nothing here -->
                                 </th>
                             </tr>
@@ -113,6 +116,11 @@
                                             >
                                             {!! $errors->has('bin.' . $item->id)? '<p class="help-block">'.$errors->first('bin.' . $item->id).'</p>':'' !!}
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if ($item->order_item_id)
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                        @endif
                                     </td>
                                     @if ($loop->first)
                                         <td rowspan="{{ $listing->items->count() }}" style="vertical-align: top;">

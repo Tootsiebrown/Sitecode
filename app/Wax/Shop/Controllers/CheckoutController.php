@@ -5,6 +5,8 @@ namespace App\Wax\Shop\Controllers;
 use App\Http\Controllers\Controller;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Payment\Types\TokenPaymentType;
+use App\Wax\Shop\Support\CheckoutInventoryManager;
+use Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -12,11 +14,16 @@ use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
 {
+    /** @var ShopService */
     protected $shopService;
 
-    public function __construct(ShopService $shopService)
+    /** @var CheckoutInventoryManager */
+    protected $inventoryManager;
+
+    public function __construct(ShopService $shopService, CheckoutInventoryManager $inventoryManager)
     {
         $this->shopService = $shopService;
+        $this->inventoryManager = $inventoryManager;
     }
 
     public function checkout()
@@ -159,52 +166,30 @@ class CheckoutController extends Controller
             'address' => $this->getBillingAddress($request, $order),
         ]);
 
+        try {
+            $this->inventoryManager->reserveItems($order);
+        } catch (Throwable $e) {
+            $this->releaseItems($order);
 
+            throw $e;
+        }
 
-        DB::transaction(function () use ($order, $token) {
-            $this->reserveItems($order);
+        try {
             $this->shopService->applyPayment(
                 $token
             );
+        } catch (Throwable $e) {
+            $this->inventoryManager->releaseItems($order);
 
-            $order->refresh();
+            throw $e;
+        }
 
-            $this->markItemsSold($order);
-        });
+        $order->refresh();
+
+        $this->inventoryManager->markItemsSold($order);
 
 
         return redirect()->route('shop.checkout.confirmation');
-    }
-
-    protected function reserveItems(Order $order)
-    {
-        $order
-            ->default_shipment
-            ->items
-            ->each(function ($item) {
-                $result = DB::table('listing_items')
-                    ->where('listing_id', $item->listing_id)
-                    ->limit($item->quantity)
-                    ->lockForUpdate()
-                    ->get();
-
-                if ($result->count() < $item->quantity) {
-                    throw ValidationException::withMessages(['payment' => 'Insufficient Inventory for ' . $item->name]);
-                }
-            });
-    }
-
-    protected function markItemsSold(Order $order)
-    {
-        $order
-            ->default_shipment
-            ->items
-            ->each(function ($item) {
-                DB::table('listing_items')
-                    ->where('listing_id', $item->listing_id)
-                    ->limit($item->quantity)
-                    ->update(['order_item_id' => $item->id]);
-            });
     }
 
     protected function getBillingAddress(Request $request, Order $order)

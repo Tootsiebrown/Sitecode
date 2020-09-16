@@ -107,6 +107,7 @@ class AdsController extends Controller
         }
 
         return $adQuery
+            ->withoutGlobalScopes()
             ->orderBy('title', 'asc')
             ->paginate(20);
     }

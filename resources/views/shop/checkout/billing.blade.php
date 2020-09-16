@@ -96,7 +96,7 @@
                                         id="phone"
                                         value="{{ old('phone') ?? $lUser->phone ?? '' }}"
                                     >
-                                    @include('site.components.field-error', ['field' => 'first_name'])
+                                    @include('site.components.field-error', ['field' => 'phone'])
                                 </div>
                             </div>
                             <div class="row">
