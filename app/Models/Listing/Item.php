@@ -12,7 +12,7 @@ class Item extends Model
 
     public function listing()
     {
-        return $this->belongsTo(Listing::class, 'listing_id');
+        return $this->belongsTo(Listing::class, 'listing_id')->withoutGlobalScopes();
     }
 
     public function scopeAvailable($query)

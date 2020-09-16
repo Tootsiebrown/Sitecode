@@ -9,9 +9,14 @@
     <ul class="checkout-cart">
         @foreach($order->items as $item)
             <li>
-                <a href="{{ $item->listing->url }}">
+                @if ($item->listing->has_available_items)
+                    <a href="{{ $item->listing->url }}">
+                        {{ $item->listing->title }}
+                    </a>
+                @else
                     {{ $item->listing->title }}
-                </a>
+                @endif
+
                 <div class="checkout-cart__details">
                     <div class="checkout-cart__price">
                         ${{ $item->unit_price }}

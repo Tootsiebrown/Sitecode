@@ -15,6 +15,7 @@ use App\ProductCategory;
 use App\State;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +30,15 @@ class Listing extends Model
     ];
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('withInventory', function (Builder $query) {
+            $query->has('availableItems');
+        });
+    }
 
     public function user()
     {
@@ -313,5 +323,10 @@ class Listing extends Model
     public function availableItems()
     {
         return $this->items()->available();
+    }
+
+    public function getHasAvailableItemsAttribute()
+    {
+        return $this->availableItems->count() > 0;
     }
 }

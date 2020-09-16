@@ -25,7 +25,7 @@ class Item extends WaxItem
             return $this->memoizedListing;
         }
 
-        $this->memoizedListing = Listing::find($this->listing_id);
+        $this->memoizedListing = Listing::withoutGlobalScopes()->find($this->listing_id);
 
         return $this->memoizedListing;
     }
