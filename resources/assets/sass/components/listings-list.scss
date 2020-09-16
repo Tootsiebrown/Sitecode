@@ -22,6 +22,15 @@
         }
     }
 
+    &__image {
+        a {
+            display: block;
+        }
+        img {
+            width: 100%;
+        }
+    }
+
     &__listing-title {
         background-color: $color-tan-light;
         flex-grow: 1;

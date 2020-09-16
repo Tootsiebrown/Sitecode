@@ -1,13 +1,13 @@
 <div class="listing-boxes__container @if (!isset($container) || $container === true) container @endif">
     @foreach($listings as $listing)
         <div class="listing-boxes__listing">
-            <div class="ads-thumbnail">
-                <a href="{{ route('single_ad', [$listing->id, $listing->slug]) }}">
-                    @if ($listing->featured_image)
+            @if ($listing->featured_image)
+                <div class="listing-boxes__image">
+                    <a href="{{ route('single_ad', [$listing->id, $listing->slug]) }}">
                         <img itemprop="image"  src="{{ $listing->featured_image->thumb_url }}" class="img-responsive" alt="{{ $listing->title }}">
-                    @endif
-                </a>
-            </div>
+                    </a>
+                </div>
+            @endif
 
             <div class="listing-boxes__listing-title">
                 <a class="" href="{{ route('single_ad', [$listing->id, $listing->slug]) }}" title="{{ $listing->title }}">
