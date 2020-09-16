@@ -18,7 +18,7 @@ class NavCartComponent implements Htmlable
     public function toHtml()
     {
         $order = $this->shopService->getActiveOrder();
-        $items = $order->default_shipment->items;
+        $items = $order->items;
 
         return View::make('site.components.nav-cart')
             ->with([
