@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Wax\Shop\Exceptions\ValidationException;
-use Wax\Shop\Payment\Types\CreditCard;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -52,20 +51,20 @@ class CheckoutController extends Controller
         $this->validate(
             $request,
             [
-                'first_name' => 'required_unless:in_store_pickup,1',
-                'last_name' => 'required_unless:in_store_pickup,1',
-                'email' => 'required_unless:in_store_pickup,1',
-                'phone' => 'required_unless:in_store_pickup,1',
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required',
+                'phone' => 'required',
                 'address1' => 'required_unless:in_store_pickup,1',
                 'city' => 'required_unless:in_store_pickup,1',
                 'state' => 'required_unless:in_store_pickup,1',
                 'zip' => 'required_unless:in_store_pickup,1',
             ],
             [
-                'first_name.required_unless' => ':attribute is required.',
-                'last_name.required_unless' => ':attribute is required.',
-                'email.required_unless' => ':attribute is required.',
-                'phone.required_unless' => ':attribute is required.',
+                'first_name.required' => ':attribute is required.',
+                'last_name.required' => ':attribute is required.',
+                'email.required' => ':attribute is required.',
+                'phone.required' => ':attribute is required.',
                 'address1.required_unless' => ':attribute is required.',
                 'city.required_unless' => ':attribute is required.',
                 'state.required_unless' => ':attribute is required.',
@@ -80,12 +79,9 @@ class CheckoutController extends Controller
 
         if ($request->input('in_store_pickup')) {
             $shipment->in_store_pickup = true;
-            $shipment->save();
-
-            return redirect()->route('shop.checkout.showBilling');
+        } else {
+            $shipment->in_store_pickup = false;
         }
-
-        $shipment->in_store_pickup = false;
         $shipment->save();
 
         $shipment->setAddress(
@@ -94,11 +90,11 @@ class CheckoutController extends Controller
             '',
             $request->input('email'),
             $request->input('phone'),
-            $request->input('address1'),
-            $request->input('address2'),
-            $request->input('city'),
-            $request->input('state'),
-            $request->input('zip'),
+            $request->input('address1', ''),
+            $request->input('address2', ''),
+            $request->input('city', ''),
+            $request->input('state', ''),
+            $request->input('zip', ''),
             'US'
         );
 
@@ -163,11 +159,52 @@ class CheckoutController extends Controller
             'address' => $this->getBillingAddress($request, $order),
         ]);
 
-        $this->shopService->applyPayment(
-            $token
-        );
+
+
+        DB::transaction(function () use ($order, $token) {
+            $this->reserveItems($order);
+            $this->shopService->applyPayment(
+                $token
+            );
+
+            $order->refresh();
+
+            $this->markItemsSold($order);
+        });
+
 
         return redirect()->route('shop.checkout.confirmation');
+    }
+
+    protected function reserveItems(Order $order)
+    {
+        $order
+            ->default_shipment
+            ->items
+            ->each(function ($item) {
+                $result = DB::table('listing_items')
+                    ->where('listing_id', $item->listing_id)
+                    ->limit($item->quantity)
+                    ->lockForUpdate()
+                    ->get();
+
+                if ($result->count() < $item->quantity) {
+                    throw ValidationException::withMessages(['payment' => 'Insufficient Inventory for ' . $item->name]);
+                }
+            });
+    }
+
+    protected function markItemsSold(Order $order)
+    {
+        $order
+            ->default_shipment
+            ->items
+            ->each(function ($item) {
+                DB::table('listing_items')
+                    ->where('listing_id', $item->listing_id)
+                    ->limit($item->quantity)
+                    ->update(['order_item_id' => $item->id]);
+            });
     }
 
     protected function getBillingAddress(Request $request, Order $order)

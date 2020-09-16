@@ -28,6 +28,7 @@ class StripeDriver
             'amount' => $amount,
             'currency' => 'USD',
             'token' => $token,
+            'description' => 'order_id ' . $order->id,
         ])->send();
 
         if ($response->isSuccessful()) {

@@ -42,6 +42,55 @@
                         <form method="POST" action="{{ route('shop.checkout.saveShipping') }}">
                             @csrf
                             <input type="hidden" name="in_store_pickup" value="1">
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="first-name">First Name *</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="first_name"
+                                        id="first-name"
+                                        value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"
+                                    >
+                                    @include('site.components.field-error', ['field' => 'first_name'])
+                                </div>
+                                <div class="col-xs-6">
+                                    <label for="last-name">Last Name *</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="last_name"
+                                        id="last-name"
+                                        value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"
+                                    >
+                                    @include('site.components.field-error', ['field' => 'last_name'])
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <label for="email">Email *</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="email"
+                                        id="email"
+                                        value="{{ old('email') ?? $shipment->email ?? $lUser->email ?? '' }}"
+                                    >
+                                    @include('site.components.field-error', ['field' => 'email'])
+                                </div>
+                                <div class="col-xs-6">
+                                    <label for="phone">Phone Number *</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="phone"
+                                        id="phone"
+                                        value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone ?? '' }}"
+                                    >
+                                    @include('site.components.field-error', ['field' => 'phone'])
+                                </div>
+                            </div>
                             <button type="submit" name="submit" value="submit" class="btn btn-primary">
                                 Continue to Payment
                             </button>

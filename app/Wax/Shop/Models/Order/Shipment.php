@@ -97,4 +97,13 @@ class Shipment extends WaxShipment
 
         return $taxRequest;
     }
+
+    public function getListingIdsAttribute()
+    {
+        return $this
+            ->items
+            ->map(function ($item) {
+                return $item->listing_id;
+            });
+    }
 }

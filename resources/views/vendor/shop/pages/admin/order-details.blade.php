@@ -46,7 +46,11 @@
                         @endif
                         <p>
                             <strong>Ship To:</strong><br>
-                            {!! \Wax\Data::formatAddress($shipment, true) !!}
+                            @if ($shipment->in_store_pickup)
+                                In-store-pickup
+                            @else
+                                {!! \Wax\Data::formatAddress($shipment, true) !!}
+                            @endif
                         </p>
                         @include ('shop::components.admin.order-details.cart', ['shipment' => $shipment])
                         @include ('shop::components.admin.order-details.shipment-details', ['shipment' => $shipment])

@@ -3,6 +3,7 @@
 namespace App\Wax\Shop\Models\Order;
 
 use App\Models\Listing;
+use App\Models\Listing\Item as ListingItem;
 use Wax\Shop\Models\Order\Item as WaxItem;
 
 class Item extends WaxItem
@@ -27,6 +28,11 @@ class Item extends WaxItem
         $this->memoizedListing = Listing::find($this->listing_id);
 
         return $this->memoizedListing;
+    }
+
+    public function listingItems()
+    {
+        return $this->hasMany(ListingItem::class, 'order_item_id');
     }
 
     public function getUrlAttribute(): ?string
