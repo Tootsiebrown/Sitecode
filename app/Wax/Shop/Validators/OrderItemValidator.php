@@ -15,7 +15,7 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
      * @param Product $product
      * @return bool
      */
-    protected function checkInventory(Product $product) : bool
+    protected function checkInventory(Product $product): bool
     {
         if ($this->itemId) {
             // this is already in the cart, don't double the pending quantity
@@ -28,7 +28,7 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
                 ->where('product_id', $product->id)
                 ->when($this->customizations->isNotEmpty(), function ($query) {
                     $query->whereHas('customizations', function (Builder $query) {
-                        foreach($this->customizations as $customizationId => $customizationValue) {
+                        foreach ($this->customizations as $customizationId => $customizationValue) {
                             if ($customizationId === 1) {
                                 $query->where('customization_id', $customizationId)
                                     ->where('value', $customizationValue);
