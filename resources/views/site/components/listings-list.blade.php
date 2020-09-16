@@ -4,7 +4,7 @@
             <div class="ads-thumbnail">
                 <a href="{{ route('single_ad', [$listing->id, $listing->slug]) }}">
                     @if ($listing->featured_image)
-                        <img itemprop="image"  src="{{ $listing->featured_image->url }}" class="img-responsive" alt="{{ $listing->title }}">
+                        <img itemprop="image"  src="{{ $listing->featured_image->thumb_url }}" class="img-responsive" alt="{{ $listing->title }}">
                     @endif
                 </a>
             </div>

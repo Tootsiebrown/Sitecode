@@ -2,6 +2,7 @@
 
 namespace App\Wax\Shop\Providers;
 
+use App\Wax\Shop\Validators\OrderItemValidator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Wax\Core\Contracts\FilterAggregatorContract;
@@ -10,6 +11,7 @@ use Wax\Shop\Providers\ShopServiceProvider as WaxShopServiceProvider;
 use Wax\Shop\Repositories\ProductRepository;
 use Wax\Shop\Services\ShopService;
 use Wax\Shop\Tax\Contracts\TaxDriverContract;
+use Wax\Shop\Validators\OrderItemValidator as WaxOrderItemValidator;
 
 class ShopServiceProvider extends WaxShopServiceProvider
 {
@@ -33,6 +35,11 @@ class ShopServiceProvider extends WaxShopServiceProvider
             function ($app) {
                 return $app->make(config('wax.shop.tax.driver'));
             }
+        );
+
+        $this->app->bind(
+            WaxOrderItemValidator::class,
+            OrderItemValidator::class
         );
     }
 
