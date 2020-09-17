@@ -1,0 +1,99 @@
+.listing-boxes {
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        &::before, &::after {
+            display: none;
+        }
+    }
+
+    &__listing {
+        border-radius: 6px;
+        border-top: 6px solid $color-turquoise;
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: column;
+        margin-bottom: 36px;
+        overflow: hidden;
+
+        @media (min-width: $bp-phablet) {
+            flex-basis: 270px;
+        }
+    }
+
+    &__image {
+        a {
+            display: block;
+        }
+        img {
+            width: 100%;
+        }
+    }
+
+    &__listing-title {
+        background-color: $color-tan-light;
+        flex-grow: 1;
+        padding: 24px;
+
+        a {
+            color: $color-black;
+        }
+    }
+
+    &__listing-prices {
+        background-color: $color-tan-med;
+        padding: 12px;
+
+        .price-row {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+
+            .btn {
+                &:hover {
+                    cursor: default;
+                    background-color: $color-turquoise;
+                }
+            }
+        }
+    }
+
+    &__listing-bottom {
+        background-color: $color-brown;
+        color: $color-white;
+        font-size: 14px;
+        padding: 0;
+
+        &:hover {
+            background-color: $color-navy;
+            cursor: pointer;
+        }
+
+        input[type=submit] {
+            appearance: none;
+            background-color: transparent;
+            border: none;
+            display: block;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            width: 100%;
+        }
+    }
+    &__listing-watch
+    {
+        color: $color-white;
+        display: block;
+        height:32px;
+        line-height: 32px;
+        text-align: center;
+        &:hover {
+            color: $color-white;
+        }
+        &:focus {
+            color: $color-white;
+        }
+    }
+}

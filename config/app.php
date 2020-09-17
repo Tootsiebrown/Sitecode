@@ -197,6 +197,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Wax\Shop\Providers\ShopServiceProvider::class,
+
         /**
          *  LaraBid
          */
@@ -210,7 +212,8 @@ return [
         /*
          * Important catch-all route included
          */
-        Wax\Pages\Providers\PagesServiceProvider::class,
+        // Wax\Pages\Providers\PagesServiceProvider::class,
+        App\Providers\PagesServiceProvider::class
 
 
     ],
@@ -272,6 +275,7 @@ return [
         'SeoTags' => Wax\Core\Facades\SeoTags::class,
         'GoogleAnalytics' => Wax\Core\Facades\GoogleAnalytics::class,
         'BugHerd' => Wax\Core\Facades\BugHerd::class,
+        'Currency' => Wax\Core\Support\Localization\Currency::class,
 
         /**
          * LaraBid

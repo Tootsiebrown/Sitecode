@@ -15,6 +15,7 @@ use App\ProductCategory;
 use App\State;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,9 +26,19 @@ class Listing extends Model
 
     protected $casts = [
         'expired_at' => 'datetime',
+        'price' => 'float',
     ];
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('withInventory', function (Builder $query) {
+            $query->has('availableItems');
+        });
+    }
 
     public function user()
     {
@@ -65,6 +76,26 @@ class Listing extends Model
                 $query->whereIn('product_categories.id', $categoryId);
             });
         }
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->where('expired_at', '<=', Carbon::now()->toDateTimeString());
+    }
+
+    public function scopeTypeIsAuction($query)
+    {
+        return $query->where('type', 'auction');
+    }
+
+    public function scopeEndEventNotFired($query)
+    {
+        return $query->where('end_event_fired', false);
+    }
+
+    public function scopeOfBrand($query, $brandId)
+    {
+        return $query->where('brand_id', $brandId);
     }
 
     public function getFeaturedImageAttribute()
@@ -120,12 +151,6 @@ class Listing extends Model
         return $created_date_time;
     }
 
-    public function expired_date()
-    {
-        $created_date_time = date(get_option('date_format_custom'), strtotime($this->expired_at));
-        return $created_date_time;
-    }
-
 
     public function status_context()
     {
@@ -152,7 +177,7 @@ class Listing extends Model
         }
         $user = Auth::user();
 
-        $favorite = Favorite::whereUserId($user->id)->whereAdId($this->id)->first();
+        $favorite = Favorite::where('user_id', $user->id)->where('listing_id', $this->id)->first();
         if ($favorite) {
             return true;
         } else {
@@ -184,7 +209,7 @@ class Listing extends Model
         return false;
     }
 
-    public function current_bid()
+    public function current_bid(): float
     {
         $last_bid = $this->price;
 
@@ -195,33 +220,30 @@ class Listing extends Model
         return $last_bid;
     }
 
+    public function getWinningBidAttribute()
+    {
+        return $this->bids->sortByDesc('bid_amount')->first();
+    }
+
     public function is_bid_active()
     {
-        $status = true;
-        if ($this->type == 'auction') {
-            $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
-            if ($is_accepted_bid) {
-                $status = false;
-            }
-
-            $expired_date = Carbon::createFromTimestamp(strtotime($this->expired_at));
-            if ($expired_date->isPast()) {
-                $status = false;
-            }
+        if (
+            $this->type == 'auction'
+            && $this->expired_at->isPast()
+        ) {
+            return false;
         }
-        return $status;
+
+        return true;
     }
 
     public function is_bid_accepted()
     {
-        $status = false;
-        if ($this->type == 'auction') {
-            $is_accepted_bid = Bid::whereAdId($this->id)->whereIsAccepted(1)->first();
-            if ($is_accepted_bid) {
-                $status = true;
-            }
+        if ($this->type == 'auction' && $this->bids->isNotEmpty()) {
+            return true;
         }
-        return $status;
+
+        return false;
     }
 
     public function premium_icon()
@@ -265,8 +287,46 @@ class Listing extends Model
         return false;
     }
 
+    public function getUrlAttribute()
+    {
+        return route('single_ad', [
+            'id' => $this->id,
+            'slug' => $this->slug,
+        ]);
+    }
+
     public function items()
     {
         return $this->hasMany(Item::class, 'listing_id');
+    }
+
+    public function getIsAuctionAttribute(): bool
+    {
+        return $this->type === 'auction';
+    }
+
+    public function getIsSetPriceAttribute(): bool
+    {
+        return $this->type === 'set-price';
+    }
+
+    public function getQuantityAttribute(): int
+    {
+        return $this->items->count();
+    }
+
+    public function getBuyItNowPriceAttribute()
+    {
+        return $this->current_bid() * 1.25;
+    }
+
+    public function availableItems()
+    {
+        return $this->items()->available();
+    }
+
+    public function getHasAvailableItemsAttribute()
+    {
+        return $this->availableItems->count() > 0;
     }
 }

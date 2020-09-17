@@ -338,7 +338,7 @@ class UserController extends Controller
      * @return array
      */
 
-    public function saveAdAsFavorite(Request $request)
+    public function watchListing(Request $request)
     {
         if (! Auth::check()) {
             return ['status' => 0, 'msg' => trans('app.error_msg'), 'redirect_url' => route('login')];
@@ -347,18 +347,19 @@ class UserController extends Controller
         $user = Auth::user();
 
         $slug = $request->slug;
-        $ad = Listing::whereSlug($slug)->first();
+        $listing = Listing::whereSlug($slug)->first();
 
-        if ($ad) {
-            $get_previous_favorite = Favorite::whereUserId($user->id)->whereAdId($ad->id)->first();
-            if (! $get_previous_favorite) {
-                Favorite::create(['user_id' => $user->id, 'ad_id' => $ad->id]);
-                return ['status' => 1, 'action' => 'added', 'msg' => trans('app.remove_from_favorite') . '<i class="fa fa-eye-slash"></i> '];
+        if ($listing) {
+            $existingFavorite = Favorite::where('user_id', $user->id)->where('listing_id', $listing->id)->first();
+            if (! $existingFavorite) {
+                Favorite::create(['user_id' => $user->id, 'listing_id' => $listing->id]);
+                return ['status' => 1, 'action' => 'added', 'msg' => trans('app.remove_from_favorite') . ' <i class="fa fa-eye-slash"></i> '];
             } else {
-                $get_previous_favorite->delete();
-                return ['status' => 1, 'action' => 'removed', 'msg' => trans('app.save_ad_as_favorite') . '<i class="fa fa-eye"></i> '];
+                $existingFavorite->delete();
+                return ['status' => 1, 'action' => 'removed', 'msg' => trans('app.save_ad_as_favorite') . ' <i class="fa fa-eye"></i> '];
             }
         }
+
         return ['status' => 0, 'msg' => trans('app.error_msg')];
     }
 

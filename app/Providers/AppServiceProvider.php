@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Option;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;

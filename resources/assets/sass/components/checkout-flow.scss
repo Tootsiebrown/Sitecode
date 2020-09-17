@@ -1,0 +1,62 @@
+.checkout-flow {
+    display: none;
+    font-size: 24px;
+    font-weight: bold;
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+
+    @media (min-width: $bp-tablet) {
+        display: block;
+    }
+
+    li {
+        $spacerWidth: 64px;
+        display: inline-block;
+        padding-right: calc(#{$spacerWidth} + 16px);
+        position: relative;
+
+        &::after {
+            content: '';
+            height: 1px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: $spacerWidth;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        &.past {
+            color: $color-navy;
+            &::after {
+                background-color: $color-navy;
+            }
+        }
+
+        &.current {
+            color: $color-turquoise;
+            &::after {
+                background-color: $color-turquoise;
+            }
+        }
+
+        &.future {
+            color: $color-navy;
+            opacity: .5;
+            &::after {
+                background-color: $color-navy;
+            }
+        }
+
+        &:last-child {
+            padding-right: 0;
+            &::after {
+                display: none;
+            }
+        }
+    }
+}

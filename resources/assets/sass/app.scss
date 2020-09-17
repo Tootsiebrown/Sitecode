@@ -14,7 +14,15 @@
 @import "shared/base";
 @import "shared/nav.scss";
 @import "shared/breadcrumbs";
+@import "shared/forms";
+@import "shared/footer";
+
+@import "components/checkout-cart";
+@import "components/checkout-flow";
+@import "components/listings-list";
 
 // pages / modules
-@import "dashboard/dashboard";
 @import "pages/single-ad";
+@import "pages/cart";
+@import "pages/checkout";
+@import "pages/search";

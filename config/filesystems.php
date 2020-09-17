@@ -93,7 +93,6 @@ return [
             'visibility' => 'private',
         ]
 
-
     ],
 
 ];

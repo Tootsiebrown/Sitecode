@@ -54,10 +54,10 @@ Route::get('set-country/{country_code}', ['uses' => 'LocationController@setCurre
 Route::get('searchCityJson', ['uses' => 'LocationController@searchCityJson'])->name('searchCityJson');
 
 
-Route::get(
-    'search/{country_code?}/{state_id?}/{city_id?}/{category_slug?}/{brand_slug?}',
-    ['as' => 'search', 'uses' => 'AdsController@search']
-);
+Route::get('search')
+    ->uses('AdsController@search')
+    ->name('search');
+
 Route::get('search-redirect', ['as' => 'search_redirect', 'uses' => 'AdsController@searchRedirect']);
 
 Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsController@adsByUser']);
@@ -65,14 +65,16 @@ Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsContr
 Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
 
-Route::post('save-ad-as-favorite', ['as' => 'save_ad_as_favorite', 'uses' => 'UserController@saveAdAsFavorite']);
+Route::post('watch-listing')
+    ->uses('UserController@watchListing')
+    ->name('watchListing');
 
 Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses' => 'UserController@replyByEmailPost']);
 Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentController@postComments']);
 
 
 // Password reset routes...
-Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses' => 'Auth\PasswordController@postEmail']);
+//Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses' => 'Auth\PasswordController@postEmail']);
 
 //Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 //Route::post('password/reset', ['as'=>'password_reset_post', 'uses'=>'Auth\PasswordController@postReset']);
@@ -95,19 +97,24 @@ Route::post('post-new', ['uses' => 'AdsController@store']);
 //Post bid
 Route::post('{id}/post-new', ['as' => 'post_bid', 'uses' => 'BidController@postBid']);
 
+Route::get('pay-for-auction', 'PayForItController@endedAuction')
+    ->middleware('auth')
+    ->name('payForEndedAuction');
+
 
 //Checkout payment
-Route::get('checkout/{transaction_id}', ['as' => 'payment_checkout', 'uses' => 'PaymentController@checkout']);
-Route::post('checkout/{transaction_id}', ['uses' => 'PaymentController@chargePayment']);
-//Payment success url
-Route::any(
-    'checkout/{transaction_id}/payment-success',
-    ['as' => 'payment_success_url', 'uses' => 'PaymentController@paymentSuccess']
-);
-Route::any(
-    'checkout/{transaction_id}/paypal-notify',
-    ['as' => 'paypal_notify_url', 'uses' => 'PaymentController@paypalNotify']
-);
+// disabled in favor of WAX's.
+//Route::get('checkout/{transaction_id}', ['as' => 'payment_checkout', 'uses' => 'PaymentController@checkout']);
+//Route::post('checkout/{transaction_id}', ['uses' => 'PaymentController@chargePayment']);
+////Payment success url
+//Route::any(
+//    'checkout/{transaction_id}/payment-success',
+//    ['as' => 'payment_success_url', 'uses' => 'PaymentController@paymentSuccess']
+//);
+//Route::any(
+//    'checkout/{transaction_id}/paypal-notify',
+//    ['as' => 'paypal_notify_url', 'uses' => 'PaymentController@paypalNotify']
+//);
 
 
 Route::group(
@@ -414,3 +421,63 @@ Route::group(
         //Route::get('logout', ['as'=>'logout', 'uses' => 'DashboardController@logout']);
     }
 );
+
+Route::name('shop.')
+    ->group(function () {
+        Route::name('cart.')
+            ->prefix('cart')
+            ->group(function () {
+                Route::get('/', 'CartController@index')
+                    ->name('index');
+                Route::post('add')
+                    ->uses('CartController@store')
+                    ->name('add');
+                Route::delete('{itemId}')
+                    ->uses('CartController@destroy')
+                    ->name('delete');
+            });
+
+
+        Route::prefix('checkout')
+            ->name('checkout.')
+            ->group(function() {
+                Route::get('', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
+                    ->name('start');
+
+                Route::get('shipping', '\App\Wax\Shop\Controllers\CheckoutController@showShipping')
+                    ->name('showShipping');
+                Route::post('shipping', '\App\Wax\Shop\Controllers\CheckoutController@saveShipping')
+                    ->name('saveShipping');
+
+                Route::get('billing', '\App\Wax\Shop\Controllers\CheckoutController@showBilling')
+                    ->name('showBilling');
+                Route::post('billing', '\App\Wax\Shop\Controllers\CheckoutController@pay')
+                    ->name('saveBilling');
+
+                Route::get('confirmation')
+                    ->uses('\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
+                    ->name('confirmation');
+            });
+
+    });
+
+Route::name('shop::')
+    ->prefix('admin')
+    ->middleware('auth.panel')
+    ->group(function () {
+        /**
+         * Order Manager
+         */
+        Route::get('shop/order/{id}', 'Admin\OrdersController@show')
+            ->name('orderDetails');
+        Route::get('shop/order/{id}/print', 'Admin\OrdersController@print')
+            ->name('orderDetails.print');
+        Route::post('shop/order/{id}/add-tracking/{shipmentId}', 'Admin\OrdersController@addTracking')
+            ->name('orderDetails.addTracking');
+        Route::post('shop/order/{id}/capture-payments', 'Admin\OrdersController@capturePayments')
+            ->name('orderDetails.capturePayments');
+        Route::post('shop/order/{id}/mark-processed')
+            ->uses('Admin\OrdersController@markProcessed')
+            ->name('orderDetails.markProcessed');
+    });
+

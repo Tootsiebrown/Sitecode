@@ -1,0 +1,32 @@
+.search-sidebar {
+    background-color: $color-tan-med;
+    padding: 16px;
+
+    & > div {
+        margin-bottom: 24px;
+    }
+
+    p.label {
+        color: $color-black;
+        margin: 0;
+        padding: 0 0 8px;
+    }
+    form {
+        padding: 0;
+
+        .input-group .btn  {
+            padding: 4px 8px 0;
+
+            svg {
+                height: 24px;
+            }
+        }
+    }
+
+    &__categories {
+        & > ul {
+            list-style: none;
+            padding-left: 0;
+        }
+    }
+}

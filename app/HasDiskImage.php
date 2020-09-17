@@ -28,7 +28,7 @@ trait HasDiskImage
     public function getThumbUrlAttribute()
     {
         if (Storage::disk($this->disk)->exists(static::getDiskPath() . $this->media_name)) {
-            return asset(static::getUrlPath() . $this->media_name);
+            return asset(static::getUrlPath() . 'thumbs/' . $this->media_name);
         } else {
             return $this->getPlaceholderUrl();
         }

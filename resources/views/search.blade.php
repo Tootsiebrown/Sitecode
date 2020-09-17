@@ -7,101 +7,60 @@
             <div class="row">
                 <div class="col-md-12">
                     @if( ! empty($title)) <h2>{{ $title }} </h2> @endif
-                    <div class="btn-group btn-breadcrumb">
-                        <a href="{{route('home')}}" class="btn btn-warning"><i class="glyphicon glyphicon-home"></i></a>
+                    <div class="breadcrumbs">
+                        <a href="{{route('home')}}" >Home</a>
                         {!! $pagination_output !!}
+                        @if ($category)
+                            @if ($category->parent)
+                                @if ($category->parent->parent)
+                                    <a href="{{route('search', ['category' => $category->parent->parent->id])}}">{{ $category->parent->parent->name }}</a>
+                                @endif
+                                <a href="{{route('search', ['category' => $category->parent->id])}}">{{ $category->parent->name }}</a>
+                            @endif
+                            <a href="{{route('search', ['category' => $category->id])}}">{{ $category->name }}</a>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="itemViewFilterWrap">
-        <div class="container">
-            <div class="row">
+{{--    <div class="itemViewFilterWrap">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
 
-                <div class="col-md-12">
-                    <div class="listingTopFilterBar">
-                        <h4 class="pull-left">Total Found {{$ads->count()}} Auctions</h4>
+{{--                <div class="col-md-12">--}}
+{{--                    <div class="listingTopFilterBar">--}}
+{{--                        <h4 class="pull-left">Total Found {{$ads->count()}} Auctions</h4>--}}
 
-                        <ul class="listingViewIcon pull-right">
-                            <li class="dropdown shortByListingLi">
-                                <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@lang('app.short_by') <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'price_high_to_low']) }}">@lang('app.price_high_to_low')</a></li>
-                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'price_low_to_high']) }}">@lang('app.price_low_to_high')</a></li>
-                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'latest']) }}">@lang('app.latest')</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="javascript:;" class="itemListView"><i class="fa fa-bars"></i> </a></li>
-                            <li><a href="javascript:;" class="itemImageListView"><i class="fa fa-th-list"></i> </a> </li>
-                            <li><a href="javascript:;" class="itemGridView"><i class="fa fa-th-large"></i> </a></li>
-                        </ul>
-                    </div>
-                </div>
+{{--                        <ul class="listingViewIcon pull-right">--}}
+{{--                            <li class="dropdown shortByListingLi">--}}
+{{--                                <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">@lang('app.sort_by') <span class="caret"></span></a>--}}
+{{--                                <ul class="dropdown-menu">--}}
+{{--                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'price_high_to_low']) }}">@lang('app.price_high_to_low')</a></li>--}}
+{{--                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'price_low_to_high']) }}">@lang('app.price_low_to_high')</a></li>--}}
+{{--                                    <li><a href="{{ request()->fullUrlWithQuery(['shortBy'=>'latest']) }}">@lang('app.latest')</a></li>--}}
+{{--                                </ul>--}}
+{{--                            </li>--}}
+{{--                            <li><a href="javascript:;" class="itemListView"><i class="fa fa-bars"></i> </a></li>--}}
+{{--                            <li><a href="javascript:;" class="itemImageListView"><i class="fa fa-th-list"></i> </a> </li>--}}
+{{--                            <li><a href="javascript:;" class="itemGridView"><i class="fa fa-th-large"></i> </a></li>--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
 
-            </div>
-        </div>
-    </div>
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     @if($ads->count())
         <div id="regular-ads-container">
             <div class="container">
                 <div class="row">
-
-                    @foreach($ads as $ad)
-                        <div class="item-loop col-md-3">
-
-                            <div class="ad-box ad-type-{{$ad->price_plan}}">
-                                <div class="ads-thumbnail">
-                                    <a href="{{ route('single_ad', [$ad->id, $ad->slug]) }}">
-                                        <img itemprop="image"  src="{{ media_url($ad->feature_img) }}" class="img-responsive" alt="{{ $ad->title }}">
-                                        <span class="modern-img-indicator">
-                                        @if(! empty($ad->video_url))
-                                                <i class="fa fa-file-video-o"></i>
-                                            @else
-                                                <i class="fa fa-file-image-o"> {{ $ad->images->count() }}</i>
-                                            @endif
-                                    </span>
-                                    </a>
-                                </div>
-                                <div class="caption">
-                                    <div class="ad-box-caption-title">
-                                        <a class="ad-box-title" href="{{ route('single_ad', [$ad->id, $ad->slug]) }}" title="{{ $ad->title }}">
-                                            {{ str_limit($ad->title, 40) }}
-                                        </a>
-                                    </div>
-
-                                    <div class="ad-box-category">
-                                        @if($ad->sub_category)
-                                            <a class="price text-muted" href="{{ route('search', [ $ad->country->country_code,  'category' => 'cat-'.$ad->sub_category->id.'-'.$ad->sub_category->category_slug]) }}"> <i class="fa fa-folder-o"></i> {{ $ad->sub_category->category_name }} </a>
-                                        @endif
-                                        @if($ad->city)
-                                            <a class="location text-muted" href="{{ route('search', [$ad->country->country_code, 'state' => 'state-'.$ad->state->id, 'city' => 'city-'.$ad->city->id]) }}"> <i class="fa fa-map-marker"></i> {{ $ad->city->city_name }} </a>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="ad-box-footer">
-                                    <span class="ad-box-price">@lang('app.starting_price') {!! themeqx_price($ad->price) !!},</span>
-                                    <span class="ad-box-price">@lang('app.current_bid') {!! themeqx_price($ad->current_bid()) !!}</span>
-
-                                    @if($ad->price_plan == 'premium')
-                                        <div class="ad-box-premium" data-toggle="tooltip" title="@lang('app.premium_ad')">
-                                            {!! $ad->premium_icon() !!}
-                                        </div>
-                                    @endif
-                                </div>
-
-
-                                <div class="countdown" data-expire-date="{{$ad->expired_at}}" ></div>
-                                <div class="place-bid-btn">
-                                    <a href="{{ route('single_ad', [$ad->id, $ad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
-                                </div>
-
-                            </div>
-                        </div>
-                    @endforeach
+                    @include('pages.search.sidebar')
+                    <div class="search-body col-xs-9">
+                        @include('site.components.listings-list', ['listings' => $ads, 'container' => false])
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +68,8 @@
     @else
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                @include('pages.search.sidebar')
+                <div class="col-md-9">
                     <div class="no-content-wrap">
                         <h2> <i class="fa fa-info-circle"></i> @lang('app.there_is_no_ads')</h2>
                     </div>

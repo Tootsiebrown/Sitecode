@@ -1,0 +1,113 @@
+.footer {
+    border-top: 6px solid $color-turquoise;
+    background-color: $color-tan-med;
+
+    &__brand {
+        display: block;
+        width: 190px;
+        margin: 36px auto;
+        text-align: center;
+    }
+
+    &__social-links {
+
+        p {
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        ul {
+            text-align: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                display: inline-block;
+                font-size: 24px;
+                margin: 0 12px;
+            }
+        }
+    }
+
+    &__menu {
+        width: 260px;
+        margin: 0 auto 24px;
+        list-style: none;
+        padding: 0;
+
+        li {
+            margin: 12px 0;
+        }
+
+        a {
+            display: flex;
+            justify-content: space-between;
+            color: $color-navy;
+        }
+    }
+
+    &__corporate {
+        background-color: $color-tan-dark;
+        border-top: 6px solid $color-brown;
+        padding: 24px 0;
+
+        a {
+            color: $color-black;
+            margin-left: 24px;
+        }
+    }
+
+    @media (min-width: $bp-tablet) {
+        &__top {
+            .container {
+                padding: 24px 0;
+                &::before, &::after {
+                    display: none;
+                }
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        &__media {
+            margin: 24px 0;
+        }
+        &__brand {
+            margin: 0;
+            padding: 0 45px;
+            width: 220px;
+        }
+        &__social-links {
+            li {
+                margin: 8px;
+                &:last-child {
+                    margin-right: 0;
+                }
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+
+            p {
+                text-align: left;
+            }
+        }
+        &__middle {
+            background-image: url('/assets/img/squiggles.png');
+            background-repeat: repeat-x;
+            background-position: center top;
+            .container {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+        &__menu {
+            margin: 0;
+            padding: 30px;
+            background-color: $color-tan-med;
+        }
+    }
+}

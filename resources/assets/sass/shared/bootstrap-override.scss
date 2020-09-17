@@ -23,6 +23,10 @@
     font-size: 16px;
 }
 
+.page-header {
+    border-bottom: none;
+}
+
 .btn-primary {
     background-color: $color-turquoise;
     svg  {
@@ -32,6 +36,10 @@
             fill: $color-tan-light;
         }
     }
+
+    &:hover {
+        background-color: $color-navy;
+    }
 }
 
 .btn-default {
@@ -40,7 +48,30 @@
 
     &:hover {
         background-color: $color-turquoise;
+        color: $color-tan-light;
     }
+    &:focus {
+        background-color: $color-navy;
+        color: $color-tan-light;
+    }
+}
+
+.btn-secondary {
+    background-color: $color-orange-light;
+    color: $color-tan-light;
+
+    svg  {
+        height: 18px;
+        vertical-align: middle;
+        path {
+            fill: $color-tan-light;
+        }
+    }
+
+    &:hover {
+        background-color: $color-turquoise !important;
+    }
+
     &:focus {
         background-color: $color-navy;
     }
@@ -97,6 +128,78 @@
             background: $color-tan-light;
         }
     }
-
-
 }
+
+.nav-tabs-start-empty {
+    border-bottom: none;
+
+    & li {
+        & > a.btn {
+            border-radius: 4px;
+            width: 180px;
+            margin-right: 12px;
+
+            &:hover {
+                &.btn-primary {
+                    background-color: $color-navy;
+                }
+            }
+        }
+
+        &.active {
+            & > a.btn {
+                &.btn-primary {
+                    background-color: $color-orange-light;
+                    color: $color-tan-light;
+                    border-radius: 4px 4px 0 0;
+                }
+            }
+        }
+    }
+}
+
+.navbar-default .navbar-nav > .open > a {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    &:hover {
+        background-color: transparent
+    }
+}
+
+.panel-default {
+    .panel-heading {
+        background-color: $color-tan-dark;
+        background-image: none;
+        border: none;
+        box-shadow: none;
+        padding: 10px 15px 0;
+    }
+
+    .panel-body {
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+.nav-pills {
+    & > li {
+        & > a {
+            color: $color-navy;
+            border-radius: 4px 4px 0 0;
+        }
+
+        &.active > a {
+            background-color: $color-tan-med;
+            color: $color-turquoise;
+            font-weight: bold;
+
+            &:hover {
+                background-color: $color-tan-med;
+                color: $color-turquoise;
+            }
+        }
+    }
+}
+

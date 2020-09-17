@@ -11,7 +11,7 @@
                     <div class="panel-body">
                         @include('dashboard.flash_msg')
 
-                        <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}" novalidate>
                             {{ csrf_field() }}
 
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">

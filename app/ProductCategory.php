@@ -23,6 +23,11 @@ class ProductCategory extends Model
         return $this->hasMany(static::class, 'parent_id');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(static::class, 'parent_id');
+    }
+
     public function hasChildren()
     {
         return $this->children->count() > 0;
@@ -31,7 +36,7 @@ class ProductCategory extends Model
     public function getUrlAttribute()
     {
         return route('search', [
-            'category[]' => $this->id
+            'category' => $this->id
         ]);
     }
 }

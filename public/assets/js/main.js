@@ -86,19 +86,6 @@ function getCookie(cname) {
     return "";
 }
 
-/**
- * Make Sticky menu
- */
-
-var make_sticky_menu = function(){
-    if ( $(document).scrollTop() > 52 ) {
-        $('.navbar-static-top').addClass('sticky-menu');				}
-    else {
-        $('.navbar-static-top').removeClass('sticky-menu');
-    }
-};
-$(document).bind('scroll', make_sticky_menu);
-
 function getTimeRemaining(endtime){
     var t = Date.parse(endtime) - Date.parse(new Date());
     var seconds = Math.floor( (t/1000) % 60 );

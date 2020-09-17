@@ -1,5 +1,4 @@
 import selectComponent from '../utilities/select-component'
-import * as $ from "jquery"
 
 export default class FocusableInputGroup {
 

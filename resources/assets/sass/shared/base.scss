@@ -1,5 +1,5 @@
 body {
-    background-color: $color-tan-light;
+    background-color: $color-white;
 }
 
 a {
@@ -12,6 +12,14 @@ a {
 
 h4 {
     color: $color-navy;
+}
+
+#app {
+    padding-top: 68px;
+
+    @media (min-width: $bp-tablet) {
+        padding-top: 134px;
+    }
 }
 
 .page-header {

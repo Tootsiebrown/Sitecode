@@ -16,6 +16,9 @@ class AdsLikeProducts extends Migration
     {
         Schema::table('ads', function (Blueprint $table) {
             $table->dropColumn('brand');
+        });
+
+        Schema::table('ads', function (Blueprint $table) {
             $table->unsignedInteger('brand_id')->nullable();
 
             $table->decimal('original_price', 15, 4)->nullable();
