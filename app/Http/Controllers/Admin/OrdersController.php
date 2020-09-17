@@ -26,7 +26,7 @@ class OrdersController extends \Wax\Shop\Http\Controllers\Admin\OrdersController
             'page' => $page,
             'structure' => 'orders',
             'id' => $orderId,
-            'errors' => ['The shipment has been marked as shipped and the customer has been notified.'],
+            'errors' => ['The shipment has been marked as processed.'],
             'notes' => [],
         ]);
     }
