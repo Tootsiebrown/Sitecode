@@ -169,7 +169,7 @@ class CheckoutController extends Controller
         try {
             $this->inventoryManager->reserveItems($order);
         } catch (Throwable $e) {
-            $this->releaseItems($order);
+            $this->inventoryManager->releaseItems($order);
 
             throw $e;
         }
