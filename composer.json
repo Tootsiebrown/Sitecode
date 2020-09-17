@@ -92,12 +92,10 @@
             "php7.4 artisan key:generate --ansi"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php7.4 artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php7.4 artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     }
 }

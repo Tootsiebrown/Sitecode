@@ -40,7 +40,7 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
         }
 
         $relevantCustomization = $this->customizations->first(fn($value, $key) => $key === 1);
-        $effectiveInventory = Listing::find($relevantCustomization)->availableItems->count() - $pendingQuantity;
+        $effectiveInventory = Listing::withoutGlobalScopes()->find($relevantCustomization)->availableItems->count() - $pendingQuantity;
 
         if ($effectiveInventory < $this->quantity) {
             $this->errors()

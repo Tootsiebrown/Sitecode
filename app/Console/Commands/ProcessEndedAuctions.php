@@ -41,7 +41,8 @@ class ProcessEndedAuctions extends Command
     public function handle()
     {
         Listing
-            ::expired()
+            ::withoutGlobalScopes()
+            ->expired()
             ->typeIsAuction()
             ->endEventNotFired()
             ->get()

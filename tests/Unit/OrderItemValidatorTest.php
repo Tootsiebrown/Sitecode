@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
-use App\Wax\Shop\Models\Product;
 use App\Wax\Shop\Validators\OrderItemValidator;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Services\ShopService;
