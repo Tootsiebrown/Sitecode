@@ -19,4 +19,19 @@ class Item extends Model
     {
         return $query->whereNull('order_item_id');
     }
+
+    public function scopeSold($query)
+    {
+        return $query->whereNotNull('order_item_id');
+    }
+
+    public function scopeReserved($query)
+    {
+        return $query->whereNotNull('reserved_for_order_id');
+    }
+
+    public function scopeNotReserved($query)
+    {
+        return $query->whereNull('reserved_for_order_id');
+    }
 }
