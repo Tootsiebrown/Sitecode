@@ -14,7 +14,7 @@ use App\Models\Listing\Item;
 use App\ProductCategory;
 use App\State;
 use App\User;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +37,16 @@ class Listing extends Model
 
         static::addGlobalScope('withInventory', function (Builder $query) {
             $query->has('availableItems');
+        });
+
+        static::addGlobalScope('activeIfAuction', function (Builder $query) {
+            $query->where(function($query) {
+                $query->orWhere('type', 'set-price');
+                $query->orWhere(function ($query) {
+                    $query->where('type', 'auction');
+                    $query->where('expired_at', '>=', Carbon::now()->toDateTimeString());
+                });
+            });
         });
     }
 
@@ -213,7 +223,7 @@ class Listing extends Model
     {
         $last_bid = $this->price;
 
-        $get_last_bid = Bid::whereAdId($this->id)->max('bid_amount');
+        $get_last_bid = $this->bids()->max('bid_amount');
         if ($get_last_bid && $get_last_bid > $last_bid) {
             $last_bid = $get_last_bid;
         }
@@ -239,7 +249,11 @@ class Listing extends Model
 
     public function is_bid_accepted()
     {
-        if ($this->type == 'auction' && $this->bids->isNotEmpty()) {
+        if (
+            $this->type == 'auction'
+            && $this->bids->isNotEmpty()
+            && $this->ended
+        ) {
             return true;
         }
 
@@ -328,5 +342,10 @@ class Listing extends Model
     public function getHasAvailableItemsAttribute()
     {
         return $this->availableItems->count() > 0;
+    }
+
+    public function getEndedAttribute(): bool
+    {
+        return $this->expired_at->lt(Carbon::now());
     }
 }

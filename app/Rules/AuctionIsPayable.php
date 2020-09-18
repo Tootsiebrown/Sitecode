@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Ad;
+use App\Models\Listing;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +27,7 @@ class AuctionIsPayable implements Rule
      */
     public function passes($attribute, $value)
     {
-        $ad = Ad::find($value);
+        $ad = Listing::withoutGlobalScopes()->find($value);
 
         if (! $ad) {
             return false;

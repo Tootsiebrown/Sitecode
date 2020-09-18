@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Listing;
 use App\Bid;
+use App\Models\Listing;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +28,6 @@ class BidController extends Controller
 
     public function postBid(Request $request, $ad_id)
     {
-
         if (! Auth::check()) {
             return redirect(route('login'))->with('error', trans('app.login_first_to_post_bid'));
         }

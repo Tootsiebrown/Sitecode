@@ -124,6 +124,14 @@
                                         </div>
                                     </div>
                                 </form>
+
+                                <a href="#" data-component="watch-listing" data-slug="{{ $listing->slug }}" class="btn btn-default">
+                                    @if( ! $listing->is_my_favorite())
+                                        @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
+                                    @else
+                                        @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
+                                    @endif
+                                </a>
                             @endif
                         @endif
                     @elseif ($listing->is_set_price)
@@ -147,21 +155,6 @@
                         <p class="single-ad__available-inventory">
                             Available Inventory: {{ $listing->availableItems->count() }}
                         </p>
-                    @endif
-
-                    @if ($listing->is_auction && $listing->is_bid_active())
-                        @if ($listing->type === 'auction')
-                            <p>Or buy now for ${{ $listing->price }}</p>
-                        @endif
-
-                        <button class="btn btn-primary">Add to Cart @svg(cart)</button>
-                        <a href="#" data-component="watch-listing" data-slug="{{ $listing->slug }}" class="btn btn-default">
-                            @if( ! $listing->is_my_favorite())
-                                @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
-                            @else
-                                @lang('app.remove_from_favorite') <i class="fa fa-eye-slash"></i>
-                            @endif
-                        </a>
                     @endif
                 </div>
                 <div class="single-ad__images">
@@ -340,22 +333,14 @@
                                             @endforeach
                                         @endif
                                     </li>
-
                                 @endforeach
-
-
                             </ul>
-
                         @else
 
                         @endif
-
-
                     </div>
                 @endif
-
             </div>
-
 
             <div class="related-ads">
                 @if($relatedListings->count() > 0 && get_option('enable_related_ads') == 1)
@@ -417,58 +402,8 @@
                             </div>
                         @endforeach
                     </div>
-
                 @endif
-
             </div>
-        </div>
-    </div>
-
-
-    <div class="footer-features">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2>@lang('app.sell_your_items_through')</h2>
-                    <p>@lang('app.thousands_of_people_selling')</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="icon-text-feature">
-                        <i class="fa fa-check-circle-o"></i>
-                        @lang('app.trusted_buyers')
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="icon-text-feature">
-                        <i class="fa fa-check-circle-o"></i>
-                        @lang('app.swift_and_secure')
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="icon-text-feature">
-                        <i class="fa fa-check-circle-o"></i>
-                        @lang('app.spam_free')
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="icon-text-feature">
-                        <i class="fa fa-check-circle-o"></i>
-                        @lang('app.sell_your_items_quickly')
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="{{route('category')}}" class="btn btn-warning btn-lg"><i class="fa fa-search"></i> @lang('app.browse_ads')</a>
-                    <a href="{{route('create_ad')}}" class="btn btn-warning btn-lg"><i class="fa fa-save"></i> @lang('app.post_an_ad')</a>
-
-                </div>
-            </div>
-
         </div>
     </div>
 

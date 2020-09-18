@@ -15,7 +15,7 @@ class PayForItController extends Controller
             $request,
             [
                 'id' => [
-                    'exists:ads',
+                    'exists:listings',
                     new AuctionWonByCurrentUser(),
                     new AuctionIsPayable(),
                     'required',
@@ -29,6 +29,6 @@ class PayForItController extends Controller
             ShopServiceFacade::addOrderItem(1, 1, [], $customizations);
         }
 
-        return redirect()->route('shop.checkout');
+        return redirect()->route('shop.checkout.start');
     }
 }
