@@ -20,13 +20,13 @@
                         <input
                             type="text"
                             class="form-control searchKeyword"
-                            name="q"
+                            name="search"
                             placeholder="@lang('app.what_are_u_looking_short')"
                             data-element="input"
                         >
                         <span class="input-group-btn">
-                                <button class="btn btn-link" type="submit">@svg(magnifying-glass)</button>
-                            </span>
+                            <button class="btn btn-link" type="submit">@svg(magnifying-glass)</button>
+                        </span>
                     </div>
 
                 </form>
@@ -47,14 +47,13 @@
             <!-- Left Side Of Navbar -->
             <div class="navbar-left">
                 <div class="navbar-search-wrap more desktop-search ">
-                    <form action="{{route('search_redirect')}}" class="form-inline" method="get" enctype="multipart/form-data">
-                        @csrf
+                    <form action="{{route('search')}}" class="form-inline" method="get" enctype="multipart/form-data">
                         <div class="input-group focusable" data-component="focusable-input-group">
                             <input
                                 type="text"
                                 class="form-control"
                                 id="searchKeyword"
-                                name="q"
+                                name="search"
                                 placeholder="@lang('app.what_are_u_looking')"
                                 data-element="input"
                             >

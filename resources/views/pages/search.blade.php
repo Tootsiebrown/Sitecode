@@ -9,16 +9,16 @@
                     @if( ! empty($title)) <h2>{{ $title }} </h2> @endif
                     <div class="breadcrumbs">
                         <a href="{{route('home')}}" >Home</a>
-                        {!! $pagination_output !!}
-                        @if ($category)
-                            @if ($category->parent)
-                                @if ($category->parent->parent)
-                                    <a href="{{route('search', ['category' => $category->parent->parent->id])}}">{{ $category->parent->parent->name }}</a>
-                                @endif
-                                <a href="{{route('search', ['category' => $category->parent->id])}}">{{ $category->parent->name }}</a>
-                            @endif
-                            <a href="{{route('search', ['category' => $category->id])}}">{{ $category->name }}</a>
-                        @endif
+                        {!! $listings->links() !!}
+{{--                        @if ($category)--}}
+{{--                            @if ($category->parent)--}}
+{{--                                @if ($category->parent->parent)--}}
+{{--                                    <a href="{{route('search', ['category' => $category->parent->parent->id])}}">{{ $category->parent->parent->name }}</a>--}}
+{{--                                @endif--}}
+{{--                                <a href="{{route('search', ['category' => $category->parent->id])}}">{{ $category->parent->name }}</a>--}}
+{{--                            @endif--}}
+{{--                            <a href="{{route('search', ['category' => $category->id])}}">{{ $category->name }}</a>--}}
+{{--                        @endif--}}
                     </div>
                 </div>
             </div>
@@ -53,13 +53,13 @@
 {{--        </div>--}}
 {{--    </div>--}}
 
-    @if($ads->count())
+    @if($listings->count())
         <div id="regular-ads-container">
             <div class="container">
                 <div class="row">
                     @include('pages.search.sidebar')
                     <div class="search-body col-xs-9">
-                        @include('site.components.listings-list', ['listings' => $ads, 'container' => false])
+                        @include('site.components.listings-list', ['listings' => $listings, 'container' => false])
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                {!! $ads->links() !!}
+                {!! $listings->links() !!}
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -38,5 +39,10 @@ class ProductCategory extends Model
         return route('search', [
             'category' => $this->id
         ]);
+    }
+
+    public function listings()
+    {
+        return $this->belongsToMany(Listing::class, 'ad_category_links', 'category_id', 'ad_id');
     }
 }

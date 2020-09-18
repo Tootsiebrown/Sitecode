@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Listing;
 use App\Option;
-use Exception;
+use App\Repositories\ListingsRepository;
+use App\Support\Filters\FilterAggregatorContract;
+use App\Support\Filters\Listings\ListingsFilterAggreggator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +28,14 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('svg', function ($component) {
             return "<?php include(public_path('assets/img/" . $component . ".svg')) ?>";
         });
+
+        $this->app->when(ListingsRepository::class)
+            ->needs(Model::class)
+            ->give(Listing::class);
+
+        $this->app->when(ListingsRepository::class)
+            ->needs(FilterAggregatorContract::class)
+            ->give(ListingsFilterAggreggator::class);
     }
 
     /**
