@@ -100,7 +100,7 @@ class Listing extends Model
 
     public function getFeaturedImageAttribute()
     {
-        return $this->images()->orderBy('featured', 'desc')->first();
+        return $this->images->sortByDesc('featured')->first();
     }
 
     public function images()

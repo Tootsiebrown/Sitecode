@@ -12,6 +12,7 @@ use App\Country;
 use App\Media;
 use App\Payment;
 use App\ProductCategory;
+use App\Repositories\ListingsRepository;
 use App\State;
 use App\Sub_Category;
 use App\User;
@@ -24,10 +25,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
+use Wax\Core\Traits\CanUseFilters;
 
 class AdsController extends Controller
 {
     use GetsDenormalizedProductCategories;
+    use CanUseFilters;
+
+    protected $repo;
 
     protected $optionalFields = [
         'gender' => 'Gender',
@@ -37,6 +42,11 @@ class AdsController extends Controller
         'dimensions' => 'Dimensions',
         'size' => 'Size',
     ];
+
+    public function __construct(ListingsRepository $listingsRepository)
+    {
+        $this->repo = $listingsRepository;
+    }
 
     public function index(Request $request)
     {
@@ -107,7 +117,6 @@ class AdsController extends Controller
         }
 
         return $adQuery
-            ->withoutGlobalScopes()
             ->orderBy('title', 'asc')
             ->paginate(20);
     }
@@ -798,56 +807,39 @@ class AdsController extends Controller
     }
 
     /**
-     * @param null $segment_one
-     * @param null $segment_two
-     * @param null $segment_three
-     * @param null $segment_four
-     * @param null $segment_five
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * Search ads
      */
 
-    public function search()
+    public function search(Request $request)
     {
-        $pagination_output = null;
-        $pagination_params = [];
+        $this->syncFilters($request);
+        $perPage = 12;
+
         $title = null;
 
-        $listings = Listing::active();
+        $paginatedListings = $this->repo->getPaginated($perPage);
 
-        //Search Keyword
-        $search = request('search');
+        $filterOptions = $this->repo->getFilterOptions();
 
-        //Search by keyword
-        if ($search) {
-            $listings = $listings->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%");
-        }
-
-        $category = null;
         $brand = null;
-        $type = null;
-
-        if (request('category')) {
-            $category = ProductCategory::find(request('category'));
-            if ($category) {
-                $listings = $listings->inCategory((int)request('category'));
-                $title = $category->name;
-            }
-        }
-
         if (request('brand')) {
             $brand = Brand::find(request('brand'));
-            if ($brand) {
-                $listings = $listings->ofBrand(request('brand'));
-            }
         }
 
-        if (! $title) {
-            $title = 'Search Results';
-        }
+        return view('pages.search', [
+            'listings' => $paginatedListings,
+            'filterOptions' => $filterOptions,
+            'filterValues' => $this->getFilterValuesFromRequest($request),
+            'brand' => $brand,
+            'title' => 'Search Results'
+        ]);
 
         //Sort by filter
+        // maybe add this back in at some point
         if (request('sortBy')) {
             switch (request('sortBy')) {
                 case 'price_high_to_low':
@@ -863,50 +855,6 @@ class AdsController extends Controller
         } else {
             $listings = $listings->orderBy('id', 'desc');
         }
-
-        $listings = $listings->paginate(20);
-
-        $level1Cat = null;
-        $level2Cat = null;
-        $level2Cat = null;
-        $level3Cat = null;
-        $categoryLevel = 1;
-        if ($category) {
-            $level1Cat = $category;
-        }
-        if ($category && $category->parent) {
-            $categoryLevel = 2;
-            $level1Cat = $category->parent;
-            $level2Cat = $category;
-
-            if ($category->parent->parent) {
-                $categoryLevel = 3;
-                $level1Cat = $category->parent->parent;
-                $level2Cat = $category->parent;
-                $level3Cat = $category;
-            }
-        }
-
-        $searchState = [
-            'search' => $search,
-            'category' => request('category'),
-            'brand' => request('brand'),
-            'type' => request('type'),
-        ];
-
-        return view('search', [
-            'ads' => $listings,
-            'title' => $title,
-            'brand' => $brand,
-            'pagination_output' => $pagination_output,
-            'category' => $category,
-            'categories' => $this->getDenormalizedProductCategories(),
-            'categoryLevel' => $categoryLevel,
-            'level1Cat' => $level1Cat,
-            'level2Cat' => $level2Cat,
-            'level3Cat' => $level3Cat,
-            'searchState' => $searchState,
-        ]);
     }
 
     /**
