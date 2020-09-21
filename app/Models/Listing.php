@@ -114,7 +114,7 @@ class Listing extends Model
             return $query;
         }
 
-        return $query->whereHas('bids', function($query) {
+        return $query->whereHas('bids', function ($query) {
             return $query->where('user_id', Auth::user()->id);
         });
     }
