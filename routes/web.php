@@ -202,6 +202,22 @@ Route::group(
 
             });
 
+        Route::get('auction-activity')
+            ->uses('AuctionActivityController@index')
+            ->name('dashboard.auction-activity');
+
+        Route::prefix('orders')
+            ->name('dashboard.orders.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('DashboardOrdersController@index');
+
+                Route::get('{id}')
+                    ->name('details')
+                    ->uses('DashboardOrdersController@details');
+            });
+
         Route::middleware('privilege:Administrator')
             ->group(function () {
                 Route::group(
@@ -394,7 +410,7 @@ Route::group(
                         );
 
                         //bids
-                        Route::get('bids/{ad_id}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
+                        Route::get('bids/{listingId}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
                         Route::post('bids/action', ['as' => 'bid_action', 'uses' => 'BidController@bidAction']);
                         Route::get(
                             'bidder_info/{bid_id}',

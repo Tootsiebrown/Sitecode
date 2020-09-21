@@ -72,11 +72,6 @@
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right nav-sarchbar">
                 <li class="nav-cart__container" data-component="nav-cart">
-                    <a href="/cart" class="btn btn-link nav-cart__button" data-element="link">
-                        @render(App\ViewComponents\CartCountComponent::class)
-                        @svg(cart)
-                        <span>My Cart</span>
-                    </a>
                     @render(App\ViewComponents\NavCartComponent::class)
                 </li>
 

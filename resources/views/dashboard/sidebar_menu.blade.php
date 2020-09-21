@@ -39,6 +39,20 @@
             @endif
 
             <li>
+                <a href="{{ route('dashboard.auction-activity') }}">
+                    <i class="fa fa-hourglass-o"></i>
+                    Auction Activity
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('dashboard.orders.index') }}">
+                    <i class="fa fa-shopping-basket"></i>
+                    Orders
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('favorite_ads') }}">
                     <i class="fa fa-star"></i>
                     @lang('app.favourite_ads')

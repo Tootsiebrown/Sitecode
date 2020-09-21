@@ -27,17 +27,17 @@ class AuctionIsPayable implements Rule
      */
     public function passes($attribute, $value)
     {
-        $ad = Listing::withoutGlobalScopes()->find($value);
+        $listing = Listing::withoutGlobalScopes()->find($value);
 
-        if (! $ad) {
+        if (! $listing) {
             return false;
         }
 
-        if ($ad->is_bid_active()) {
+        if ($listing->is_bidding_active) {
             return false;
         }
 
-        if (! $ad->is_bid_accepted()) {
+        if (! $listing->is_bid_accepted()) {
             return false;
         }
 

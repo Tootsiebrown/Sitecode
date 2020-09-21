@@ -69,7 +69,7 @@
 
                     <div class="single-ad__condition">{{ $listing->condition }}</div>
                     @if ($listing->is_auction)
-                        @if($listing->is_bid_active())
+                        @if($listing->is_bidding_active)
                             <p class="single-ad__time-limit">
                                 {{sprintf(trans('app.bid_deadline_info'), $listing->bid_deadline(), $listing->bid_deadline_left())}}
                             </p>
@@ -82,7 +82,7 @@
 
 
                         <p class="single-ad__current-bid-headline">
-                            @if($listing->is_bid_active())
+                            @if($listing->is_bidding_active)
                                 @lang('app.highest_bid')
                             @else
                                 The final price was
@@ -93,7 +93,7 @@
                             {!! themeqx_price($listing->current_bid()) !!}
                         </p>
 
-                        @if (!$listing->is_bid_active() && $listing->is_bid_accepted())
+                        @if (!$listing->is_bidding_active && $listing->is_bid_accepted())
                             @if(Auth::check() && $listing->winning_bid->user_id == Auth::user()->id)
                                 <a
                                   href="{{ route('payForEndedAuction', ['id' => $listing->id]) }}"
@@ -145,7 +145,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">Qty:</div>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" placeholder="#" required="required">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="#" required="required">
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary" type="submit">Add to Cart @svg(cart)</button>
                                     </span>

@@ -40,7 +40,7 @@ class Listing extends Model
         });
 
         static::addGlobalScope('activeIfAuction', function (Builder $query) {
-            $query->where(function($query) {
+            $query->where(function ($query) {
                 $query->orWhere('type', 'set-price');
                 $query->orWhere(function ($query) {
                     $query->where('type', 'auction');
@@ -106,6 +106,17 @@ class Listing extends Model
     public function scopeOfBrand($query, $brandId)
     {
         return $query->where('brand_id', $brandId);
+    }
+
+    public function scopeThatIBidFor($query)
+    {
+        if (! Auth::check()) {
+            return $query;
+        }
+
+        return $query->whereHas('bids', function($query) {
+            return $query->where('user_id', Auth::user()->id);
+        });
     }
 
     public function getFeaturedImageAttribute()
@@ -235,7 +246,7 @@ class Listing extends Model
         return $this->bids->sortByDesc('bid_amount')->first();
     }
 
-    public function is_bid_active()
+    public function getIsBiddingActiveAttribute()
     {
         if (
             $this->type == 'auction'
@@ -329,11 +340,6 @@ class Listing extends Model
         return $this->items->count();
     }
 
-    public function getBuyItNowPriceAttribute()
-    {
-        return $this->current_bid() * 1.25;
-    }
-
     public function availableItems()
     {
         return $this->items()->available();
@@ -347,5 +353,24 @@ class Listing extends Model
     public function getEndedAttribute(): bool
     {
         return $this->expired_at->lt(Carbon::now());
+    }
+
+    public function getIWonAttribute()
+    {
+        return $this->is_auction && $this->ended && $this->winning_bid->is_mine;
+    }
+
+    public function getMyMostRecentBidAttribute()
+    {
+        return $this->bids()->mine()->orderBy('created_at', 'desc')->first();
+    }
+
+    public function getIsPaidForAttribute()
+    {
+        if (! $this->is_auction) {
+            return false;
+        }
+
+        return ! is_null($this->items->first()->order_item_id);
     }
 }

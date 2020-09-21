@@ -1,0 +1,10 @@
+.order-details {
+    &__cart {
+
+
+        .cartitem-quantity,
+        .cartitem-unit-price {
+            text-align: right;
+        }
+    }
+}
