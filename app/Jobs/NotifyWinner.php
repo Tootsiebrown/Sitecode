@@ -14,7 +14,10 @@ use Wax\Core\Support\ConfigurationDatabase;
 
 class NotifyWinner implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var Listing
