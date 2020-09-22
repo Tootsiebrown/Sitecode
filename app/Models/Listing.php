@@ -373,4 +373,19 @@ class Listing extends Model
 
         return ! is_null($this->items->first()->order_item_id);
     }
+
+    public function getWinnerAttribute()
+    {
+        if (!$this->is_auction) {
+            return false;
+        }
+
+        if (!$this->ended) {
+            return null;
+        }
+
+        if (!$this->bids->isEmpty() && $this->winning_bid->bid_amount > $this->price) {
+            return $this->winning_bid->user;
+        }
+    }
 }

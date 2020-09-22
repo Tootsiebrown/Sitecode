@@ -2,7 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Events\AuctionEndedEvent;
+use App\Mail\NotifyWinner as NotifyWinnerEmail;
+use App\Mail\NotifyNoWinner as NotifyNoWinnerEmail;
 use App\Models\Listing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,11 +44,11 @@ class NotifyWinner implements ShouldQueue
     {
         if ($this->listing->winner) {
             Mail::to($this->listing->winner)
-                ->queue(NotifyWinnerEmail::class);
+                ->queue(new NotifyWinnerEmail($this->listing, $this->listing->winner));
         } else {
             $siteSettings = new ConfigurationDatabase('Site Settings');
             Mail::to($siteSettings->get('DEV_EMAIL_ALERT'))
-                ->queue(NotifyNoWinnerEmail::class);
+                ->queue(new NotifyNoWinnerEmail($this->listing));
         }
     }
 }
