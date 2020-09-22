@@ -53,4 +53,15 @@ class Order extends WaxOrder
 
         return $bundlesTouched;
     }
+
+
+
+    public function getDefaultShipmentAttribute()
+    {
+        if (!empty($this->shipments->first())) {
+            return $this->shipments->first();
+        }
+
+        return $this->shipments()->firstOrCreate([]);
+    }
 }

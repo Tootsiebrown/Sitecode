@@ -10,7 +10,8 @@ use Illuminate\Queue\SerializesModels;
 
 class NotifyNoWinner extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var Listing

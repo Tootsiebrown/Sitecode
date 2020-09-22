@@ -1,3 +1,10 @@
+<html>
+<head>
+    <style>
+        @php include(public_path('assets/css/email.css')) @endphp
+    </style>
+</head>
+<body>
 <table class="email" width="100%">
     <tbody>
         <tr>
@@ -17,3 +24,5 @@
         </tr>
     </tbody>
 </table>
+</body>
+</html>

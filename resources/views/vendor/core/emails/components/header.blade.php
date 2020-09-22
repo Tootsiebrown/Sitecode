@@ -2,7 +2,7 @@
     <tbody>
     <tr>
         <td align="center">
-            {{ config('app.name') }}
+            <img id="logo" alt="{{ config('app.name') }}" src="{{ url('assets/img/catchndealz.svg') }}">
         </td>
     </tr>
     </tbody>

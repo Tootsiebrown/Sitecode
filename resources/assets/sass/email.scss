@@ -6,6 +6,10 @@
     color: $color-black;
     width: 100%;
 
+    a {
+        color: $color-turquoise;
+    }
+
     &__container {
         width: 100%;
         max-width: 600px;
@@ -33,11 +37,15 @@
         font-size: 24px;
     }
 
-    &__cta {
+    a.email__cta {
         display: inline-block;
         width: 203px;
         height: 40px;
+        line-height: 40px;
         margin: 0 auto;
         border-radius: 6px;
+        background-color: $color-turquoise;
+        color: $color-white;
+        text-decoration: none;
     }
 }

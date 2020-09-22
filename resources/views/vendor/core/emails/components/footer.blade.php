@@ -1,5 +1,4 @@
-<table class="email" style="background-color: #273C89; font-family: sans-serif; color: #FFF; width: 100%;" width="100%"
-       cellpadding="40">
+<table class="email__footer" width="100%" cellpadding="40">
     <tbody>
     <tr>
         <td align="center">

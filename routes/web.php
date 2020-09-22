@@ -220,6 +220,30 @@ Route::group(
 
         Route::middleware('privilege:Administrator')
             ->group(function () {
+                Route::name('dashboard.emails.')
+                    ->prefix('emails')
+                    ->group(function () {
+                        Route::get('/')
+                            ->name('index')
+                            ->uses('MailPreviewController@index');
+                        Route::get('iframe/{slug}')
+                            ->name('iframe')
+                            ->uses('MailPreviewController@iframe');
+
+                        Route::get('order-placed')
+                            ->name('orderPlaced')
+                            ->uses('MailPreviewController@orderPlaced');
+                        Route::get('order-shipped')
+                            ->name('orderShipped')
+                            ->uses('MailPreviewController@orderShipped');
+                        Route::get('auction-won')
+                            ->name('auctionWon')
+                            ->uses('MailPreviewController@auctionWon');
+                        Route::get('auction-ended-no-winner')
+                            ->name('auctionEndedNoWinner')
+                            ->uses('MailPreviewController@auctionEndedNoWinner');
+                    });
+
                 Route::group(
                     ['prefix' => 'settings'],
                     function () {

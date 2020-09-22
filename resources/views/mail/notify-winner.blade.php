@@ -9,7 +9,7 @@
                 <h1 class="email__headline">You've won!</h1>
                 <h2 class="email__subhead">
                     <a href="{{ route('single_ad', ['id' => $listing->id, 'slug' => $listing->slug]) }}">
-                        {{ $listing->name }}
+                        {{ $listing->title }}
                     </a>
                 </h2>
                 <p>Please pay promptly to finalize the deal.</p>

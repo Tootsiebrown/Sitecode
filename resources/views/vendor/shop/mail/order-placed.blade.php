@@ -5,24 +5,9 @@
         <tbody>
         <tr>
             <td>
-                <h1 class="email__headline">Your order has
-                    shipped!</h1>
+                <h1 class="email__headline">Thank You!</h1>
                 <h2 class="email__subhead">Order #{{ $order['sequence'] }}</h2>
-
-                @if (!empty($trackedShipments))
-                    <strong>Tracking Number</strong>
-                    @foreach ($trackedShipments as $shipment)
-                        <p>
-                            @if (!empty($shipment['shipping_service_name']))
-                                {{ $shipment['shipping_carrier'] }} {{ $shipment['shipping_service_name'] }}:
-                            @else
-                                Shipment {{ $loop->iteration }}:
-                            @endif
-                            {{ $shipment['tracking_number'] }}
-                        </p>
-                    @endforeach
-                @endif
-                <hr>
+                <p>Thank you for your purchase; you can find the details below.</p>
                 @foreach ($order['payments'] as $payment)
                     <p>
                         Your {{ $payment['brand'] }} card ending in {{ substr($payment['account'], -4) }} was
@@ -54,10 +39,10 @@
                     <tr>
                         <td colspan="2" align="right">
                             <ul style="list-style: none;">
-                                <li style="color: #273C89; font-weight: 700; margin-bottom: 8px;">
+                                <li style="font-weight: 700; margin-bottom: 8px;">
                                     Subtotal: {{ Currency::format($order['item_gross_subtotal']) }}</li>
                                 @foreach ($order['bundles'] as $bundle)
-                                    <li style="margin-bottom: 4px;">{{ $bundle['name'] }}:
+                                    <li style="color: #0CA678; margin-bottom: 4px;">{{ $bundle['name'] }}:
                                         -{{ Currency::format($bundle['calculated_value']) }}</li>
                                 @endforeach
 

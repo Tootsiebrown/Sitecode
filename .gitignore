@@ -11,6 +11,7 @@
 /storage/app
 
 /resources/assets/js/ziggy.js
+/public/assets/css/email.css
 
 ## Cloned from elsewhere
 /vendor
