@@ -151,8 +151,12 @@
   text-align: right;
 }
 
-.bulk-edit-listing-bins {
+.top-form {
   margin-bottom: 24px;
+}
+
+.top-form .form-group label {
+  padding-top: 0;
 }
 
 .auction-activity {

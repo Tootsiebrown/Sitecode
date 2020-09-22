@@ -70,6 +70,12 @@ class BinsController extends Controller
             $item->save();
         });
 
+        $toDelete = $request->input('to-delete');
+        if (is_array($toDelete)) {
+            $toDelete = array_keys($toDelete);
+            $listing->items()->whereIn('id', $toDelete)->delete();
+        }
+
         return redirect()
             ->route('dashboard.bins.index')
             ->with('success', 'Bins Edited.');
@@ -120,5 +126,31 @@ class BinsController extends Controller
         return redirect()
             ->route('dashboard.bins.index')
             ->with('success', 'Bins Edited.');
+    }
+
+    public function addItems(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'quantity' => 'required|integer',
+            ]
+        );
+
+        $listing = Listing::with(['items'])
+            ->findOrFail($request->input('listing_id'));
+
+        $quantity = request('quantity');
+        $records = [];
+        for ($i = 1; $i <= $quantity; $i++)
+        {
+            $records[] = [];
+        }
+
+        $listing->items()->createMany($records);
+
+        return redirect()
+            ->route('dashboard.bins.showListingBins', ['id' => $listing->id])
+            ->with('success', 'Items Added.');
     }
 }

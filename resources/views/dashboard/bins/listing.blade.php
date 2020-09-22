@@ -31,7 +31,7 @@
                       method="POST"
                       action="{{ route('dashboard.bins.bulkEditListingBins') }}"
                       data-component="listing-bin-bulk-editor"
-                      class="bulk-edit-listing-bins form-horizontal"
+                      class="bulk-edit-listing-bins form-horizontal top-form"
                     >
                         @csrf
                         <input type="hidden" name="listing_id" value="{{ $listing->id }}">
@@ -74,6 +74,53 @@
                         </div>
                     </form>
 
+                    @if ($listing->is_set_price)
+                        <form
+                            method="POST"
+                            action="{{ route('dashboard.bins.addItems') }}"
+                            data-component="listing-item-adder"
+                            class="listing-item-adder form-horizontal top-form"
+                        >
+                            @csrf
+                            <input type="hidden" name="listing_id" value="{{ $listing->id }}">
+
+                            <button data-element="opener" class="btn btn-default">
+                                Add More Items
+                            </button>
+
+                            <div class="hidden" data-element="collapsibleSection">
+                                <div class="form-group {{ $errors->has('quantity')? 'has-error':'' }}">
+                                    <label for="quantity" class="col-sm-3 control-label">
+                                        How many more items?
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="quantity"
+                                            value="{{ old('quantity') ?? '' }}"
+                                            id="quantity"
+                                        >
+                                        {!! $errors->has('quantity')? '<p class="help-block">'.$errors->first('quantity').'</p>':'' !!}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        <!-- just for alignment -->
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <button class="btn btn-primary" name="submit" value="submit">
+                                            Add Items
+                                        </button>
+                                        <button data-element="closer" class="btn btn-default">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    @endif
+
                     <form method="POST" action="{{ route('dashboard.bins.saveListingBins', ['id' => $listing->id]) }}">
                         @csrf
                         @if ($errors->any())
@@ -98,6 +145,9 @@
                                     Sold
                                 </th>
                                 <th>
+                                    Delete
+                                </th>
+                                <th>
                                     <!-- nothing here -->
                                 </th>
                             </tr>
@@ -117,10 +167,13 @@
                                             {!! $errors->has('bin.' . $item->id)? '<p class="help-block">'.$errors->first('bin.' . $item->id).'</p>':'' !!}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="centered-column">
                                         @if ($item->order_item_id)
                                             <i class="fa fa-check" aria-hidden="true"></i>
                                         @endif
+                                    </td>
+                                    <td class="centered-column">
+                                        <input type="checkbox" name="to-delete[{{ $item->id }}]" class="deletable" value="1">
                                     </td>
                                     @if ($loop->first)
                                         <td rowspan="{{ $listing->items->count() }}" style="vertical-align: top;">
@@ -129,6 +182,7 @@
                                               name="submit"
                                               value="submit"
                                               class="btn btn-primary sticky-thing"
+                                              data-component="confirm-if-delete-items"
                                             >
                                                 Update bins
                                             </button>

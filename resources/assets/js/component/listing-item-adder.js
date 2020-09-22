@@ -1,6 +1,6 @@
 import selectComponent from "../utilities/select-component";
 
-export default class ListingBinBulkEditor {
+export default class ListingItemAdder {
     constructor(element) {
         this.$component = selectComponent(element)
         this.$opener = this.$component.elements.opener

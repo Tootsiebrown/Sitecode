@@ -199,6 +199,9 @@ Route::group(
                 Route::post('listing-bulk')
                     ->uses('BinsController@bulkEditListingBins')
                     ->name('bulkEditListingBins');
+                Route::post('add-items')
+                    ->uses('BinsController@addItems')
+                    ->name('addItems');
 
             });
 
