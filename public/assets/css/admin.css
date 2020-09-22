@@ -155,6 +155,25 @@
   margin-bottom: 24px;
 }
 
+.auction-activity {
+  list-style: none;
+  padding-left: 0;
+}
+
+.order-details__cart .cartitem-quantity,
+.order-details__cart .cartitem-unit-price {
+  text-align: right;
+}
+
+.dashboard-table td,
+.dashboard-table th {
+  padding: 8px;
+}
+
+.dashboard-table td.money {
+  text-align: right;
+}
+
 #wrapper {
   width: 100%;
 }

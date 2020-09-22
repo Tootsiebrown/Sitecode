@@ -3,8 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\AuctionEndedEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Jobs\NotifyWinner;
 
 class SendAuctionEndedNotification
 {
@@ -26,6 +25,8 @@ class SendAuctionEndedNotification
      */
     public function handle(AuctionEndedEvent $event)
     {
-        //
+        $listing = $event->listing;
+
+        NotifyWinner::dispatch($listing);
     }
 }

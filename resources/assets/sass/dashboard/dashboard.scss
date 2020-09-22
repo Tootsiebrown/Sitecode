@@ -7,3 +7,16 @@
 @import "components/listing-type-select";
 
 @import "bins/bins";
+@import "auction-activity/auction-activity";
+@import "orders/details";
+@import "orders/index";
+
+.dashboard-table {
+    td, th {
+        padding: 8px;
+    }
+
+    td.money {
+        text-align: right;
+    }
+}

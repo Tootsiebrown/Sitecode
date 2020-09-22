@@ -22,5 +22,6 @@ mix.webpackConfig({
 
 mix.js('resources/assets/js/app.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
+    .sass('resources/assets/sass/email.scss', 'public/assets/css')
     .sass('resources/assets/sass/admin.scss', 'public/assets/css/admin.css')
     .version();

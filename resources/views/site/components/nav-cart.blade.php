@@ -1,3 +1,8 @@
+<a href="/cart" class="btn btn-link nav-cart__button" data-element="link">
+    <span class="nav-cart__count">{{ $items->count() }}</span>
+    @svg(cart)
+    <span>My Cart</span>
+</a>
 <div class="nav-cart">
     @if ($items->count() > 0)
         <ul>

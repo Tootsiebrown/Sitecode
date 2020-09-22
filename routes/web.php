@@ -202,8 +202,48 @@ Route::group(
 
             });
 
+        Route::get('auction-activity')
+            ->uses('AuctionActivityController@index')
+            ->name('dashboard.auction-activity');
+
+        Route::prefix('orders')
+            ->name('dashboard.orders.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('DashboardOrdersController@index');
+
+                Route::get('{id}')
+                    ->name('details')
+                    ->uses('DashboardOrdersController@details');
+            });
+
         Route::middleware('privilege:Administrator')
             ->group(function () {
+                Route::name('dashboard.emails.')
+                    ->prefix('emails')
+                    ->group(function () {
+                        Route::get('/')
+                            ->name('index')
+                            ->uses('MailPreviewController@index');
+                        Route::get('iframe/{slug}')
+                            ->name('iframe')
+                            ->uses('MailPreviewController@iframe');
+
+                        Route::get('order-placed')
+                            ->name('orderPlaced')
+                            ->uses('MailPreviewController@orderPlaced');
+                        Route::get('order-shipped')
+                            ->name('orderShipped')
+                            ->uses('MailPreviewController@orderShipped');
+                        Route::get('auction-won')
+                            ->name('auctionWon')
+                            ->uses('MailPreviewController@auctionWon');
+                        Route::get('auction-ended-no-winner')
+                            ->name('auctionEndedNoWinner')
+                            ->uses('MailPreviewController@auctionEndedNoWinner');
+                    });
+
                 Route::group(
                     ['prefix' => 'settings'],
                     function () {
@@ -394,7 +434,7 @@ Route::group(
                         );
 
                         //bids
-                        Route::get('bids/{ad_id}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
+                        Route::get('bids/{listingId}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
                         Route::post('bids/action', ['as' => 'bid_action', 'uses' => 'BidController@bidAction']);
                         Route::get(
                             'bidder_info/{bid_id}',

@@ -14,7 +14,7 @@ use App\Models\Listing\Item;
 use App\ProductCategory;
 use App\State;
 use App\User;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +37,16 @@ class Listing extends Model
 
         static::addGlobalScope('withInventory', function (Builder $query) {
             $query->has('availableItems');
+        });
+
+        static::addGlobalScope('activeIfAuction', function (Builder $query) {
+            $query->where(function ($query) {
+                $query->orWhere('type', 'set-price');
+                $query->orWhere(function ($query) {
+                    $query->where('type', 'auction');
+                    $query->where('expired_at', '>=', Carbon::now()->toDateTimeString());
+                });
+            });
         });
     }
 
@@ -96,6 +106,17 @@ class Listing extends Model
     public function scopeOfBrand($query, $brandId)
     {
         return $query->where('brand_id', $brandId);
+    }
+
+    public function scopeThatIBidFor($query)
+    {
+        if (! Auth::check()) {
+            return $query;
+        }
+
+        return $query->whereHas('bids', function ($query) {
+            return $query->where('user_id', Auth::user()->id);
+        });
     }
 
     public function getFeaturedImageAttribute()
@@ -213,7 +234,7 @@ class Listing extends Model
     {
         $last_bid = $this->price;
 
-        $get_last_bid = Bid::whereAdId($this->id)->max('bid_amount');
+        $get_last_bid = $this->bids()->max('bid_amount');
         if ($get_last_bid && $get_last_bid > $last_bid) {
             $last_bid = $get_last_bid;
         }
@@ -225,7 +246,7 @@ class Listing extends Model
         return $this->bids->sortByDesc('bid_amount')->first();
     }
 
-    public function is_bid_active()
+    public function getIsBiddingActiveAttribute()
     {
         if (
             $this->type == 'auction'
@@ -239,7 +260,11 @@ class Listing extends Model
 
     public function is_bid_accepted()
     {
-        if ($this->type == 'auction' && $this->bids->isNotEmpty()) {
+        if (
+            $this->type == 'auction'
+            && $this->bids->isNotEmpty()
+            && $this->ended
+        ) {
             return true;
         }
 
@@ -315,11 +340,6 @@ class Listing extends Model
         return $this->items->count();
     }
 
-    public function getBuyItNowPriceAttribute()
-    {
-        return $this->current_bid() * 1.25;
-    }
-
     public function availableItems()
     {
         return $this->items()->available();
@@ -328,5 +348,44 @@ class Listing extends Model
     public function getHasAvailableItemsAttribute()
     {
         return $this->availableItems->count() > 0;
+    }
+
+    public function getEndedAttribute(): bool
+    {
+        return $this->expired_at->lt(Carbon::now());
+    }
+
+    public function getIWonAttribute()
+    {
+        return $this->is_auction && $this->ended && $this->winning_bid->is_mine;
+    }
+
+    public function getMyMostRecentBidAttribute()
+    {
+        return $this->bids()->mine()->orderBy('created_at', 'desc')->first();
+    }
+
+    public function getIsPaidForAttribute()
+    {
+        if (! $this->is_auction) {
+            return false;
+        }
+
+        return ! is_null($this->items->first()->order_item_id);
+    }
+
+    public function getWinnerAttribute()
+    {
+        if (!$this->is_auction) {
+            return false;
+        }
+
+        if (!$this->ended) {
+            return null;
+        }
+
+        if (!$this->bids->isEmpty() && $this->winning_bid->bid_amount > $this->price) {
+            return $this->winning_bid->user;
+        }
     }
 }

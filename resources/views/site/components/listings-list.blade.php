@@ -20,9 +20,6 @@
                     <div class="price-row">
                         @lang('app.current_bid'): <span class="btn btn-primary">{!! themeqx_price($listing->current_bid()) !!}</span>
                     </div>
-                    <div class="price-row">
-                        Or buy it now for: <span class="btn btn-primary">{!! themeqx_price($listing->buy_it_now_price) !!}</span>
-                    </div>
                 @else
                     <div class="price-row">
                         Price: <span class="btn btn-primary">${{ $listing->price }}</span>

@@ -21,6 +21,7 @@ class FireExpiredAuctionsEventsTest extends WaxAppTestCase
     {
         $listing = factory(Listing::class)->create([
             'expired_at' => Carbon::now()->subMinute(),
+            'type' => 'auction',
         ]);
 
         Artisan::call('auction:process-ended');

@@ -4,6 +4,7 @@ namespace App\Models\Listing;
 
 use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
+use Wax\Shop\Models\Order\Item as OrderItem;
 
 class Item extends Model
 {
@@ -33,5 +34,10 @@ class Item extends Model
     public function scopeNotReserved($query)
     {
         return $query->whereNull('reserved_for_order_id');
+    }
+
+    public function orderItem()
+    {
+        return $this->belongsTo(OrderItem::class);
     }
 }

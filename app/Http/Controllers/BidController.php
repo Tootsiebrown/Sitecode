@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Listing;
 use App\Bid;
+use App\Models\Listing;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,39 +26,32 @@ class BidController extends Controller
         return view('dashboard.bids', compact('title', 'ad'));
     }
 
-    public function postBid(Request $request, $ad_id)
+    public function postBid(Request $request, $listingId)
     {
-
         if (! Auth::check()) {
             return redirect(route('login'))->with('error', trans('app.login_first_to_post_bid'));
         }
-        $user = Auth::user();
+
         $bid_amount = $request->bid_amount;
 
-        $ad = Listing::find($ad_id);
-        if (! $ad) {
+        $listing = Listing::find($listingId);
+        if (! $listing) {
             abort(404);
         }
-        $current_max_bid = $ad->current_bid();
-        $rules = [
-            'bid_amount' => 'required|gt:' . (string)($current_max_bid + 1),
-        ];
 
+        $rules = [
+            'bid_amount' => 'required|gt:' . (string)($listing->current_bid() + 1),
+        ];
         $this->validate($request, $rules);
 
-        if ($bid_amount <= $current_max_bid) {
-            return back()->with('error', sprintf(trans('app.enter_min_bid_amount'), themeqx_price($current_max_bid)));
-        }
 
-        $data = [
-            'ad_id'         => $ad_id,
-            'user_id'       => $user->id,
+        Bid::create([
+            'listing_id'         => $listingId,
+            'user_id'       => Auth::user()->id,
             'bid_amount'    => $bid_amount,
             'is_accepted'   => 0,
-        ];
+        ]);
 
-
-        Bid::create($data);
         return back()->with('success', trans('app.your_bid_posted'));
     }
 

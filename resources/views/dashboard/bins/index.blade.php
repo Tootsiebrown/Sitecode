@@ -21,7 +21,7 @@
 
                 @include('dashboard.flash_msg')
 
-                @if ($message)
+                @if (isset($message))
                     <div class="alert alert-danger">
                         {{ $message }}
                     </div>

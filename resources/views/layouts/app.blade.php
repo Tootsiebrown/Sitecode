@@ -15,8 +15,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-theme.min.css') }}">
 
-    <!-- Font awesome 4.4.0 -->
-    <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.4.0/css/font-awesome.min.css') }}">
+    <!-- Font awesome 4.4.7 -->
+    <link rel="stylesheet" href="{{ asset('assets/font-awesome-4.7.0/css/font-awesome.min.css') }}">
 
 
     <!-- google fonts -->

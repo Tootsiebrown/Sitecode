@@ -39,6 +39,20 @@
             @endif
 
             <li>
+                <a href="{{ route('dashboard.auction-activity') }}">
+                    <i class="fa fa-hourglass-o"></i>
+                    Auction Activity
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('dashboard.orders.index') }}">
+                    <i class="fa fa-shopping-basket"></i>
+                    Orders
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('favorite_ads') }}">
                     <i class="fa fa-star"></i>
                     @lang('app.favourite_ads')
@@ -47,44 +61,45 @@
 
             @if($lUser->isAdmin())
 
-                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
-
-                <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>
+{{--                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
+{{--                <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
                 <li> <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>  </li>
-
                 <li>
-                    <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>
-                    <ul class="nav nav-second-level">
-                        <li> <a href="{{ route('social_url_settings') }}">@lang('app.social_url')</a> </li>
-                    </ul>
-                    <!-- /.nav-second-level -->
+                    <a href="{{ route('dashboard.emails.index') }}"><i class="fa fa-send"></i> Email Previews</a>
                 </li>
+{{--                <li>--}}
+{{--                    <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
+{{--                    <ul class="nav nav-second-level">--}}
+{{--                        <li> <a href="{{ route('social_url_settings') }}">@lang('app.social_url')</a> </li>--}}
+{{--                    </ul>--}}
+{{--                    <!-- /.nav-second-level -->--}}
+{{--                </li>--}}
 
-                <li>
-                    <a href="#"><i class="fa fa-map-marker"></i> @lang('app.locations')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>
-                    <ul class="nav nav-second-level">
-                        <li> <a href="{{ route('country_list') }}">@lang('app.countries')</a> </li>
-                        <li> <a href="{{ route('state_list') }}">@lang('app.states')</a> </li>
-                        <li> <a href="{{ route('city_list') }}">@lang('app.cities')</a> </li>
-                    </ul>
-                    <!-- /.nav-second-level -->
-                </li>
+{{--                <li>--}}
+{{--                    <a href="#"><i class="fa fa-map-marker"></i> @lang('app.locations')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
+{{--                    <ul class="nav nav-second-level">--}}
+{{--                        <li> <a href="{{ route('country_list') }}">@lang('app.countries')</a> </li>--}}
+{{--                        <li> <a href="{{ route('state_list') }}">@lang('app.states')</a> </li>--}}
+{{--                        <li> <a href="{{ route('city_list') }}">@lang('app.cities')</a> </li>--}}
+{{--                    </ul>--}}
+{{--                    <!-- /.nav-second-level -->--}}
+{{--                </li>--}}
 
-                <li>
-                    <a href="#"><i class="fa fa-wrench fa-fw"></i> @lang('app.settings')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>
-                    <ul class="nav nav-second-level">
-                        <li> <a href="{{ route('general_settings') }}">@lang('app.general_settings')</a> </li>
-                        <li> <a href="{{ route('ad_settings') }}">@lang('app.ad_settings_and_pricing')</a> </li>
-                        <li> <a href="{{ route('payment_settings') }}">@lang('app.payment_settings')</a> </li>
-                        <li> <a href="{{ route('language_settings') }}">@lang('app.language_settings')</a> </li>
-                        <li> <a href="{{ route('file_storage_settings') }}">@lang('app.file_storage_settings')</a> </li>
-                        <li> <a href="{{ route('social_settings') }}">@lang('app.social_settings')</a> </li>
-                        <li> <a href="{{ route('re_captcha_settings') }}">@lang('app.re_captcha_settings')</a> </li>
-                    </ul>
-                    <!-- /.nav-second-level -->
-                </li>
+{{--                <li>--}}
+{{--                    <a href="#"><i class="fa fa-wrench fa-fw"></i> @lang('app.settings')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
+{{--                    <ul class="nav nav-second-level">--}}
+{{--                        <li> <a href="{{ route('general_settings') }}">@lang('app.general_settings')</a> </li>--}}
+{{--                        <li> <a href="{{ route('ad_settings') }}">@lang('app.ad_settings_and_pricing')</a> </li>--}}
+{{--                        <li> <a href="{{ route('payment_settings') }}">@lang('app.payment_settings')</a> </li>--}}
+{{--                        <li> <a href="{{ route('language_settings') }}">@lang('app.language_settings')</a> </li>--}}
+{{--                        <li> <a href="{{ route('file_storage_settings') }}">@lang('app.file_storage_settings')</a> </li>--}}
+{{--                        <li> <a href="{{ route('social_settings') }}">@lang('app.social_settings')</a> </li>--}}
+{{--                        <li> <a href="{{ route('re_captcha_settings') }}">@lang('app.re_captcha_settings')</a> </li>--}}
+{{--                    </ul>--}}
+{{--                    <!-- /.nav-second-level -->--}}
+{{--                </li>--}}
 
-                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>
+{{--                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>--}}
 
 
             @endif
