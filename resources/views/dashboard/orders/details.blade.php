@@ -16,15 +16,9 @@
             <table class="order-details__cart dashboard-table" id="">
                 <thead>
                 <tr>
-                    <th>
-                        Product Name
-                    </th>
-                    <th>
-                        Quantity
-                    </th>
-                    <th>
-                        Unit Price
-                    </th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
                 </tr>
                 </thead>
                 <tbody>

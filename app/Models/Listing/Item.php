@@ -4,6 +4,7 @@ namespace App\Models\Listing;
 
 use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Wax\Shop\Models\Order\Item as OrderItem;
 
 class Item extends Model
@@ -39,5 +40,21 @@ class Item extends Model
     public function orderItem()
     {
         return $this->belongsTo(OrderItem::class);
+    }
+
+    public function getRemovedAttribute()
+    {
+        return !is_null($this->removed_at);
+    }
+
+    public function toggleRemoved()
+    {
+        if ($this->removed) {
+            $this->removed_at = null;
+        } else {
+            $this->removed_at = Carbon::now()->toDateTimeString();
+        }
+
+        $this->save();
     }
 }

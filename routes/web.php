@@ -247,6 +247,21 @@ Route::group(
                             ->uses('MailPreviewController@auctionEndedNoWinner');
                     });
 
+                Route::name('dashboard.shop.orders.')
+                    ->prefix('shop/orders')
+                    ->middleware('privilege:Shop - Orders')
+                    ->group(function () {
+                        Route::get('/')
+                            ->name('index')
+                            ->uses('ShopOrdersController@index');
+                        Route::get('{id}')
+                            ->name('details')
+                            ->uses('ShopOrdersController@details');
+                        Route::post('{orderId}/items/{itemId}/toggle-removed')
+                            ->name('items.toggle-removed')
+                            ->uses('ShopOrdersController@toggleItemRemoved');
+                    });
+
                 Route::group(
                     ['prefix' => 'settings'],
                     function () {
