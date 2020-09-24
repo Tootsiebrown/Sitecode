@@ -169,9 +169,34 @@
   text-align: right;
 }
 
+.shop-order-details section {
+  margin-bottom: 24px;
+}
+
 #toggle-item-bin {
   padding: 0;
   background-color: transparent;
+}
+
+.order-status {
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+}
+
+.order-status li {
+  color: #110f2e;
+  opacity: 0.5;
+  background-color: rgba(17, 15, 46, 0.2);
+  border-radius: 6px;
+  padding: 8px;
+  margin-right: 8px;
+}
+
+.order-status li.done {
+  opacity: 1;
+  color: #ffffff;
+  background-color: #003b5c;
 }
 
 .dashboard-table td,

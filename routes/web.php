@@ -260,6 +260,12 @@ Route::group(
                         Route::post('{orderId}/items/{itemId}/toggle-removed')
                             ->name('items.toggle-removed')
                             ->uses('ShopOrdersController@toggleItemRemoved');
+                        Route::post('{id}/status')
+                            ->name('status')
+                            ->uses('ShopOrdersController@setStatus');
+                        Route::post('{id}/cancel')
+                            ->name('cancel')
+                            ->uses('ShopOrdersController@cancel');
                     });
 
                 Route::group(

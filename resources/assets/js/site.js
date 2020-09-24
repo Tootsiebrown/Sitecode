@@ -19,6 +19,7 @@ import BillingSameAsShipping from "./component/billing-same-as-shipping";
 import WatchListing from "./component/watch-listing";
 import ListingItemAdder from "./component/listing-item-adder";
 import ConfirmIfDeleteItems from "./component/confirm-if-delete-items";
+import CancelOrder from "./component/cancel-order";
 
 export default function Site() {
 
@@ -46,6 +47,7 @@ export default function Site() {
         selectComponent('billing-same-as-shipping').each((index, element) => new BillingSameAsShipping(element))
         selectComponent('watch-listing').each((index, element) => new WatchListing(element))
         selectComponent('confirm-if-delete-items').each((index, element) => new ConfirmIfDeleteItems(element))
+        selectComponent('cancel-order').each((index, element) => new CancelOrder(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

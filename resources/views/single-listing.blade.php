@@ -145,7 +145,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-addon">Qty:</div>
-                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="#" required="required">
+                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="#" required="required" value="{{ old('quantity') ?? 1 }}">
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary" type="submit">Add to Cart @svg(cart)</button>
                                     </span>
