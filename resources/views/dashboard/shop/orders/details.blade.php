@@ -76,11 +76,11 @@
                             <td class="cartitem-unit-price" rowspan="{{ $item->listingItems->count() }}">
                                 {{ Currency::format($item->gross_unit_price) }}
                             </td>
-                            <td class="numeric" rowspan="{{ $item->listingItems->count() }}">
+                            <td class="numeric cartitem-listing-id" rowspan="{{ $item->listingItems->count() }}">
                                 {{ $item->listing_id }}
                             </td>
                             @if (! $order->canceled)
-                                <td>
+                                <td class="numeric">
                                     {{ $item->listingItems->first()->id }}
                                 </td>
                                 <td>
@@ -109,7 +109,7 @@
                                 @continue
                             @endif
                             <tr class="{{ $loop->last ? 'last-for-item' : '' }}">
-                                <td>
+                                <td class="numeric">
                                     {{ $listingItem->id }}
                                 </td>
                                 <td>
@@ -126,7 +126,7 @@
                                     >
                                         @csrf
                                         <input type="hidden" name="current_status" value="{{ $listingItem->removed_at ? '1' : '0' }}">
-                                        <input type="submit" name="action" value="toggle">
+                                        <input class="btn btn-primary" type="submit" name="action" value="toggle">
                                     </form>
                                 </td>
                             </tr>

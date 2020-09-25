@@ -3,7 +3,11 @@
         margin-bottom: 24px;
     }
 
-    td.cartitem-name {
+    td.cartitem-name,
+    td.cartitem-quantity,
+    td.cartitem-unit-price,
+    td.cartitme-listing-id
+    {
         vertical-align: top;
     }
 
