@@ -10,7 +10,7 @@ class OrderPolicy
 {
     public function get(User $user, Order $order)
     {
-        $authRepo = new AuthorizationRepository;
+        $authRepo = new AuthorizationRepository();
 
         $privilege = $authRepo->getPrivilege('Shop - Orders');
         if ($authRepo->userHasPrivilege($user, $privilege)) {
