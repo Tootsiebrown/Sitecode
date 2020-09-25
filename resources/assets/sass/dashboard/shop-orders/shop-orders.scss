@@ -2,6 +2,18 @@
     section {
         margin-bottom: 24px;
     }
+
+    td.cartitem-name {
+        vertical-align: top;
+    }
+
+    tr.last-for-item {
+        border-bottom: 2px solid $color-navy;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
 }
 
 #toggle-item-bin {

@@ -63,7 +63,7 @@
                     </thead>
                     <tbody>
                     @foreach ($shipment->items as $item)
-                        <tr data-id="$item['id']">
+                        <tr data-id="{{ $item->id }}" class="{{ $item->listingItems->count() > 1 ? '' : 'last-for-item' }}">
                             <td class="cartitem-name" rowspan="{{ $item->listingItems->count() }}">
                                 {{ $item->name }}
                                 @foreach ($item->options as $option)
@@ -108,7 +108,7 @@
                             @if ($loop->first)
                                 @continue
                             @endif
-                            <tr>
+                            <tr class="{{ $loop->last ? 'last-for-item' : '' }}">
                                 <td>
                                     {{ $listingItem->id }}
                                 </td>

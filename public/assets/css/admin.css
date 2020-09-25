@@ -173,6 +173,18 @@
   margin-bottom: 24px;
 }
 
+.shop-order-details td.cartitem-name {
+  vertical-align: top;
+}
+
+.shop-order-details tr.last-for-item {
+  border-bottom: 2px solid #003b5c;
+}
+
+.shop-order-details tr.last-for-item:last-child {
+  border-bottom: none;
+}
+
 #toggle-item-bin {
   padding: 0;
   background-color: transparent;
