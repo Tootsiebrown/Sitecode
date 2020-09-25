@@ -34,7 +34,7 @@
 
     <!-- Conditional page load script -->
     @if(request()->segment(1) === 'dashboard')
-        <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
+        <link rel="stylesheet" href="{{ mix('assets/css/admin.css') }}">
     @endif
 
     @if(is_rtl())
