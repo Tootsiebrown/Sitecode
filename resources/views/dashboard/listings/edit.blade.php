@@ -1,396 +1,392 @@
-@extends('layouts.app')
-@section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
+@extends('layouts.dashboard')
 
-@section('content')
+@section('dashboard-content')
     <script type="text/javascript">
         var categoryHierarchy = {!! json_encode($categoryHierarchy) !!};
     </script>
-    <div class="container">
+    <h2>Edit Listing</h2>
+    <form action="{{ route('dashboard.listings.saveEdit', ['id' => $listing->id]) }}" id="" class="form-horizontal" method="post" enctype="multipart/form-data">
+        @csrf
 
-        <div id="wrapper">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            @include('dashboard.sidebar_menu')
+        <div class="form-group">
+            <label for="sku" class="col-sm-4 control-label">Listing Sku</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="name" value="{{ $listing->id }}" name="listing_sku" placeholder="" readonly disabled>
+            </div>
+        </div>
 
-            <div id="page-wrapper">
+        <div class="form-group">
+            <label for="sku" class="col-sm-4 control-label">Product Sku</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="name" value="{{ $listing->product_id }}" name="product_sku" placeholder="" readonly disabled>
+            </div>
+        </div>
 
-                @include('dashboard.flash_msg')
+        <div class="form-group">
+            <label for="type" class="col-sm-4 control-label">Listing Type</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="type" value="{{ $listing->type }}" name="type" placeholder="" readonly disabled>
+            </div>
+        </div>
 
-                <h2>Edit Listing</h2>
-                <form action="{{ route('dashboard.listings.saveEdit', ['id' => $listing->id]) }}" id="" class="form-horizontal" method="post" enctype="multipart/form-data">
-                    @csrf
+        @if ($listing->type === 'auction')
+            <div class="form-group">
+                <label for="expired_at" class="col-sm-4 control-label">Auction Ends At</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="expired_at" value="{{ $listing->expired_at->toDateTimeString() }}" name="expired_at" placeholder="" readonly disabled>
+                </div>
+            </div>
+        @endif
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+        <div class="form-group">
+            <label for="expired_at" class="col-sm-4 control-label">Bins</label>
+            <div class="col-sm-8">
+                <a href="{{ route('dashboard.bins.showListingBins', ['id' => $listing->id]) }}">Edit Bins</a>
+                @if ($listing->is_set_price)
+                    <br>Edit quantity by adding more items and bins
+                @endif
+            </div>
+        </div>
 
+        <div class="form-group {{ $errors->has('title')? 'has-error':'' }}">
+            <label for="title" class="col-sm-4 control-label">Listing Title</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="title" value="{{ old('title') ?? request('title') ?? $listing->title ?? '' }}" name="title" placeholder="">
+                {!! $errors->has('title')? '<p class="help-block">'.$errors->first('title').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
+            <label for="upc" class="col-sm-4 control-label">UPC</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') ?? $listing->upc ?? '' }}" name="upc" placeholder="">
+                {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
+            <label for="original_price" class="col-sm-4 control-label">Original Price</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($listing->original_price ?? 0, 2, '.', '') }}" name="original_price" placeholder="">
+                {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
+            <label for="price" class="col-sm-4 control-label">Listing Price</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($listing->price ?? 0, 2, '.', '') }}" name="price" placeholder="">
+                {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
+            <label for="condition" class="col-sm-4 control-label">Condition</label>
+            <div class="col-sm-8">
+                <select name="condition" class="select2">
+                    @foreach ($listing::getConditions() as $condition)
+                        <option value="{{ $condition }}" @if ($condition === $listing->condition) selected @endif>
+                            {{ $condition }}
+                        </option>
+                    @endforeach
+                </select>
+                {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('description')? 'has-error':'' }}">
+            <label class="col-sm-4 control-label">Description</label>
+            <div class="col-sm-8">
+                <textarea name="description" class="form-control" id="description_editor" rows="8">{!! old('description')?? $listing['description'] ?? '' !!}</textarea>
+                {!! $errors->has('description')? '<p class="help-block">'.$errors->first('description').'</p>':'' !!}
+            </div>
+        </div>
+
+        <div class="form-group {{ $errors->has('features')? 'has-error':'' }}">
+            <label class="col-sm-4 control-label">Features</label>
+            <div class="col-sm-8">
+                <textarea name="features" class="form-control" id="features_editor" rows="8">{!! old('features') ?? $listing['features'] ?? '' !!}</textarea>
+                {!! $errors->has('features')? '<p class="help-block">'.$errors->first('features').'</p>':'' !!}
+            </div>
+        </div>
+
+        <legend>Product Brand</legend>
+
+        <div class="select-or-new" data-component="select-or-new">
+            @if (!$brands->isEmpty())
+                <div class="form-group">
+                    <label for="brand_id" class="col-sm-4 control-label">Brand</label>
+                    <div class="col-sm-8">
+                        <select
+                          data-element="select"
+                          class="form-control select2 select-or-new__select"
+                          name="brand_id"
+                          id="brand_id"
+                        >
+                            <option value="">Select Brand...</option>
+                            <option value="new" @if (!empty($newBrand)) selected="selected" @endif>New...</option>
+                            @foreach($brands as $brand)
+                                <option
+                                  value="{{ $brand->id }}"
+                                  @if ($brand->id == old('brand_id')) selected="selected"
+                                  @elseif ($brand->id == request('brand_id')) selected="selected"
+                                  @elseif ($brand->id == $listing->brand_id) selected="selected"
+                                  @endif
+                                >{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @endif
+
+            <div
+              data-element="new"
+              class="form-group {{ $errors->has('new_brand')? 'has-error':'' }} select-or-new__new"
+            >
+                <label for="brand" class="col-sm-4 control-label">New Brand:</label>
+                <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="new_brand"
+                      value="{{ old('new_brand') ?? request('new_brand') ?? $newBrand ?? '' }}"
+                      name="new_brand"
+                      placeholder=""
+                    >
+                    {!! $errors->has('new_brand')? '<p class="help-block">'.$errors->first('new_brand').'</p>':'' !!}
+                </div>
+            </div>
+        </div>
+
+        <div data-component="product-categories-hierarchy">
+            <legend>Product Category</legend>
+
+            <div class="select-or-new" data-component="select-or-new">
+                @if (!$categories->isEmpty())
                     <div class="form-group">
-                        <label for="sku" class="col-sm-4 control-label">Listing Sku</label>
+                        <label for="category_id" class="col-sm-4 control-label">Category</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="name" value="{{ $listing->id }}" name="listing_sku" placeholder="" readonly disabled>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sku" class="col-sm-4 control-label">Product Sku</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="name" value="{{ $listing->product_id }}" name="product_sku" placeholder="" readonly disabled>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="type" class="col-sm-4 control-label">Listing Type</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="type" value="{{ $listing->type }}" name="type" placeholder="" readonly disabled>
-                        </div>
-                    </div>
-
-                    @if ($listing->type === 'auction')
-                        <div class="form-group">
-                            <label for="expired_at" class="col-sm-4 control-label">Auction Ends At</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="expired_at" value="{{ $listing->expired_at->toDateTimeString() }}" name="expired_at" placeholder="" readonly disabled>
-                            </div>
-                        </div>
-                    @endif
-
-                    <div class="form-group {{ $errors->has('title')? 'has-error':'' }}">
-                        <label for="title" class="col-sm-4 control-label">Listing Title</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="title" value="{{ old('title') ?? request('title') ?? $listing->title ?? '' }}" name="title" placeholder="">
-                            {!! $errors->has('title')? '<p class="help-block">'.$errors->first('title').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('upc')? 'has-error':'' }}">
-                        <label for="upc" class="col-sm-4 control-label">UPC</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="upc" value="{{ old('upc') ?? request('upc') ?? $listing->upc ?? '' }}" name="upc" placeholder="">
-                            {!! $errors->has('upc')? '<p class="help-block">'.$errors->first('upc').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('original_price')? 'has-error':'' }}">
-                        <label for="original_price" class="col-sm-4 control-label">Original Price</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="original_price" value="{{ old('original_price') ?? number_format($listing->original_price ?? 0, 2, '.', '') }}" name="original_price" placeholder="">
-                            {!! $errors->has('original_price')? '<p class="help-block">'.$errors->first('original_price').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
-                        <label for="price" class="col-sm-4 control-label">Listing Price</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="price" value="{{ old('price') ?? number_format($listing->price ?? 0, 2, '.', '') }}" name="price" placeholder="">
-                            {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('condition')? 'has-error':'' }}">
-                        <label for="condition" class="col-sm-4 control-label">Condition</label>
-                        <div class="col-sm-8">
-                            <select name="condition" class="select2">
-                                @foreach ($listing::getConditions() as $condition)
-                                    <option value="{{ $condition }}" @if ($condition === $listing->condition) selected @endif>
-                                        {{ $condition }}
-                                    </option>
+                            <select
+                              class="form-control select2 select-or-new__select"
+                              name="category_id"
+                              id="category_id"
+                              data-element="select"
+                              data-product-categories-hierarchy-element="topSelect"
+                              data-component="select-with-child"
+                              data-child-wrapper="#child-wrapper"
+                              data-child-data-url="{{ route("getProductCategoryChildren") }}"
+                              data-url-parameter="category_id"
+                              data-child-name="Child Category"
+                            >
+                                <option value="">Select Category...</option>
+                                <option value="new">New Category...</option>
+                                @foreach($categories as $category)
+                                    <option
+                                      value="{{ $category->id }}"
+                                      @if ($category->id == old('category_id')) selected="selected"
+                                      @elseif ($category->id == request('category_id')) selected="selected"
+                                      @elseif ($listing->categories->pluck('id')->contains($category->id)) selected="selected"
+                                      @endif
+                                    >{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                            {!! $errors->has('new')? '<p class="help-block">'.$errors->first('new').'</p>':'' !!}
                         </div>
                     </div>
+                @endif
 
-                    <div class="form-group {{ $errors->has('description')? 'has-error':'' }}">
-                        <label class="col-sm-4 control-label">Description</label>
-                        <div class="col-sm-8">
-                            <textarea name="description" class="form-control" id="description_editor" rows="8">{!! old('description')?? $listing['description'] ?? '' !!}</textarea>
-                            {!! $errors->has('description')? '<p class="help-block">'.$errors->first('description').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group {{ $errors->has('features')? 'has-error':'' }}">
-                        <label class="col-sm-4 control-label">Features</label>
-                        <div class="col-sm-8">
-                            <textarea name="features" class="form-control" id="features_editor" rows="8">{!! old('features') ?? $listing['features'] ?? '' !!}</textarea>
-                            {!! $errors->has('features')? '<p class="help-block">'.$errors->first('features').'</p>':'' !!}
-                        </div>
-                    </div>
-
-                    <legend>Product Brand</legend>
-
-                    <div class="select-or-new" data-component="select-or-new">
-                        @if (!$brands->isEmpty())
-                            <div class="form-group">
-                                <label for="brand_id" class="col-sm-4 control-label">Brand</label>
-                                <div class="col-sm-8">
-                                    <select
-                                      data-element="select"
-                                      class="form-control select2 select-or-new__select"
-                                      name="brand_id"
-                                      id="brand_id"
-                                    >
-                                        <option value="">Select Brand...</option>
-                                        <option value="new" @if (!empty($newBrand)) selected="selected" @endif>New...</option>
-                                        @foreach($brands as $brand)
-                                            <option
-                                              value="{{ $brand->id }}"
-                                              @if ($brand->id == old('brand_id')) selected="selected"
-                                              @elseif ($brand->id == request('brand_id')) selected="selected"
-                                              @elseif ($brand->id == $listing->brand_id) selected="selected"
-                                              @endif
-                                            >{{ $brand->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div
-                          data-element="new"
-                          class="form-group {{ $errors->has('new_brand')? 'has-error':'' }} select-or-new__new"
+                <div
+                  class="form-group select-or-new__new {{ $errors->has('new_category')? 'has-error':'' }}"
+                  data-element="new"
+                >
+                    <label for="category" class="col-sm-4 control-label">New Category</label>
+                    <div class="col-sm-8">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="new_category"
+                          value="{{ old('new_category') ?? request('new_category') ?? '' }}"
+                          name="new_category"
+                          placeholder=""
                         >
-                            <label for="brand" class="col-sm-4 control-label">New Brand:</label>
-                            <div class="col-sm-8">
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="new_brand"
-                                  value="{{ old('new_brand') ?? request('new_brand') ?? $newBrand ?? '' }}"
-                                  name="new_brand"
-                                  placeholder=""
-                                >
-                                {!! $errors->has('new_brand')? '<p class="help-block">'.$errors->first('new_brand').'</p>':'' !!}
-                            </div>
-                        </div>
+                        {!! $errors->has('category')? '<p class="help-block">'.$errors->first('new_category').'</p>':'' !!}
                     </div>
+                </div>
+            </div>
+            <div
+              id="child-wrapper"
+              class="select-or-new"
+              data-component="select-or-new"
+              data-product-categories-hierarchy-element="child-select"
+              data-my-child-hierarchy-component="[data-component='grand-child-select-component']"
+            >
+                <legend>Product Child Category</legend>
 
-                    <div data-component="product-categories-hierarchy">
-                        <legend>Product Category</legend>
-
-                        <div class="select-or-new" data-component="select-or-new">
-                            @if (!$categories->isEmpty())
-                                <div class="form-group">
-                                    <label for="category_id" class="col-sm-4 control-label">Category</label>
-                                    <div class="col-sm-8">
-                                        <select
-                                          class="form-control select2 select-or-new__select"
-                                          name="category_id"
-                                          id="category_id"
-                                          data-element="select"
-                                          data-product-categories-hierarchy-element="topSelect"
-                                          data-component="select-with-child"
-                                          data-child-wrapper="#child-wrapper"
-                                          data-child-data-url="{{ route("getProductCategoryChildren") }}"
-                                          data-url-parameter="category_id"
-                                          data-child-name="Child Category"
-                                        >
-                                            <option value="">Select Category...</option>
-                                            <option value="new">New Category...</option>
-                                            @foreach($categories as $category)
-                                                <option
-                                                  value="{{ $category->id }}"
-                                                  @if ($category->id == old('category_id')) selected="selected"
-                                                  @elseif ($category->id == request('category_id')) selected="selected"
-                                                  @elseif ($listing->categories->pluck('id')->contains($category->id)) selected="selected"
-                                                  @endif
-                                                >{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div
-                              class="form-group select-or-new__new {{ $errors->has('new_category')? 'has-error':'' }}"
-                              data-element="new"
-                            >
-                                <label for="category" class="col-sm-4 control-label">New Category</label>
-                                <div class="col-sm-8">
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      id="new_category"
-                                      value="{{ old('new_category') ?? request('new_category') ?? '' }}"
-                                      name="new_category"
-                                      placeholder=""
-                                    >
-                                    {!! $errors->has('category')? '<p class="help-block">'.$errors->first('new_category').'</p>':'' !!}
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                          id="child-wrapper"
-                          class="select-or-new"
-                          data-component="select-or-new"
-                          data-product-categories-hierarchy-element="child-select"
-                          data-my-child-hierarchy-component="[data-component='grand-child-select-component']"
+                <div class="form-group" id="child-category" >
+                    <label for="child_category_id" class="col-sm-4 control-label">Child Category</label>
+                    <div class="col-sm-8">
+                        <select
+                          class="form-control select2 select-or-new__select"
+                          name="child_category_id"
+                          id="child_category_id"
+                          data-selected="{{ old('child_category_id') ?? (!is_null($listing->child_category) ? $listing->child_category->id : '') }}"
+                          data-element="select"
+                          data-component="select-with-child"
+                          data-child-wrapper="#grandchild-wrapper"
+                          data-child-data-url="{{ route("getProductCategoryChildren") }}"
+                          data-url-parameter="category_id"
+                          data-child-name="Grandchild Category"
                         >
-                            <legend>Product Child Category</legend>
-
-                            <div class="form-group" id="child-category" >
-                                <label for="child_category_id" class="col-sm-4 control-label">Child Category</label>
-                                <div class="col-sm-8">
-                                    <select
-                                      class="form-control select2 select-or-new__select"
-                                      name="child_category_id"
-                                      id="child_category_id"
-                                      data-selected="{{ old('child_category_id') ?? (!is_null($listing->child_category) ? $listing->child_category->id : '') }}"
-                                      data-element="select"
-                                      data-component="select-with-child"
-                                      data-child-wrapper="#grandchild-wrapper"
-                                      data-child-data-url="{{ route("getProductCategoryChildren") }}"
-                                      data-url-parameter="category_id"
-                                      data-child-name="Grandchild Category"
-                                    >
-                                        <option value="">Select Child Category..</option>
-                                        <option value="new">New Child Category...</option>
-                                        @foreach($children as $child)
-                                            <option value="{{ $child->id }}" @if ($child->id == old('child_category_id')) selected="selected" @endif>{{ $child->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div
-                                class="form-group select-or-new__new {{ $errors->has('new_child_category')? 'has-error':'' }}"
-                                data-element="new"
-                            >
-                                <label for="new_child_category" class="col-sm-4 control-label">New Child Category</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="new_child_category" value="{{ old('new_child_category') ?? $listing->child->id ?? '' }}" name="new_child_category" placeholder="" />
-                                    {!! $errors->has('new_child_category')? '<p class="help-block">'.$errors->first('new_child_category').'</p>':'' !!}
-                                </div>
-                            </div>
-                        </div> <!-- .child-wrapper -->
-
-                        <div
-                          id="grandchild-wrapper"
-                          data-component="grand-child-select-component"
-                        >
-                            <legend>Product Grandchild Category</legend>
-                            <div class="select-or-new" data-component="select-or-new">
-                                <div class="form-group" id="grandchild_category_id"
-                                     data-component="select-or-new">
-                                    <label for="grandchild_category_id" class="col-sm-4 control-label">Grandchild Category</label>
-                                    <div class="col-sm-8">
-                                        <select
-                                          class="form-control select2 select-or-new__select"
-                                          name="grandchild_category_id"
-                                          id="grandchild_category_id"
-                                          data-selected="{{ old('grandchild_category_id') ?? (!is_null($listing->grandchild_category) ? $listing->grandchild_category->id : '') }}"
-                                          data-element="select"
-                                        >
-                                            <option value="">Select Grandchild Category...</option>
-                                            <option value="new">New Grandchild Category...</option>
-                                            @foreach($grandchildren as $grandchild)
-                                                <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('grandchild_category_id')) selected="selected" @endif>{{ $grandchild->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div
-                                  class="form-group select-or-new__new{{ $errors->has('new_grandchild_category')? 'has-error':'' }}"
-                                  data-element="new"
-                                >
-                                    <label for="new_grandchild_category" class="col-sm-4 control-label">New Grandchild Category</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="new_grandchild_category" value="{{ old('new_grandchild_category') ?? $listing['grandchild'] ?? '' }}" name="new_grandchild_category" placeholder="" />
-                                        {!! $errors->has('new_grandchild_category')? '<p class="help-block">'.$errors->first('new_grandchild_category').'</p>':'' !!}
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- .grandchild-wrapper -->
-                    </div>
-                    <legend>Product Images</legend>
-
-                    <div class="images-wrapper" data-component="lister-product-image-wrapper">
-                        @foreach($listing->images as $image)
-                            @if ($errors->any() && !in_array($image->id, old('existing_images', [])))
-                                {{-- if we already submitted, but this was deleted, don't bring it back.--}}
-                                @continue
-                            @endif
-
-                            <div class="lister-product-image clearfix" data-component="lister-product-image">
-                                <input
-                                    type="hidden"
-                                    name="existing_images[]"
-                                    value="{{ $image->id }}"
-                                />
-                                <label class="col-sm-4 control-label"></label>
-                                <div class="col-sm-8 lister-product-image__display-container">
-                                    <div class="lister-product-image__image-wrapper"><img src="{{ $image->url }}"></div>
-                                    <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
-                                </div>
-                            </div>
-                        @endforeach
-                        @if (is_array(old('new_images')) && !empty(old('new_images')))
-                            @foreach (old('new_images') as $newImage)
-                                    <div class="lister-product-image clearfix" data-component="lister-product-image" data-saved="false">
-                                        <input
-                                            type="hidden"
-                                            name="new_images[]"
-                                            value="{{ $newImage }}"
-                                        />
-                                        <label class="col-sm-4 control-label"></label>
-                                        <div class="col-sm-8 lister-product-image__display-container">
-                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::getUrlPath() . $newImage }}"></div>
-                                            <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
-                                        </div>
-                                    </div>
+                            <option value="">Select Child Category..</option>
+                            <option value="new">New Child Category...</option>
+                            @foreach($children as $child)
+                                <option value="{{ $child->id }}" @if ($child->id == old('child_category_id')) selected="selected" @endif>{{ $child->name }}</option>
                             @endforeach
-                        @endif
+                        </select>
+                    </div>
+                </div>
+
+                <div
+                    class="form-group select-or-new__new {{ $errors->has('new_child_category')? 'has-error':'' }}"
+                    data-element="new"
+                >
+                    <label for="new_child_category" class="col-sm-4 control-label">New Child Category</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="new_child_category" value="{{ old('new_child_category') ?? $listing->child->id ?? '' }}" name="new_child_category" placeholder="" />
+                        {!! $errors->has('new_child_category')? '<p class="help-block">'.$errors->first('new_child_category').'</p>':'' !!}
+                    </div>
+                </div>
+            </div> <!-- .child-wrapper -->
+
+            <div
+              id="grandchild-wrapper"
+              data-component="grand-child-select-component"
+            >
+                <legend>Product Grandchild Category</legend>
+                <div class="select-or-new" data-component="select-or-new">
+                    <div class="form-group" id="grandchild_category_id"
+                         data-component="select-or-new">
+                        <label for="grandchild_category_id" class="col-sm-4 control-label">Grandchild Category</label>
+                        <div class="col-sm-8">
+                            <select
+                              class="form-control select2 select-or-new__select"
+                              name="grandchild_category_id"
+                              id="grandchild_category_id"
+                              data-selected="{{ old('grandchild_category_id') ?? (!is_null($listing->grandchild_category) ? $listing->grandchild_category->id : '') }}"
+                              data-element="select"
+                            >
+                                <option value="">Select Grandchild Category...</option>
+                                <option value="new">New Grandchild Category...</option>
+                                @foreach($grandchildren as $grandchild)
+                                    <option value="{{ $grandchild->id }}" @if ($grandchild->id == old('grandchild_category_id')) selected="selected" @endif>{{ $grandchild->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
-                        <div class="col-sm-12">
+                    <div
+                      class="form-group select-or-new__new{{ $errors->has('new_grandchild_category')? 'has-error':'' }}"
+                      data-element="new"
+                    >
+                        <label for="new_grandchild_category" class="col-sm-4 control-label">New Grandchild Category</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="new_grandchild_category" value="{{ old('new_grandchild_category') ?? $listing['grandchild'] ?? '' }}" name="new_grandchild_category" placeholder="" />
+                            {!! $errors->has('new_grandchild_category')? '<p class="help-block">'.$errors->first('new_grandchild_category').'</p>':'' !!}
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- .grandchild-wrapper -->
+        </div>
+        <legend>Product Images</legend>
 
-                            <label class="col-sm-4 control-label">New Image</label>
-                            <div class="col-sm-8">
-                                <div class="new-product-image" data-component="new-product-image">
-                                    <input
-                                      type="file"
-                                      name="new_image"
-                                      data-element="input"
-                                      class="form-control new-product-image__input"
-                                      data-action="{{ route('lister.upload-image') }}"
-                                    />
-                                    <div class="new-product-image__spinner" data-element="spinner">
-                                        <img src="/assets/img/loading-spinner.gif" alt="loading">
-                                    </div>
-                                    <p class="new-product-image__message" data-element="message"></p>
-                                </div>
+        <div class="images-wrapper" data-component="lister-product-image-wrapper">
+            @foreach($listing->images as $image)
+                @if ($errors->any() && !in_array($image->id, old('existing_images', [])))
+                    {{-- if we already submitted, but this was deleted, don't bring it back.--}}
+                    @continue
+                @endif
+
+                <div class="lister-product-image clearfix" data-component="lister-product-image">
+                    <input
+                        type="hidden"
+                        name="existing_images[]"
+                        value="{{ $image->id }}"
+                    />
+                    <label class="col-sm-4 control-label"></label>
+                    <div class="col-sm-8 lister-product-image__display-container">
+                        <div class="lister-product-image__image-wrapper"><img src="{{ $image->url }}"></div>
+                        <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
+                    </div>
+                </div>
+            @endforeach
+            @if (is_array(old('new_images')) && !empty(old('new_images')))
+                @foreach (old('new_images') as $newImage)
+                        <div class="lister-product-image clearfix" data-component="lister-product-image" data-saved="false">
+                            <input
+                                type="hidden"
+                                name="new_images[]"
+                                value="{{ $newImage }}"
+                            />
+                            <label class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8 lister-product-image__display-container">
+                                <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::getUrlPath() . $newImage }}"></div>
+                                <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
                             </div>
-                            {!! $errors->has('new_image ')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
                         </div>
+                @endforeach
+            @endif
+        </div>
+
+        <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
+            <div class="col-sm-12">
+
+                <label class="col-sm-4 control-label">New Image</label>
+                <div class="col-sm-8">
+                    <div class="new-product-image" data-component="new-product-image">
+                        <input
+                          type="file"
+                          name="new_image"
+                          data-element="input"
+                          class="form-control new-product-image__input"
+                          data-action="{{ route('lister.upload-image') }}"
+                        />
+                        <div class="new-product-image__spinner" data-element="spinner">
+                            <img src="/assets/img/loading-spinner.gif" alt="loading">
+                        </div>
+                        <p class="new-product-image__message" data-element="message"></p>
                     </div>
+                </div>
+                {!! $errors->has('new_image ')? '<p class="help-block">'.$errors->first('images').'</p>':'' !!}
+            </div>
+        </div>
 
-                    <legend>Optional Attributes</legend>
+        <legend>Optional Attributes</legend>
 
-                    @foreach ($optionalFields as $optionalFieldName => $optionalFieldLabel)
-                        <div class="form-group {{ $errors->has($optionalFieldName)? 'has-error':'' }}">
-                            <label for="{{ $optionalFieldName }}" class="col-sm-4 control-label">{{ $optionalFieldLabel }}</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="{{ $optionalFieldName }}" value="{{ old($optionalFieldName) ?? $listing[$optionalFieldName] ?? '' }}" name="{{ $optionalFieldName }}" placeholder="">
-                                {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
-                            </div>
-                        </div>
-                    @endforeach
+        @foreach ($optionalFields as $optionalFieldName => $optionalFieldLabel)
+            <div class="form-group {{ $errors->has($optionalFieldName)? 'has-error':'' }}">
+                <label for="{{ $optionalFieldName }}" class="col-sm-4 control-label">{{ $optionalFieldLabel }}</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="{{ $optionalFieldName }}" value="{{ old($optionalFieldName) ?? $listing[$optionalFieldName] ?? '' }}" name="{{ $optionalFieldName }}" placeholder="">
+                    {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
+                </div>
+            </div>
+        @endforeach
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-8">
-                            <button type="submit" class="btn btn-primary">Save Product</button>
-                        </div>
-                    </div>
-                </form>
-            </div> <!-- .page-wrapper -->
-        </div> <!-- #wrapper -->
-    </div><!-- .container -->
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit" class="btn btn-primary">Save Product</button>
+            </div>
+        </div>
+    </form>
 
 @endsection
 
@@ -409,12 +405,6 @@
             format: "yyyy-mm-dd",
             todayHighlight: true,
             startDate: new Date(),
-            autoclose: true
-        });
-        $('#build_year').datepicker({
-            format: "yyyy",
-            viewMode: "years",
-            minViewMode: "years",
             autoclose: true
         });
     </script>
