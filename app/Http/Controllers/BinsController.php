@@ -142,8 +142,7 @@ class BinsController extends Controller
 
         $quantity = request('quantity');
         $records = [];
-        for ($i = 1; $i <= $quantity; $i++)
-        {
+        for ($i = 1; $i <= $quantity; $i++) {
             $records[] = [];
         }
 

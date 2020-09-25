@@ -66,7 +66,7 @@ class ShopOrdersController extends Controller
             case 'processed':
                 $allRemovedFromBin = $order
                     ->items
-                    ->map(function($item) {
+                    ->map(function ($item) {
                         return $item->listingItems;
                     })
                     ->flatten()
