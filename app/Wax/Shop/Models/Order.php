@@ -2,6 +2,10 @@
 
 namespace App\Wax\Shop\Models;
 
+use App\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Wax\Shop\Models\Bundle;
 use Wax\Shop\Models\Order as WaxOrder;
 use App\Wax\Shop\Models\Order\Shipment;
@@ -54,8 +58,6 @@ class Order extends WaxOrder
         return $bundlesTouched;
     }
 
-
-
     public function getDefaultShipmentAttribute()
     {
         if (!empty($this->shipments->first())) {
@@ -63,5 +65,40 @@ class Order extends WaxOrder
         }
 
         return $this->shipments()->firstOrCreate([]);
+    }
+
+    public function getShippedAttribute()
+    {
+        return $this
+            ->shipments
+            ->filter(function ($shipment) {
+                return is_null($shipment->shipped_at);
+            })
+            ->count() === 0;
+    }
+
+    public function getCanceledAttribute()
+    {
+        return !is_null($this->canceled_at);
+    }
+
+    public function cancel()
+    {
+        DB::table('listing_items')
+            ->where('reserved_for_order_id', $this->id)
+            ->update([
+                'reserved_for_order_id' => null,
+                'order_item_id' => null,
+                'removed_at' => null,
+            ]);
+
+        $this->canceled_by_user_id = Auth::user()->id;
+        $this->canceled_at = Carbon::now()->toDateTimeString();
+        $this->save();
+    }
+
+    public function canceledBy()
+    {
+        return $this->belongsTo(User::class, 'canceled_by_user_id');
     }
 }

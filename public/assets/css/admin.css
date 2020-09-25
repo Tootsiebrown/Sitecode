@@ -151,8 +151,12 @@
   text-align: right;
 }
 
-.bulk-edit-listing-bins {
+.top-form {
   margin-bottom: 24px;
+}
+
+.top-form .form-group label {
+  padding-top: 0;
 }
 
 .auction-activity {
@@ -165,12 +169,53 @@
   text-align: right;
 }
 
+.shop-order-details section {
+  margin-bottom: 24px;
+}
+
+#toggle-item-bin {
+  padding: 0;
+  background-color: transparent;
+}
+
+.order-status {
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+}
+
+.order-status li {
+  color: #110f2e;
+  opacity: 0.5;
+  background-color: rgba(17, 15, 46, 0.2);
+  border-radius: 6px;
+  padding: 8px;
+  margin-right: 8px;
+}
+
+.order-status li.done {
+  opacity: 1;
+  color: #ffffff;
+  background-color: #003b5c;
+}
+
 .dashboard-table td,
 .dashboard-table th {
   padding: 8px;
 }
 
-.dashboard-table td.money {
+.dashboard-table td:first-child,
+.dashboard-table th:first-child {
+  padding-left: 0;
+}
+
+.dashboard-table td:last-child,
+.dashboard-table th:last-child {
+  padding-right: 0;
+}
+
+.dashboard-table td.money,
+.dashboard-table td.numeric {
   text-align: right;
 }
 
@@ -178,19 +223,23 @@
   width: 100%;
 }
 
+@media (min-width: 768px) {
+  #wrapper {
+    display: flex;
+  }
+
+  #wrapper > .sidebar {
+    flex-basis: 240px;
+  }
+}
+
 #page-wrapper {
-  display: inline-block;
-  padding: 0 30px;
+  flex-grow: 1;
+  padding: 0 0 0 30px;
 }
 
 #page-wrapper h1.page-header {
   margin: 15px 0;
-}
-
-@media (min-width: 990px) {
-  #page-wrapper {
-    width: 70%;
-  }
 }
 
 .navbar-default {
@@ -500,12 +549,6 @@
 
 label {
   font-weight: 400;
-}
-
-.sidebar {
-  z-index: 1;
-  float: left;
-  width: 250px;
 }
 
 .sidebar .sidebar-nav.navbar-collapse {

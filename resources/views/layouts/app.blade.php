@@ -35,7 +35,6 @@
     <!-- Conditional page load script -->
     @if(request()->segment(1) === 'dashboard')
         <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.css') }}">
     @endif
 
     @if(is_rtl())
@@ -69,15 +68,6 @@
 
 @yield('page-js')
 
-<!-- Conditional page load script -->
-@if(request()->segment(1) === 'dashboard')
-    <script src="{{ asset('assets/plugins/metisMenu/dist/metisMenu.min.js') }}"></script>
-    <script>
-        $(function() {
-            $('#side-menu').metisMenu();
-        });
-    </script>
-@endif
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{ mix('/js/app.js') }}"></script>
 <script>

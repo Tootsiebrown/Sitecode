@@ -199,6 +199,9 @@ Route::group(
                 Route::post('listing-bulk')
                     ->uses('BinsController@bulkEditListingBins')
                     ->name('bulkEditListingBins');
+                Route::post('add-items')
+                    ->uses('BinsController@addItems')
+                    ->name('addItems');
 
             });
 
@@ -242,6 +245,27 @@ Route::group(
                         Route::get('auction-ended-no-winner')
                             ->name('auctionEndedNoWinner')
                             ->uses('MailPreviewController@auctionEndedNoWinner');
+                    });
+
+                Route::name('dashboard.shop.orders.')
+                    ->prefix('shop/orders')
+                    ->middleware('privilege:Shop - Orders')
+                    ->group(function () {
+                        Route::get('/')
+                            ->name('index')
+                            ->uses('ShopOrdersController@index');
+                        Route::get('{id}')
+                            ->name('details')
+                            ->uses('ShopOrdersController@details');
+                        Route::post('{orderId}/items/{itemId}/toggle-removed')
+                            ->name('items.toggle-removed')
+                            ->uses('ShopOrdersController@toggleItemRemoved');
+                        Route::post('{id}/status')
+                            ->name('status')
+                            ->uses('ShopOrdersController@setStatus');
+                        Route::post('{id}/cancel')
+                            ->name('cancel')
+                            ->uses('ShopOrdersController@cancel');
                     });
 
                 Route::group(

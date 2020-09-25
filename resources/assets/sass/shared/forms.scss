@@ -12,6 +12,11 @@ form {
             text-align: right;
         }
     }
+
+    &.solo-button {
+        background-color: transparent;
+        padding: 0;
+    }
 }
 
 .error-message {

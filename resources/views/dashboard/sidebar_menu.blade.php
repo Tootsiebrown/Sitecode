@@ -40,7 +40,7 @@
 
             <li>
                 <a href="{{ route('dashboard.auction-activity') }}">
-                    <i class="fa fa-hourglass-o"></i>
+                    <i class="fa fa-hourglass"></i>
                     Auction Activity
                 </a>
             </li>
@@ -48,7 +48,7 @@
             <li>
                 <a href="{{ route('dashboard.orders.index') }}">
                     <i class="fa fa-shopping-basket"></i>
-                    Orders
+                    My Orders
                 </a>
             </li>
 
@@ -59,13 +59,20 @@
                 </a>
             </li>
 
-            @if($lUser->isAdmin())
+            <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
 
+
+            @if($lUser->isAdmin())
 {{--                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
 {{--                <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
-                <li> <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>  </li>
+                <li>
+                    <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>
+                </li>
                 <li>
                     <a href="{{ route('dashboard.emails.index') }}"><i class="fa fa-send"></i> Email Previews</a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.shop.orders.index') }}"><i class="fa fa-credit-card-alt"></i> Shop Orders</a>
                 </li>
 {{--                <li>--}}
 {{--                    <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
@@ -74,7 +81,6 @@
 {{--                    </ul>--}}
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
-
 {{--                <li>--}}
 {{--                    <a href="#"><i class="fa fa-map-marker"></i> @lang('app.locations')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
 {{--                    <ul class="nav nav-second-level">--}}
@@ -84,7 +90,6 @@
 {{--                    </ul>--}}
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
-
 {{--                <li>--}}
 {{--                    <a href="#"><i class="fa fa-wrench fa-fw"></i> @lang('app.settings')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
 {{--                    <ul class="nav nav-second-level">--}}
@@ -98,17 +103,13 @@
 {{--                    </ul>--}}
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
-
 {{--                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>--}}
-
-
             @endif
 
-            <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
             <li>
                 <a href="{{ route('logout') }}"
-                  onclick="event.preventDefault();
+                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"
                 >
                     <i class="fa fa-sign-out"></i>
@@ -119,8 +120,6 @@
                     {{ csrf_field() }}
                 </form>
             </li>
-
-
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

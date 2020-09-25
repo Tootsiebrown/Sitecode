@@ -8,6 +8,9 @@
     }
 }
 
-.bulk-edit-listing-bins {
+.top-form {
     margin-bottom: 24px;
+    .form-group label {
+        padding-top: 0;
+    }
 }
