@@ -50,6 +50,6 @@ class ShopServiceProvider extends WaxShopServiceProvider
         $this->loadViewsFrom(base_path('vendor/oohology/wax-shop/resources/views/'), 'shop');
         $this->loadTranslationsFrom(base_path('vendor/oohology/wax-shop/resources/lang'), 'shop');
 
-        Gate::define('get-order', 'Wax\Shop\Policies\OrderPolicy@get');
+        Gate::define('get-order', 'App\Wax\Shop\Policies\OrderPolicy@get');
     }
 }
