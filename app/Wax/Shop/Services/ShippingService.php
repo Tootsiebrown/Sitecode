@@ -104,7 +104,15 @@ class ShippingService
         $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
 
-        $this->shipStation->orders->post($shipstationOrder, 'createorder');
+        if ($order->shipstation_key) {
+            $shipstationOrder->orderKey = $order->shipstation_key;
+        }
+
+        $result = $this->shipStation->orders->post($shipstationOrder, 'createorder');
+        if ($order->shipstation_key != $result->orderKey) {
+            $order->shipstation_key = $result->orderKey;
+            $order->save();
+        }
     }
 
     protected function getShipstationBillTo(Order $order)
