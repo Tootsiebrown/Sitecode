@@ -14,7 +14,7 @@ class ShippingRatesHasActualAmount extends Migration
     public function up()
     {
         Schema::table('shipping_rates', function (Blueprint $table) {
-            $table->float('actual_amount', 15, 4);
+            $table->float('actual_amount', 15, 4)->nullable();
         });
     }
 
