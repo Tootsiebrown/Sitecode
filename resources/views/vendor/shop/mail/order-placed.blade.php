@@ -52,6 +52,12 @@
                                         -{{ Currency::format($order['coupon']['calculated_value']) }}</li>
                                 @endif
 
+                                @if ($order['shipping_subtotal'] > 0)
+                                    <li style="margin-bottom: 4px;">Shipping
+                                        ({{ $order['default_shipment']['shipping_service_name'] }}):
+                                        + {{ Currency::format($order['shipping_subtotal']) }}</li>
+                                @endif
+
                                 @if ($order['tax_subtotal'] > 0)
                                     <li style="margin-bottom: 4px;">Sales Tax
                                         ({{ $order['default_shipment']['tax_desc'] }}):
