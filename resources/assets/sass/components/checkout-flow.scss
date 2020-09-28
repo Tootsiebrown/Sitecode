@@ -13,8 +13,12 @@
     li {
         $spacerWidth: 64px;
         display: inline-block;
-        padding-right: calc(#{$spacerWidth} + 16px);
+        padding-right: calc(#{$spacerWidth/2} + 16px);
         position: relative;
+
+        @media (min-width: $bp-laptop) {
+            padding-right: calc(#{$spacerWidth} + 16px);
+        }
 
         &::after {
             content: '';
@@ -23,7 +27,11 @@
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            width: $spacerWidth;
+            width: $spacerWidth/2;
+
+            @media (min-width: $bp-laptop) {
+                width: $spacerWidth;
+            }
         }
 
         a {

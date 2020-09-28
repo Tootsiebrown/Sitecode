@@ -26,27 +26,31 @@
             </div>
             <div class="checkout__main checkout__cart-page">
                 @include('dashboard.flash_msg')
-                <ul>
-                    @foreach ($order->items as $item)
-                        <li class="checkout-cart-list-item">
-                            <div class="checkout-cart-list-item__image-container">
-                                <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->name }}">
-                            </div>
-                            <div class="checkout-cart-list-item__main">
-                                <p class="checkout-cart-list-item__name">{{ $item->name }}</p>
-                                <p>${{ $item->gross_unit_price }}</p>
-                                <p>Qty: {{ $item->quantity }}</p>
-                            </div>
-                            <div class="checkout-cart-list-item__actions">
-                                <form action="{{ route('shop.cart.delete', ['itemId' => $item->id]) }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-link">@svg(trash)</button>
-                                </form>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
+                @if ($order->items->count() > 0)
+                    <ul>
+                        @foreach ($order->items as $item)
+                            <li class="checkout-cart-list-item">
+                                <div class="checkout-cart-list-item__image-container">
+                                    <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->name }}">
+                                </div>
+                                <div class="checkout-cart-list-item__main">
+                                    <p class="checkout-cart-list-item__name">{{ $item->name }}</p>
+                                    <p>${{ $item->gross_unit_price }}</p>
+                                    <p>Qty: {{ $item->quantity }}</p>
+                                </div>
+                                <div class="checkout-cart-list-item__actions">
+                                    <form action="{{ route('shop.cart.delete', ['itemId' => $item->id]) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-link">@svg(trash)</button>
+                                    </form>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <h2>Cart is empty. Please continue shopping.</h2>
+                @endif
             </div>
         </div>
     </div>

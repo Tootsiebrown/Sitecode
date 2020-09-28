@@ -24,6 +24,7 @@
         "ext-pdo": "*",
         "ext-zlib": "*",
         "barryvdh/laravel-debugbar": "3.2.*",
+        "campo/laravel-shipstation": "~4.0",
         "doctrine/dbal": "^2.10",
         "fedeisas/laravel-mail-css-inliner": "~2.0",
         "fideloper/proxy": "^4.0",

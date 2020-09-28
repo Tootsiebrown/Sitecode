@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54797b0a8fb4cf2f9039195bad5faecf",
+    "content-hash": "42e324dec419d138fd8048aab0ab7247",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -158,6 +158,45 @@
                 "webprofiler"
             ],
             "time": "2020-02-25T20:42:23+00:00"
+        },
+        {
+            "name": "campo/laravel-shipstation",
+            "version": "4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joecampo/laravel-shipstation.git",
+                "reference": "1bc7dc535bdeb9827199c2a24b30dfe6e414ba8f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joecampo/laravel-shipstation/zipball/1bc7dc535bdeb9827199c2a24b30dfe6e414ba8f",
+                "reference": "1bc7dc535bdeb9827199c2a24b30dfe6e414ba8f",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LaravelShipStation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Campo",
+                    "email": "jcampo@gmail.com"
+                }
+            ],
+            "description": "ShipStation API wrapper for Laravel 5.",
+            "time": "2020-05-19T22:03:08+00:00"
         },
         {
             "name": "clue/stream-filter",

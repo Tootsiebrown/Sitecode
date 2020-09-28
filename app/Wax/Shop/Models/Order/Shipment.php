@@ -3,7 +3,9 @@
 namespace App\Wax\Shop\Models\Order;
 
 use App\Wax\Shop\Models\Order\Item;
+use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
 use Wax\Shop\Models\Order\Shipment as WaxShipment;
+use Wax\Shop\Models\Order\ShippingRate;
 use Wax\Shop\Tax\Support\Address;
 use Wax\Shop\Tax\Support\LineItem;
 use Wax\Shop\Tax\Support\Request;
@@ -106,5 +108,22 @@ class Shipment extends WaxShipment
             ->map(function ($item) {
                 return $item->listing_id;
             });
+    }
+
+    public function setShippingService(ShippingRate $rate)
+    {
+        $this->shipping_carrier = $rate->carrier;
+        $this->shipping_service_code = $rate->service_code;
+        $this->shipping_service_name = $rate->service_name;
+        $this->shipping_service_amount = $rate->amount;
+        $this->shipping_service_actual_amount = $rate->actual_amount;
+        $this->business_transit_days = $rate->business_transit_days;
+        $this->box_count = $rate->box_count;
+        $this->packaging = $rate->packaging;
+        $result = $this->save();
+
+        event(new ShippingServiceChangedEvent($this->order->fresh()));
+
+        return $result;
     }
 }

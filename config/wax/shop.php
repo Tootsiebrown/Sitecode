@@ -29,4 +29,13 @@ return [
             'stored_credit_card' => \Wax\Shop\Payment\Types\StoredCreditCard::class,
         ],
     ],
+    'listeners' => [
+        'place_order' => [
+            \Wax\Shop\Listeners\OrderPlaced\CouponListener::class,
+            \Wax\Shop\Listeners\OrderPlaced\EmailListener::class,
+            \Wax\Shop\Listeners\OrderPlaced\InventoryListener::class,
+            \Wax\Shop\Listeners\OrderPlaced\CommitTaxListener::class,
+            \Wax\Shop\Listeners\OrderPlaced\ProcessOrderListener::class,
+        ],
+    ],
 ];

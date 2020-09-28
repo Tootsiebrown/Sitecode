@@ -508,10 +508,19 @@ Route::name('shop.')
                 Route::get('', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
                     ->name('start');
 
-                Route::get('shipping', '\App\Wax\Shop\Controllers\CheckoutController@showShipping')
+                Route::get('shipping')
+                    ->uses('\App\Wax\Shop\Controllers\ShippingController@showShipping')
                     ->name('showShipping');
-                Route::post('shipping', '\App\Wax\Shop\Controllers\CheckoutController@saveShipping')
+                Route::post('shipping')
+                    ->uses('\App\Wax\Shop\Controllers\ShippingController@saveShipping')
                     ->name('saveShipping');
+
+                Route::get('rates')
+                    ->uses('\App\Wax\Shop\Controllers\ShippingController@showRates')
+                    ->name('showRates');
+                Route::post('rate')
+                    ->uses('\App\Wax\Shop\Controllers\ShippingController@saveRate')
+                    ->name('saveRate');
 
                 Route::get('billing', '\App\Wax\Shop\Controllers\CheckoutController@showBilling')
                     ->name('showBilling');

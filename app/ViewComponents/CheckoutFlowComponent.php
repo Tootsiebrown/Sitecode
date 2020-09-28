@@ -22,6 +22,11 @@ class CheckoutFlowComponent implements Htmlable
             'status' => null,
         ],
         [
+            'route' => 'shop.checkout.showRates',
+            'name' => 'Rates',
+            'status' => null,
+        ],
+        [
             'route' => 'shop.checkout.showBilling',
             'name' => 'Payment',
             'status' => null,

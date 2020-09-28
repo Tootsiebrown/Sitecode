@@ -29,7 +29,8 @@
         @endforeach
     </ul>
 
-    <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
+        <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? '$' . $order->shipping_subtotal : 'TBD' }}</h4>
+        <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
 
     <h3>Total</h3>
     <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">

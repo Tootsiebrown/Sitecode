@@ -10,7 +10,7 @@
                     <div class="col-md-12">
                         <div class="front-ads-head">
                             <h2>@lang('app.new_regular_ads')</h2>
-                            <h3>Don't miss out on the best catch of the daty!</h3>
+                            <h3>Don't miss out on the best catch of the day!</h3>
                         </div>
                     </div>
 
@@ -19,7 +19,6 @@
                 </div>
             </div>
         </div>
-
     @else
         <div class="container">
             <div class="row">
@@ -31,7 +30,6 @@
                 </div>
             </div>
         </div>
-
     @endif
 
 @endsection

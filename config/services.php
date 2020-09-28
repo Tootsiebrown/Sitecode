@@ -41,4 +41,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'ship_station' => [
+        'api_key' => env('SHIPSTATION_API_KEY'),
+        'api_secret' => env('SHIPSTATION_API_SECRET'),
+        'api_url' => env('SHIPSTATION_API_URL'),
+        'from_postal_code' => 40213,
+    ],
+
 ];

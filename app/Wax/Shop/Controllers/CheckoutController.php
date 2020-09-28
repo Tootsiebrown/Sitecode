@@ -8,8 +8,6 @@ use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use App\Wax\Shop\Support\CheckoutInventoryManager;
 use Throwable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -33,79 +31,6 @@ class CheckoutController extends Controller
         } else {
             return redirect()->route('shop.cart.index');
         }
-    }
-
-    public function showShipping(Request $request)
-    {
-        $order = $this->shopService->getActiveOrder();
-        $order->calculateTax();
-
-        if (! $this->shopService->getActiveOrder()->validateHasItems()) {
-            return redirect()->route('shop.cart.index');
-        }
-
-        return view('shop.checkout.shipping', [
-            'order' => $order,
-            'shipment' => $order->default_shipment,
-            'inStorePickup' => $request->old('in_store_pickup')
-        ]);
-    }
-
-    public function saveShipping(Request $request)
-    {
-        $shipment = $this->shopService->getActiveOrder()->default_shipment;
-
-        $this->validate(
-            $request,
-            [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'address1' => 'required_unless:in_store_pickup,1',
-                'city' => 'required_unless:in_store_pickup,1',
-                'state' => 'required_unless:in_store_pickup,1',
-                'zip' => 'required_unless:in_store_pickup,1',
-            ],
-            [
-                'first_name.required' => ':attribute is required.',
-                'last_name.required' => ':attribute is required.',
-                'email.required' => ':attribute is required.',
-                'phone.required' => ':attribute is required.',
-                'address1.required_unless' => ':attribute is required.',
-                'city.required_unless' => ':attribute is required.',
-                'state.required_unless' => ':attribute is required.',
-                'zip.required_unless' => ':attribute is required.',
-            ],
-            [
-                'first_name' => 'first name',
-                'last_name' => 'last name',
-                'address1' => 'address line 1',
-            ],
-        );
-
-        if ($request->input('in_store_pickup')) {
-            $shipment->in_store_pickup = true;
-        } else {
-            $shipment->in_store_pickup = false;
-        }
-        $shipment->save();
-
-        $shipment->setAddress(
-            $request->input('first_name'),
-            $request->input('last_name'),
-            '',
-            $request->input('email'),
-            $request->input('phone'),
-            $request->input('address1', ''),
-            $request->input('address2', ''),
-            $request->input('city', ''),
-            $request->input('state', ''),
-            $request->input('zip', ''),
-            'US'
-        );
-
-        return redirect()->route('shop.checkout.showBilling');
     }
 
     public function showBilling(Request $request)

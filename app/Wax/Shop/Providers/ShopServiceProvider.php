@@ -2,11 +2,29 @@
 
 namespace App\Wax\Shop\Providers;
 
+use App\Wax\Shop\Models\Order\Item;
 use App\Wax\Shop\Validators\OrderItemValidator;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use LaravelShipStation\ShipStation;
 use Wax\Core\Contracts\FilterAggregatorContract;
+use Wax\Core\Events\SessionMigrationEvent;
+use Wax\Shop\Contracts\OrderChangedEventContract;
+use Wax\Shop\Events\OrderChanged\CartContentsChangedEvent;
+use Wax\Shop\Events\OrderChanged\ShippingAddressChangedEvent;
+use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
+use Wax\Shop\Events\OrderPlacedEvent;
 use Wax\Shop\Filters\CatalogFilterAggregator;
+use Wax\Shop\Listeners\InvalidateOrderShippingListener;
+use Wax\Shop\Listeners\InvalidateOrderTaxListener;
+use Wax\Shop\Listeners\LoginListener;
+use Wax\Shop\Listeners\RecalculateDiscountsListener;
+use Wax\Shop\Listeners\SessionMigrationListener;
+use Wax\Shop\Models\Order\Bundle;
+use Wax\Shop\Observers\OrderBundleObserver;
+use Wax\Shop\Observers\OrderItemObserver;
 use Wax\Shop\Providers\ShopServiceProvider as WaxShopServiceProvider;
 use Wax\Shop\Repositories\ProductRepository;
 use Wax\Shop\Services\ShopService;
@@ -41,6 +59,16 @@ class ShopServiceProvider extends WaxShopServiceProvider
             WaxOrderItemValidator::class,
             OrderItemValidator::class
         );
+
+        $this->app->bind(
+            ShipStation::class,
+            function ($app) {
+                return new ShipStation(
+                    config('services.ship_station.api_key'),
+                    config('services.ship_station.api_secret'),
+                    config('services.ship_station.api_url')
+                );
+            });
     }
 
     public function boot()
@@ -51,5 +79,39 @@ class ShopServiceProvider extends WaxShopServiceProvider
         $this->loadTranslationsFrom(base_path('vendor/oohology/wax-shop/resources/lang'), 'shop');
 
         Gate::define('get-order', 'App\Wax\Shop\Policies\OrderPolicy@get');
+
+        $this->registerListeners();
+    }
+
+    public function registerListeners()
+    {
+        // clean up the nested relations when an Order Item changes
+        Item::observe(OrderItemObserver::class);
+        Bundle::observe(OrderBundleObserver::class);
+
+        Event::listen(SessionMigrationEvent::class, SessionMigrationListener::class);
+        Event::listen(Login::class, LoginListener::class);
+
+        Event::listen(
+            [
+                CartContentsChangedEvent::class,
+                ShippingAddressChangedEvent::class,
+            ],
+            InvalidateOrderShippingListener::class
+        );
+
+        Event::listen(
+            [
+                CartContentsChangedEvent::class,
+                ShippingServiceChangedEvent::class,
+            ],
+            RecalculateDiscountsListener::class
+        );
+
+        Event::listen(OrderChangedEventContract::class, InvalidateOrderTaxListener::class);
+
+        foreach (config('wax.shop.listeners.place_order') as $listener) {
+            Event::listen(OrderPlacedEvent::class, $listener);
+        }
     }
 }

@@ -9,95 +9,95 @@
             @render(App\ViewComponents\CheckoutCartComponent::class)
             <div class="checkout__main checkout__shipping">
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs nav-tabs-start-empty" role="tablist">
-                    <li role="presentation">
-                        <a
-                          href="#in-store-pickup"
-                          aria-controls="in-store-pickup"
-                          role="tab"
-                          data-toggle="tab"
-                          class="btn btn-primary @if($inStorePickup === "1") active @endif"
-                        >
-                            In-Store Pickup
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a
-                          href="#free-delivery"
-                          aria-controls="free-delivery"
-                          role="tab"
-                          data-toggle="tab"
-                          class="btn btn-primary @if($inStorePickup === "0") active @endif"
-                        >
-                            Free Delivery
-                        </a>
-                    </li>
-                </ul>
+{{--                <ul class="nav nav-tabs nav-tabs-start-empty" role="tablist">--}}
+{{--                    <li role="presentation">--}}
+{{--                        <a--}}
+{{--                          href="#in-store-pickup"--}}
+{{--                          aria-controls="in-store-pickup"--}}
+{{--                          role="tab"--}}
+{{--                          data-toggle="tab"--}}
+{{--                          class="btn btn-primary @if($inStorePickup === "1") active @endif"--}}
+{{--                        >--}}
+{{--                            In-Store Pickup--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                    <li role="presentation">--}}
+{{--                        <a--}}
+{{--                          href="#free-delivery"--}}
+{{--                          aria-controls="free-delivery"--}}
+{{--                          role="tab"--}}
+{{--                          data-toggle="tab"--}}
+{{--                          class="btn btn-primary @if($inStorePickup === "0") active @endif"--}}
+{{--                        >--}}
+{{--                            Free Delivery--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                </ul>--}}
 
                 <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane @if($inStorePickup === "1") active @endif" id="in-store-pickup">
-                        <p>Lorem Ipsum</p>
-                        <p>Pickup instructions</p>
-                        <form method="POST" action="{{ route('shop.checkout.saveShipping') }}">
-                            @csrf
-                            <input type="hidden" name="in_store_pickup" value="1">
+{{--                <div class="tab-content">--}}
+{{--                    <div role="tabpanel" class="tab-pane @if($inStorePickup === "1") active @endif" id="in-store-pickup">--}}
+{{--                        <p>Lorem Ipsum</p>--}}
+{{--                        <p>Pickup instructions</p>--}}
+{{--                        <form method="POST" action="{{ route('shop.checkout.saveShipping') }}">--}}
+{{--                            @csrf--}}
+{{--                            <input type="hidden" name="in_store_pickup" value="1">--}}
 
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label for="first-name">First Name *</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="first_name"
-                                        id="first-name"
-                                        value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'first_name'])
-                                </div>
-                                <div class="col-xs-6">
-                                    <label for="last-name">Last Name *</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="last_name"
-                                        id="last-name"
-                                        value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'last_name'])
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label for="email">Email *</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="email"
-                                        id="email"
-                                        value="{{ old('email') ?? $shipment->email ?? $lUser->email ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'email'])
-                                </div>
-                                <div class="col-xs-6">
-                                    <label for="phone">Phone Number *</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="phone"
-                                        id="phone"
-                                        value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'phone'])
-                                </div>
-                            </div>
-                            <button type="submit" name="submit" value="submit" class="btn btn-primary">
-                                Continue to Payment
-                            </button>
-                        </form>
-                        <input type="hidden" name="in-store-pickup" value="0">
-                    </div>
-                    <div role="tabpanel" class="tab-pane @if($inStorePickup === "0") active @endif" id="free-delivery">
+{{--                            <div class="row">--}}
+{{--                                <div class="col-xs-6">--}}
+{{--                                    <label for="first-name">First Name *</label>--}}
+{{--                                    <input--}}
+{{--                                        type="text"--}}
+{{--                                        class="form-control"--}}
+{{--                                        name="first_name"--}}
+{{--                                        id="first-name"--}}
+{{--                                        value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"--}}
+{{--                                    >--}}
+{{--                                    @include('site.components.field-error', ['field' => 'first_name'])--}}
+{{--                                </div>--}}
+{{--                                <div class="col-xs-6">--}}
+{{--                                    <label for="last-name">Last Name *</label>--}}
+{{--                                    <input--}}
+{{--                                        type="text"--}}
+{{--                                        class="form-control"--}}
+{{--                                        name="last_name"--}}
+{{--                                        id="last-name"--}}
+{{--                                        value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"--}}
+{{--                                    >--}}
+{{--                                    @include('site.components.field-error', ['field' => 'last_name'])--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-xs-6">--}}
+{{--                                    <label for="email">Email *</label>--}}
+{{--                                    <input--}}
+{{--                                        type="text"--}}
+{{--                                        class="form-control"--}}
+{{--                                        name="email"--}}
+{{--                                        id="email"--}}
+{{--                                        value="{{ old('email') ?? $shipment->email ?? $lUser->email ?? '' }}"--}}
+{{--                                    >--}}
+{{--                                    @include('site.components.field-error', ['field' => 'email'])--}}
+{{--                                </div>--}}
+{{--                                <div class="col-xs-6">--}}
+{{--                                    <label for="phone">Phone Number *</label>--}}
+{{--                                    <input--}}
+{{--                                        type="text"--}}
+{{--                                        class="form-control"--}}
+{{--                                        name="phone"--}}
+{{--                                        id="phone"--}}
+{{--                                        value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone ?? '' }}"--}}
+{{--                                    >--}}
+{{--                                    @include('site.components.field-error', ['field' => 'phone'])--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <button type="submit" name="submit" value="submit" class="btn btn-primary">--}}
+{{--                                Continue to Payment--}}
+{{--                            </button>--}}
+{{--                        </form>--}}
+{{--                        <input type="hidden" name="in-store-pickup" value="0">--}}
+{{--                    </div>--}}
+{{--                    <div role="tabpanel" class="tab-pane @if($inStorePickup === "0") active @endif" id="free-delivery">--}}
                         <form class="shipping-form" method="POST" action="{{ route('shop.checkout.saveShipping') }}">
                             @include('dashboard.flash_msg')
                             @csrf
@@ -223,13 +223,13 @@
                             <div class="row row-right">
                                 <div class="col-xs-12">
                                     <button type="submit" class="btn btn-primary" name="submit" value="submit">
-                                        Continue to Payment
+                                        Continue to Shipping Rates
                                     </button>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
         </div>
     </div>
