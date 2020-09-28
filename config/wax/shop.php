@@ -36,6 +36,7 @@ return [
             \Wax\Shop\Listeners\OrderPlaced\InventoryListener::class,
             \Wax\Shop\Listeners\OrderPlaced\CommitTaxListener::class,
             \Wax\Shop\Listeners\OrderPlaced\ProcessOrderListener::class,
+            \App\Listeners\SendOrderToShipstation::class,
         ],
     ],
 ];
