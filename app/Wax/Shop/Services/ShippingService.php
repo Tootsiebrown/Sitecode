@@ -149,8 +149,7 @@ class ShippingService
     {
         $shipstationItems = [];
 
-        foreach ($order->default_shipment->items as $item)
-        {
+        foreach ($order->default_shipment->items as $item) {
             $shipstationItem = new \LaravelShipStation\Models\OrderItem();
 
             $shipstationItem->lineItemKey = $item->id;
@@ -170,7 +169,7 @@ class ShippingService
     {
         $location = 'ItemId:Bin,';
         foreach ($item->listing->items as $listingItem) {
-            $location .= $listingItem->id . ':' .$listingItem->bin . ',';
+            $location .= $listingItem->id . ':' . $listingItem->bin . ',';
         }
 
         return trim($location, ',');
