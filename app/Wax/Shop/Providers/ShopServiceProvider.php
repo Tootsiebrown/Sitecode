@@ -68,7 +68,8 @@ class ShopServiceProvider extends WaxShopServiceProvider
                     config('services.ship_station.api_secret'),
                     config('services.ship_station.api_url')
                 );
-            });
+            }
+        );
     }
 
     public function boot()
