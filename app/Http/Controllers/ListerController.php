@@ -337,7 +337,9 @@ class ListerController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
-            'shipping_weight_oz' => $request->input('shipping_weight_oz'),
+            'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
+                ? null
+                : $request->input('shipping_weight_oz'),
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -444,7 +446,7 @@ class ListerController extends Controller
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'expired_at' => $request->input('type') == 'auction'
-                    ? $request->bid_deadline
+                    ? $request->bid_deadline . ':00'
                     : null,
 
                 'type' => $request->input('type'),

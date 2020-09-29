@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-if (App::environment() == 'dev') {
+if (App::environment() == 'local') {
     Route::get(
         '/frontend-test',
         function () {
@@ -23,6 +23,10 @@ if (App::environment() == 'dev') {
         }
     );
 }
+
+
+Route::get('exception')
+    ->uses('ExceptionController@exception');
 
 //Route::get(
 //    '/site-information',

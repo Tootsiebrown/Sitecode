@@ -34,11 +34,8 @@ class ShippingService
                 $weight->value = $order->weight;
                 $weight->units = 'ounces';
 
-
-
                 try {
                     $services = $this->shipStation->shipments->post(
-
                         [
                             'carrierCode' => $carrier->code,
                             'fromPostalCode' => config('services.ship_station.from_postal_code'),
@@ -110,12 +107,10 @@ class ShippingService
         $weight = new Weight();
         $weight->value = $order->weight;
         $weight->units = 'ounces';
-
         $shipstationOrder = new \LaravelShipStation\Models\Order();
         $shipstationOrder->orderNumber = $order->sequence;
-        $shipstationOrder->orderDate = $order->placed_at->toDateString();
+        $shipstationOrder->orderDate = $order->placed_at->setTimezone('America/Los_Angeles')->toDateTimeString();
         $shipstationOrder->orderStatus = 'awaiting_shipment';
-        $shipstationOrder->orderDate = $order->placed_at->toDateString();
         $shipstationOrder->amountPaid = $order->total;
         $shipstationOrder->taxAmount = $order->tax_subtotal;
         $shipstationOrder->shippingAmount = $order->shipping_subtotal;
