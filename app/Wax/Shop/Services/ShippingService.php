@@ -34,24 +34,37 @@ class ShippingService
                 $weight->value = $order->weight;
                 $weight->units = 'ounces';
 
-                $services = $this->shipStation->shipments->post(
-                    [
-                        'carrierCode' => $carrier->code,
-                        'fromPostalCode' => config('services.ship_station.from_postal_code'),
-                        'toCountry' => 'US',
-                        'toPostalCode' => $order->default_shipment->zip,
-                        'weight' => $weight,
-                    ],
-                    'getrates'
-                );
+
+
+                try {
+                    $services = $this->shipStation->shipments->post(
+
+                        [
+                            'carrierCode' => $carrier->code,
+                            'fromPostalCode' => config('services.ship_station.from_postal_code'),
+                            'toCountry' => 'US',
+                            'toPostalCode' => $order->default_shipment->zip,
+                            'weight' => $weight,
+                        ],
+                        'getrates'
+                    );
+                } catch (\Exception $e) {
+                    if (strpos($e->getMessage(), "No applicable services were available for the configured shipmen") === 0) {
+                        return null;
+                    }
+
+                    $services = [];
+                }
 
                 return collect($services)
+                    ->filter()
                     ->map(function ($service) use ($carrier) {
                         $service->carrier = $carrier;
                         return $service;
                     });
             })
             ->flatten()
+            ->filter()
             ->filter(function ($service) {
                 return in_array($service->serviceName, config('shipping.services'));
             })
