@@ -65,21 +65,21 @@ class TaxReportController extends Controller
 
     protected function getNextMonthUrl($year, $month)
     {
-
+        //
     }
 
     protected function getPrevMonthUrl($year, $month)
     {
-
+        //
     }
 
     protected function getNextYearUrl($year)
     {
-
+        //
     }
 
     protected function getPrevYearUrl($year)
     {
-        
+        //
     }
 }
