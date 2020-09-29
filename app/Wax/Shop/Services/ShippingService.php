@@ -5,6 +5,7 @@ namespace App\Wax\Shop\Services;
 use App\Wax\Shop\Models\Order;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use LaravelShipStation\Models\AdvancedOptions;
 use LaravelShipStation\Models\Weight;
 use LaravelShipStation\ShipStation;
 use App\Wax\Shop\Models\Order\ShippingRate;
@@ -103,6 +104,7 @@ class ShippingService
         $shipstationOrder->requestedShippingService = $order->default_shipment->shipping_service_name;
         $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
+        $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order);
 
         if ($order->shipstation_key) {
             $shipstationOrder->orderKey = $order->shipstation_key;
@@ -173,5 +175,24 @@ class ShippingService
         }
 
         return trim($location, ',');
+    }
+
+    public function getAdvancedOptions(Order $order)
+    {
+        $advancedOptions = new AdvancedOptions();
+
+        $location = 'ItemId:Bin,';
+        foreach ($order->items as $orderItem) {
+            foreach($orderItem->listing->items as $listingItem) {
+                if ($listingItem->order_item_id !== $orderItem->id) {
+                    continue;
+                }
+                $location .= $listingItem->id . ':' . $listingItem->bin . ',';
+            }
+        }
+
+        $advancedOptions->customField1 = trim($location, ',');
+
+        return $advancedOptions;
     }
 }
