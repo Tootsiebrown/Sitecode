@@ -258,6 +258,9 @@ Route::group(
                         Route::get('/')
                             ->name('index')
                             ->uses('ShopOrdersController@index');
+                        Route::get('report')
+                            ->name('report')
+                            ->uses('ShopOrdersController@report');
                         Route::get('{id}')
                             ->name('details')
                             ->uses('ShopOrdersController@details');
@@ -271,6 +274,8 @@ Route::group(
                             ->name('cancel')
                             ->uses('ShopOrdersController@cancel');
                     });
+
+
 
                 Route::group(
                     ['prefix' => 'settings'],

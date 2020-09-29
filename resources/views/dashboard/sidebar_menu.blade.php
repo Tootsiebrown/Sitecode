@@ -74,6 +74,14 @@
                 <li>
                     <a href="{{ route('dashboard.shop.orders.index') }}"><i class="fa fa-credit-card-alt"></i> Shop Orders</a>
                 </li>
+
+
+                <li>
+                    <a href="{{ route('dashboard.shop.orders.report') }}">
+                        <i class="fa fa-list-alt"></i>
+                        Order Processing Report
+                    </a>
+                </li>
 {{--                <li>--}}
 {{--                    <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
 {{--                    <ul class="nav nav-second-level">--}}

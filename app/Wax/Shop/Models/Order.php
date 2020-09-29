@@ -114,4 +114,9 @@ class Order extends WaxOrder
             })
             ->sum();
     }
+
+    public function scopeNotShipped($query)
+    {
+        return $query->whereNull('shipped_at');
+    }
 }
