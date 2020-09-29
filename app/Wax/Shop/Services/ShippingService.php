@@ -189,7 +189,7 @@ class ShippingService
 
         $location = 'ItemId:Bin,';
         foreach ($order->items as $orderItem) {
-            foreach($orderItem->listing->items as $listingItem) {
+            foreach ($orderItem->listing->items as $listingItem) {
                 if ($listingItem->order_item_id !== $orderItem->id) {
                     continue;
                 }
