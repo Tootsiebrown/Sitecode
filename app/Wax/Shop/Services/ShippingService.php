@@ -34,11 +34,8 @@ class ShippingService
                 $weight->value = $order->weight;
                 $weight->units = 'ounces';
 
-
-
                 try {
                     $services = $this->shipStation->shipments->post(
-
                         [
                             'carrierCode' => $carrier->code,
                             'fromPostalCode' => config('services.ship_station.from_postal_code'),
