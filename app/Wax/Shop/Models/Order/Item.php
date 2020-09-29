@@ -45,10 +45,10 @@ class Item extends WaxItem
         return $value ?? $this->listing->title;
     }
 
-    public function getGrossUnitPriceAttribute(): float
+    public function getPriceAttribute($value): float
     {
-        if ((float)$this->price > 0) {
-            return $this->price;
+        if ($value > 0) {
+            return $value;
         }
 
         if ($this->listing->type === 'auction') {
@@ -59,6 +59,6 @@ class Item extends WaxItem
             return $this->listing->price;
         }
 
-        throw new Exception('Listing id: ' . $this->listing->id . 'of type ' . $this->listing->type . ' cannot have price calcualted properly.');
+        throw new \Exception('Listing id: ' . $this->listing->id . 'of type ' . $this->listing->type . ' cannot have price calcualted properly.');
     }
 }
