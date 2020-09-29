@@ -337,7 +337,9 @@ class ListerController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
-            'shipping_weight_oz' => $request->input('shipping_weight_oz'),
+            'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
+                ? null
+                : $request->input('shipping_weight_oz'),
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
