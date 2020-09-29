@@ -25,9 +25,8 @@ if (App::environment() == 'local') {
 }
 
 
-Route::get('exception', function () {
-    throw new Exception('an error');
-});
+Route::get('exception')
+    ->uses('ExceptionController@exception');
 
 //Route::get(
 //    '/site-information',
