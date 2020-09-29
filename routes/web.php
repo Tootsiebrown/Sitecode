@@ -226,9 +226,12 @@ Route::group(
                 Route::get('report')
                     ->uses('TaxReportController@index')
                     ->name('report.index');
-
-
-
+                Route::get('report/{year}')
+                    ->uses('TaxReportController@year')
+                    ->name('report.year');
+                Route::get('report/{year}/{month}')
+                    ->uses('TaxReportController@month')
+                    ->name('report.month');
             });
 
         Route::get('auction-activity')

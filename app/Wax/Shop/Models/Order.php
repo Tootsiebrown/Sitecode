@@ -114,4 +114,29 @@ class Order extends WaxOrder
             })
             ->sum();
     }
+
+    public function scopePlacedMonth($query, $year, $month)
+    {
+        $startDate = new Carbon();
+        $startDate->setYear($year);
+        $startDate->setMonth($month);
+        $endDate = clone $startDate;
+
+        $startDate->startOfMonth();
+        $endDate->endOfMonth();
+
+        return $query->whereBetween('placed_at', [$startDate, $endDate]);
+    }
+
+    public function scopePlacedYear($query, $year)
+    {
+        $startDate = new Carbon();
+        $startDate->setYear($year);
+        $endDate = clone $startDate;
+
+        $startDate->startOfYear();
+        $endDate->endOfYear();
+
+        return $query->whereBetween('placed_at', [$startDate, $endDate]);
+    }
 }
