@@ -148,12 +148,11 @@ class ShopOrdersController extends Controller
             ->map(fn($item) => $item->listingItems)
             ->flatten();
 
-        $callback = function() use ($lineItems, $columns) {
+        $callback = function () use ($lineItems, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($lineItems as $lineItem) {
-
                 fputcsv($file, [
                     $lineItem->listing->title,
                     $lineItem->reserved_for_order_id,
