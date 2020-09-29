@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class ExceptionController extends \Controller
+class ExceptionController extends Controller
 {
     public function exception()
     {
