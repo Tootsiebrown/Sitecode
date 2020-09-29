@@ -209,6 +209,28 @@ Route::group(
 
             });
 
+        Route::prefix('tax')
+            ->middleware('privilege:Tax Table')
+            ->name('dashboard.tax.')
+            ->group(function () {
+                Route::get('zones')
+                    ->uses('TaxController@index')
+                    ->name('zones.index');
+                Route::get('zones/{id}')
+                    ->uses('TaxController@showZone')
+                    ->name('zones.show');
+                Route::post('zones/{id}')
+                    ->uses('TaxController@saveZone')
+                    ->name('zones.save');
+
+                Route::get('report')
+                    ->uses('TaxReportController@index')
+                    ->name('report.index');
+
+
+
+            });
+
         Route::get('auction-activity')
             ->uses('AuctionActivityController@index')
             ->name('dashboard.auction-activity');
