@@ -23,11 +23,12 @@ class ShippingService
     public function refreshRatesFor(Order $order)
     {
         $shipment = $order->default_shipment;
+
         $carriers = $this->carriers();
         $rates = collect($carriers)
             ->map(function ($carrier) use ($order) {
                 $weight = new Weight();
-                $weight->value = 20;
+                $weight->value = $order->weight;
                 $weight->units = 'ounces';
 
                 $services = $this->shipStation->shipments->post(
@@ -90,6 +91,10 @@ class ShippingService
 
     public function record(Order $order)
     {
+        $weight = new Weight();
+        $weight->value = $order->weight;
+        $weight->units = 'ounces';
+
         $shipstationOrder = new \LaravelShipStation\Models\Order();
         $shipstationOrder->orderNumber = $order->sequence;
         $shipstationOrder->orderDate = $order->placed_at->toDateString();
@@ -105,6 +110,7 @@ class ShippingService
         $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
         $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order);
+        $shipstationOrder->weight = $weight;
 
         if ($order->shipstation_key) {
             $shipstationOrder->orderKey = $order->shipstation_key;
