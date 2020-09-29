@@ -101,4 +101,17 @@ class Order extends WaxOrder
     {
         return $this->belongsTo(User::class, 'canceled_by_user_id');
     }
+
+    public function getWeightAttribute()
+    {
+        return $this->default_shipment
+            ->items
+            ->map(function ($item) {
+                $itemWeight = empty($item->listing->shipping_weight_oz)
+                    ? 8
+                    : $item->listing->shipping_weight_oz;
+                return $item->quantity * $itemWeight;
+            })
+            ->sum();
+    }
 }

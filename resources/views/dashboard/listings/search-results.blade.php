@@ -38,6 +38,7 @@
                         <p>Original Price: {{ $listing->original_price }}</p>
                         <p>Listing Price: {{ $listing->price }}</p>
                         <p>Condition: {{ $listing->condition }}</p>
+                        <p>Shipping Weight: {{ $listing->shipping_weight_oz}} oz</p>
                         <p class="listing-results__label">Description</p>
                         <div class="listing-results__wysiwyg"><p>{!! $listing->description !!}</p></div>
                         <p class="listing-results__label">Features</p>

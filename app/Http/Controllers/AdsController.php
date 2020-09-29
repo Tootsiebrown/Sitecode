@@ -187,6 +187,7 @@ class AdsController extends Controller
 //                }),
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+            'shipping_weight_oz' => 'numeric|min:1',
 
         ];
 
@@ -242,6 +243,7 @@ class AdsController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
+            'shipping_weight_oz' => $request->input('shipping_weight_oz'),
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {

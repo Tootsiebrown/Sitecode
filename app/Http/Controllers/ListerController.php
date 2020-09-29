@@ -282,6 +282,7 @@ class ListerController extends Controller
 //                }),
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
+            'shipping_weight_oz' => 'numeric|min:1',
         ];
 
         $this->validate($request, $rules);
@@ -336,6 +337,7 @@ class ListerController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
+            'shipping_weight_oz' => $request->input('shipping_weight_oz'),
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -461,6 +463,7 @@ class ListerController extends Controller
                 'meta_keywords' => $product->meta_keywords,
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
+                'shipping_weight_oz' => $product->shipping_weight_oz,
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
