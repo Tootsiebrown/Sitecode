@@ -100,6 +100,14 @@
                         </div>
                     </div>
 
+                    <div class="form-group {{ $errors->has('shipping_weight_oz')? 'has-error':'' }}">
+                        <label for="price" class="col-sm-4 control-label">Shipping Weight (oz)</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="shipping_weight_oz" value="{{ old('shipping_weight_oz') ?? $product->shipping_weight_oz }}" name="shipping_weight_oz" placeholder="">
+                            {!! $errors->has('shipping_weight_oz')? '<p class="help-block">'.$errors->first('shipping_weight_oz').'</p>':'' !!}
+                        </div>
+                    </div>
+
                     <div class="form-group {{ $errors->has('description')? 'has-error':'' }}">
                         <label class="col-sm-4 control-label">Description</label>
                         <div class="col-sm-8">
