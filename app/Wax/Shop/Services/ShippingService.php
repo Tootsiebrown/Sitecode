@@ -26,6 +26,9 @@ class ShippingService
 
         $carriers = $this->carriers();
         $rates = collect($carriers)
+            ->filter(function ($carrier) {
+                return in_array($carrier->code, config('shipping.carriers'));
+            })
             ->map(function ($carrier) use ($order) {
                 $weight = new Weight();
                 $weight->value = $order->weight;
