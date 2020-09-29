@@ -119,4 +119,50 @@ class ShopOrdersController extends Controller
             ->back()
             ->with('success', 'Order canceled.');
     }
+
+    public function report()
+    {
+        $fileName = 'orders-' . date('Y-m-d-H-i-s') . '.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = [
+            'Listing Title',
+            'Order Number',
+            'Listing SKU',
+            'Item SKU',
+            'Bin'
+        ];
+
+        $lineItems = Order::placed()
+            ->notShipped()
+            ->get()
+            ->map(fn($order) => $order->items)
+            ->flatten()
+            ->map(fn($item) => $item->listingItems)
+            ->flatten();
+
+        $callback = function () use ($lineItems, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($lineItems as $lineItem) {
+                fputcsv($file, [
+                    $lineItem->listing->title,
+                    $lineItem->reserved_for_order_id,
+                    $lineItem->listing_id,
+                    $lineItem->id,
+                    $lineItem->bin,
+                ]);
+            }
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
