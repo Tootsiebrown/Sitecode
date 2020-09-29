@@ -139,4 +139,8 @@ class Order extends WaxOrder
 
         return $query->whereBetween('placed_at', [$startDate, $endDate]);
     }
+    public function scopeNotShipped($query)
+    {
+        return $query->whereNull('shipped_at');
+    }
 }
