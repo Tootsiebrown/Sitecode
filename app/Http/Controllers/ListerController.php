@@ -444,7 +444,7 @@ class ListerController extends Controller
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'expired_at' => $request->input('type') == 'auction'
-                    ? $request->bid_deadline
+                    ? $request->bid_deadline . ':00'
                     : null,
 
                 'type' => $request->input('type'),
