@@ -13,7 +13,10 @@ use LaravelShipStation\ShipStation;
 
 class SyncShipmentShipped implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private $vars;
 
@@ -38,7 +41,7 @@ class SyncShipmentShipped implements ShouldQueue
 
         $orderKeys = [];
 
-        foreach($info->shipments as $shipment) {
+        foreach ($info->shipments as $shipment) {
             if (in_array($shipment->orderKey, $orderKeys)) {
                 continue;
             }

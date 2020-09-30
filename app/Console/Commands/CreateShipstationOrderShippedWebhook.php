@@ -50,7 +50,8 @@ class CreateShipstationOrderShippedWebhook extends Command
         $this->info('webhook created');
     }
 
-    protected function alreadyHasWebHook($webhooks) {
+    protected function alreadyHasWebHook($webhooks)
+    {
         if ($webhooks->isEmpty()) {
             return false;
         }
