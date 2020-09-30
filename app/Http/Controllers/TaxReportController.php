@@ -63,19 +63,60 @@ class TaxReportController extends Controller
         return route('dashboard.tax.report.year', ['year' => $year]);
     }
 
-    protected function getNextMonthUrl($year, $month)
-    {
-        //
-    }
-
     protected function getPrevMonthUrl($year, $month)
     {
-        //
+        $prevYear = $year;
+        if ($month == 1) {
+            $prevMonth = 12;
+            $prevYear = $year - 1;
+        } else {
+            $prevMonth = 1;
+        }
+
+        if (
+            $prevYear < $this->earliestYear
+            || $prevYear == $this->earliestYear && $prevMonth < $this->earliestMonth
+        ) {
+            return null;
+        }
+
+        $prevMonth =  str_pad($prevMonth, 2, '0', STR_PAD_LEFT);
+
+        return route('dashboard.tax.report.month', [
+            'year' => $prevYear,
+            'month' => $prevMonth,
+        ]);
+    }
+
+    protected function getNextMonthUrl($year, $month)
+    {
+        $nextYear = $year;
+        if ($month == 12) {
+            $nextMonth = 1;
+            $nextYear = $year + 1;
+        } else {
+            $nextMonth = $month + 1;
+        }
+
+        if (
+            $nextYear > date('Y')
+            || $nextYear == date('Y') && $nextMonth > date('m')
+        ) {
+            return null;
+        }
+
+        $nextMonth =  str_pad($nextMonth, 2, '0', STR_PAD_LEFT);
+
+        return route('dashboard.tax.report.month', [
+            'year' => $nextYear,
+            'month' => $nextMonth,
+        ]);
     }
 
     protected function getNextYearUrl($year)
     {
-        //
+        $nextYear = $year + 1;
+
     }
 
     protected function getPrevYearUrl($year)
