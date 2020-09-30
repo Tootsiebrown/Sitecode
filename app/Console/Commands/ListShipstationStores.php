@@ -20,19 +20,14 @@ class ListShipstationStores extends Command
      * @var string
      */
     protected $description = 'Command description';
-    /**
-     * @var ShippingService
-     */
-    private ShippingService $shippingService;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(ShippingService $shippingService)
+    public function __construct()
     {
-        $this->shippingService = $shippingService;
         parent::__construct();
     }
 
@@ -41,7 +36,7 @@ class ListShipstationStores extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(ShippingService $shippingService)
     {
         $this->table(
             [
@@ -50,7 +45,7 @@ class ListShipstationStores extends Command
                 'Marketplace ID',
                 'Marketplace Name',
             ],
-            $this->shippingService->listShipstationStores()
+            $shippingService->listShipstationStores()
                 ->map(function ($store) {
                     unset($store["accountName"]);
                     unset($store["email"]);

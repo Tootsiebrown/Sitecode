@@ -22,19 +22,13 @@ class CreateShipstationOrderShippedWebhook extends Command
     protected $description = 'Command description';
 
     /**
-     * @var ShippingService
-     */
-    private ShippingService $shippingService;
-
-    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(ShippingService $shippingService)
+    public function __construct()
     {
         parent::__construct();
-        $this->shippingService = $shippingService;
     }
 
     /**
@@ -42,21 +36,22 @@ class CreateShipstationOrderShippedWebhook extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(ShippingService $shippingService)
     {
-        $webhooks = $this->shippingService->listShipstationWebHooks();
+        $webhooks = $shippingService->listShipstationWebHooks();
 
         if ($this->alreadyHasWebHook($webhooks)) {
             $this->info('webhook already exists');
             return;
         }
 
-        $this->createWebHook();
+        $shippingService->createShipstationWebHookForOrderShipped();
 
         $this->info('webhook created');
     }
 
-    protected function alreadyHasWebHook($webhooks) {
+    protected function alreadyHasWebHook($webhooks)
+    {
         if ($webhooks->isEmpty()) {
             return false;
         }
@@ -69,10 +64,5 @@ class CreateShipstationOrderShippedWebhook extends Command
             });
 
         return $matchingWebHooks->isNotEmpty();
-    }
-
-    protected function createWebHook()
-    {
-        $this->shippingService->createShipstationWebHookForOrderShipped();
     }
 }

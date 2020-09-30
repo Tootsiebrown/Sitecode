@@ -155,7 +155,7 @@ class ShopOrdersController extends Controller
             foreach ($lineItems as $lineItem) {
                 fputcsv($file, [
                     $lineItem->listing->title,
-                    $lineItem->reserved_for_order_id,
+                    $lineItem->orderItem->shipment->order->sequence,
                     $lineItem->listing_id,
                     $lineItem->id,
                     $lineItem->bin,

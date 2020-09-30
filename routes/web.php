@@ -588,7 +588,7 @@ Route::name('shop::')
 Route::name('webhooks.')
     ->prefix('webhooks')
     ->group(function () {
-        Route::any('order-shipped')
+        Route::post('order-shipped')
             ->name('order-shipped')
             ->uses('WebHookController@orderShipped');
     });

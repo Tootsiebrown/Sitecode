@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'checkout/*/paypal-notify',
+        'webhooks/*',
     ];
 }
