@@ -8,6 +8,7 @@ use App\Repositories\ListingsRepository;
 use App\Support\Filters\FilterAggregatorContract;
 use App\Support\Filters\Listings\ListingsFilterAggreggator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -43,8 +44,14 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Request $request)
     {
+        if ($this->app->environment('local')) {
+            if ($request->server->has('HTTP_X_ORIGINAL_HOST')) {
+                $request->server->set('HTTP_X_FORWARDED_HOST', $request->server->get('HTTP_X_ORIGINAL_HOST'));
+                $request->headers->set('X_FORWARDED_HOST', $request->server->get('HTTP_X_ORIGINAL_HOST'));
+            }
+        }
         load_options();
 
         view()->composer('*', function ($view) {
