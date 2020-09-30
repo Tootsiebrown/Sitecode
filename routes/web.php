@@ -209,6 +209,31 @@ Route::group(
 
             });
 
+        Route::prefix('tax')
+            ->middleware('privilege:Tax Table')
+            ->name('dashboard.tax.')
+            ->group(function () {
+                Route::get('zones')
+                    ->uses('TaxController@index')
+                    ->name('zones.index');
+                Route::get('zones/{id}')
+                    ->uses('TaxController@showZone')
+                    ->name('zones.show');
+                Route::post('zones/{id}')
+                    ->uses('TaxController@saveZone')
+                    ->name('zones.save');
+
+                Route::get('report')
+                    ->uses('TaxReportController@index')
+                    ->name('report.index');
+                Route::get('report/{year}')
+                    ->uses('TaxReportController@year')
+                    ->name('report.year');
+                Route::get('report/{year}/{month}')
+                    ->uses('TaxReportController@month')
+                    ->name('report.month');
+            });
+
         Route::get('auction-activity')
             ->uses('AuctionActivityController@index')
             ->name('dashboard.auction-activity');
@@ -275,145 +300,143 @@ Route::group(
                             ->uses('ShopOrdersController@cancel');
                     });
 
+//                Route::group(
+//                    ['prefix' => 'settings'],
+//                    function () {
+//                        Route::get(
+//                            'modern-theme-settings',
+//                            ['as' => 'modern_theme_settings', 'uses' => 'SettingsController@modernThemeSettings']
+//                        );
+//                        Route::get(
+//                            'social-url-settings',
+//                            ['as' => 'social_url_settings', 'uses' => 'SettingsController@SocialUrlSettings']
+//                        );
+//                        Route::get(
+//                            'general',
+//                            ['as' => 'general_settings', 'uses' => 'SettingsController@GeneralSettings']
+//                        );
+//                        Route::get(
+//                            'payments',
+//                            ['as' => 'payment_settings', 'uses' => 'SettingsController@PaymentSettings']
+//                        );
+//                        Route::get('ad', ['as' => 'ad_settings', 'uses' => 'SettingsController@AdSettings']);
+//                        Route::get('languages', ['as' => 'language_settings', 'uses' => 'LanguageController@index']);
+//                        Route::post('languages', ['uses' => 'LanguageController@store']);
+//                        Route::post(
+//                            'languages-delete',
+//                            ['as' => 'delete_language', 'uses' => 'LanguageController@destroy']
+//                        );
+//
+//                        Route::get(
+//                            'storage',
+//                            ['as' => 'file_storage_settings', 'uses' => 'SettingsController@StorageSettings']
+//                        );
+//                        Route::get(
+//                            'social',
+//                            ['as' => 'social_settings', 'uses' => 'SettingsController@SocialSettings']
+//                        );
+//                        Route::get('other', ['as' => 'other_settings', 'uses' => 'SettingsController@OtherSettings']);
+//                        Route::post(
+//                            'other',
+//                            ['as' => 'other_settings', 'uses' => 'SettingsController@OtherSettingsPost']
+//                        );
+//
+//                        Route::get(
+//                            'recaptcha',
+//                            ['as' => 're_captcha_settings', 'uses' => 'SettingsController@reCaptchaSettings']
+//                        );
+//
+//                        //Save settings / options
+//                        Route::post('save-settings', ['as' => 'save_settings', 'uses' => 'SettingsController@update']);
+//                    }
+//                );
 
+//                Route::group(
+//                    ['prefix' => 'location'],
+//                    function () {
+//                        Route::get('country', ['as' => 'country_list', 'uses' => 'LocationController@countries']);
+//
+//                        Route::get('states', ['as' => 'state_list', 'uses' => 'LocationController@stateList']);
+//                        Route::post('states', ['uses' => 'LocationController@saveState']);
+//                        Route::get(
+//                            'states/{id}/edit',
+//                            ['as' => 'edit_state', 'uses' => 'LocationController@stateEdit']
+//                        );
+//                        Route::post('states/{id}/edit', ['uses' => 'LocationController@stateEditPost']);
+//                        Route::post(
+//                            'states/delete',
+//                            ['as' => 'delete_state', 'uses' => 'LocationController@stateDestroy']
+//                        );
+//                        Route::get('cities', ['as' => 'city_list', 'uses' => 'LocationController@cityList']);
+//                        Route::post('cities', ['uses' => 'LocationController@saveCity']);
+//
+//                        Route::get('cities/{id}/edit', ['as' => 'edit_city', 'uses' => 'LocationController@cityEdit']);
+//                        Route::post('cities/{id}/edit', ['uses' => 'LocationController@cityEditPost']);
+//                        Route::post('city/delete', ['as' => 'delete_city', 'uses' => 'LocationController@cityDestroy']);
+//                    }
+//                );
 
-                Route::group(
-                    ['prefix' => 'settings'],
-                    function () {
-                        Route::get(
-                            'modern-theme-settings',
-                            ['as' => 'modern_theme_settings', 'uses' => 'SettingsController@modernThemeSettings']
-                        );
-                        Route::get(
-                            'social-url-settings',
-                            ['as' => 'social_url_settings', 'uses' => 'SettingsController@SocialUrlSettings']
-                        );
-                        Route::get(
-                            'general',
-                            ['as' => 'general_settings', 'uses' => 'SettingsController@GeneralSettings']
-                        );
-                        Route::get(
-                            'payments',
-                            ['as' => 'payment_settings', 'uses' => 'SettingsController@PaymentSettings']
-                        );
-                        Route::get('ad', ['as' => 'ad_settings', 'uses' => 'SettingsController@AdSettings']);
-                        Route::get('languages', ['as' => 'language_settings', 'uses' => 'LanguageController@index']);
-                        Route::post('languages', ['uses' => 'LanguageController@store']);
-                        Route::post(
-                            'languages-delete',
-                            ['as' => 'delete_language', 'uses' => 'LanguageController@destroy']
-                        );
+//                Route::group(
+//                    ['prefix' => 'categories'],
+//                    function () {
+//                        Route::get('/', ['as' => 'parent_categories', 'uses' => 'CategoriesController@index']);
+//                        Route::post('/', ['uses' => 'CategoriesController@store']);
+//
+//                        Route::get('edit/{id}', ['as' => 'edit_categories', 'uses' => 'CategoriesController@edit']);
+//                        Route::post('edit/{id}', ['uses' => 'CategoriesController@update']);
+//
+//                        Route::post(
+//                            'delete-categories',
+//                            ['as' => 'delete_categories', 'uses' => 'CategoriesController@destroy']
+//                        );
+//                    }
+//                );
 
-                        Route::get(
-                            'storage',
-                            ['as' => 'file_storage_settings', 'uses' => 'SettingsController@StorageSettings']
-                        );
-                        Route::get(
-                            'social',
-                            ['as' => 'social_settings', 'uses' => 'SettingsController@SocialSettings']
-                        );
-                        Route::get('other', ['as' => 'other_settings', 'uses' => 'SettingsController@OtherSettings']);
-                        Route::post(
-                            'other',
-                            ['as' => 'other_settings', 'uses' => 'SettingsController@OtherSettingsPost']
-                        );
-
-                        Route::get(
-                            'recaptcha',
-                            ['as' => 're_captcha_settings', 'uses' => 'SettingsController@reCaptchaSettings']
-                        );
-
-                        //Save settings / options
-                        Route::post('save-settings', ['as' => 'save_settings', 'uses' => 'SettingsController@update']);
-                    }
-                );
-
-                Route::group(
-                    ['prefix' => 'location'],
-                    function () {
-                        Route::get('country', ['as' => 'country_list', 'uses' => 'LocationController@countries']);
-
-                        Route::get('states', ['as' => 'state_list', 'uses' => 'LocationController@stateList']);
-                        Route::post('states', ['uses' => 'LocationController@saveState']);
-                        Route::get(
-                            'states/{id}/edit',
-                            ['as' => 'edit_state', 'uses' => 'LocationController@stateEdit']
-                        );
-                        Route::post('states/{id}/edit', ['uses' => 'LocationController@stateEditPost']);
-                        Route::post(
-                            'states/delete',
-                            ['as' => 'delete_state', 'uses' => 'LocationController@stateDestroy']
-                        );
-                        Route::get('cities', ['as' => 'city_list', 'uses' => 'LocationController@cityList']);
-                        Route::post('cities', ['uses' => 'LocationController@saveCity']);
-
-                        Route::get('cities/{id}/edit', ['as' => 'edit_city', 'uses' => 'LocationController@cityEdit']);
-                        Route::post('cities/{id}/edit', ['uses' => 'LocationController@cityEditPost']);
-                        Route::post('city/delete', ['as' => 'delete_city', 'uses' => 'LocationController@cityDestroy']);
-                    }
-                );
-
-                Route::group(
-                    ['prefix' => 'categories'],
-                    function () {
-                        Route::get('/', ['as' => 'parent_categories', 'uses' => 'CategoriesController@index']);
-                        Route::post('/', ['uses' => 'CategoriesController@store']);
-
-                        Route::get('edit/{id}', ['as' => 'edit_categories', 'uses' => 'CategoriesController@edit']);
-                        Route::post('edit/{id}', ['uses' => 'CategoriesController@update']);
-
-                        Route::post(
-                            'delete-categories',
-                            ['as' => 'delete_categories', 'uses' => 'CategoriesController@destroy']
-                        );
-                    }
-                );
-
-                Route::group(
-                    ['prefix' => 'admin_comments'],
-                    function () {
-                        Route::get('/', ['as' => 'admin_comments', 'uses' => 'CommentController@index']);
-                        Route::post('action', ['as' => 'comment_action', 'uses' => 'CommentController@commentAction']);
-                    }
-                );
+//                Route::group(
+//                    ['prefix' => 'admin_comments'],
+//                    function () {
+//                        Route::get('/', ['as' => 'admin_comments', 'uses' => 'CommentController@index']);
+//                        Route::post('action', ['as' => 'comment_action', 'uses' => 'CommentController@commentAction']);
+//                    }
+//                );
 
 //                Route::get('pending', ['as' => 'admin_pending_ads', 'uses' => 'AdsController@adminPendingAds']);
 //                Route::post('status-change', ['as' => 'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
                 Route::get('users', ['as' => 'users', 'uses' => 'UserController@index']);
                 Route::get('users-info/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);
-                Route::post(
-                    'change-user-status',
-                    ['as' => 'change_user_status', 'uses' => 'UserController@changeStatus']
-                );
-                Route::post(
-                    'change-user-feature',
-                    ['as' => 'change_user_feature', 'uses' => 'UserController@changeFeature']
-                );
-                Route::get(
-                    'contact-messages',
-                    ['as' => 'contact_messages', 'uses' => 'HomeController@contactMessages']
-                );
+//                Route::post(
+//                    'change-user-status',
+//                    ['as' => 'change_user_status', 'uses' => 'UserController@changeStatus']
+//                );
+//                Route::post(
+//                    'change-user-feature',
+//                    ['as' => 'change_user_feature', 'uses' => 'UserController@changeFeature']
+//                );
+//                Route::get(
+//                    'contact-messages',
+//                    ['as' => 'contact_messages', 'uses' => 'HomeController@contactMessages']
+//                );
 
-                Route::group(
-                    ['prefix' => 'administrators'],
-                    function () {
-                        Route::get('/', ['as' => 'administrators', 'uses' => 'UserController@administrators']);
-                        Route::get(
-                            'create',
-                            ['as' => 'add_administrator', 'uses' => 'UserController@addAdministrator']
-                        );
-                        Route::post('create', ['uses' => 'UserController@storeAdministrator']);
-
-                        Route::post(
-                            'block-unblock',
-                            [
-                                'as' => 'administratorBlockUnblock',
-                                'uses' => 'UserController@administratorBlockUnblock',
-                            ]
-                        );
-                    }
-                );
+//                Route::group(
+//                    ['prefix' => 'administrators'],
+//                    function () {
+//                        Route::get('/', ['as' => 'administrators', 'uses' => 'UserController@administrators']);
+//                        Route::get(
+//                            'create',
+//                            ['as' => 'add_administrator', 'uses' => 'UserController@addAdministrator']
+//                        );
+//                        Route::post('create', ['uses' => 'UserController@storeAdministrator']);
+//
+//                        Route::post(
+//                            'block-unblock',
+//                            [
+//                                'as' => 'administratorBlockUnblock',
+//                                'uses' => 'UserController@administratorBlockUnblock',
+//                            ]
+//                        );
+//                    }
+//                );
             });
 
         //All user can access this route
@@ -428,51 +451,51 @@ Route::group(
                 Route::group(
                     ['prefix' => 'posts'],
                     function () {
-                        Route::get('/', ['as' => 'my_ads', 'uses' => 'AdsController@myAds']);
-                        Route::post('delete', ['as' => 'delete_ads', 'uses' => 'AdsController@destroy']);
-                        Route::get('edit/{id}', ['as' => 'edit_ad', 'uses' => 'AdsController@edit']);
-                        Route::post('edit/{id}', ['uses' => 'AdsController@update']);
+//                        Route::get('/', ['as' => 'my_ads', 'uses' => 'AdsController@myAds']);
+//                        Route::post('delete', ['as' => 'delete_ads', 'uses' => 'AdsController@destroy']);
+//                        Route::get('edit/{id}', ['as' => 'edit_ad', 'uses' => 'AdsController@edit']);
+//                        Route::post('edit/{id}', ['uses' => 'AdsController@update']);
                         Route::get('favorite-lists', ['as' => 'favorite_ads', 'uses' => 'AdsController@favoriteAds']);
-                        //Upload ads image
-                        Route::post(
-                            'upload-a-image',
-                            ['as' => 'upload_ads_image', 'uses' => 'AdsController@uploadAdsImage']
-                        );
-
-                        //Delete media
-                        Route::post('delete-media', ['as' => 'delete_media', 'uses' => 'AdsController@deleteMedia']);
-                        Route::post(
-                            'feature-media-creating',
-                            [
-                                'as' => 'feature_media_creating_ads',
-                                'uses' => 'AdsController@featureMediaCreatingAds',
-                            ]
-                        );
-                        Route::get(
-                            'append-media-image',
-                            ['as' => 'append_media_image', 'uses' => 'AdsController@appendMediaImage']
-                        );
-                        Route::get('archive-lists', ['as' => 'favourite_ad', 'uses' => 'AdsController@create']);
+//                        //Upload ads image
+//                        Route::post(
+//                            'upload-a-image',
+//                            ['as' => 'upload_ads_image', 'uses' => 'AdsController@uploadAdsImage']
+//                        );
+//
+//                        //Delete media
+//                        Route::post('delete-media', ['as' => 'delete_media', 'uses' => 'AdsController@deleteMedia']);
+//                        Route::post(
+//                            'feature-media-creating',
+//                            [
+//                                'as' => 'feature_media_creating_ads',
+//                                'uses' => 'AdsController@featureMediaCreatingAds',
+//                            ]
+//                        );
+//                        Route::get(
+//                            'append-media-image',
+//                            ['as' => 'append_media_image', 'uses' => 'AdsController@appendMediaImage']
+//                        );
+//                        Route::get('archive-lists', ['as' => 'favourite_ad', 'uses' => 'AdsController@create']);
 
                         Route::get('profile', ['as' => 'profile', 'uses' => 'UserController@profile']);
                         Route::get('profile/edit', ['as' => 'profile_edit', 'uses' => 'UserController@profileEdit']);
                         Route::post('profile/edit', ['uses' => 'UserController@profileEditPost']);
-                        Route::get(
-                            'profile/change-avatar',
-                            ['as' => 'change_avatar', 'uses' => 'UserController@changeAvatar']
-                        );
-                        Route::post(
-                            'upload-avatar',
-                            ['as' => 'upload_avatar', 'uses' => 'UserController@uploadAvatar']
-                        );
+//                        Route::get(
+//                            'profile/change-avatar',
+//                            ['as' => 'change_avatar', 'uses' => 'UserController@changeAvatar']
+//                        );
+//                        Route::post(
+//                            'upload-avatar',
+//                            ['as' => 'upload_avatar', 'uses' => 'UserController@uploadAvatar']
+//                        );
 
                         //bids
-                        Route::get('bids/{listingId}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
-                        Route::post('bids/action', ['as' => 'bid_action', 'uses' => 'BidController@bidAction']);
-                        Route::get(
-                            'bidder_info/{bid_id}',
-                            ['as' => 'bidder_info', 'uses' => 'BidController@bidderInfo']
-                        );
+//                        Route::get('bids/{listingId}', ['as' => 'auction_bids', 'uses' => 'BidController@index']);
+//                        Route::post('bids/action', ['as' => 'bid_action', 'uses' => 'BidController@bidAction']);
+//                        Route::get(
+//                            'bidder_info/{bid_id}',
+//                            ['as' => 'bidder_info', 'uses' => 'BidController@bidderInfo']
+//                        );
 
                         /**
                          * Change Password route
@@ -540,7 +563,6 @@ Route::name('shop.')
                     ->uses('\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
                     ->name('confirmation');
             });
-
     });
 
 Route::name('shop::')

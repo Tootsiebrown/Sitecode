@@ -38,6 +38,17 @@
                 </li>
             @endif
 
+            @if ($lUser->hasPrivilege('Tax Table'))
+                <li>
+                    <a href="{{ route('dashboard.tax.zones.index') }}"><i class="fa fa-bank"></i> Tax Table</a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.tax.report.index') }}"><i class="fa fa-area-chart"></i> Tax Report</a>
+                </li>
+
+                </li>
+            @endif
+
             <li>
                 <a href="{{ route('dashboard.auction-activity') }}">
                     <i class="fa fa-hourglass"></i>
