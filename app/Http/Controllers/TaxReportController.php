@@ -116,7 +116,6 @@ class TaxReportController extends Controller
     protected function getNextYearUrl($year)
     {
         $nextYear = $year + 1;
-
     }
 
     protected function getPrevYearUrl($year)
