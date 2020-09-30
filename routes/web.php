@@ -585,3 +585,11 @@ Route::name('shop::')
             ->name('orderDetails.markProcessed');
     });
 
+Route::name('webhooks.')
+    ->prefix('webhooks')
+    ->group(function () {
+        Route::any('order-shipped')
+            ->name('order-shipped')
+            ->uses('WebHookController@orderShipped');
+    });
+

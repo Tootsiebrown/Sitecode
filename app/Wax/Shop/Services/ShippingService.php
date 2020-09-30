@@ -220,4 +220,22 @@ class ShippingService
                 return (array) $store;
             });
     }
+
+    public function listShipstationWebHooks()
+    {
+        return collect($this->shipStation->webhooks->get()->webhooks);
+    }
+
+    public function createShipstationWebHookForOrderShipped()
+    {
+        $this->shipStation->webhooks->post(
+            [
+                'target_url' => route('webhooks.order-shipped'),
+                'store_id' => config('services.ship_station.store_id'),
+                'event' => 'SHIP_NOTIFY',
+                'friendly_name' => 'Notify website when order shipped (label printed)',
+            ],
+            'subscribe'
+        );
+    }
 }
