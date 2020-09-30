@@ -212,4 +212,12 @@ class ShippingService
 
         return $advancedOptions;
     }
+
+    public function listShipstationStores()
+    {
+        return collect($this->shipStation->stores->get())
+            ->map(function ($store) {
+                return (array) $store;
+            });
+    }
 }

@@ -39,6 +39,7 @@ class QueueShipstationOrder extends Command
      */
     public function handle()
     {
+        dd('nope');
         OrderToShipstation::dispatch(Order::find(177));
     }
 }
