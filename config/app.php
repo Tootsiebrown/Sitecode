@@ -182,9 +182,9 @@ return [
         Wax\Core\Providers\SessionServiceProvider::class,
         Wax\Admin\AdminServiceProvider::class,
         Wax\Base\WaxVintageServiceProvider::class,
-        Wax\MailingList\Providers\MailingListServiceProvider::class,
-        Wax\Blog\Providers\BlogServiceProvider::class,
-        Wax\CaseStudies\Providers\CaseStudiesServiceProvider::class,
+        //Wax\MailingList\Providers\MailingListServiceProvider::class,
+        //Wax\Blog\Providers\BlogServiceProvider::class,
+        //Wax\CaseStudies\Providers\CaseStudiesServiceProvider::class,
         Wax\SiteMap\Providers\SiteMapServiceProvider::class,
         Wax\SiteSearch\Providers\SiteSearchServiceProvider::class,
 
