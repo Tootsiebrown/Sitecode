@@ -75,6 +75,7 @@
                                                 value="{{ $group->name }}"
                                                 name="permissions[]"
                                                 placeholder=""
+                                                {{ Auth::user()->id === $user->id ? 'readonly disabled' : '' }}
                                                 {{ $user->groups->pluck('id')->contains($group->id) ? 'checked' : '' }}
                                             >
                                             {{ $group->name }}
@@ -88,7 +89,11 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-8">
-                            <button type="submit" class="btn btn-primary">Assign Permissions</button>
+                            @if (Auth::user()->id === $user->id)
+                                <p>You cannot edit your own permissions</p>
+                            @else
+                                <button type="submit" class="btn btn-primary">Assign Permissions</button>
+                            @endif
                         </div>
                     </div>
                 </form>
