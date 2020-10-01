@@ -15,7 +15,6 @@
                     method="get"
                     enctype="multipart/form-data"
                 >
-                    @csrf
                     <div class="input-group focusable" data-component="focusable-input-group">
                         <input
                             type="text"
