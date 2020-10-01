@@ -57,7 +57,7 @@
                 </tr>
             </table>
 
-            @if (Auth::user()->hasPrivilege('Administrator'))
+            @if (Auth::user()->hasPrivilege('Manager'))
                 <form class="form-horizontal users-permissions" method="POST" action="{{ route('dashboard.users.update', ['id' => $user->id]) }}">
                     @csrf
                     @foreach (Auth::user()->descendant_groups as $group)
