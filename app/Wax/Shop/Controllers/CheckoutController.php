@@ -62,6 +62,7 @@ class CheckoutController extends Controller
                 'address1' => 'required_unless:same_as_shipping,1',
                 'city' => 'required_unless:same_as_shipping,1',
                 'state' => 'required_unless:same_as_shipping,1',
+                'terms_and_conditions' => 'required|accepted',
             ],
             [
                 'first_name.required_unless' => ':attribute is required.',

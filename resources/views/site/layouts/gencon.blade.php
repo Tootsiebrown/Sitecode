@@ -1,13 +1,10 @@
-@extends('site.layouts.base', ['bodyClass' => 'gencon'])
+@extends('layouts.app')
 
-@section('body')
+@section('content')
     <div class="container">
-    	{!! Breadcrumbs::draw() !!}
         <h1 class="page-title">{{ $page['title'] }}</h1>
-    	@section('content')
-    		<div class="editable-content">
-    			{!! $page['content'] ?? '' !!}
-    		</div>
-    	@show
+        <div class="editable-content">
+            {!! $page['content'] ?? '' !!}
+        </div>
     </div>
 @endsection
