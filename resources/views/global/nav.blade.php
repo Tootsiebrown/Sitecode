@@ -10,7 +10,7 @@
             <!-- Search -->
             <div class="navbar-search-wrap more mobile-search">
                 <form
-                    action="{{route('search_redirect')}}"
+                    action="{{route('search')}}"
                     class="form-inline"
                     method="get"
                     enctype="multipart/form-data"
