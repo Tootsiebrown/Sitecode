@@ -192,6 +192,11 @@ class UserController extends Controller
 
     protected function saveUserPermissions(User $user, Collection $permissions)
     {
+        if ($user->id === Auth::user()->id) {
+            // nah, the front-end won't let you edit yoruself. Gotta go to the developer
+            return;
+        }
+
         $authRepo = app()->make(AuthorizationRepositoryContract::class);
         $assignableGroups = Auth::user()->descendant_groups;
         $permissions
