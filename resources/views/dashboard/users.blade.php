@@ -7,7 +7,7 @@
 
             <form class="form-horizontal" method="GET" action="{{ route('users') }}">
                 <div class="form-group {{ $errors->has('searh')? 'has-error':'' }}">
-                    <label for="search" class="col-sm-4 control-label">Email, Name, etc.</label>
+                    <label for="search" class="col-sm-4 control-label">Email or Name</label>
                     <div class="col-sm-8">
                         <input
                             type="text"

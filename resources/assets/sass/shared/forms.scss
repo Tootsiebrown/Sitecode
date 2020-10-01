@@ -17,6 +17,14 @@ form {
         background-color: transparent;
         padding: 0;
     }
+
+    &.users-permissions {
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    }
 }
 
 .error-message {

@@ -57,30 +57,42 @@
                 </tr>
             </table>
 
-            <form class="form-horizontal" method="GET" action="{{ route('dashboard.users.update', ['id' => $user->id]) }}">
-                @csrf
-                <div class="form-group {{ $errors->has('permissions')? 'has-error':'' }}">
-                    <label for="permissions" class="col-sm-4 control-label">Permissions</label>
-                    <div class="col-sm-8">
-                        @foreach ($user->assignableGroups as $group)
-                            <input
-                                type="checkbox"
-                                value="{{ $group->id }}"
-                                name="permissions[]"
-                                placeholder=""
-                            >
-                        @endforeach
-                        {!! $errors->has('permissions')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
+            @if (Auth::user()->hasPrivilege('Manager'))
+                <form class="form-horizontal users-permissions" method="POST" action="{{ route('dashboard.users.update', ['id' => $user->id]) }}">
+                    @csrf
+                    @foreach (Auth::user()->descendant_groups as $group)
+                        <input type="hidden" name="assignablePermissions[]" value="{{ $group->name }}">
+                    @endforeach
+                    <div class="form-group {{ $errors->has('permissions')? 'has-error':'' }}">
+                        <label for="permissions" class="col-sm-4 control-label">Permissions</label>
+                        <div class="col-sm-8">
+                            <ul>
+                                @foreach (Auth::user()->descendant_groups as $group)
+                                    <li>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="{{ $group->name }}"
+                                                name="permissions[]"
+                                                placeholder=""
+                                                {{ $user->groups->pluck('id')->contains($group->id) ? 'checked' : '' }}
+                                            >
+                                            {{ $group->name }}
+                                        </label>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            {!! $errors->has('permissions')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-4 col-sm-8">
-                        <button type="submit" class="btn btn-primary">Assign Permissions</button>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Assign Permissions</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-
+                </form>
+            @endif
         </div>
     </div>
 @endsection

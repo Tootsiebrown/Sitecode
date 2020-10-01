@@ -115,6 +115,7 @@ return [
         'Bins',
         'Taxes',
         'Orders',
+        'Manager'
     ],
 
 ];
