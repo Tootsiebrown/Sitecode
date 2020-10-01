@@ -9,12 +9,14 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use Wax\Core\Contracts\AuthorizationRepositoryContract;
 
 class UserController extends Controller
 {
@@ -156,7 +158,6 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
 //    public function edit($id)
 //    {
@@ -168,11 +169,45 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user) {
+            abort(404);
+        }
+
+        if (Auth::user()->hasPrivilege('Users')) {
+            $this->saveUserPermissions(
+                $user,
+                collect($request->input('permissions')),
+            );
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'Edited User');
+    }
+
+    protected function saveUserPermissions(User $user, Collection $permissions)
+    {
+        $authRepo = app()->make(AuthorizationRepositoryContract::class);
+        $assignableGroups = Auth::user()->descendant_groups;
+        $permissions
+            ->each(function ($permission) use ($assignableGroups, $authRepo, $user) {
+                if ($assignableGroups->pluck('name')->contains($permission)) {
+                    $authRepo->addUserToGroup($user, $authRepo->getGroup($permission));
+                } else {
+                    throw new \Exception('Impermissable attempt by ' . Auth::user()->email . ' to give someone else ' . $permission);
+                }
+            });
+
+        foreach ($assignableGroups as $deleteableGroup) {
+            if (! $permissions->contains($deleteableGroup->name)) {
+                $authRepo->removeUserFromGroup($user, $deleteableGroup);
+            }
+        }
     }
 
     /**
