@@ -20,17 +20,27 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $title = trans('app.users');
 
-        //$users = User::whereUserType('user')->paginate(20);
-        $users = User::paginate(20);
+        $search = $request->input('search');
+        if (!empty($search)) {
+            $users = User::orWhere('email', 'like', '%' . $search . '%')
+                ->orWhere('firstname', 'like', '%' . $search . '%')
+                ->orWhere('lastname', 'like', '%' . $search . '%')
+                ->paginate(20)
+                ->appends(['search' => $search]);
+        } else {
+            $users = User::paginate(20);
+        }
 
-        return view('dashboard.users', compact('title', 'users'));
+
+        return view('dashboard.users', [
+            'title' => trans('app.users'),
+            'users' => $users,
+        ]);
     }
 
     public function userInfo($id)
@@ -50,11 +60,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $countries = Country::all();
-        return view('theme.user_create', compact('countries'));
-    }
+//    public function create()
+//    {
+//        $countries = Country::all();
+//        return view('theme.user_create', compact('countries'));
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -62,74 +72,74 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-
-        $rules = [
-            'first_name'    => 'required',
-            'email'    => 'required|email',
-            'gender'    => 'required',
-            'country'    => 'required',
-            'password'    => 'required|confirmed',
-            'password_confirmation'    => 'required',
-            'phone'    => 'required',
-            'agree'    => 'required',
-        ];
-        $this->validate($request, $rules);
-
-        $active_status = get_option('verification_email_after_registration');
-
-        $data = [
-            'first_name'        => $request->first_name,
-            'last_name'         => $request->last_name,
-            'name'              => $request->first_name . ' ' . $request->last_name,
-            'email'             => $request->email,
-            'password'          => bcrypt($request->password),
-            'phone'             => $request->phone,
-            'gender'             => $request->gender,
-            'country_id'             => $request->country,
-
-            'user_type'         => 'user',
-            'active_status'     => ($active_status == '1') ? '0' : '1',
-            'activation_code'   => str_random(30)
-        ];
-
-        $user_create = User::create($data);
-
-        if ($user_create) {
-            $registration_success_activating_msg = "";
-            if ($active_status == '1') {
-                try {
-                    $registration_success_activating_msg = ", we've sent you an activation email, please follow email instruction";
-
-                    Mail::send('emails.activation_email', ['user' => $data], function ($m) use ($data) {
-                        $m->from(get_option('email_address'), get_option('site_name'));
-                        $m->to($data['email'], $data['name'])->subject(trans('app.activate_email_subject'));
-                    });
-                } catch (\Exception $e) {
-                    $registration_success_activating_msg = ", we can't sending you activation email during an email error, please contact with your admin";
-                    //
-                }
-            }
-            return redirect(route('login'))->with('registration_success', trans('app.registration_success') . $registration_success_activating_msg);
-        } else {
-            return back()->withInput()->with('error', trans('app.error_msg'));
-        }
-    }
-
-    public function activatingAccount($activation_code)
-    {
-        $get_user = User::whereActivationCode($activation_code)->first();
-        if (! $get_user) {
-            $error = trans('app.invalid_activation_code');
-            return view('theme.invalid', compact('error'));
-        }
-        $get_user->active_status = '1';
-        $get_user->activation_code = '';
-        $get_user->save();
-
-        return redirect(route('login'))->with('registration_success', trans('app.account_activated'));
-    }
+//    public function store(Request $request)
+//    {
+//
+//        $rules = [
+//            'first_name'    => 'required',
+//            'email'    => 'required|email',
+//            'gender'    => 'required',
+//            'country'    => 'required',
+//            'password'    => 'required|confirmed',
+//            'password_confirmation'    => 'required',
+//            'phone'    => 'required',
+//            'agree'    => 'required',
+//        ];
+//        $this->validate($request, $rules);
+//
+//        $active_status = get_option('verification_email_after_registration');
+//
+//        $data = [
+//            'first_name'        => $request->first_name,
+//            'last_name'         => $request->last_name,
+//            'name'              => $request->first_name . ' ' . $request->last_name,
+//            'email'             => $request->email,
+//            'password'          => bcrypt($request->password),
+//            'phone'             => $request->phone,
+//            'gender'             => $request->gender,
+//            'country_id'             => $request->country,
+//
+//            'user_type'         => 'user',
+//            'active_status'     => ($active_status == '1') ? '0' : '1',
+//            'activation_code'   => str_random(30)
+//        ];
+//
+//        $user_create = User::create($data);
+//
+//        if ($user_create) {
+//            $registration_success_activating_msg = "";
+//            if ($active_status == '1') {
+//                try {
+//                    $registration_success_activating_msg = ", we've sent you an activation email, please follow email instruction";
+//
+//                    Mail::send('emails.activation_email', ['user' => $data], function ($m) use ($data) {
+//                        $m->from(get_option('email_address'), get_option('site_name'));
+//                        $m->to($data['email'], $data['name'])->subject(trans('app.activate_email_subject'));
+//                    });
+//                } catch (\Exception $e) {
+//                    $registration_success_activating_msg = ", we can't sending you activation email during an email error, please contact with your admin";
+//                    //
+//                }
+//            }
+//            return redirect(route('login'))->with('registration_success', trans('app.registration_success') . $registration_success_activating_msg);
+//        } else {
+//            return back()->withInput()->with('error', trans('app.error_msg'));
+//        }
+//    }
+//
+//    public function activatingAccount($activation_code)
+//    {
+//        $get_user = User::whereActivationCode($activation_code)->first();
+//        if (! $get_user) {
+//            $error = trans('app.invalid_activation_code');
+//            return view('theme.invalid', compact('error'));
+//        }
+//        $get_user->active_status = '1';
+//        $get_user->activation_code = '';
+//        $get_user->save();
+//
+//        return redirect(route('login'))->with('registration_success', trans('app.account_activated'));
+//    }
 
     /**
      * Display the specified resource.
@@ -148,10 +158,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+//    public function edit($id)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -242,64 +252,64 @@ class UserController extends Controller
         return redirect(route('profile'))->with('success', trans('app.profile_edit_success_msg'));
     }
 
-    public function administrators()
-    {
-        $title = trans('app.administrators');
-        //$users = User::whereUserType('admin')->get();
-        $users = User::get();
-
-        return view('dashboard.administrators', compact('title', 'users'));
-    }
-
-    public function addAdministrator()
-    {
-        $title = trans('app.add_administrator');
-        $countries = Country::all();
-
-        return view('dashboard.add_administrator', compact('title', 'countries'));
-    }
-
-
-    public function storeAdministrator(Request $request)
-    {
-        $rules = [
-            'name'                  => 'required',
-            'email'                 => 'required|email',
-            'phone'                 => 'required',
-            'gender'                => 'required',
-            'country'               => 'required',
-            'password'              => 'required|confirmed',
-            'password_confirmation' => 'required',
-        ];
-        $this->validate($request, $rules);
-
-        $data = [
-            'name'              => $request->name,
-            'email'             => $request->email,
-            'password'          => bcrypt($request->password),
-            'phone'             => $request->phone,
-            'gender'            => $request->gender,
-            'country_id'        => $request->country,
-            'user_type'         => 'admin',
-            'active_status'     => '1',
-            'activation_code'   => str_random(30)
-        ];
-
-        $user_create = User::create($data);
-        return redirect(route('administrators'))->with('success', trans('app.registration_success'));
-    }
-
-    public function administratorBlockUnblock(Request $request)
-    {
-        $status = $request->status == 'unblock' ? '1' : '2';
-        $user_id = $request->user_id;
-        User::whereId($user_id)->update(['active_status' => $status]);
-
-        if ($status == 1) {
-            return ['success' => 1, 'msg' => trans('app.administrator_unblocked')];
-        }
-        return ['success' => 1, 'msg' => trans('app.administrator_blocked')];
-    }
+//    public function administrators()
+//    {
+//        $title = trans('app.administrators');
+//        //$users = User::whereUserType('admin')->get();
+//        $users = User::get();
+//
+//        return view('dashboard.administrators', compact('title', 'users'));
+//    }
+//
+//    public function addAdministrator()
+//    {
+//        $title = trans('app.add_administrator');
+//        $countries = Country::all();
+//
+//        return view('dashboard.add_administrator', compact('title', 'countries'));
+//    }
+//
+//
+//    public function storeAdministrator(Request $request)
+//    {
+//        $rules = [
+//            'name'                  => 'required',
+//            'email'                 => 'required|email',
+//            'phone'                 => 'required',
+//            'gender'                => 'required',
+//            'country'               => 'required',
+//            'password'              => 'required|confirmed',
+//            'password_confirmation' => 'required',
+//        ];
+//        $this->validate($request, $rules);
+//
+//        $data = [
+//            'name'              => $request->name,
+//            'email'             => $request->email,
+//            'password'          => bcrypt($request->password),
+//            'phone'             => $request->phone,
+//            'gender'            => $request->gender,
+//            'country_id'        => $request->country,
+//            'user_type'         => 'admin',
+//            'active_status'     => '1',
+//            'activation_code'   => str_random(30)
+//        ];
+//
+//        $user_create = User::create($data);
+//        return redirect(route('administrators'))->with('success', trans('app.registration_success'));
+//    }
+//
+//    public function administratorBlockUnblock(Request $request)
+//    {
+//        $status = $request->status == 'unblock' ? '1' : '2';
+//        $user_id = $request->user_id;
+//        User::whereId($user_id)->update(['active_status' => $status]);
+//
+//        if ($status == 1) {
+//            return ['success' => 1, 'msg' => trans('app.administrator_unblocked')];
+//        }
+//        return ['success' => 1, 'msg' => trans('app.administrator_blocked')];
+//    }
 
     public function changePassword()
     {

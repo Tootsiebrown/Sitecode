@@ -404,7 +404,11 @@ Route::group(
 //                Route::post('status-change', ['as' => 'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
                 Route::get('users', ['as' => 'users', 'uses' => 'UserController@index']);
-                Route::get('users-info/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);
+                Route::get('users/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);
+                Route::post('users/{id}')
+                    ->name('dashboard.users.update')
+                    ->uses('UserController@update');
+
 //                Route::post(
 //                    'change-user-status',
 //                    ['as' => 'change_user_status', 'uses' => 'UserController@changeStatus']
