@@ -178,7 +178,7 @@
                                     @if (old('terms_and_conditions')) checked @endif
                                 > Accept
                             </label>
-                            &nbsp;&nbsp(<a href="/terms-and-conditions">Review</a>)
+                            &nbsp;&nbsp(<a href="/terms-and-conditions" target="_blank">Review</a>)
                             @include('site.components.field-error', ['field' => 'terms_and_conditions'])
                         </div>
                     </div>
