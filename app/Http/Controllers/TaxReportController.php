@@ -70,7 +70,7 @@ class TaxReportController extends Controller
             $prevMonth = 12;
             $prevYear = $year - 1;
         } else {
-            $prevMonth = 1;
+            $prevMonth = $month - 1;
         }
 
         if (
