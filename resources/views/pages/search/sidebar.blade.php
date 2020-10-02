@@ -1,4 +1,13 @@
-<div class="search-sidebar col-xs-3">
+<div class="search-sidebar col-xs-3" data-component="search-sidebar">
+    <div class="search-sidebar__toggle-container">
+        <span>Filters</span>
+        <span
+            class="search-sidebar__toggle btn btn-secondary"
+            data-element="sidebarToggle"
+        >
+            <span>Show</span> <i class="fa fa-chevron-down"></i>
+        </span>
+    </div>
     @if ($brand)
         <div class="search-sidebar__brand">
             <p class="label">

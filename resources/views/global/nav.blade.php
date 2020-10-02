@@ -53,7 +53,7 @@
                                 class="form-control"
                                 id="searchKeyword"
                                 name="search"
-                                placeholder="@lang('app.what_are_u_looking')"
+                                placeholder="@lang('app.what_are_u_looking_short')"
                                 data-element="input"
                             >
                             <span class="input-group-btn">

@@ -251,7 +251,7 @@ class ListerController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'upc' => 'required',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|gt:0',
             'original_price' => 'required|numeric',
             'description' => 'required',
             'condition' => [
