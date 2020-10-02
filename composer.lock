@@ -3241,12 +3241,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:oohology/wax-cms.git",
-                "reference": "879abe074a0d76ce16550ed751bef6f1cd27243d"
+                "reference": "e9e4eca648e8f1fbaa6decba94c45b1dee5d0c38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-cms/repository/archive.zip?sha=879abe074a0d76ce16550ed751bef6f1cd27243d",
-                "reference": "879abe074a0d76ce16550ed751bef6f1cd27243d",
+                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-cms/repository/archive.zip?sha=e9e4eca648e8f1fbaa6decba94c45b1dee5d0c38",
+                "reference": "e9e4eca648e8f1fbaa6decba94c45b1dee5d0c38",
                 "shasum": ""
             },
             "require": {
@@ -3314,7 +3314,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/2142177/issues"
             },
-            "time": "2020-10-01T17:02:37+00:00"
+            "time": "2020-10-02T14:57:24+00:00"
         },
         {
             "name": "oohology/wax-shop",

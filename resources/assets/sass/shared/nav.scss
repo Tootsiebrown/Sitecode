@@ -466,7 +466,7 @@
 
     @media (min-width: $bp-tablet) {
         .nav-cart__container.open & {
-            max-height: 100vh;
+            max-height: calc(100vh - 140px);
             overflow-y: scroll;
             border-width: 6px 2px 2px 2px;
             border-radius: 0 0 16px 16px;
