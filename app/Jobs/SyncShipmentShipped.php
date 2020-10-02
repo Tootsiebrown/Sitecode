@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\ShipstationOrderNotFoundException;
 use App\Wax\Shop\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,6 +51,14 @@ class SyncShipmentShipped implements ShouldQueue
 
             $order = Order::where('shipstation_key', $shipment->orderKey)
                 ->first();
+
+            if (!$order) {
+                throw new ShipstationOrderNotFoundException(
+                    'Failed to find order key ' .
+                    $shipment->orderKey . ' in environment "' .
+                    config('app.env') . "'"
+                );
+            }
 
             $shippedAt = Carbon::now()->toDateTimeString();
 
