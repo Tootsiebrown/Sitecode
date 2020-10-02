@@ -253,41 +253,42 @@ class UserController extends Controller
         ];
         $this->validate($request, $rules);
 
-        $inputs = array_except($request->input(), ['_token', 'photo']);
+        $inputs = array_only($request->input(), ['firstname', 'lastname', 'email']);
+
         $user_update = $user->whereId($user_id)->update($inputs);
 
-        if ($request->hasFile('photo')) {
-            $rules = ['photo' => 'mimes:jpeg,jpg,png'];
-            $this->validate($request, $rules);
-
-            $image = $request->file('photo');
-            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-            $resized_thumb = Image::make($image)->resize(300, 300)->stream();
-
-            $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
-
-            $imageFileName = 'uploads/avatar/' . $image_name;
-
-            //Upload original image
-            $is_uploaded = current_disk()->put($imageFileName, $resized_thumb->__toString(), 'public');
-
-            if ($is_uploaded) {
-                $previous_photo = $user->photo;
-                $previous_photo_storage = $user->photo_storage;
-
-                $user->photo = $image_name;
-                $user->photo_storage = get_option('default_storage');
-                $user->save();
-
-                if ($previous_photo) {
-                    $previous_photo_path = 'uploads/avatar/' . $previous_photo;
-                    $storage = Storage::disk($previous_photo_storage);
-                    if ($storage->has($previous_photo_path)) {
-                        $storage->delete($previous_photo_path);
-                    }
-                }
-            }
-        }
+//        if ($request->hasFile('photo')) {
+//            $rules = ['photo' => 'mimes:jpeg,jpg,png'];
+//            $this->validate($request, $rules);
+//
+//            $image = $request->file('photo');
+//            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
+//            $resized_thumb = Image::make($image)->resize(300, 300)->stream();
+//
+//            $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
+//
+//            $imageFileName = 'uploads/avatar/' . $image_name;
+//
+//            //Upload original image
+//            $is_uploaded = current_disk()->put($imageFileName, $resized_thumb->__toString(), 'public');
+//
+//            if ($is_uploaded) {
+//                $previous_photo = $user->photo;
+//                $previous_photo_storage = $user->photo_storage;
+//
+//                $user->photo = $image_name;
+//                $user->photo_storage = get_option('default_storage');
+//                $user->save();
+//
+//                if ($previous_photo) {
+//                    $previous_photo_path = 'uploads/avatar/' . $previous_photo;
+//                    $storage = Storage::disk($previous_photo_storage);
+//                    if ($storage->has($previous_photo_path)) {
+//                        $storage->delete($previous_photo_path);
+//                    }
+//                }
+//            }
+//        }
 
         return redirect(route('profile'))->with('success', trans('app.profile_edit_success_msg'));
     }
