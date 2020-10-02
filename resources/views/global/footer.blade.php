@@ -10,35 +10,35 @@
                 <p>Follow Us:</p>
                 @php
                     $facebook_url = get_option('facebook_url');
-                    $twitter_url = get_option('twitter_url');
-                    $linked_in_url = get_option('linked_in_url');
-                    $dribble_url = get_option('dribble_url');
-                    $google_plus_url = get_option('google_plus_url');
-                    $youtube_url = get_option('youtube_url');
-                    $instagram_url = get_option('instagram_url');
+                    // $twitter_url = get_option('twitter_url');
+                    // $linked_in_url = get_option('linked_in_url');
+                    // $dribble_url = get_option('dribble_url');
+                    // $google_plus_url = get_option('google_plus_url');
+                    // $youtube_url = get_option('youtube_url');
+                    // $instagram_url = get_option('instagram_url');
                 @endphp
                 <ul>
-                    @if($instagram_url)
-                        <li><a href="{{$instagram_url}}"><i class="fa fa-instagram"></i> </a> </li>
-                    @endif
+{{--                    @if($instagram_url)--}}
+{{--                        <li><a href="{{$instagram_url}}"><i class="fa fa-instagram"></i> </a> </li>--}}
+{{--                    @endif--}}
                     @if($facebook_url)
                         <li><a href="{{$facebook_url}}"><i class="fa fa-facebook"></i> </a> </li>
                     @endif
-                    @if($twitter_url)
-                        <li><a href="{{$twitter_url}}"><i class="fa fa-twitter"></i> </a> </li>
-                    @endif
-                    @if($google_plus_url)
-                        <li><a href="{{$google_plus_url}}"><i class="fa fa-google-plus"></i> </a> </li>
-                    @endif
-                    @if($youtube_url)
-                        <li><a href="{{$youtube_url}}"><i class="fa fa-youtube"></i> </a> </li>
-                    @endif
-                    @if($linked_in_url)
-                        <li><a href="{{$linked_in_url}}"><i class="fa fa-linkedin"></i> </a> </li>
-                    @endif
-                    @if($dribble_url)
-                        <li><a href="{{$dribble_url}}"><i class="fa fa-dribbble"></i> </a> </li>
-                    @endif
+{{--                    @if($twitter_url)--}}
+{{--                        <li><a href="{{$twitter_url}}"><i class="fa fa-twitter"></i> </a> </li>--}}
+{{--                    @endif--}}
+{{--                    @if($google_plus_url)--}}
+{{--                        <li><a href="{{$google_plus_url}}"><i class="fa fa-google-plus"></i> </a> </li>--}}
+{{--                    @endif--}}
+{{--                    @if($youtube_url)--}}
+{{--                        <li><a href="{{$youtube_url}}"><i class="fa fa-youtube"></i> </a> </li>--}}
+{{--                    @endif--}}
+{{--                    @if($linked_in_url)--}}
+{{--                        <li><a href="{{$linked_in_url}}"><i class="fa fa-linkedin"></i> </a> </li>--}}
+{{--                    @endif--}}
+{{--                    @if($dribble_url)--}}
+{{--                        <li><a href="{{$dribble_url}}"><i class="fa fa-dribbble"></i> </a> </li>--}}
+{{--                    @endif--}}
                 </ul>
             </div>
 
