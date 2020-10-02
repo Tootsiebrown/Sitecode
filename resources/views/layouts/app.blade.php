@@ -74,5 +74,22 @@
     var toastr_options = {closeButton : true};
 </script>
 
+@if(App::environment('production'))
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172816429-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-172816429-1');
+    </script>
+
+    <!-- Start of HubSpot Embed Code -->
+    <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/8559894.js"></script>
+    <!-- End of HubSpot Embed Code -->
+@endif
+
+
 </body>
 </html>
