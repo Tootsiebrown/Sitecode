@@ -69,7 +69,7 @@
         <div class="container">
             <div class="row">
                 @include('pages.search.sidebar')
-                <div class="col-md-9">
+                <div class="col-md-9 search-content">
                     <div class="no-content-wrap">
                         <h2> <i class="fa fa-info-circle"></i> @lang('app.there_is_no_ads')</h2>
                     </div>
@@ -86,92 +86,4 @@
         </div>
     </div>
 
-@endsection
-
-@section('page-js')
-    <script type="text/javascript">
-        $(".select2LoadCity").select2({
-            ajax: {
-                url: "{{route('searchCityJson')}}",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page
-                    };
-                },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.items,
-                        pagination: {
-                            more: (params.page * 30) < data.total_count
-                        }
-                    };
-                },
-                cache: true
-            },
-            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-            minimumInputLength: 3,
-            templateResult: formatRepo, // omitted for brevity, see the source of this page
-            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
-        });
-        function formatRepo (repo) {
-            if (repo.loading) return repo.city_name;
-
-            var markup = "<div class='clearfix'>"+
-                "<div class='select2-result-repository__title'> <i class='fa fa-map-marker'></i> " + repo.city_name + "</div></div>" +
-                "</div></div>";
-
-            return markup;
-        }
-        function formatRepoSelection (repo) {
-            return repo.city_name || repo.text;
-        }
-
-        $('.itemListView').click(function (e) {
-            e.preventDefault();
-            switchItemView('itemListView');
-        });
-
-        $('.itemGridView').click(function (e) {
-            e.preventDefault();
-            switchItemView('itemGridView');
-        });
-
-        $('.itemImageListView').click(function (e) {
-            e.preventDefault();
-            switchItemView('itemImageListView');
-        });
-
-        function setInitialItemViewMode() {
-            var isSavedViewMode = getCookie("itemViewMode");
-            if (isSavedViewMode != "") {
-                switchItemView(isSavedViewMode);
-            }
-        }
-        setInitialItemViewMode();
-
-        function switchItemView(mode){
-            var item_loop = $('.item-loop');
-
-            if (mode == 'itemListView'){
-                item_loop.addClass('item-loop-list').removeClass('col-md-3 item-loop-list-thumb');
-                item_loop.find('.ads-thumbnail').hide();
-                setCookie('itemViewMode', 'itemListView', 30);
-            }else if (mode == 'itemGridView'){
-                item_loop.removeClass('item-loop-list item-loop-list-thumb').addClass('col-md-3');
-                item_loop.find('.ads-thumbnail').show();
-                setCookie('itemViewMode', 'itemGridView', 30);
-            }else if(mode == 'itemImageListView'){
-                item_loop.addClass('item-loop-list-thumb').removeClass('col-md-3 item-loop-list');
-                item_loop.find('.ads-thumbnail').show();
-                setCookie('itemViewMode', 'itemImageListView', 30);
-            }
-        }
-
-
-
-    </script>
 @endsection
