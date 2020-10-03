@@ -8,6 +8,8 @@ class BrandsRepository
 {
     public function all()
     {
-        return Brand::all();
+        return Brand::hasListings()
+            ->orderBy('name')
+            ->get();
     }
 }
