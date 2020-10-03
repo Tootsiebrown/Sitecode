@@ -117,7 +117,7 @@ class DedupCategories extends Command
 
     public function moveChildren($children, $canonicalCategoryId)
     {
-        Db::table('product_categories' )
+        Db::table('product_categories')
             ->whereIn('id', $children->pluck('id'))
             ->update(['parent_id' => $canonicalCategoryId]);
     }
