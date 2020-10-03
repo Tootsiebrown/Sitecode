@@ -88,7 +88,7 @@ class DedupCategories extends Command
                     return;
                 }
 
-                $this->moveListings($category->listings, $category->id, $canonicalCategory->id);
+                $this->moveListings($category->listings()->withoutGlobalScopes()->get(), $category->id, $canonicalCategory->id);
                 $this->moveProducts($category->products, $category->id, $canonicalCategory->id);
                 $this->moveChildren($category->children, $canonicalCategory->id);
 
@@ -117,7 +117,7 @@ class DedupCategories extends Command
 
     public function moveChildren($children, $canonicalCategoryId)
     {
-        Db::table('product_categories' )
+        Db::table('product_categories')
             ->whereIn('id', $children->pluck('id'))
             ->update(['parent_id' => $canonicalCategoryId]);
     }

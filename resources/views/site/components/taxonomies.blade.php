@@ -3,12 +3,12 @@
         <a href="#" data-element="link">Shop By Category <i class="fa fa-sort-desc"></i></a>
         <div class="scroll-container">
             <ul>
-                @foreach($categories as $category)
+                @foreach($categories->sortBy('name') as $category)
                     <li class="top-cat">
                         <a href="{{ $category->url }}">{{ $category->name }}</h2></a>
                         @if ($category->hasChildren())
                             <ul>
-                                @foreach($category->children as $child)
+                                @foreach($category->children->sortBy('name') as $child)
                                     <li>
                                         <a href="{{ $child->url }}">{{ $child->name }}</a>
                                     </li>

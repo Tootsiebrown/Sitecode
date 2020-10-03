@@ -250,7 +250,7 @@ Route::group(
                     ->uses('DashboardOrdersController@details');
             });
 
-        Route::middleware('privilege:Administrator')
+        Route::middleware('privilege:Manager')
             ->group(function () {
                 Route::name('dashboard.emails.')
                     ->prefix('emails')
@@ -276,29 +276,7 @@ Route::group(
                             ->uses('MailPreviewController@auctionEndedNoWinner');
                     });
 
-                Route::name('dashboard.shop.orders.')
-                    ->prefix('shop/orders')
-                    ->middleware('privilege:Orders')
-                    ->group(function () {
-                        Route::get('/')
-                            ->name('index')
-                            ->uses('ShopOrdersController@index');
-                        Route::get('report')
-                            ->name('report')
-                            ->uses('ShopOrdersController@report');
-                        Route::get('{id}')
-                            ->name('details')
-                            ->uses('ShopOrdersController@details');
-                        Route::post('{orderId}/items/{itemId}/toggle-removed')
-                            ->name('items.toggle-removed')
-                            ->uses('ShopOrdersController@toggleItemRemoved');
-                        Route::post('{id}/status')
-                            ->name('status')
-                            ->uses('ShopOrdersController@setStatus');
-                        Route::post('{id}/cancel')
-                            ->name('cancel')
-                            ->uses('ShopOrdersController@cancel');
-                    });
+
 
 //                Route::group(
 //                    ['prefix' => 'settings'],
@@ -441,6 +419,30 @@ Route::group(
 //                        );
 //                    }
 //                );
+            });
+
+        Route::name('dashboard.shop.orders.')
+            ->prefix('shop/orders')
+            ->middleware('privilege:Orders')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('ShopOrdersController@index');
+                Route::get('report')
+                    ->name('report')
+                    ->uses('ShopOrdersController@report');
+                Route::get('{id}')
+                    ->name('details')
+                    ->uses('ShopOrdersController@details');
+                Route::post('{orderId}/items/{itemId}/toggle-removed')
+                    ->name('items.toggle-removed')
+                    ->uses('ShopOrdersController@toggleItemRemoved');
+                Route::post('{id}/status')
+                    ->name('status')
+                    ->uses('ShopOrdersController@setStatus');
+                Route::post('{id}/cancel')
+                    ->name('cancel')
+                    ->uses('ShopOrdersController@cancel');
             });
 
         //All user can access this route
