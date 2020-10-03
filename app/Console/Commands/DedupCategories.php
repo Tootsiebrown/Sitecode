@@ -88,7 +88,7 @@ class DedupCategories extends Command
                     return;
                 }
 
-                $this->moveListings($category->listings, $category->id, $canonicalCategory->id);
+                $this->moveListings($category->listings()->withoutGlobalScopes()->get(), $category->id, $canonicalCategory->id);
                 $this->moveProducts($category->products, $category->id, $canonicalCategory->id);
                 $this->moveChildren($category->children, $canonicalCategory->id);
 

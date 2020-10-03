@@ -76,7 +76,7 @@ class DedupBrands extends Command
                     return;
                 }
 
-                $brand->listings()->update([
+                $brand->listings()->withoutGlobalScopes()->update([
                     'brand_id' => $canonicalBrand->id
                 ]);
 

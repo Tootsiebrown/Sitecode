@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RequiredPrivilege
 {
-    /**
+    /**z
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
