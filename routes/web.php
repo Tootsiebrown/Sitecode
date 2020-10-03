@@ -278,7 +278,7 @@ Route::group(
 
                 Route::name('dashboard.shop.orders.')
                     ->prefix('shop/orders')
-                    ->middleware('privilege:Shop - Orders')
+                    ->middleware('privilege:Orders')
                     ->group(function () {
                         Route::get('/')
                             ->name('index')
