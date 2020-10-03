@@ -45,4 +45,9 @@ class ProductCategory extends Model
     {
         return $this->belongsToMany(Listing::class, 'ad_category_links', 'category_id', 'ad_id');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category_links', 'category_id');
+    }
 }
