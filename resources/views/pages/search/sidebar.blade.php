@@ -75,7 +75,7 @@
             @endif
         </p>
         <ul>
-            @foreach($filterOptions['category'] as $category)
+            @foreach(collect($filterOptions['category'])->sortBy('label') as $category)
                 <li>
                     @if ($category->isSelected)
                         <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>
@@ -88,7 +88,7 @@
                     @endif
                     @if (!empty($category->extras['children']))
                         <ul>
-                            @foreach($category->extras['children'] as $child)
+                            @foreach(collect($category->extras['children'])->sortBy('label') as $child)
                                 <li>
                                     @if ($child->isSelected)
                                         <span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span>
@@ -101,7 +101,7 @@
                                     @endif
                                     @if (!empty($child->extras['children']))
                                         <ul>
-                                            @foreach($child->extras['children'] as $grandchild)
+                                            @foreach(collect($child->extras['children'])->sortBy('label') as $grandchild)
                                                 <li>
                                                     @if ($grandchild->isSelected)
                                                         <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span>
