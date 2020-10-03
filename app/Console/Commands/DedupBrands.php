@@ -64,7 +64,7 @@ class DedupBrands extends Command
                 ->get();
 
             $brandsMap = $brands
-                ->sort(function($brand1, $brand2) {
+                ->sort(function ($brand1, $brand2) {
                     return ($brand2->listings->count() + $brand2->products->count())
                         <=> ($brand1->listings->count() + $brand1->products->count());
                 });
