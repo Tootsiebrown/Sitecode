@@ -264,20 +264,23 @@
 
         li.open {
             ul {
-                max-height: 1500px;
+                max-height: 40000px;
                 margin-bottom: 12px;
             }
 
             .scroll-container {
                 padding: 8px 15px;
                 background-color: $color-tan-light;
+
+                max-height: calc(100vh - 300px);
+                overflow: scroll;
             }
         }
 
         .nav-brands {
-            ul li:nth-child(n+25) {
-                display: none;
-            }
+            //ul li:nth-child(n+25) {
+            //    display: none;
+            //}
         }
 
         @media(min-width: $bp-tablet) {
