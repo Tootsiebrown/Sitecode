@@ -96,9 +96,9 @@ class SiteSearchRepository extends WaxSiteSearchRepository
             ->select('search_pages.url as url', 'search_pages.module as module')
             ->whereIn('search_pages_words.stem', $stems)
             ->orWhere(function ($query) use ($likeStems) {
-//                $likeStems->each(function ($stem) use ($query) {
-//                    $query->orWhere('word', 'like', "$stem%");
-//                });
+                $likeStems->each(function ($stem) use ($query) {
+                    $query->orWhere('word', 'like', "$stem%");
+                });
             })
             ->groupBy('search_pages_words.page_id');
 
@@ -131,9 +131,9 @@ class SiteSearchRepository extends WaxSiteSearchRepository
             )
             ->where(function ($query) use ($stems, $likeStems) {
                 $query->whereIn('search_pages_words.stem', $stems);
-//                $likeStems->each(function ($stem) use ($query) {
-//                    $query->orWhere('search_words_forms.word', 'like', "$stem%");
-//                });
+                $likeStems->each(function ($stem) use ($query) {
+                    $query->orWhere('search_words_forms.word', 'like', "$stem%");
+                });
             })
             ->groupBy(
                 'search_pages_words.page_id',
