@@ -79,7 +79,7 @@
                 <li>
                     @if ($category->isSelected)
                         <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>
-                    @else
+                    @elseif ($category->extras['count'] > 0)
                         <a
                           href="{{ route('search', array_merge($filterValues, ['category' => $category->value])) }}"
                         >
@@ -92,7 +92,7 @@
                                 <li>
                                     @if ($child->isSelected)
                                         <span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span>
-                                    @else
+                                    @elseif ($child->extras['count'] > 0)
                                         <a
                                           href="{{ route('search', array_merge($filterValues, ['category' => $child->value])) }}"
                                         >
@@ -105,7 +105,7 @@
                                                 <li>
                                                     @if ($grandchild->isSelected)
                                                         <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span>
-                                                    @else
+                                                    @elseif ($grandchild->extras['count'] > 0)
                                                         <a
                                                           href="{{ route('search', array_merge($filterValues, ['category' => $grandchild->value])) }}"
                                                           class="{{ $child->isSelected ? 'selected' : '' }}"

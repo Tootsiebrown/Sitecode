@@ -26,7 +26,9 @@ class ListingsIndexer implements \Wax\SiteSearch\Contracts\IndexerContract
                 . ' ' . $item->description
                 . ' ' . $item->features
                 . ' ' . $item->model_number
-                . ' ' . $item->color;
+                . ' ' . $item->color
+                . ' ' . ($item->brand ? $item->brand->name : '')
+                . ' ' . $item->categories->pluck('name')->implode(' ');
 
             $page = array(
                 'module' => 'listings',

@@ -37,6 +37,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(ListingsRepository::class)
             ->needs(FilterAggregatorContract::class)
             ->give(ListingsFilterAggreggator::class);
+
+        $this->app->bind(
+            'Wax\SiteSearch\Contracts\SiteSearchRepositoryContract',
+            'App\Repositories\SiteSearchRepository'
+        );
     }
 
     /**
