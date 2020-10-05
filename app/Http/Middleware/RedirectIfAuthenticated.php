@@ -26,8 +26,8 @@ class RedirectIfAuthenticated
                     400
                 );
             }
-
-            return redirect(RouteServiceProvider::HOME);
+dd('uhhhhh');
+            return redirect()->intended(RouteServiceProvider::HOME);
         }
 
         return $next($request);

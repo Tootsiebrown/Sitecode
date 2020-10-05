@@ -48,8 +48,8 @@
                                         <div class="g-recaptcha" data-sitekey="{{get_option('recaptcha_site_key')}}"></div>
                                         @if ($errors->has('g-recaptcha-response'))
                                             <span class="help-block">
-                                                    <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
-                                                </span>
+                                                <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                                            </span>
                                         @endif
                                     </div>
                                 </div>

@@ -155,6 +155,12 @@
                         <p class="single-ad__available-inventory">
                             Available Inventory: {{ $listing->availableItems->count() }}
                         </p>
+
+                        @if (Auth::check())
+
+                        @else
+                            <p>Please <a href="{{ route('login') }}">Login</a> if you want to make an offer</p>
+                        @endif
                     @endif
                 </div>
                 <div class="single-ad__images">
