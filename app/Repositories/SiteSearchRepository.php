@@ -100,7 +100,7 @@ class SiteSearchRepository extends WaxSiteSearchRepository
 //                    $query->orWhere('word', 'like', "$stem%");
 //                });
             })
-            ->groupBy('search_pages_words.page_id',);
+            ->groupBy('search_pages_words.page_id');
 
         $modules = DB::table(DB::raw('(' . $searchPages->toSql() . ') as subquery'))
             ->mergeBindings($searchPages)
