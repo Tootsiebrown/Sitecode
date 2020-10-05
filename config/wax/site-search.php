@@ -13,4 +13,7 @@ return [
             'title' => 'Listings',
         ],
     ],
+    'go_words' => [
+        'macbook' => 'macbooks',
+    ],
 ];
