@@ -234,6 +234,27 @@ Route::group(
                     ->name('report.month');
             });
 
+        Route::prefix('brands')
+            ->middleware('privilege:Brands')
+            ->name('dashboard.brands.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('BrandsController@index');
+
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('BrandsController@show');
+
+                Route::post('{id}')
+                    ->name('save')
+                    ->uses('BrandsController@save');
+
+                Route::delete('{id}')
+                    ->name('delete')
+                    ->uses('BrandsController@delete');
+            });
+
         Route::get('auction-activity')
             ->uses('AuctionActivityController@index')
             ->name('dashboard.auction-activity');
