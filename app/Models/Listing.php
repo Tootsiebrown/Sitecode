@@ -27,6 +27,7 @@ class Listing extends Model
     protected $casts = [
         'expired_at' => 'datetime',
         'price' => 'float',
+        'featured' => 'boolean',
     ];
 
     protected $guarded = [];
@@ -117,6 +118,11 @@ class Listing extends Model
         return $query->whereHas('bids', function ($query) {
             return $query->where('user_id', Auth::user()->id);
         });
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('featured', 1);
     }
 
     public function getFeaturedImageAttribute()
