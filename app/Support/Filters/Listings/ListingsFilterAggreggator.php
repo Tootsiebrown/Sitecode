@@ -15,11 +15,9 @@ class ListingsFilterAggreggator extends FilterAggregator
         TypeFilter $typeFilter,
         CategoryFilter $categoryFilter,
         SearchFilter $searchFilter
-//        BrandFilter $brandFilter
     ) {
         $this->filters[$typeFilter->getName()] = $typeFilter;
         $this->filters[$categoryFilter->getName()] = $categoryFilter;
         $this->filters[$searchFilter->getName()] = $searchFilter;
-//        $this->filters[$brandFilter->getName()] = $brandFilter;
     }
 }
