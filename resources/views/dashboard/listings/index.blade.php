@@ -81,7 +81,8 @@
 
     @if(! $listings->isEmpty())
         <h2>Listings</h2>
-        <a href="{{ $featuredLink }}">Filter for Featured</a>
+        <a href="{{ $featuredLink }}">Filter for Featured</a> |
+        <a href="{{ route('dashboard.listings.sort-featured') }}">Sort Featured</a>
         @include('dashboard.listings.search-results', ['listings' => $listings])
         {{ $listings->links() }}
     @else

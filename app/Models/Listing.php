@@ -122,7 +122,8 @@ class Listing extends Model
 
     public function scopeFeatured($query)
     {
-        return $query->where('featured', 1);
+        return $query->where('featured', 1)
+            ->orderBy('featured_sort_id');
     }
 
     public function getFeaturedImageAttribute()

@@ -95,7 +95,7 @@ class AdsController extends Controller
         );
     }
 
-    private  function getFeaturedLink($searchBy, $upc, $name, $sku)
+    private function getFeaturedLink($searchBy, $upc, $name, $sku)
     {
         $parameters = [
             'featured' => 1
@@ -569,4 +569,29 @@ class AdsController extends Controller
 //    {
 //        session(['grid_list_view' => $request->grid_list_view]);
 //    }
+
+    public function showSortFeatured()
+    {
+        $listings = Listing::active()->featured()->get();
+
+        return view('dashboard.listings.sort-featured', [
+            'listings' => $listings,
+        ]);
+    }
+
+    public function saveSortFeatured(Request $request)
+    {
+        $json = $request->input('listing_order');
+
+        $listingOrder = json_decode($json);
+
+        foreach ($listingOrder as $listingPosition) {
+            Listing::where('id', $listingPosition->id)
+                ->update(['featured_sort_id' => $listingPosition->position]);
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'New Order Saved');
+    }
 }

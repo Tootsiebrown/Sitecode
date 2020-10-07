@@ -17,8 +17,16 @@
         margin-bottom: 36px;
         overflow: hidden;
 
+        @media (min-width: $bp-mobile) {
+            flex-basis: calc(50% - 16px);
+        }
+
         @media (min-width: $bp-phablet) {
-            flex-basis: 270px;
+            flex-basis: calc(33% - 16px);
+        }
+
+        @media(min-width: $bp-laptop) {
+            flex-basis: calc(25% - 16px)
         }
     }
 
