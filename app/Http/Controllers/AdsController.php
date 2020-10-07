@@ -302,7 +302,7 @@ class AdsController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
-            'featured' => $request->input('featured'),
+            'featured' => $request->input('featured', false),
             'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
                 ? null
                 : $request->input('shipping_weight_oz'),
