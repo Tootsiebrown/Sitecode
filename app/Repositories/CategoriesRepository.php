@@ -10,14 +10,13 @@ class CategoriesRepository
     {
         return ProductCategory
             ::top()
-            ->hasListings()
-            ->with([
-                'children' => function ($query) {
-                    $query->hasListings();
-                },
-                'children.children' => function ($query) {
-                    $query->hasListings();
-                }
+            ->with(['children.children'
+//                'children' => function ($query) {
+//                    $query->hasListings();
+//                },
+//                'children.children' => function ($query) {
+//                    $query->hasListings();
+//                }
             ])
             ->get();
     }
