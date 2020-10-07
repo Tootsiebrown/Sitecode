@@ -237,10 +237,23 @@
     }
 
     .nav-taxonomies {
-        & > li > a > i {
-            position: relative;
-            bottom: 3px;
-            padding-left: 12px;
+        li {
+            float: none;
+            position: static;
+            flex-grow: 1;
+            text-align: left;
+        }
+        
+        & > li {
+            @media (min-width: $bp-tablet) {
+                text-align: center;
+            }
+
+            & > a > i {
+                position: relative;
+                bottom: 3px;
+                padding-left: 12px;
+            }
         }
 
         ul {
@@ -251,11 +264,6 @@
             overflow: hidden;
             transition: max-height .2s,
                 margin .2s;
-        }
-
-        li {
-            float: none;
-            position: static;
         }
 
         .top-cat ul {
