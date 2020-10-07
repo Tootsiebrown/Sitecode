@@ -54,6 +54,7 @@ class AdsController extends Controller
         $name = $request->input('name');
         $sku = $request->input('sku');
         $searchBy = $request->input('search_by');
+        $featured = (bool)$request->input('featured');
 
         switch ($searchBy) {
             case 'name':
@@ -82,43 +83,101 @@ class AdsController extends Controller
                     $upc,
                     $name,
                     $sku,
+                    $featured
+                ),
+                'featuredLink' => $this->getFeaturedLink(
+                    $searchBy,
+                    $upc,
+                    $name,
+                    $sku,
                 ),
             ]
         );
     }
 
-    private function listingSearch($searchBy, $upc, $name, $sku)
+    private function getFeaturedLink($searchBy, $upc, $name, $sku)
     {
+        $parameters = [
+            'featured' => 1
+        ];
+
+        switch ($searchBy) {
+            case 'name':
+                $parameters['search_by'] = 'name';
+                $parameters['name'] = $name;
+                break;
+            case 'upc':
+                $parameters['search_by'] = 'upc';
+                $parameters['upc'] = $upc;
+                break;
+            case 'sku':
+                $parameters['search_by'] = 'sku';
+                $parameters['sku'] = $sku;
+                break;
+        }
+
+        return route('dashboard.listings.index', $parameters);
+    }
+
+    private function listingSearch($searchBy, $upc, $name, $sku, $featured)
+    {
+        if ($featured) {
+            $adQuery = Listing::featured();
+        } else {
+            $adQuery = (new Listing())->newQuery();
+        }
+
         if (is_null($searchBy)) {
-            return collect();
+            return $adQuery->orderBy('title', 'asc')->paginate(20);
         }
 
         switch ($searchBy) {
             case 'name':
-                if (empty($name)) {
-                    return collect();
-                }
-                $adQuery = Listing::where('title', 'like', "%$name%");
+                $adQuery->where('title', 'like', "%$name%");
                 break;
             case 'upc':
-                if (empty($upc)) {
-                    return collect();
-                }
-                $adQuery = Listing::where('upc', $upc);
+                $adQuery->where('upc', $upc);
                 break;
             case 'sku':
-                if (empty($sku)) {
-                    return collect();
-                }
-                $adQuery = Listing::where('id', $sku);
+                $adQuery->where('id', $sku);
                 break;
             default:
                 throw new Exception('Invalid search method:' . $searchBy);
         }
 
-        return $adQuery
+        $ads = $adQuery
             ->orderBy('title', 'asc')
             ->paginate(20);
+
+        switch ($searchBy) {
+            case 'name':
+                $ads
+                    ->appends([
+                        'search_by' => 'name',
+                        'name' => $name,
+                    ]);
+                break;
+            case 'upc':
+                $ads
+                    ->appends([
+                        'search_by' => 'upc',
+                        'upc' => $upc,
+                    ]);
+                break;
+            case 'sku':
+                $ads
+                    ->appends([
+                        'search_by' => 'sku',
+                        'sku' => $sku,
+                    ]);
+                break;
+        }
+
+        if (request('featured')) {
+            $ads->appends(['featured' => 1]);
+        }
+
+        return $ads;
     }
 
     public function showEdit(Request $request, $id)
@@ -128,6 +187,7 @@ class AdsController extends Controller
         if (! $listing) {
             abort(404);
         }
+
 
         return view('dashboard.listings.edit', [
             'listing' => $listing,
@@ -188,7 +248,6 @@ class AdsController extends Controller
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
             'shipping_weight_oz' => 'numeric|min:1',
-
         ];
 
         $this->validate($request, $rules);
@@ -243,6 +302,7 @@ class AdsController extends Controller
             'condition' => $request->condition,
             'description' => $request->description,
             'features' => $request->features,
+            'featured' => $request->input('featured'),
             'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
                 ? null
                 : $request->input('shipping_weight_oz'),
@@ -509,4 +569,29 @@ class AdsController extends Controller
 //    {
 //        session(['grid_list_view' => $request->grid_list_view]);
 //    }
+
+    public function showSortFeatured()
+    {
+        $listings = Listing::active()->featured()->get();
+
+        return view('dashboard.listings.sort-featured', [
+            'listings' => $listings,
+        ]);
+    }
+
+    public function saveSortFeatured(Request $request)
+    {
+        $json = $request->input('listing_order');
+
+        $listingOrder = json_decode($json);
+
+        foreach ($listingOrder as $listingPosition) {
+            Listing::where('id', $listingPosition->id)
+                ->update(['featured_sort_id' => $listingPosition->position]);
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'New Order Saved');
+    }
 }

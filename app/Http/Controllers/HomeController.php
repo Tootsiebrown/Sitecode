@@ -21,7 +21,8 @@ class HomeController extends Controller
 
         return view('index', [
             'ads' => $ads,
-            'total_ads_count' => $total_ads_count
+            'total_ads_count' => $total_ads_count,
+            'featuredListings' => Listing::active()->featured()->take(12)->get(),
         ]);
     }
 
