@@ -1,0 +1,43 @@
+.home-featured {
+    background-color: $color-turquoise;
+    background-image: url('/assets/img/squiggles-turquise-dark-big.png');
+    background-repeat: repeat-x;
+    background-position: center -16px;
+    padding-bottom: 64px;
+    padding-top: 128px;
+    position: relative;
+
+    h2, p {
+        color: $color-white;
+        text-align: center;
+    }
+
+    p {
+        margin-bottom: 32px;
+    }
+
+    .listing-boxes__listing {
+        border-top-color: $color-orange-light;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: calc(100% - 24px);
+        height: 136px;
+        width: 100%;
+        left: 0;
+        background-image: url('/assets/img/squiggles-tan-light-big.png');
+        background-repeat: repeat-x;
+        background-position: center center;
+    }
+}
+
+.regular-ads-container {
+    padding-top: 128px;
+    background-color: $color-tan-dark;
+
+    .listing-boxes__listing {
+        border-top-color: $color-navy-light;
+    }
+}

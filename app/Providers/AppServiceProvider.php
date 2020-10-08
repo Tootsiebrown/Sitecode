@@ -30,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
             return "<?php include(public_path('assets/img/" . $component . ".svg')) ?>";
         });
 
+        Blade::directive('slick', function ($component) {
+            return
+                '<script src="/assets/js/vendor/slick.min.js"></script>' .
+                '<script src="/assets/js/slick.js"></script>';
+        });
+
         $this->app->when(ListingsRepository::class)
             ->needs(Model::class)
             ->give(Listing::class);

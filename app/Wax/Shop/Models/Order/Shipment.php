@@ -126,4 +126,25 @@ class Shipment extends WaxShipment
 
         return $result;
     }
+
+    public function combineDuplicateItems()
+    {
+        $this->items
+            ->sortByDesc('created_at')
+            ->each(function ($item) {
+                $options = $item->options->mapWithKeys(function ($option) {
+                    return [$option->option_id => $option->value_id];
+                })->toArray();
+
+                $customizations = $item->customizations->mapWithKeys(function ($customization) {
+                    return [$customization->customization_id => $customization->value];
+                })->toArray();
+
+                if (($duplicate = $this->findItem($item->product_id, $options, $customizations)) && $item->isNot($duplicate)) {
+                    $duplicate->quantity += $item->quantity;
+                    $duplicate->save();
+                    $item->delete();
+                }
+            });
+    }
 }

@@ -13,7 +13,7 @@ class HomeController extends Controller
     {
         $limit_regular_ads = get_option('number_of_free_ads_in_home');
 
-        $ads = Listing::active()->with('categories')
+        $ads = Listing::active()->with('categories', 'images')
             ->limit($limit_regular_ads)
             ->orderBy('id', 'desc')->get();
 
@@ -21,7 +21,8 @@ class HomeController extends Controller
 
         return view('index', [
             'ads' => $ads,
-            'total_ads_count' => $total_ads_count
+            'total_ads_count' => $total_ads_count,
+            'featuredListings' => Listing::with('images')->active()->featured()->take(12)->get(),
         ]);
     }
 

@@ -8,17 +8,17 @@
             <span>Show</span> <i class="fa fa-chevron-down"></i>
         </span>
     </div>
-    @if ($brand)
-        <div class="search-sidebar__brand">
-            <p class="label">
-                Brand
-                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>
-            </p>
-            <ul>
-                <li><span class="selected">{{ $brand->name }}</span></li>
-            </ul>
-        </div>
-    @endif
+{{--    @if ($brand)--}}
+{{--        <div class="search-sidebar__brand">--}}
+{{--            <p class="label">--}}
+{{--                Brand--}}
+{{--                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>--}}
+{{--            </p>--}}
+{{--            <ul>--}}
+{{--                <li><span class="selected">{{ $brand->name }}</span></li>--}}
+{{--            </ul>--}}
+{{--        </div>--}}
+{{--    @endif--}}
     <div class="search-sidebar_text">
 
         <p class="label">
