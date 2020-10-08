@@ -190,7 +190,7 @@
             <legend>Product Category</legend>
 
             <div class="select-or-new" data-component="select-or-new">
-                @if (!$categories->isEmpty())
+                @if (!$categoryHierarchy->isEmpty())
                     <div class="form-group">
                         <label for="category_id" class="col-sm-4 control-label">Category</label>
                         <div class="col-sm-8">
@@ -202,20 +202,18 @@
                               data-product-categories-hierarchy-element="topSelect"
                               data-component="select-with-child"
                               data-child-wrapper="#child-wrapper"
-                              data-child-data-url="{{ route("getProductCategoryChildren") }}"
-                              data-url-parameter="category_id"
                               data-child-name="Child Category"
                             >
                                 <option value="">Select Category...</option>
                                 <option value="new">New Category...</option>
-                                @foreach($categories as $category)
+                                @foreach($categoryHierarchy as $category)
                                     <option
-                                      value="{{ $category->id }}"
-                                      @if ($category->id == old('category_id')) selected="selected"
-                                      @elseif ($category->id == request('category_id')) selected="selected"
-                                      @elseif ($listing->categories->pluck('id')->contains($category->id)) selected="selected"
+                                      value="{{ $category['id'] }}"
+                                      @if ($category['id'] == old('category_id')) selected="selected"
+                                      @elseif ($category['id'] == request('category_id')) selected="selected"
+                                      @elseif ($listing->categories->pluck('id')->contains($category['id'])) selected="selected"
                                       @endif
-                                    >{{ $category->name }}</option>
+                                    >{{ $category['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
