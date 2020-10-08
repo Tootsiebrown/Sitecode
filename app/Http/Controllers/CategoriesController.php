@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\ProductCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
@@ -11,16 +12,14 @@ class CategoriesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
-     *
      * parent categories
      */
     public function index()
     {
-        $title = trans('app.categories');
-        $categories = Category::orderBy('category_name', 'asc')->get();
-
-        return view('dashboard.categories', compact('title', 'categories'));
+        return view('dashboard.categories.index', [
+            'title' => trans('app.categories'),
+            'categories' => ProductCategory::with(['listings', 'products', 'children'])->top()->orderBy('name', 'asc')->get()
+        ]);
     }
 
     /**
@@ -39,24 +38,24 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $rules = [
-            'category_name' => 'required'
-        ];
-        $this->validate($request, $rules);
-        $slug = str_slug($request->category_name);
-
-        $data = [
-            'category_name' => $request->category_name,
-            'category_slug' => $slug,
-            'description'   => $request->description,
-            'category_type'   => 'auction',
-        ];
-
-        Category::create($data);
-        return back()->with('success', trans('app.category_created'));
-    }
+//    public function store(Request $request)
+//    {
+//        $rules = [
+//            'category_name' => 'required'
+//        ];
+//        $this->validate($request, $rules);
+//        $slug = str_slug($request->category_name);
+//
+//        $data = [
+//            'category_name' => $request->category_name,
+//            'category_slug' => $slug,
+//            'description'   => $request->description,
+//            'category_type'   => 'auction',
+//        ];
+//
+//        Category::create($data);
+//        return back()->with('success', trans('app.category_created'));
+//    }
 
     /**
      * Display the specified resource.

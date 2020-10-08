@@ -43,7 +43,7 @@ Route::get('exception')
 Auth::routes();
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
-Route::get('LanguageSwitch/{lang}', ['as' => 'switch_language', 'uses' => 'HomeController@switchLang']);
+//Route::get('LanguageSwitch/{lang}', ['as' => 'switch_language', 'uses' => 'HomeController@switchLang']);
 
 //Account activating
 Route::get(
@@ -51,20 +51,20 @@ Route::get(
     ['as' => 'email_activation_link', 'uses' => 'UserController@activatingAccount']
 );
 
-Route::get('category/{cat_id?}', ['uses' => 'CategoriesController@show'])->name('category');
-Route::get('countries/{country_code?}', ['uses' => 'LocationController@countriesListsPublic'])->name('countries');
-Route::get('set-country/{country_code}', ['uses' => 'LocationController@setCurrentCountry'])->name('set_country');
+//Route::get('category/{cat_id?}', ['uses' => 'CategoriesController@show'])->name('category');
+//Route::get('countries/{country_code?}', ['uses' => 'LocationController@countriesListsPublic'])->name('countries');
+//Route::get('set-country/{country_code}', ['uses' => 'LocationController@setCurrentCountry'])->name('set_country');
 
-Route::get('searchCityJson', ['uses' => 'LocationController@searchCityJson'])->name('searchCityJson');
+//Route::get('searchCityJson', ['uses' => 'LocationController@searchCityJson'])->name('searchCityJson');
 
 
 Route::get('search')
     ->uses('AdsController@search')
     ->name('search');
 
-Route::get('search-redirect', ['as' => 'search_redirect', 'uses' => 'AdsController@searchRedirect']);
+//Route::get('search-redirect', ['as' => 'search_redirect', 'uses' => 'AdsController@searchRedirect']);
 
-Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsController@adsByUser']);
+//Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsController@adsByUser']);
 
 Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
@@ -239,6 +239,24 @@ Route::group(
                     ->name('report.month');
             });
 
+        Route::prefix('categories')
+            ->middleware('privilege:Categories')
+            ->name('dashboard.categories.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('CategoriesController@index');
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('CategoriesController@show');
+                Route::post('{id}')
+                    ->name('save')
+                    ->uses('CategoriesController@save');
+                Route::delete('{id}')
+                    ->name('delete')
+                    ->uses('CategoriesController@delete');
+            });
+
         Route::prefix('brands')
             ->middleware('privilege:Brands')
             ->name('dashboard.brands.')
@@ -246,15 +264,12 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('BrandsController@index');
-
                 Route::get('{id}')
                     ->name('show')
                     ->uses('BrandsController@show');
-
                 Route::post('{id}')
                     ->name('save')
                     ->uses('BrandsController@save');
-
                 Route::delete('{id}')
                     ->name('delete')
                     ->uses('BrandsController@delete');
