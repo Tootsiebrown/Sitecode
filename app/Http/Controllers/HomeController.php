@@ -43,20 +43,28 @@ class HomeController extends Controller
         return collect(
             [
                 [
-                    'title' => 'This is a Deal on Power Drills',
-                    'caption' => 'Lorem ipsum dolor sit amet more text here please',
-                    'cta' => 'View Power Drills',
-                    'link' => '/search?search=drill',
-                    'background_image' => '/assets/img/slider/slide1bg.png',
-                    'image' => '/assets/img/slider/slide1.png',
+                    'title' => 'Shoes',
+                    'caption' => 'Hiking, running, walking? We got it.',
+                    'cta' => 'View Shoes',
+                    'link' => '/search?search=shoe',
+                    'background_image' => '/assets/img/slider/HikingGearBackground.jpg',
+                    'image' => '/assets/img/slider/HikingShoes.png',
                 ],
                 [
-                    'title' => 'This is Another Deal on Jeans',
-                    'caption' => 'Lorem ipggsum dolggor sit amgget more tggext here pleggase',
-                    'cta' => 'View Blue Jeans',
-                    'link' => '/search?search=jeans',
-                    'background_image' => '/assets/img/slider/slide2bg.png',
-                    'image' => '/assets/img/slider/slide2.png',
+                    'title' => 'iPhones',
+                    'caption' => 'Soooo expensive. But not here!',
+                    'cta' => 'View iPhones',
+                    'link' => '/search?search=iphone',
+                    'background_image' => '/assets/img/slider/iPHoneBackground.jpg',
+                    'image' => '/assets/img/slider/iPhoneINHand.png',
+                ],
+                [
+                    'title' => 'Whey Protein',
+                    'caption' => 'Lorem Ipsum content goes here',
+                    'cta' => 'View Protein Powder',
+                    'link' => '/search?search=protein+powder',
+                    'background_image' => '/assets/img/slider/ProteinPowderBackground.jpg',
+                    'image' => '/assets/img/slider/proteinPowder.png',
                 ],
             ]
         );

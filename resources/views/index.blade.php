@@ -12,11 +12,17 @@
                 <div class="container">
                     <div class="wavy"></div>
                     <div class="content">
-                        <h2>{{ $slide['title'] }}</h2>
-                        <p>{{ $slide['caption'] }}</p>
-                        <a href="{{ $slide['link'] }}" class="btn btn-cta">{{ $slide['cta'] }}</a>
+                        <div class="content__copy-container">
+                            <div class="content__copy">
+                                <h2>{{ $slide['title'] }}</h2>
+                                <p>{{ $slide['caption'] }}</p>
+                                <a href="{{ $slide['link'] }}" class="btn btn-cta">{{ $slide['cta'] }}</a>
+                            </div>
+                        </div>
+                        <div class="content__image">
+                            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}">
+                        </div>
                     </div>
-                    <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}">
                 </div>
             </div>
         @endforeach
