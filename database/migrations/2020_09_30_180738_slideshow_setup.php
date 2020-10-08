@@ -16,7 +16,7 @@ class SlideshowSetup extends Migration
         Schema::rename('carousel', 'slides');
 
         Schema::table('slides', function (Blueprint $table) {
-            $table->string('background_image');
+            $table->string('background_image')->nullable();
             $table->text('background_image_metadata');
         });
     }
