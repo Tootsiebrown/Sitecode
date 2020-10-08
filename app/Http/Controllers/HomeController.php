@@ -64,7 +64,7 @@ class HomeController extends Controller
                     'cta' => 'View Protein Powder',
                     'link' => '/search?search=protein+powder',
                     'background_image' => '/assets/img/slider/ProteinPowderBackground.jpg',
-                    'image' => '/assets/img/slider/proteinPowder.png',
+                    'image' => '/assets/img/slider/ProteinPowder.png',
                 ],
             ]
         );

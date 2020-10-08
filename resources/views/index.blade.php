@@ -16,11 +16,10 @@
                             <div class="content__copy">
                                 <h2>{{ $slide['title'] }}</h2>
                                 <p>{{ $slide['caption'] }}</p>
-                                <a href="{{ $slide['link'] }}" class="btn btn-cta">{{ $slide['cta'] }}</a>
+                                <a href="{{ $slide['link'] }}" class="btn btn-default">{{ $slide['cta'] }} @svg(arrow)</a>
                             </div>
                         </div>
-                        <div class="content__image">
-                            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}">
+                        <div class="content__image" style="background-image: url({{ $slide['image'] }})">
                         </div>
                     </div>
                 </div>
