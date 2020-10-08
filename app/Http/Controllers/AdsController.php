@@ -127,6 +127,8 @@ class AdsController extends Controller
             $adQuery = (new Listing())->newQuery();
         }
 
+        $adQuery->with(['images', 'brand']);
+
         if (is_null($searchBy)) {
             return $adQuery->orderBy('title', 'asc')->paginate(20);
         }
