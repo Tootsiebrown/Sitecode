@@ -6,11 +6,14 @@ use App\ProductCategory;
 
 trait GetsDenormalizedProductCategories
 {
-    protected function getDenormalizedProductCategories()
-    {
-        $categories = ProductCategory::top()->get()->keyBy('id');
-        $childCategories = ProductCategory::whereIn('parent_id', $categories->pluck('id'))->get()->keyBy('id');
-        $grandchildCategories = ProductCategory::whereIn('parent_id', $childCategories->pluck('id'))->get()->keyBy('id');
+    protected function getDenormalizedProductCategories(
+        $categories = null,
+        $childCategories = null,
+        $grandchildCategories = null
+    ) {
+        $categories = $categories ?? ProductCategory::top()->get()->keyBy('id');
+        $childCategories = $childCategories ?? ProductCategory::whereIn('parent_id', $categories->pluck('id'))->get()->keyBy('id');
+        $grandchildCategories = $grandchildCategories ?? ProductCategory::whereIn('parent_id', $childCategories->pluck('id'))->get()->keyBy('id');
 
         return $categories
             ->mapWithKeys(function ($category, $key) use ($categories, $childCategories, $grandchildCategories) {

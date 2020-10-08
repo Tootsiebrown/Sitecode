@@ -190,20 +190,24 @@ class AdsController extends Controller
             abort(404);
         }
 
+        $categories = ProductCategory::where('parent_id', 0)->get()->keyBy('id');
+        $children = ProductCategory::whereIn('parent_id', $categories->pluck('id'))->get()->keyBy('id');
+        $grandChildren = ProductCategory::whereIn('parent_id', $children->pluck('id'))->get()->keyBy('id');
+
+        $denormalizedCategories = $this->getDenormalizedProductCategories(
+            clone $categories,
+            clone $children,
+            clone $grandChildren
+        );
 
         return view('dashboard.listings.edit', [
             'listing' => $listing,
-            'categoryHierarchy' => $this->getDenormalizedProductCategories(),
+            'categoryHierarchy' => $denormalizedCategories,
             'brands' => Brand::all(),
-            'categories' => ProductCategory::where('parent_id', 0)->get(),
-            'children' => ProductCategory::whereIn('parent_id', function ($query) {
-                $query->select('id')
-                    ->from('product_categories')
-                    ->where('parent_id', 0);
-            })->get(),
-            'grandchildren' => collect(),
+            'categories' => $categories,
+            'children' => $children,
+            'grandchildren' => $grandChildren,
             'optionalFields' => $this->optionalFields,
-
         ]);
     }
 
