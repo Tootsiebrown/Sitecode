@@ -28,8 +28,14 @@
     </div>
     <div class="home-featured">
         <div class="container">
+            <div class="welcome-copy">
+                <p>
+                    Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.
+                </p>
+            </div>
+
             <h2>Featured Items</h2>
-            <p>Don't miss out on the best catch of the day!</p>
+            <p>Check out our featured Daily Dealz</p>
                 @include('site.components.listings-list', ['listings' => $featuredListings])
             </div>
         </div>

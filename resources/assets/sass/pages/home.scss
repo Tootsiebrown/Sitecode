@@ -140,3 +140,23 @@
         }
     }
 }
+
+.welcome-copy {
+    background-color: $color-white;
+    padding: 32px;
+    margin-bottom: 64px;
+
+    p {
+        color: $color-navy;
+        font-size: 2rem;
+        text-align: left;
+
+        b {
+            color: $color-orange-light;
+        }
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
