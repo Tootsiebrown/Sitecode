@@ -11,10 +11,11 @@ class HomeController extends Controller
 
     public function index()
     {
-        $limit_regular_ads = get_option('number_of_free_ads_in_home');
+        $limitRegularAds = get_option('number_of_free_ads_in_home');
 
-        $listings = Listing::active()
-            ->limit($limit_regular_ads)
+        $listings = Listing::with('categories', 'images')
+            ->active()
+            ->limit($limitRegularAds)
             ->orderBy('id', 'desc')->get();
 
         $totalListingsCount = Listing::active()->count();
@@ -23,6 +24,8 @@ class HomeController extends Controller
             'listings' => $listings,
             'totalListingsCount' => $totalListingsCount,
             'slides' => $this->getSlides(),
+            'featuredListings' => Listing::with('images')->active()->featured()->take(12)->get(),
+
         ]);
     }
 

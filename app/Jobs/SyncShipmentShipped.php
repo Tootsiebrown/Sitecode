@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\ShipstationOrderNotFoundException;
 use App\Wax\Shop\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,7 +10,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use LaravelShipStation\ShipStation;
+use Wax\Shop\Mail\OrderShipped;
 
 class SyncShipmentShipped implements ShouldQueue
 {
@@ -51,6 +54,14 @@ class SyncShipmentShipped implements ShouldQueue
             $order = Order::where('shipstation_key', $shipment->orderKey)
                 ->first();
 
+            if (!$order) {
+                throw new ShipstationOrderNotFoundException(
+                    'Failed to find order key ' .
+                    $shipment->orderKey . ' in environment "' .
+                    config('app.env') . "'"
+                );
+            }
+
             $shippedAt = Carbon::now()->toDateTimeString();
 
             $order->shipped_at = $shippedAt;
@@ -59,6 +70,9 @@ class SyncShipmentShipped implements ShouldQueue
             $orderShipment = $order->default_shipment;
             $orderShipment->shipped_at = $shippedAt;
             $orderShipment->tracking_number = $shipment->trackingNumber;
+
+            Mail::to($order->email)
+                ->queue(new OrderShipped($order));
         }
     }
 }

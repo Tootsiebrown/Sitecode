@@ -20,16 +20,4 @@
             </ul>
         </div>
     </li>
-    <li data-component="taxonomy-nav" class="nav-brands">
-        <a href="#" data-element="link">Shop By Brand <i class="fa fa-sort-desc"></i></a>
-        <div class="scroll-container">
-            <ul>
-                @foreach($brands as $brand)
-                    <li>
-                        <a href="{{ $brand->url }}">{{ $brand->name }}</h2></a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    </li>
 </ul>

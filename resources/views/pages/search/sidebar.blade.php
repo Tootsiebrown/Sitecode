@@ -1,15 +1,24 @@
-<div class="search-sidebar col-xs-3">
-    @if ($brand)
-        <div class="search-sidebar__brand">
-            <p class="label">
-                Brand
-                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>
-            </p>
-            <ul>
-                <li><span class="selected">{{ $brand->name }}</span></li>
-            </ul>
-        </div>
-    @endif
+<div class="search-sidebar col-xs-3" data-component="search-sidebar">
+    <div class="search-sidebar__toggle-container">
+        <span>Filters</span>
+        <span
+            class="search-sidebar__toggle btn btn-secondary"
+            data-element="sidebarToggle"
+        >
+            <span>Show</span> <i class="fa fa-chevron-down"></i>
+        </span>
+    </div>
+{{--    @if ($brand)--}}
+{{--        <div class="search-sidebar__brand">--}}
+{{--            <p class="label">--}}
+{{--                Brand--}}
+{{--                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>--}}
+{{--            </p>--}}
+{{--            <ul>--}}
+{{--                <li><span class="selected">{{ $brand->name }}</span></li>--}}
+{{--            </ul>--}}
+{{--        </div>--}}
+{{--    @endif--}}
     <div class="search-sidebar_text">
 
         <p class="label">
@@ -66,11 +75,11 @@
             @endif
         </p>
         <ul>
-            @foreach($filterOptions['category'] as $category)
+            @foreach(collect($filterOptions['category'])->sortBy('label') as $category)
                 <li>
                     @if ($category->isSelected)
                         <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>
-                    @else
+                    @elseif ($category->extras['count'] > 0)
                         <a
                           href="{{ route('search', array_merge($filterValues, ['category' => $category->value])) }}"
                         >
@@ -79,11 +88,11 @@
                     @endif
                     @if (!empty($category->extras['children']))
                         <ul>
-                            @foreach($category->extras['children'] as $child)
+                            @foreach(collect($category->extras['children'])->sortBy('label') as $child)
                                 <li>
                                     @if ($child->isSelected)
                                         <span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span>
-                                    @else
+                                    @elseif ($child->extras['count'] > 0)
                                         <a
                                           href="{{ route('search', array_merge($filterValues, ['category' => $child->value])) }}"
                                         >
@@ -92,11 +101,11 @@
                                     @endif
                                     @if (!empty($child->extras['children']))
                                         <ul>
-                                            @foreach($child->extras['children'] as $grandchild)
+                                            @foreach(collect($child->extras['children'])->sortBy('label') as $grandchild)
                                                 <li>
                                                     @if ($grandchild->isSelected)
                                                         <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span>
-                                                    @else
+                                                    @elseif ($grandchild->extras['count'] > 0)
                                                         <a
                                                           href="{{ route('search', array_merge($filterValues, ['category' => $grandchild->value])) }}"
                                                           class="{{ $child->isSelected ? 'selected' : '' }}"

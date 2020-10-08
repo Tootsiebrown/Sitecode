@@ -170,6 +170,11 @@ Route::group(
                 Route::get('/')
                     ->uses('AdsController@index')
                     ->name('index');
+                Route::get('sort-featured')
+                    ->uses('AdsController@showSortFeatured')
+                    ->name('sort-featured');
+                Route::post('sort-featured')
+                    ->uses('AdsController@saveSortFeatured');
                 Route::get('{id}')
                     ->uses('AdsController@showEdit')
                     ->name('showEdit');
@@ -250,7 +255,7 @@ Route::group(
                     ->uses('DashboardOrdersController@details');
             });
 
-        Route::middleware('privilege:Administrator')
+        Route::middleware('privilege:Manager')
             ->group(function () {
                 Route::name('dashboard.emails.')
                     ->prefix('emails')
@@ -276,29 +281,7 @@ Route::group(
                             ->uses('MailPreviewController@auctionEndedNoWinner');
                     });
 
-                Route::name('dashboard.shop.orders.')
-                    ->prefix('shop/orders')
-                    ->middleware('privilege:Shop - Orders')
-                    ->group(function () {
-                        Route::get('/')
-                            ->name('index')
-                            ->uses('ShopOrdersController@index');
-                        Route::get('report')
-                            ->name('report')
-                            ->uses('ShopOrdersController@report');
-                        Route::get('{id}')
-                            ->name('details')
-                            ->uses('ShopOrdersController@details');
-                        Route::post('{orderId}/items/{itemId}/toggle-removed')
-                            ->name('items.toggle-removed')
-                            ->uses('ShopOrdersController@toggleItemRemoved');
-                        Route::post('{id}/status')
-                            ->name('status')
-                            ->uses('ShopOrdersController@setStatus');
-                        Route::post('{id}/cancel')
-                            ->name('cancel')
-                            ->uses('ShopOrdersController@cancel');
-                    });
+
 
 //                Route::group(
 //                    ['prefix' => 'settings'],
@@ -404,7 +387,11 @@ Route::group(
 //                Route::post('status-change', ['as' => 'ads_status_change', 'uses' => 'AdsController@adStatusChange']);
 
                 Route::get('users', ['as' => 'users', 'uses' => 'UserController@index']);
-                Route::get('users-info/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);
+                Route::get('users/{id}', ['as' => 'user_info', 'uses' => 'UserController@userInfo']);
+                Route::post('users/{id}')
+                    ->name('dashboard.users.update')
+                    ->uses('UserController@update');
+
 //                Route::post(
 //                    'change-user-status',
 //                    ['as' => 'change_user_status', 'uses' => 'UserController@changeStatus']
@@ -437,6 +424,30 @@ Route::group(
 //                        );
 //                    }
 //                );
+            });
+
+        Route::name('dashboard.shop.orders.')
+            ->prefix('shop/orders')
+            ->middleware('privilege:Orders')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('ShopOrdersController@index');
+                Route::get('report')
+                    ->name('report')
+                    ->uses('ShopOrdersController@report');
+                Route::get('{id}')
+                    ->name('details')
+                    ->uses('ShopOrdersController@details');
+                Route::post('{orderId}/items/{itemId}/toggle-removed')
+                    ->name('items.toggle-removed')
+                    ->uses('ShopOrdersController@toggleItemRemoved');
+                Route::post('{id}/status')
+                    ->name('status')
+                    ->uses('ShopOrdersController@setStatus');
+                Route::post('{id}/cancel')
+                    ->name('cancel')
+                    ->uses('ShopOrdersController@cancel');
             });
 
         //All user can access this route

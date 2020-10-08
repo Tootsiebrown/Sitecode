@@ -21,6 +21,14 @@
             </div>
         @endforeach
     </div>
+    <div class="home-featured">
+        <div class="container">
+            <h2>Featured Items</h2>
+            <p>Don't miss out on the best catch of the day!</p>
+                @include('site.components.listings-list', ['listings' => $featuredListings])
+            </div>
+        </div>
+    </div>
     @if($listings->count())
         <div id="regular-ads-container">
             <div class="container">
@@ -28,7 +36,7 @@
                     <div class="col-md-12">
                         <div class="front-ads-head">
                             <h2>@lang('app.new_regular_ads')</h2>
-                            <h3>Don't miss out on the best catch of the day!</h3>
+                            <h3>Don't miss out on the best <i>new</i> catch of the day!</h3>
                         </div>
                     </div>
                     @include('site.components.listings-list', ['listings' => $listings])
@@ -50,5 +58,5 @@
 @endsection
 
 @section('page-js')
-    <script src="/assets/home/slick.min.js"></script>
+    @slick
 @endsection

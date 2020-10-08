@@ -20,7 +20,8 @@ import WatchListing from "./component/watch-listing";
 import ListingItemAdder from "./component/listing-item-adder";
 import ConfirmIfDeleteItems from "./component/confirm-if-delete-items";
 import CancelOrder from "./component/cancel-order";
-import HomeSlider from "./component/home-slider";
+import SearchSidebar from "./component/search-sidebar";
+import SortFeaturedListings from "./component/sort-featured-listings";
 
 export default function Site() {
 
@@ -49,7 +50,8 @@ export default function Site() {
         selectComponent('watch-listing').each((index, element) => new WatchListing(element))
         selectComponent('confirm-if-delete-items').each((index, element) => new ConfirmIfDeleteItems(element))
         selectComponent('cancel-order').each((index, element) => new CancelOrder(element))
-        selectComponent('home-slider').each((index, element) => new HomeSlider(element))
+        selectComponent('search-sidebar').each((index, element) => new SearchSidebar(element))
+        selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

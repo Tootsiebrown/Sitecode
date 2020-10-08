@@ -5,6 +5,8 @@
 //magnific popup
 @import "node_modules/magnific-popup/src/css/main";
 
+@import "vendor/slick";
+
 // overrides
 @import "shared/mfp";
 @import "shared/select2";
@@ -20,9 +22,11 @@
 @import "components/checkout-cart";
 @import "components/checkout-flow";
 @import "components/listings-list";
+@import "components/sort-featured-listings";
 
 // pages / modules
 @import "pages/single-ad";
 @import "pages/cart";
 @import "pages/checkout";
 @import "pages/search";
+@import "pages/home";

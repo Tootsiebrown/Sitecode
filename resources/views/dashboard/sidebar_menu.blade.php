@@ -73,15 +73,19 @@
             <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
 
 
-            @if($lUser->isAdmin())
+            @if($lUser->hasPrivilege('Manager'))
 {{--                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
 {{--                <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
                 <li>
                     <a href="{{ route('users') }}"><i class="fa fa-users"></i> @lang('app.users')</a>
                 </li>
+
                 <li>
                     <a href="{{ route('dashboard.emails.index') }}"><i class="fa fa-send"></i> Email Previews</a>
                 </li>
+            @endif
+
+            @if($lUser->hasPrivilege('Orders'))
                 <li>
                     <a href="{{ route('dashboard.shop.orders.index') }}"><i class="fa fa-credit-card-alt"></i> Shop Orders</a>
                 </li>
@@ -93,6 +97,7 @@
                         Order Processing Report
                     </a>
                 </li>
+            @endif
 {{--                <li>--}}
 {{--                    <a href="#"><i class="fa fa-desktop fa-fw"></i> @lang('app.appearance')<span class="fa arrow"></span> <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>--}}
 {{--                    <ul class="nav nav-second-level">--}}
@@ -123,7 +128,6 @@
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
 {{--                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>--}}
-            @endif
 
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
             <li>

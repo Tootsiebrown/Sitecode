@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Listing;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +18,11 @@ class ProductCategory extends Model
     public function scopeTop($query)
     {
         return $query->where('parent_id', 0);
+    }
+
+    public function scopeHasListings(Builder $query)
+    {
+        return $query->whereHas('listings');
     }
 
     public function children()
@@ -44,5 +50,10 @@ class ProductCategory extends Model
     public function listings()
     {
         return $this->belongsToMany(Listing::class, 'ad_category_links', 'category_id', 'ad_id');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category_links', 'category_id');
     }
 }

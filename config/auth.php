@@ -109,4 +109,13 @@ return [
 
     'password_timeout' => 10800,
 
+    'assignable_groups' => [
+        'Lister',
+        'Listings',
+        'Bins',
+        'Taxes',
+        'Orders',
+        'Manager'
+    ],
+
 ];

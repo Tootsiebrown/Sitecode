@@ -10,12 +10,11 @@
             <!-- Search -->
             <div class="navbar-search-wrap more mobile-search">
                 <form
-                    action="{{route('search_redirect')}}"
+                    action="{{route('search')}}"
                     class="form-inline"
                     method="get"
                     enctype="multipart/form-data"
                 >
-                    @csrf
                     <div class="input-group focusable" data-component="focusable-input-group">
                         <input
                             type="text"
@@ -54,7 +53,7 @@
                                 class="form-control"
                                 id="searchKeyword"
                                 name="search"
-                                placeholder="@lang('app.what_are_u_looking')"
+                                placeholder="@lang('app.what_are_u_looking_short')"
                                 data-element="input"
                             >
                             <span class="input-group-btn">

@@ -237,10 +237,23 @@
     }
 
     .nav-taxonomies {
-        & > li > a > i {
-            position: relative;
-            bottom: 3px;
-            padding-left: 12px;
+        li {
+            float: none;
+            position: static;
+            flex-grow: 1;
+            text-align: left;
+        }
+        
+        & > li {
+            @media (min-width: $bp-tablet) {
+                text-align: center;
+            }
+
+            & > a > i {
+                position: relative;
+                bottom: 3px;
+                padding-left: 12px;
+            }
         }
 
         ul {
@@ -253,31 +266,29 @@
                 margin .2s;
         }
 
-        li {
-            float: none;
-            position: static;
-        }
-
         .top-cat ul {
             display: none;
         }
 
         li.open {
             ul {
-                max-height: 1500px;
+                max-height: 40000px;
                 margin-bottom: 12px;
             }
 
             .scroll-container {
                 padding: 8px 15px;
                 background-color: $color-tan-light;
+
+                max-height: calc(100vh - 300px);
+                overflow: scroll;
             }
         }
 
         .nav-brands {
-            ul li:nth-child(n+25) {
-                display: none;
-            }
+            //ul li:nth-child(n+25) {
+            //    display: none;
+            //}
         }
 
         @media(min-width: $bp-tablet) {
@@ -466,7 +477,7 @@
 
     @media (min-width: $bp-tablet) {
         .nav-cart__container.open & {
-            max-height: 100vh;
+            max-height: calc(100vh - 140px);
             overflow-y: scroll;
             border-width: 6px 2px 2px 2px;
             border-radius: 0 0 16px 16px;
