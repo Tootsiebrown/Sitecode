@@ -223,7 +223,11 @@
                             <div class="row row-right">
                                 <div class="col-xs-12">
                                     <button type="submit" class="btn btn-primary" name="submit" value="submit">
-                                        Continue to Shipping Rates
+                                        @if (config('shipping.custom_shipping'))
+                                            Continue to Payment
+                                        @else
+                                            Continue to Shipping Rates
+                                        @endif
                                     </button>
                                 </div>
                             </div>

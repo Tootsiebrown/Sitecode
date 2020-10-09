@@ -38,6 +38,7 @@
         "lodash": "^4.17.13",
         "magnific-popup": "^1.1.0",
         "select2": "^4.0.13",
+        "slick-carousel": "^1.8.1",
         "stickybits": "^3.7.7",
         "velocity-animate": "^1.2.3",
         "vue": "^2.6.11",
