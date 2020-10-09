@@ -26,7 +26,7 @@
             </div>
             <div class="checkout__main checkout__cart-page">
                 @include('dashboard.flash_msg')
-                {!! $errors->has('quantity')? '<p class="help-block bg-danger">'.$errors->first('quantity').'</p>':'' !!}
+                {!! $errors->has('quantity')? '<div class="alert alert-danger">'.$errors->first('quantity').'</div>':'' !!}
                 @if ($order->items->count() > 0)
                     <ul>
                         @foreach ($order->items as $item)
