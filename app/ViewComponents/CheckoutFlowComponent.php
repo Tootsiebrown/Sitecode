@@ -46,7 +46,7 @@ class CheckoutFlowComponent implements Htmlable
     public function toHtml()
     {
         return View::make('site.components.checkout-flow-header')
-            ->with(['steps' => $this->steps]);
+            ->with(['steps' => $this->getSteps()]);
     }
 
     protected function initializeRoutes()
@@ -54,7 +54,7 @@ class CheckoutFlowComponent implements Htmlable
         $currentRoute = Route::currentRouteName();
         $foundCurrent = false;
 
-        foreach ($this->steps as $i => $step) {
+        foreach ($this->getSteps() as $i => $step) {
             $this->steps[$i]['status'] = 'past';
 
             if ($step['route'] === $currentRoute) {
@@ -68,5 +68,24 @@ class CheckoutFlowComponent implements Htmlable
                 $this->steps[$i]['status'] = 'future';
             }
         }
+    }
+
+    protected function getSteps()
+    {
+        if (! config('shipping.custom_shipping')) {
+            return $this->steps;
+        }
+
+        $processedSteps = [];
+
+        foreach($this->steps as $step) {
+            if ($step['name'] === 'Rates') {
+                continue;
+            }
+
+            $processedSteps[] = $step;
+        }
+
+        return $processedSteps;
     }
 }

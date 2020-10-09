@@ -29,9 +29,33 @@
     <div class="home-featured">
         <div class="container">
             <div class="welcome-copy">
-                <p>
-                    Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.
-                </p>
+                <p>Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.</p>
+                <table class="home-shipping">
+                    <thead>
+                        <tr>
+                            <th>Spend</th>
+                            <th>Shipping Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$50</td>
+                            <td>FREE!</td>
+                        </tr>
+                        <tr>
+                            <td>$30</td>
+                            <td>$8.99</td>
+                        </tr>
+                        <tr>
+                            <td>$10</td>
+                            <td>$5.99</td>
+                        </tr>
+                        <tr>
+                            <td>Less than $10</td>
+                            <td>$2.99</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <h2>Featured Items</h2>

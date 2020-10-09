@@ -29,28 +29,38 @@ class ShippingService
             ->filter(function ($carrier) {
                 return in_array($carrier->code, config('shipping.carriers'));
             })
-            ->map(function ($carrier) use ($order) {
-                $weight = new Weight();
-                $weight->value = $order->weight;
-                $weight->units = 'ounces';
+            ->map(function ($carrier) use ($order, $shipment) {
+                if (! config('shipping.custom_shipping')) {
+                    $weight = new Weight();
+                    $weight->value = $order->weight;
+                    $weight->units = 'ounces';
 
-                try {
-                    $services = $this->shipStation->shipments->post(
-                        [
-                            'carrierCode' => $carrier->code,
-                            'fromPostalCode' => config('services.ship_station.from_postal_code'),
-                            'toCountry' => 'US',
-                            'toPostalCode' => $order->default_shipment->zip,
-                            'weight' => $weight,
-                        ],
-                        'getrates'
-                    );
-                } catch (\Exception $e) {
-                    if (strpos($e->getMessage(), "No applicable services were available for the configured shipmen") === 0) {
-                        return null;
+
+                    try {
+                        $services = $this->shipStation->shipments->post(
+                            [
+                                'carrierCode' => $carrier->code,
+                                'fromPostalCode' => config('services.ship_station.from_postal_code'),
+                                'toCountry' => 'US',
+                                'toPostalCode' => $order->default_shipment->zip,
+                                'weight' => $weight,
+                            ],
+                            'getrates'
+                        );
+                    } catch (\Exception $e) {
+                        if (strpos($e->getMessage(), "No applicable services were available for the configured shipmen") === 0) {
+                            return null;
+                        }
+
+                        $services = [];
                     }
+                } else {
+                    $service = new \stdClass();
+                    $service->serviceName = 'Custom Shipping';
+                    $service->serviceCode = 'custom_shipping';
+                    $service->shipmentCost = $this->getCustomShippingCost($shipment);
 
-                    $services = [];
+                    $services = [$service];
                 }
 
                 return collect($services)
@@ -88,11 +98,31 @@ class ShippingService
         $shipment->rates()->delete();
         $shipment->rates()->saveMany($rates);
 
+        if (config('shipping.custom_shipping')) {
+            $order->default_shipment->setShippingService($rates->first());
+        }
+
         return $rates;
+    }
+
+    public function getCustomShippingCost($shipment)
+    {
+        foreach (config('shipping.custom_shipping_tiers') as $orderCost => $shippingCost) {
+            if ($shipment->item_gross_subtotal >= $orderCost) {
+                return $shippingCost;
+            }
+        }
     }
 
     public function carriers()
     {
+        if (config('shipping.custom_shipping')) {
+            $carrier = new \stdClass();
+            $carrier->code = 'custom';
+
+            return [$carrier];
+        }
+
         return Cache::remember(
             'shipstation.carriers',
             Carbon::now()->addWeeks(1),

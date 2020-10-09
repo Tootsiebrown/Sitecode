@@ -148,6 +148,7 @@
 
     p {
         color: $color-navy;
+        flex-basis: 50%;
         font-size: 2rem;
         text-align: left;
 
@@ -158,5 +159,45 @@
 
     p:last-child {
         margin-bottom: 0;
+    }
+
+    .home-shipping {
+        margin: 32px auto;
+        min-width: 320px;
+        flex-basis: 50%;
+
+        td, th {
+            padding: 4px;
+        }
+
+        td, th {
+            text-align: center;
+        }
+
+        td:first-child, th:first-child {
+            padding-left: 0;
+        }
+
+        td:last-child, th:last-child {
+            padding-right: 0;
+        }
+
+        @media (min-width: $bp-tablet) {
+            margin: 0;
+
+            th {
+                padding-top: 0;
+            }
+
+            tr:last-child {
+                padding-bottom: 0;
+            }
+        }
+    }
+
+    @media (min-width: $bp-tablet) {
+        align-items: top;
+        display: flex;
+        justify-content: space-between;
     }
 }
