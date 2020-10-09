@@ -64,13 +64,12 @@ class CartController extends Controller
 
     public function update(Request $request)
     {
-        foreach($request->input('item') as $itemId => $quantity) {
+        foreach ($request->input('item') as $itemId => $quantity) {
             $this->shopService->updateOrderItemQuantity($itemId, (int)$quantity);
         }
 
         return redirect()
             ->route('shop.cart.index')
             ->with('success', 'Updated cart quantities.');
-
     }
 }
