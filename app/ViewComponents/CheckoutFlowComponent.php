@@ -78,7 +78,7 @@ class CheckoutFlowComponent implements Htmlable
 
         $processedSteps = [];
 
-        foreach($this->steps as $i => $step) {
+        foreach ($this->steps as $i => $step) {
             if ($step['name'] === 'Rates') {
                 continue;
             }
