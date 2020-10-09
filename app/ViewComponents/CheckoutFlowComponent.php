@@ -11,27 +11,27 @@ class CheckoutFlowComponent implements Htmlable
     protected array $parameters;
 
     protected array $steps = [
-        [
+        1 => [
             'route' => 'shop.cart.index',
             'name' => 'My Cart',
             'status' => null,
         ],
-        [
+        2 => [
             'route' => 'shop.checkout.showShipping',
             'name' => 'Shipping',
             'status' => null,
         ],
-        [
+        3 => [
             'route' => 'shop.checkout.showRates',
             'name' => 'Rates',
             'status' => null,
         ],
-        [
+        4 => [
             'route' => 'shop.checkout.showBilling',
             'name' => 'Payment',
             'status' => null,
         ],
-        [
+        5 => [
             'route' => 'shop.checkout.confirmation',
             'name' => 'Confirmation',
             'status' => null,
@@ -78,12 +78,12 @@ class CheckoutFlowComponent implements Htmlable
 
         $processedSteps = [];
 
-        foreach($this->steps as $step) {
+        foreach($this->steps as $i => $step) {
             if ($step['name'] === 'Rates') {
                 continue;
             }
 
-            $processedSteps[] = $step;
+            $processedSteps[$i] = $step;
         }
 
         return $processedSteps;
