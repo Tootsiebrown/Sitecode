@@ -29,7 +29,11 @@
         @endforeach
     </ul>
 
-        <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? '$' . $order->shipping_subtotal : 'TBD' }}</h4>
+        @if (config('shipping.custom_shipping'))
+            <h4 class="checkout-cart__tax">Shipping: {{ $order->shipping_subtotal }}</h4>
+        @else
+            <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? '$' . $order->shipping_subtotal : 'TBD' }}</h4>
+        @endif
         <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
 
     <h3>Total</h3>
