@@ -17,7 +17,7 @@ class SlideshowSetup extends Migration
 
         Schema::table('slides', function (Blueprint $table) {
             $table->string('background_image')->nullable();
-            $table->text('background_image_metadata');
+            $table->text('background_image_metadata')->nullable();
         });
     }
 
