@@ -27,7 +27,7 @@
 // })
 
 $('[data-component=home-slider]').slick({
-    autoplay: false,
+    autoplay: true,
     arrows: false,
     mobileFirst: true,
 })
