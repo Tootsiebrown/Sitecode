@@ -170,6 +170,11 @@ Route::group(
                 Route::get('/')
                     ->uses('AdsController@index')
                     ->name('index');
+                Route::get('sort-featured')
+                    ->uses('AdsController@showSortFeatured')
+                    ->name('sort-featured');
+                Route::post('sort-featured')
+                    ->uses('AdsController@saveSortFeatured');
                 Route::get('{id}')
                     ->uses('AdsController@showEdit')
                     ->name('showEdit');
@@ -537,6 +542,9 @@ Route::name('shop.')
                 Route::delete('{itemId}')
                     ->uses('CartController@destroy')
                     ->name('delete');
+                Route::post('update')
+                    ->name('update')
+                    ->uses('CartController@update');
             });
 
 

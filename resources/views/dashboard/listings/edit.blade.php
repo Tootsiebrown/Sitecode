@@ -104,6 +104,16 @@
             </div>
         </div>
 
+        <div class="form-group {{ $errors->has('featured')? 'has-error':'' }}">
+            <label for="featured" class="col-sm-4 control-label">
+                Featured
+            </label>
+            <div class="col-sm-8">
+                <input type="checkbox" id="featured" {{ old('featured', $listing->featured) ? 'checked' : '' }} value="1" name="featured">
+                {!! $errors->has('featured')? '<p class="help-block">'.$errors->first('featured').'</p>':'' !!}
+            </div>
+        </div>
+
         <div class="form-group {{ $errors->has('shipping_weight_oz')? 'has-error':'' }}">
             <label for="shipping_weight_oz" class="col-sm-4 control-label">Shipping Weight (oz)</label>
             <div class="col-sm-8">
@@ -180,7 +190,7 @@
             <legend>Product Category</legend>
 
             <div class="select-or-new" data-component="select-or-new">
-                @if (!$categories->isEmpty())
+                @if (!$categoryHierarchy->isEmpty())
                     <div class="form-group">
                         <label for="category_id" class="col-sm-4 control-label">Category</label>
                         <div class="col-sm-8">
@@ -192,20 +202,18 @@
                               data-product-categories-hierarchy-element="topSelect"
                               data-component="select-with-child"
                               data-child-wrapper="#child-wrapper"
-                              data-child-data-url="{{ route("getProductCategoryChildren") }}"
-                              data-url-parameter="category_id"
                               data-child-name="Child Category"
                             >
                                 <option value="">Select Category...</option>
                                 <option value="new">New Category...</option>
-                                @foreach($categories as $category)
+                                @foreach($categoryHierarchy as $category)
                                     <option
-                                      value="{{ $category->id }}"
-                                      @if ($category->id == old('category_id')) selected="selected"
-                                      @elseif ($category->id == request('category_id')) selected="selected"
-                                      @elseif ($listing->categories->pluck('id')->contains($category->id)) selected="selected"
+                                      value="{{ $category['id'] }}"
+                                      @if ($category['id'] == old('category_id')) selected="selected"
+                                      @elseif ($category['id'] == request('category_id')) selected="selected"
+                                      @elseif ($listing->categories->pluck('id')->contains($category['id'])) selected="selected"
                                       @endif
-                                    >{{ $category->name }}</option>
+                                    >{{ $category['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>

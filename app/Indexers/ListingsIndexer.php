@@ -16,7 +16,11 @@ class ListingsIndexer implements \Wax\SiteSearch\Contracts\IndexerContract
     {
         $this->indexer = $indexer;
         $this->repo = $repo;
+        $this->goMap = config('wax.site-search.go_words');
     }
+
+
+
     public function crawl()
     {
         $items = $this->repo->getAll();
@@ -26,7 +30,18 @@ class ListingsIndexer implements \Wax\SiteSearch\Contracts\IndexerContract
                 . ' ' . $item->description
                 . ' ' . $item->features
                 . ' ' . $item->model_number
-                . ' ' . $item->color;
+                . ' ' . $item->color
+                . ' ' . ($item->brand ? $item->brand->name : '')
+                . ' ' . $item->categories->pluck('name')->implode(' ');
+
+            if (!empty($this->goMap)) {
+                foreach ($this->goMap as $goTrigger => $goWord) {
+                    if (stripos($content, $goTrigger) !== false) {
+                        $content .= ' ' . $goWord;
+                        unset($this->goMap[$goTrigger]);
+                    }
+                }
+            }
 
             $page = array(
                 'module' => 'listings',

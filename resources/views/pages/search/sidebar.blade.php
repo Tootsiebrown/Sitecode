@@ -8,17 +8,17 @@
             <span>Show</span> <i class="fa fa-chevron-down"></i>
         </span>
     </div>
-    @if ($brand)
-        <div class="search-sidebar__brand">
-            <p class="label">
-                Brand
-                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>
-            </p>
-            <ul>
-                <li><span class="selected">{{ $brand->name }}</span></li>
-            </ul>
-        </div>
-    @endif
+{{--    @if ($brand)--}}
+{{--        <div class="search-sidebar__brand">--}}
+{{--            <p class="label">--}}
+{{--                Brand--}}
+{{--                <a href="{{ route('search', array_merge($filterValues, ['brand' => null])) }}" class="clear-search">clear</a>--}}
+{{--            </p>--}}
+{{--            <ul>--}}
+{{--                <li><span class="selected">{{ $brand->name }}</span></li>--}}
+{{--            </ul>--}}
+{{--        </div>--}}
+{{--    @endif--}}
     <div class="search-sidebar_text">
 
         <p class="label">
@@ -79,7 +79,7 @@
                 <li>
                     @if ($category->isSelected)
                         <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>
-                    @else
+                    @elseif ($category->extras['count'] > 0)
                         <a
                           href="{{ route('search', array_merge($filterValues, ['category' => $category->value])) }}"
                         >
@@ -92,7 +92,7 @@
                                 <li>
                                     @if ($child->isSelected)
                                         <span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span>
-                                    @else
+                                    @elseif ($child->extras['count'] > 0)
                                         <a
                                           href="{{ route('search', array_merge($filterValues, ['category' => $child->value])) }}"
                                         >
@@ -105,7 +105,7 @@
                                                 <li>
                                                     @if ($grandchild->isSelected)
                                                         <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span>
-                                                    @else
+                                                    @elseif ($grandchild->extras['count'] > 0)
                                                         <a
                                                           href="{{ route('search', array_merge($filterValues, ['category' => $grandchild->value])) }}"
                                                           class="{{ $child->isSelected ? 'selected' : '' }}"

@@ -3,6 +3,7 @@
 namespace App\Wax\Shop\Models\Order;
 
 use App\Wax\Shop\Models\Order\Item;
+use Wax\Shop\Events\OrderChanged\CartContentsChangedEvent;
 use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
 use Wax\Shop\Models\Order\Shipment as WaxShipment;
 use Wax\Shop\Models\Order\ShippingRate;
@@ -10,6 +11,7 @@ use Wax\Shop\Tax\Support\Address;
 use Wax\Shop\Tax\Support\LineItem;
 use Wax\Shop\Tax\Support\Request;
 use Wax\Shop\Tax\Support\Shipping;
+use Wax\Shop\Validators\OrderItemValidator;
 
 class Shipment extends WaxShipment
 {
@@ -125,5 +127,45 @@ class Shipment extends WaxShipment
         event(new ShippingServiceChangedEvent($this->order->fresh()));
 
         return $result;
+    }
+
+    public function combineDuplicateItems()
+    {
+        $this->items
+            ->sortByDesc('created_at')
+            ->each(function ($item) {
+                $options = $item->options->mapWithKeys(function ($option) {
+                    return [$option->option_id => $option->value_id];
+                })->toArray();
+
+                $customizations = $item->customizations->mapWithKeys(function ($customization) {
+                    return [$customization->customization_id => $customization->value];
+                })->toArray();
+
+                if (($duplicate = $this->findItem($item->product_id, $options, $customizations)) && $item->isNot($duplicate)) {
+                    $duplicate->quantity += $item->quantity;
+                    $duplicate->save();
+                    $item->delete();
+                }
+            });
+    }
+
+    public function updateItemQuantity(int $itemId, int $quantity)
+    {
+        app()->make(OrderItemValidator::class)
+            ->setItemId($itemId)
+            ->setQuantity($quantity)
+            ->validate();
+
+        $item = $this->items->where('id', $itemId)->first();
+
+        if ($quantity === 0) {
+            $item->delete();
+        } else {
+            $item->quantity = $quantity;
+            $item->save();
+        }
+
+        event(new CartContentsChangedEvent($this->order));
     }
 }
