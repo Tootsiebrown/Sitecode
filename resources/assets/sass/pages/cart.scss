@@ -30,4 +30,23 @@
             }
         }
     }
+
+    .cart-quantity-form {
+        padding: 0;
+        background-color: transparent;
+
+        .btn {
+            color: white;
+            background-color: $color-turquoise-dark;
+
+            &:disabled {
+                background-color: $color-turquoise-faded;
+            }
+        }
+        max-width: 200px;
+        input {
+            text-align: right;
+            height: 100%;
+        }
+    }
 }

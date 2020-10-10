@@ -22,6 +22,7 @@ import ConfirmIfDeleteItems from "./component/confirm-if-delete-items";
 import CancelOrder from "./component/cancel-order";
 import SearchSidebar from "./component/search-sidebar";
 import SortFeaturedListings from "./component/sort-featured-listings";
+import CartItemQuantity from "./component/cart-item-quantity";
 
 export default function Site() {
 
@@ -52,6 +53,7 @@ export default function Site() {
         selectComponent('cancel-order').each((index, element) => new CancelOrder(element))
         selectComponent('search-sidebar').each((index, element) => new SearchSidebar(element))
         selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
+        selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

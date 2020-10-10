@@ -26,6 +26,7 @@
             </div>
             <div class="checkout__main checkout__cart-page">
                 @include('dashboard.flash_msg')
+                {!! $errors->has('quantity')? '<div class="alert alert-danger">'.$errors->first('quantity').'</div>':'' !!}
                 @if ($order->items->count() > 0)
                     <ul>
                         @foreach ($order->items as $item)
@@ -36,7 +37,31 @@
                                 <div class="checkout-cart-list-item__main">
                                     <p class="checkout-cart-list-item__name">{{ $item->name }}</p>
                                     <p>${{ $item->gross_unit_price }}</p>
-                                    <p>Qty: {{ $item->quantity }}</p>
+                                    <form class="cart-quantity-form" data-component="cart-item-quantity" method="POST" action="{{ route('shop.cart.update') }}">
+                                        @csrf
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-addon">Qty: </span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="item-{{ $item->id }}-qty"
+                                                value="{{ $item->quantity }}"
+                                                name="item[{{ $item->id }}]"
+                                                placeholder=""
+                                                data-element="input"
+                                                data-original-quantity="{{ $item->quantity }}"
+                                            >
+                                            <span class="input-group-btn">
+                                                <button
+                                                    class="btn btn-link"
+                                                    type="submit"
+                                                    data-element="button"
+                                                >
+                                                    Update
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </form>
                                 </div>
                                 <div class="checkout-cart-list-item__actions">
                                     <form action="{{ route('shop.cart.delete', ['itemId' => $item->id]) }}" method="POST">

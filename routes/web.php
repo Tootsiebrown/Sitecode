@@ -542,6 +542,9 @@ Route::name('shop.')
                 Route::delete('{itemId}')
                     ->uses('CartController@destroy')
                     ->name('delete');
+                Route::post('update')
+                    ->name('update')
+                    ->uses('CartController@update');
             });
 
 
