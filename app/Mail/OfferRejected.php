@@ -24,7 +24,7 @@ class OfferRejected extends Mailable
      */
     public function __construct(
         Offer $offer
-    ){
+    ) {
         $this->offer = $offer;
     }
 

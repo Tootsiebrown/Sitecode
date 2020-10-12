@@ -40,7 +40,7 @@ class OfferSubmitted extends Mailable
         int $quantity,
         $price,
         User $user
-    ){
+    ) {
         $this->offer = $offer;
         $this->listing = $listing;
         $this->quantity = $quantity;

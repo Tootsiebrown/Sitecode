@@ -43,7 +43,6 @@ class Offer extends Model
                 return $query->where('response', 'rejected');
                 break;
         }
-
     }
 
     public function listing()

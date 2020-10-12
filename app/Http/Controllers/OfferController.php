@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\Mail;
 
 class OfferController extends Controller
 {
-    public function __construct()
-    {
-
-    }
     public function make(Request $request)
     {
         $listing = Listing::findOrFail($request->input('listing_id'));
@@ -70,7 +66,7 @@ class OfferController extends Controller
     {
         $offer = Offer::find($id);
 
-        return view ('dashboard.offers.details', [
+        return view('dashboard.offers.details', [
             'offer' => $offer
         ]);
     }
@@ -138,7 +134,7 @@ class OfferController extends Controller
     {
         $offer = Offer::find($id);
 
-        return view ('dashboard.my-offers.details', [
+        return view('dashboard.my-offers.details', [
             'offer' => $offer
         ]);
     }

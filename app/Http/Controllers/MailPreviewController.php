@@ -150,5 +150,4 @@ class MailPreviewController extends Controller
 
         return new OfferCountered($offer);
     }
-
 }
