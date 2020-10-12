@@ -26,7 +26,7 @@ class RedirectIfAuthenticated
                     400
                 );
             }
-dd('uhhhhh');
+
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 
