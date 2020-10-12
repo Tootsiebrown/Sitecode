@@ -116,9 +116,20 @@ class Offer extends Model
 
     public function customerAccept()
     {
-        $this->counter_responded_at = Carbon::now()->toDateTimeString();
-        $this->counter_accepted = 1;
-        $this->save();
+        DB::transaction(function () {
+            $numberOfRowsAffected = $this
+                ->listing->items()->available()
+                ->limit($this->counter_quantity)
+                ->update(['reserved_for_offer_id' => $this->id]);
+
+            if ($numberOfRowsAffected !== $this->counter_quantity) {
+                throw ValidationException::withMessages(['error' => 'Insufficient Inventory for ' . $this->listing->title]);
+            }
+
+            $this->counter_responded_at = Carbon::now()->toDateTimeString();
+            $this->counter_accepted = 1;
+            $this->save();
+        });
     }
 
     public function customerReject()
