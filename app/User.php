@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Listing;
+use App\Models\Offer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -108,5 +109,24 @@ class User extends UserBase
     public function getNameAttribute()
     {
         return sprintf('%s %s', $this->firstname, $this->lastname);
+    }
+
+    public function hasAcceptedOfferOn(Listing $listing)
+    {
+        return $this
+                ->offers()
+                ->where('listing_id', $listing->id)
+                ->status('accepted')
+                ->count() > 0;
+    }
+
+    public function getOffersFor(Listing $listing)
+    {
+        return $this->offers()->where('listing_id', $listing->id)->get();
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
     }
 }

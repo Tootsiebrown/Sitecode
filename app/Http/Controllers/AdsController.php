@@ -543,7 +543,9 @@ class AdsController extends Controller
      */
     public function singleAuction($id, $slug)
     {
-        $listing = Listing::withoutGlobalScope('activeIfAuction')->find($id);
+        $listing = Listing::withoutGlobalScope('activeIfAuction')
+            ->withoutGlobalScope('withInventory')
+            ->find($id);
 
         if (! $listing) {
             return view('error_404');

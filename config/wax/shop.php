@@ -39,4 +39,6 @@ return [
             \App\Listeners\SendOrderToShipstation::class,
         ],
     ],
+
+    'offersToEmail' => 'dbankes@oohology.com',
 ];

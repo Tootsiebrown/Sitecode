@@ -69,12 +69,33 @@ Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsContr
 Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
 
-Route::post('watch-listing')
-    ->uses('UserController@watchListing')
-    ->name('watchListing');
+Route::middleware('auth')
+    ->group(function () {
+        Route::post('watch-listing')
+            ->uses('UserController@watchListing')
+            ->name('watchListing');
 
-Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses' => 'UserController@replyByEmailPost']);
-Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentController@postComments']);
+        Route::post('make-an-offer')
+            ->uses('OfferController@make')
+            ->name('makeAnOffer');
+
+        Route::post('{id}/post-new')
+            ->uses('BidController@postBid')
+            ->name('post_bid');
+
+        Route::get('pay-for-auction')
+            ->uses('PayForItController@endedAuction')
+            ->middleware('auth')
+            ->name('payForEndedAuction');
+
+        Route::get('pay-for-accepted-offer')
+            ->middleware('auth')
+            ->name('payForAcceptedOffer')
+            ->uses('PayForItController@acceptedOffer');
+    });
+
+//Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses' => 'UserController@replyByEmailPost']);
+//Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentController@postComments']);
 
 
 // Password reset routes...
@@ -95,15 +116,9 @@ Route::post('switch/product-view', ['as' => 'switch_grid_list_view', 'uses' => '
 
 Route::get('get-product-category-children', ['as' => 'getProductCategoryChildren', 'uses' => 'ListerController@getCategoryChildren']);
 
-Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);
-Route::post('post-new', ['uses' => 'AdsController@store']);
+//Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);
+//Route::post('post-new', ['uses' => 'AdsController@store']);
 
-//Post bid
-Route::post('{id}/post-new', ['as' => 'post_bid', 'uses' => 'BidController@postBid']);
-
-Route::get('pay-for-auction', 'PayForItController@endedAuction')
-    ->middleware('auth')
-    ->name('payForEndedAuction');
 
 
 //Checkout payment
@@ -255,6 +270,47 @@ Route::group(
                     ->uses('DashboardOrdersController@details');
             });
 
+        Route::prefix('my-offers')
+            ->name('dashboard.my-offers.')
+            ->group(function () {
+                Route::get('/')
+                    ->uses('OfferController@customerIndex')
+                    ->name('index');
+                Route::get('{id}')
+                    ->uses('OfferController@customerShow')
+                    ->name('show');
+                Route::post('{id}/accept')
+                    ->uses('OfferController@customerAccept')
+                    ->name('accept');
+                Route::post('{id}/reject')
+                    ->uses('OfferController@customerReject')
+                    ->name('reject');
+
+            });
+
+
+
+        Route::prefix('offers')
+            ->name('dashboard.offers.')
+            ->middleware('privilege:Offers')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('OfferController@index');
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('OfferController@show');
+                Route::post('{id}/accept')
+                    ->name('accept')
+                    ->uses('OfferController@accept');
+                Route::post('{id}/reject')
+                    ->name('reject')
+                    ->uses('OfferController@reject');
+                Route::post('{id}/counter')
+                    ->name('counter')
+                    ->uses('OfferController@counter');
+            });
+
         Route::middleware('privilege:Manager')
             ->group(function () {
                 Route::name('dashboard.emails.')
@@ -279,6 +335,18 @@ Route::group(
                         Route::get('auction-ended-no-winner')
                             ->name('auctionEndedNoWinner')
                             ->uses('MailPreviewController@auctionEndedNoWinner');
+                        Route::get('offer-submitted')
+                            ->name('offerSubmitted')
+                            ->uses('MailPreviewController@offerSubmitted');
+                        Route::get('offer-accepted')
+                            ->name('offerAccepted')
+                            ->uses('MailPreviewController@offerAccepted');
+                        Route::get('offer-rejected')
+                            ->name('offerRejected')
+                            ->uses('MailPreviewController@offerRejected');
+                        Route::get('offer-countered')
+                            ->name('offerCountered')
+                            ->uses('MailPreviewController@offerCountered');
                     });
 
 

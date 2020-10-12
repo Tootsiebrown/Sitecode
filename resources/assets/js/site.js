@@ -23,6 +23,7 @@ import CancelOrder from "./component/cancel-order";
 import SearchSidebar from "./component/search-sidebar";
 import SortFeaturedListings from "./component/sort-featured-listings";
 import CartItemQuantity from "./component/cart-item-quantity";
+import OfferActionForm from "./component/offer-action-form";
 
 export default function Site() {
 
@@ -54,6 +55,8 @@ export default function Site() {
         selectComponent('search-sidebar').each((index, element) => new SearchSidebar(element))
         selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
+        selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
+        console.log(selectComponent('offer-action-form'))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

@@ -57,6 +57,13 @@
             </li>
 
             <li>
+                <a href="{{ route('dashboard.my-offers.index') }}">
+                    <i class="fa fa-question-circle"></i>
+                    My offers
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('dashboard.orders.index') }}">
                     <i class="fa fa-shopping-basket"></i>
                     My Orders
@@ -95,6 +102,15 @@
                     <a href="{{ route('dashboard.shop.orders.report') }}">
                         <i class="fa fa-list-alt"></i>
                         Order Processing Report
+                    </a>
+                </li>
+            @endif
+
+            @if ($lUser->hasPrivilege('Offers'))
+                <li>
+                    <a href="{{ route('dashboard.offers.index') }}">
+                        <i class="fa fa-reply-all"></i>
+                        Offers
                     </a>
                 </li>
             @endif

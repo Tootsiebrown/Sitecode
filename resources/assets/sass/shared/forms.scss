@@ -25,6 +25,10 @@ form {
             padding: 0;
         }
     }
+
+    &.form-inline {
+        display: inline-block;
+    }
 }
 
 .error-message {

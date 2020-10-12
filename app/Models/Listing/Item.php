@@ -19,7 +19,9 @@ class Item extends Model
 
     public function scopeAvailable($query)
     {
-        return $query->whereNull('order_item_id');
+        return $query
+            ->whereNull('order_item_id')
+            ->whereNull('reserved_for_offer_id');
     }
 
     public function scopeSold($query)
@@ -34,7 +36,9 @@ class Item extends Model
 
     public function scopeNotReserved($query)
     {
-        return $query->whereNull('reserved_for_order_id');
+        return $query
+            ->whereNull('reserved_for_order_id')
+            ->whereNull('reserved_for_offer_id');
     }
 
     public function orderItem()

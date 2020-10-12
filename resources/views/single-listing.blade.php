@@ -138,27 +138,69 @@
                         <p class="single-ad__current-bid-amount">
                             {!! themeqx_price($listing->price) !!}
                         </p>
-                        <form action="{{ route('shop.cart.add') }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
-                            @csrf
-                            <input type="hidden" name="customizations[1]" value="{{ $listing->id }}">
-                            <input type="hidden" name="product_id" value="1">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon">Qty:</div>
-                                    <input type="text" class="form-control" id="quantity" name="quantity" placeholder="#" required="required" value="{{ old('quantity') ?? 1 }}">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="submit">Add to Cart @svg(cart)</button>
-                                    </span>
+                        @if ($listing->availableItems->count() === 0)
+                            <p>Sorry, we&rsquo;re out of inventory.</p>
+                        @else
+                            <form action="{{ route('shop.cart.add') }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                                @csrf
+                                <input type="hidden" name="customizations[1]" value="{{ $listing->id }}">
+                                <input type="hidden" name="product_id" value="1">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">Qty:</div>
+                                        <input type="text" class="form-control" id="quantity" name="quantity" placeholder="#" required="required" value="{{ old('quantity') ?? 1 }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit">Add to Cart @svg(cart)</button>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                        <p class="single-ad__available-inventory">
-                            Available Inventory: {{ $listing->availableItems->count() }}
-                        </p>
+                            </form>
+                            <p class="single-ad__available-inventory">
+                                Available Inventory: {{ $listing->availableItems->count() }}
+                            </p>
+                        @endif
 
                         @if (Auth::check())
+                            @if (Auth::user()->offers()->forListing($listing)->count() > 0)
+                                <p>You already have an offer on this listing</p>
+                                @if (Auth::user()->hasAcceptedOfferOn($listing))
+                                    <a href="{{ route('payForAcceptedOffer', ['id' => Auth::user()->offers()->where('listing_id', $listing->id)->status('accepted')->first()->id]) }}">Pay for it now</a>
+                                @endif
+                            @elseif ($listing->availableItems()->count() > 0)
+                                <p><b>OR</b></p>
+{{--                                <div class="make-an-offer" data-component="make-an-offer">--}}
+{{--                                    <button data-element="button">Make and Offer</button>--}}
+{{--                                </div>--}}
+                                <form action="{{ route('makeAnOffer') }}" method="POST" class="form-horizontal">
+                                    @csrf
+                                    <input type="hidden" name="listing_id" value="{{ $listing->id }}">
 
-                        @else
+                                    <legend>Make an Offer</legend>
+                                    <div class="row">
+                                        <label class="col-sm-2" for="offer_quantity">Qty:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" value="{{ old('offer_quantity', 1) }}" name="offer_quantity" id="offer_quantity">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-2">$/each:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" value="{{ old('offer_price', $listing->price) }}" name="offer_price" id="offer_price">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-sm-2">&nbsp;</label>
+                                        <div class="col-sm-10">
+                                            <input type="submit" name="offer" value="Submit" class="btn btn-primary">
+                                        </div>
+                                    </div>
+
+
+
+                                </form>
+                            @endif
+                        @elseif ($listing->availableItems()->count() > 0)
                             <p>Please <a href="{{ route('login') }}">Login</a> if you want to make an offer</p>
                         @endif
                     @endif
@@ -457,88 +499,88 @@
 @endsection
 
 @section('page-js')
-    @if(get_option('enable_fb_comments') == 1)
-        <div id="fb-root"></div>
-        <script>(function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10";
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-        </script>
-    @endif
+{{--    @if(get_option('enable_fb_comments') == 1)--}}
+{{--        <div id="fb-root"></div>--}}
+{{--        <script>(function(d, s, id) {--}}
+{{--                var js, fjs = d.getElementsByTagName(s)[0];--}}
+{{--                if (d.getElementById(id)) return;--}}
+{{--                js = d.createElement(s); js.id = id;--}}
+{{--                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10";--}}
+{{--                fjs.parentNode.insertBefore(js, fjs);--}}
+{{--            }(document, 'script', 'facebook-jssdk'));--}}
+{{--        </script>--}}
+{{--    @endif--}}
 
     <script src="{{ asset('assets/plugins/fotorama-4.6.4/fotorama.js') }}"></script>
-    <script src="{{ asset('assets/plugins/SocialShare/SocialShare.js') }}"></script>
+{{--    <script src="{{ asset('assets/plugins/SocialShare/SocialShare.js') }}"></script>--}}
 {{--    <script src="{{ asset('assets/plugins/form-validator/form-validator.min.js') }}"></script>--}}
 
-    <script>
-        $('.share').ShareLink({
-            title: '{{ $listing->title }}', // title for share message
-            text: '{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}', // text for share message
+{{--    <script>--}}
+{{--        $('.share').ShareLink({--}}
+{{--            title: '{{ $listing->title }}', // title for share message--}}
+{{--            text: '{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}', // text for share message--}}
 
-            @if($listing->images->first())
-            image: '{{ $listing->images->first()->url }}', // optional image for share message (not for all networks)
-            @else
-            image: '{{ asset('uploads/placeholder.png') }}', // optional image for share message (not for all networks)
-            @endif
-            url: '{{  route('single_ad', [$listing->id, $listing->slug]) }}', // link on shared page
-            class_prefix: 's_', // optional class prefix for share elements (buttons or links or everything), default: 's_'
-            width: 640, // optional popup initial width
-            height: 480 // optional popup initial height
-        })
-    </script>
+{{--            @if($listing->images->first())--}}
+{{--            image: '{{ $listing->images->first()->url }}', // optional image for share message (not for all networks)--}}
+{{--            @else--}}
+{{--            image: '{{ asset('uploads/placeholder.png') }}', // optional image for share message (not for all networks)--}}
+{{--            @endif--}}
+{{--            url: '{{  route('single_ad', [$listing->id, $listing->slug]) }}', // link on shared page--}}
+{{--            class_prefix: 's_', // optional class prefix for share elements (buttons or links or everything), default: 's_'--}}
+{{--            width: 640, // optional popup initial width--}}
+{{--            height: 480 // optional popup initial height--}}
+{{--        })--}}
+{{--    </script>--}}
 {{--    <script>--}}
 {{--        $.validate();--}}
 {{--    </script>--}}
 
-    <script>
-        $(function(){
-            $('#onClickShowPhone').click(function(){
-                $('#ShowPhoneWrap').html('<i class="fa fa-phone"></i> {{ $listing->seller_phone }}');
-            });
+{{--    <script>--}}
+{{--        $(function(){--}}
+{{--            $('#onClickShowPhone').click(function(){--}}
+{{--                $('#ShowPhoneWrap').html('<i class="fa fa-phone"></i> {{ $listing->seller_phone }}');--}}
+{{--            });--}}
 
-            $('#replyByEmailForm').submit(function(e){
-                e.preventDefault();
-                var reply_email_form_data = $(this).serialize();
+{{--            $('#replyByEmailForm').submit(function(e){--}}
+{{--                e.preventDefault();--}}
+{{--                var reply_email_form_data = $(this).serialize();--}}
 
-                $('#loadingOverlay').show();
-                $.ajax({
-                    type : 'POST',
-                    url : '{{ route('reply_by_email_post') }}',
-                    data : reply_email_form_data,
-                    success : function (data) {
-                        if (data.status == 1){
-                            toastr.success(data.msg, '@lang('app.success')', toastr_options);
-                        }else {
-                            toastr.error(data.msg, '@lang('app.error')', toastr_options);
-                        }
-                        $('#replyByEmail').modal('hide');
-                        $('#loadingOverlay').hide();
-                    }
-                });
-            });
+{{--                $('#loadingOverlay').show();--}}
+{{--                $.ajax({--}}
+{{--                    type : 'POST',--}}
+{{--                    url : '{{ route('reply_by_email_post') }}',--}}
+{{--                    data : reply_email_form_data,--}}
+{{--                    success : function (data) {--}}
+{{--                        if (data.status == 1){--}}
+{{--                            toastr.success(data.msg, '@lang('app.success')', toastr_options);--}}
+{{--                        }else {--}}
+{{--                            toastr.error(data.msg, '@lang('app.error')', toastr_options);--}}
+{{--                        }--}}
+{{--                        $('#replyByEmail').modal('hide');--}}
+{{--                        $('#loadingOverlay').hide();--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
 
-            $(document).on('click', '.comments-list .fa-reply', function(e){
-                e.preventDefault();
+{{--            $(document).on('click', '.comments-list .fa-reply', function(e){--}}
+{{--                e.preventDefault();--}}
 
-                var comment_id = $(this).closest('.comment-box').attr('data-comment-id');
-                var reply_form = $('.post-comments-form').html();
-                reply_form += '<a href="javascript:;" class="text-danger reply_form_remove"><i class="fa fa-times"> </a>';
+{{--                var comment_id = $(this).closest('.comment-box').attr('data-comment-id');--}}
+{{--                var reply_form = $('.post-comments-form').html();--}}
+{{--                reply_form += '<a href="javascript:;" class="text-danger reply_form_remove"><i class="fa fa-times"> </a>';--}}
 
-                //reply_form_box
-                $(this).closest('.comment-box').find('.reply_form_box').html(reply_form).show().find('.comment_id').val(comment_id);
+{{--                //reply_form_box--}}
+{{--                $(this).closest('.comment-box').find('.reply_form_box').html(reply_form).show().find('.comment_id').val(comment_id);--}}
 
-            });
+{{--            });--}}
 
-            $(document).on('click', '.reply_form_remove', function(e) {
-                e.preventDefault();
-                $(this).closest('form').remove();
-                $(this).closest('.reply_form_box').hide();
-            });
+{{--            $(document).on('click', '.reply_form_remove', function(e) {--}}
+{{--                e.preventDefault();--}}
+{{--                $(this).closest('form').remove();--}}
+{{--                $(this).closest('.reply_form_box').hide();--}}
+{{--            });--}}
 
-        });
-    </script>
+{{--        });--}}
+{{--    </script>--}}
 
 @endsection
