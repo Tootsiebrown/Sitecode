@@ -353,6 +353,9 @@ Route::group(
                         Route::get('bid-received')
                             ->name('bidReceived')
                             ->uses('MailPreviewController@notifyWatcherBidReceived');
+                        Route::get('auction-ending')
+                            ->name('auctionEnding')
+                            ->uses('MailPreviewController@notifyWatcherAuctionEndingSoon');
                     });
 
 
