@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ProcessAuctionsEndingInOneHour;
 use App\Console\Commands\ProcessEndedAuctions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -31,7 +32,7 @@ class Kernel extends ConsoleKernel
          $schedule->command(ProcessEndedAuctions::class)
              ->everyMinute();
 
-         $schedule->command(UpdateWatchersOneHourBeforeAuctionEnds::class)
+         $schedule->command(ProcessAuctionsEndingInOneHour::class)
              ->everyMinute();
     }
 
