@@ -38,7 +38,7 @@ class OfferNotYetInCart implements Rule
         $alreadyInCart = ShopServiceFacade::getActiveOrder()
             ->default_shipment
             ->items
-            ->filter(function ($item) use($offer) {
+            ->filter(function ($item) use ($offer) {
                 return $item
                     ->customizations
                     ->filter(function ($customization) use ($offer) {

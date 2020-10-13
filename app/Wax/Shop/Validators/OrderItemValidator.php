@@ -27,7 +27,7 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
                 ->items()
                 ->where('product_id', $product->id)
                 ->when($this->customizations->isNotEmpty(), function ($query) {
-                    foreach($this->customizations as $customizationId => $customizationValue) {
+                    foreach ($this->customizations as $customizationId => $customizationValue) {
                         $query->whereHas('customizations', function (Builder $query) use ($customizationId, $customizationValue) {
                             $query->where('customization_id', $customizationId)
                                 ->where('value', $customizationValue);
