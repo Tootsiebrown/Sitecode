@@ -16,7 +16,7 @@
                         <td class="" style="padding:16px;">
                             {{ $offer->counter_quantity }}
                         </td>
-                        <td style="padding:16px;">${{ $offer->counter_price }}</td>
+                        <td style="padding:16px;">{{ Currency::format($offer->counter_price) }}</td>
                     </tr>
                 </table>
 

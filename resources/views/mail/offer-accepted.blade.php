@@ -16,7 +16,7 @@
                         <td class="" style="padding:16px;">
                             {{ $quantity }}
                         </td>
-                        <td style="padding:16px;">${{ $price }}</td>
+                        <td style="padding:16px;">{{ Currency::format($price) }}</td>
                     </tr>
                 </table>
 

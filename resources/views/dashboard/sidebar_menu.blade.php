@@ -110,7 +110,7 @@
                 <li>
                     <a href="{{ route('dashboard.offers.index') }}">
                         <i class="fa fa-reply-all"></i>
-                        Offers
+                        Shop Offers
                     </a>
                 </li>
             @endif
