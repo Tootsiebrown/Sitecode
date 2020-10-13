@@ -30,6 +30,9 @@ class Kernel extends ConsoleKernel
 
          $schedule->command(ProcessEndedAuctions::class)
              ->everyMinute();
+
+         $schedule->command(UpdateWatchersOneHourBeforeAuctionEnds::class)
+             ->everyMinute();
     }
 
     /**

@@ -20,7 +20,7 @@
                     </tr>
                 </table>
 
-                <p><a href="{{ route('dashboard.my-offers.show', ['id' => $offer->id]) }}">Review Counter</a></p>
+                <p>This counter is good for 24 hours. Please <a href="{{ route('dashboard.my-offers.show', ['id' => $offer->id]) }}">review</a> promptly.</p>
             </td>
         </tr>
         </tbody>

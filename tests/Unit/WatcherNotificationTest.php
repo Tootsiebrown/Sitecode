@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Events\AuctionEndedEvent;
-use App\Jobs\NotifyWinner;
+use App\Jobs\NotifyWatchers;
 use App\Listeners\SendAuctionEndedNotification;
 use App\Models\Listing;
 use Illuminate\Support\Carbon;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Services\ShopService;
 
-class WinnerNotificationTest extends WaxAppTestCase
+class WatcherNotificationTest extends WaxAppTestCase
 {
     /**
      * @var \Illuminate\Contracts\Foundation\Application|mixed

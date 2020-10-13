@@ -45,12 +45,14 @@ class BidController extends Controller
         $this->validate($request, $rules);
 
 
-        Bid::create([
+        $bid = Bid::create([
             'listing_id'         => $listingId,
             'user_id'       => Auth::user()->id,
             'bid_amount'    => $bid_amount,
             'is_accepted'   => 0,
         ]);
+
+        event(new BidReceived($bid));
 
         return back()->with('success', trans('app.your_bid_posted'));
     }

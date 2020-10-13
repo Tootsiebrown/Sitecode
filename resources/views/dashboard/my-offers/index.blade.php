@@ -18,7 +18,7 @@
             <tr>
                 <td>{{ $offer->listing->title }}</td>
                 <td>{{ $offer->quantity }}</td>
-                <td>{{ $offer->price }}</td>
+                <td>{{ Currency::format($offer->price) }}</td>
                 <td>{{ $offer->pretty_status }}</td>
                 <td>
                     @if ($offer->status === 'accepted' || $offer->status == 'counter_accepted')

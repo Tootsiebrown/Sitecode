@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Bid;
 use App\Mail\NotifyNoWinner;
+use App\Mail\NotifyWatcherAuctionEnded;
+use App\Mail\NotifyWatcherBidReceived;
 use App\Mail\NotifyWinner;
 use App\Mail\OfferCountered;
 use App\Mail\OfferRejected;
@@ -34,6 +37,8 @@ class MailPreviewController extends Controller
         'offer-accepted' => 'Offer Accepted',
         'offer-rejected' => 'Offer Rejected',
         'offer-countered' => 'Offer Countered',
+        'watcher-ended' => 'Notify Watcher Auction Ended',
+        'bid-received' => 'Notify Watcher Bid Recevied',
     ];
 
     public function index()
@@ -149,5 +154,20 @@ class MailPreviewController extends Controller
         ]);
 
         return new OfferCountered($offer);
+    }
+
+    public function notifyWatcherAuctionEnded()
+    {
+        $listing = Listing::typeIsAuction()
+            ->first();
+
+        return new NotifyWatcherAuctionEnded($listing);
+    }
+
+    public function notifyWatcherBidReceived()
+    {
+        $bid = Bid::first();
+
+        return new NotifyWatcherBidReceived($bid);
     }
 }

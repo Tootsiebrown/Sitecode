@@ -347,6 +347,12 @@ Route::group(
                         Route::get('offer-countered')
                             ->name('offerCountered')
                             ->uses('MailPreviewController@offerCountered');
+                        Route::get('watcher-ended')
+                            ->name('watcherEnded')
+                            ->uses('MailPreviewController@notifyWatcherAuctionEnded');
+                        Route::get('bid-received')
+                            ->name('bidReceived')
+                            ->uses('MailPreviewController@notifyWatcherBidReceived');
                     });
 
 

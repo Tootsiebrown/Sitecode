@@ -395,4 +395,11 @@ class Listing extends Model
             return $this->winning_bid->user;
         }
     }
+
+    public function watchers()
+    {
+        return $this
+            ->belongsToMany(User::class, 'favorites', 'user_id', 'listing_id' )
+            ->withTimestamps();
+    }
 }

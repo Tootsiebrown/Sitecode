@@ -17,12 +17,13 @@ export default class WatchListing {
     }
 
     handleClick = (event) => {
-        let slug = this.$component.data('slug');
+        event.preventDefault()
+        let id = this.$component.data('id');
 
         $.ajax({
             type : 'POST',
             url : route('watchListing'),
-            data : { slug : slug, action: 'add' },
+            data : { id : id, action: 'add' },
             success : (data) => {
                 if (data.status == 1){
                     this.$component.html(data.msg);

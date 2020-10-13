@@ -16,11 +16,11 @@
                         <td class="" style="padding:16px;">
                             {{ $quantity }}
                         </td>
-                        <td style="padding:16px;">${{ $price }}</td>
+                        <td style="padding:16px;">{{ Currency::format($price) }}</td>
                     </tr>
                 </table>
 
-                <p><a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">Purchase Item</a></p>
+                <p>This deal is good for 24 hours. Please <a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">Pay/a> promptly.</p>
             </td>
         </tr>
         </tbody>

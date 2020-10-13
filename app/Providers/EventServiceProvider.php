@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\AuctionEndedEvent;
+use App\Events\BidReceivedEvent;
 use App\Listeners\SendAuctionEndedNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         AuctionEndedEvent::class => [
             SendAuctionEndedNotification::class,
+        ],
+        BidReceivedEvent::class => [
+            SendBidReceivedNotification::class,
         ],
     ];
 

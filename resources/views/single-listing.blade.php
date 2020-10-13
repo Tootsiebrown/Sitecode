@@ -125,7 +125,7 @@
                                     </div>
                                 </form>
 
-                                <a href="#" data-component="watch-listing" data-slug="{{ $listing->slug }}" class="btn btn-default">
+                                <a href="#" data-component="watch-listing" data-id="{{ $listing->id }}" class="btn btn-default">
                                     @if( ! $listing->is_my_favorite())
                                         @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>
                                     @else
