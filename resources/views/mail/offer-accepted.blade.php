@@ -20,7 +20,7 @@
                     </tr>
                 </table>
 
-                <p><a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">Purchase Item</a></p>
+                <p>Your offer expires in 24 hours. Please <a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">pay</a> promptly!</p>
             </td>
         </tr>
         </tbody>

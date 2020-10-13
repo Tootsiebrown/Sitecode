@@ -9,6 +9,7 @@ use App\Support\Filters\FilterAggregatorContract;
 use App\Support\Filters\Listings\ListingsFilterAggreggator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -48,6 +49,10 @@ class AppServiceProvider extends ServiceProvider
             'Wax\SiteSearch\Contracts\SiteSearchRepositoryContract',
             'App\Repositories\SiteSearchRepository'
         );
+
+        Carbon::macro('wasOver24HoursAgo', function () {
+            return Carbon::now()->subHours(24)->greaterThan($this);
+        });
     }
 
     /**

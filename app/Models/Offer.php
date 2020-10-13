@@ -14,6 +14,9 @@ use Illuminate\Validation\ValidationException;
 class Offer extends Model
 {
     protected $guarded = [];
+    protected $dates = [
+        'responded_at',
+    ];
 
     public function scopeMine(Builder $query)
     {
@@ -31,8 +34,36 @@ class Offer extends Model
             case 'purchased':
                 return $query->whereNotNull('purchased_at');
                 break;
+            case 'counter_expired':
+                return $query
+                    ->where('responded_at', '<', Carbon::now()->subHours(24)->toDateTimeString())
+                    ->where('response', 'countered')
+                    ->whereNull('purchased_at');
+                break;
+            case 'countered':
+                return $query
+                    ->whereNull('counter_responded_at')
+                    ->where('responded_at', '>', Carbon::now()->subHours(24)->toDateTimeString())
+                    ->where('response', 'countered');
+                break;
+            case 'counter_accepted':
+                return $query
+                    ->where('responded_at', '>', Carbon::now()->subHours(24)->toDateTimeString())
+                    ->whereNotNull('purchased_at')
+                    ->where('counter_accepted', true);
+                break;
+            case 'counter_rejected':
+                return $query
+                    ->where('counter_rejected', true);
+                break;
+            case 'expired':
+                return $query
+                    ->where('responded_at', '<', Carbon::now()->subHours(24)->toDateTimeString())
+                    ->where('response', 'accepted')
+                    ->whereNull('purchased_at');
             case 'accepted':
                 return $query
+                    ->where('responded_at', '>', Carbon::now()->subHours(24)->toDateTimeString())
                     ->where('response', 'accepted')
                     ->whereNull('purchased_at');
                 break;
@@ -62,22 +93,28 @@ class Offer extends Model
 
     public function getStatusAttribute()
     {
+        if ($this->purchased_at) {
+            return 'purchased';
+        }
+
+        if ($this->counter_responded_at) {
+            if (! $this->counter_accepted) {
+                return 'counter_rejected';
+            } else {
+                if ($this->responded_at->wasOver24HoursAgo()) {
+                    return 'counter_expired';
+                } else {
+                    return 'counter_accepted';
+                }
+            }
+        }
+
         if (! $this->responded_at) {
             return 'pending';
         }
 
-        if ($this->response === 'countered') {
-            if (! $this->counter_responded_at) {
-                return 'countered';
-            } else {
-                return $this->counter_accepted
-                    ? 'counter_accepted'
-                    : 'counter_rejected';
-            }
-        }
-
-        if ($this->purchased_at) {
-            return 'purchased';
+        if ($this->responded_at->wasOver24HoursAgo()) {
+            return 'expired';
         }
 
         return $this->response;
