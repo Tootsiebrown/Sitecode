@@ -20,7 +20,7 @@
 
                 <h3>Subtotal</h3>
                 <div class="checkout-cart__subtotal">
-                    ${{ $order->item_gross_subtotal }}
+                    {{ Currency::format($order->item_gross_subtotal) }}
                 </div>
                 <a href="{{ route('shop.checkout.showShipping') }}" class="checkout-cart__continue">Checkout @svg(cart)</a>
             </div>

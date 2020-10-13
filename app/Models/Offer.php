@@ -141,4 +141,10 @@ class Offer extends Model
         $this->counter_accepted = 0;
         $this->save();
     }
+
+    public function markPurchased()
+    {
+        $this->purchased_at = Carbon::now()->toDateTimeString();
+        $this->save();
+    }
 }
