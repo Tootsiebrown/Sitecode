@@ -27,20 +27,23 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
                 ->items()
                 ->where('product_id', $product->id)
                 ->when($this->customizations->isNotEmpty(), function ($query) {
-                    $query->whereHas('customizations', function (Builder $query) {
-                        foreach ($this->customizations as $customizationId => $customizationValue) {
-                            if ($customizationId === 1) {
-                                $query->where('customization_id', $customizationId)
-                                    ->where('value', $customizationValue);
-                            }
-                        }
-                    });
+                    foreach($this->customizations as $customizationId => $customizationValue) {
+                        $query->whereHas('customizations', function (Builder $query) use ($customizationId, $customizationValue) {
+                            $query->where('customization_id', $customizationId)
+                                ->where('value', $customizationValue);
+                        });
+                    }
                 })
                 ->sum('quantity');
         }
 
-        $relevantCustomization = $this->customizations->first(fn($value, $key) => $key === 1);
-        $effectiveInventory = Listing::withoutGlobalScopes()->find($relevantCustomization)->availableItems->count() - $pendingQuantity;
+        $listingId = $this->customizations->first(fn($value, $key) => $key === 1);
+        $offerId = $this->customizations->first(fn($value, $key) => $key === 2);
+        if ($offerId) {
+            $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->reservedForOffer($offerId)->count();
+        } else {
+            $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->availableItems->count() - $pendingQuantity;
+        }
 
         if ($effectiveInventory < $this->quantity) {
             $this->errors()

@@ -76,6 +76,10 @@ class Offer extends Model
             }
         }
 
+        if ($this->purchased_at) {
+            return 'purchased';
+        }
+
         return $this->response;
     }
 
