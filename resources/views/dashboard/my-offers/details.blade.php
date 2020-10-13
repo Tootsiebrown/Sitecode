@@ -62,4 +62,9 @@
         @endif
     </table>
 
+
+    @if ($offer->status === 'accepted' || $offer->status == 'counter_accepted')
+        <a class="btn btn-primary" href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">Purchase</a>
+    @endif
+
 @endsection

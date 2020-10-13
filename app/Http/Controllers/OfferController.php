@@ -10,7 +10,9 @@ use App\Models\Listing;
 use App\Models\Offer;
 use App\Rules\ListingGteInventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class OfferController extends Controller
@@ -55,11 +57,18 @@ class OfferController extends Controller
 
     public function index()
     {
+        $pendingOffersCount = Offer::whereNull('responded_at')->count();
+        $twentyFourHoursCount = Offer::where('created_at', '>', Carbon::now()->subHours(24)->toDateTimeString())->count();
         $offers = Offer::with('listing')
+            ->orderBy(DB::raw('responded_at IS NULL'), 'desc')
             ->orderBy('updated_at', 'desc')
             ->paginate(12);
 
-        return view('dashboard.offers.index', ['offers' => $offers]);
+        return view('dashboard.offers.index', [
+            'offers' => $offers,
+            'pendingCount' => $pendingOffersCount,
+            'rollingCount' => $twentyFourHoursCount,
+        ]);
     }
 
     public function show($id)
