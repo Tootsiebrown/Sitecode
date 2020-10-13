@@ -9,7 +9,7 @@
         margin-bottom: 32px;
 
         &__image-container {
-            width: 200px;
+            flex-basis: 200px;
             img {
                 max-width: 100%;
             }
@@ -17,6 +17,7 @@
 
         &__main {
             margin: 0 16px;
+            flex-basis: 600px;
         }
 
         &__name {
@@ -24,6 +25,7 @@
         }
 
         &__actions {
+            flex-basis: 30px;
             form {
                 background-color: inherit;
                 padding: 0;

@@ -9,6 +9,7 @@ use App\Rules\OfferIsPayable;
 use App\Rules\OfferMine;
 use App\Rules\OfferNotYetInCart;
 use Illuminate\Http\Request;
+use Wax\Shop\Exceptions\ValidationException;
 use Wax\Shop\Facades\ShopServiceFacade;
 
 class PayForItController extends Controller
@@ -58,13 +59,19 @@ class PayForItController extends Controller
             2 => $request->input('id'),
         ];
 
-        if (! ShopServiceFacade::getActiveOrder()->default_shipment->findItem(1, [], $customizations)) {
-            ShopServiceFacade::addOrderItem(
-                1,
-                $offer->counter_quantity ?? $offer->auantity,
-                [],
-                $customizations
-            );
+        try {
+            if (!ShopServiceFacade::getActiveOrder()->default_shipment->findItem(1, [], $customizations)) {
+                ShopServiceFacade::addOrderItem(
+                    1,
+                    $offer->counter_quantity ?? $offer->quantity,
+                    [],
+                    $customizations
+                );
+            }
+        } catch (ValidationException $e) {
+            return redirect()
+                ->back()
+                ->with('error', implode(' ', $e->messages()->all()));
         }
 
         return redirect()->route('shop.checkout.start');

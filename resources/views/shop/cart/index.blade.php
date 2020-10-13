@@ -37,31 +37,35 @@
                                 <div class="checkout-cart-list-item__main">
                                     <p class="checkout-cart-list-item__name">{{ $item->name }}</p>
                                     <p>${{ $item->gross_unit_price }}</p>
-                                    <form class="cart-quantity-form" data-component="cart-item-quantity" method="POST" action="{{ route('shop.cart.update') }}">
-                                        @csrf
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-addon">Qty: </span>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                id="item-{{ $item->id }}-qty"
-                                                value="{{ $item->quantity }}"
-                                                name="item[{{ $item->id }}]"
-                                                placeholder=""
-                                                data-element="input"
-                                                data-original-quantity="{{ $item->quantity }}"
-                                            >
-                                            <span class="input-group-btn">
-                                                <button
-                                                    class="btn btn-link"
-                                                    type="submit"
-                                                    data-element="button"
+                                    @if ($item->offer)
+                                        <i>Cannot change the quantity of an accepted offer.</i>
+                                    @else
+                                        <form class="cart-quantity-form" data-component="cart-item-quantity" method="POST" action="{{ route('shop.cart.update') }}">
+                                            @csrf
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-addon">Qty: </span>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="item-{{ $item->id }}-qty"
+                                                    value="{{ $item->quantity }}"
+                                                    name="item[{{ $item->id }}]"
+                                                    placeholder=""
+                                                    data-element="input"
+                                                    data-original-quantity="{{ $item->quantity }}"
                                                 >
-                                                    Update
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </form>
+                                                <span class="input-group-btn">
+                                                    <button
+                                                        class="btn btn-link"
+                                                        type="submit"
+                                                        data-element="button"
+                                                    >
+                                                        Update
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    @endif
                                 </div>
                                 <div class="checkout-cart-list-item__actions">
                                     <form action="{{ route('shop.cart.delete', ['itemId' => $item->id]) }}" method="POST">

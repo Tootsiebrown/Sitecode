@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Wax\Shop\Models\Order\Item;
 use Wax\Shop\Repositories\OrderRepository;
 use Wax\Shop\Services\ShopService;
 use Illuminate\Http\Request;

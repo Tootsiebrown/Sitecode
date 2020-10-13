@@ -78,6 +78,10 @@ class Item extends WaxItem
             return $value;
         }
 
+        if ($this->offer) {
+            return $this->offer->counter_price ?? $this->offer->price;
+        }
+
         if ($this->listing->type === 'auction') {
             return $this->listing->current_bid();
         }

@@ -1,6 +1,9 @@
 @extends('layouts.dashboard')
 
 @section('dashboard-content')
+    @if ($errors->has('id'))
+        @include('site.components.field-error', ['field' => 'id'])
+    @endif
     <h1>Offers</h1>
 
     <table class="dashboard-table">
