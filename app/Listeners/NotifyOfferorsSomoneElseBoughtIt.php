@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-Use App\Jobs\NotifyOfferorsSomeoneElseBoughtIt as NotifyOfferorsSomeoneElseBoughtItJob;
+use App\Jobs\NotifyOfferorsSomeoneElseBoughtIt as NotifyOfferorsSomeoneElseBoughtItJob;
 use Wax\Shop\Events\OrderPlacedEvent;
 
 class NotifyOfferorsSomoneElseBoughtIt
