@@ -24,7 +24,11 @@
                     @endif
                 </td>
                 <td>
-                    {{ $listing->items->first()->order_item_id ? 'Yes' : 'No' }}
+                    @if ($listing->items->isNotEmpty())
+                        {{ $listing->items->first()->order_item_id ? 'Yes' : 'No' }}
+                    @else
+                        No
+                    @endif
                 </td>
             </tr>
         @endforeach
