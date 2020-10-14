@@ -47,7 +47,7 @@ class ProcessExpiredOffers extends Command
             ->status('expired')
             ->get()
             ->each(function ($offer) {
-                $offer->expiration_event_fired = true;
+                $offer->expired_event_fired = true;
                 $offer->save();
                 Event::dispatch(new OfferExpiredEvent($offer));
             });
@@ -56,7 +56,7 @@ class ProcessExpiredOffers extends Command
             ->status('counter_expired')
             ->get()
             ->each(function ($offer) {
-                $offer->expiration_event_fired = true;
+                $offer->expired_event_fired = true;
                 $offer->save();
                 Event::dispatch(new OfferCounterExpiredEvent($offer));
             });
