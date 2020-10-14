@@ -399,7 +399,7 @@ class Listing extends Model
     public function watchers()
     {
         return $this
-            ->belongsToMany(User::class, 'favorites', 'listing_id', 'user_id' )
+            ->belongsToMany(User::class, 'favorites', 'listing_id', 'user_id')
             ->withTimestamps();
     }
 

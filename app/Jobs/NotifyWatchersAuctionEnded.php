@@ -47,7 +47,7 @@ class NotifyWatchersAuctionEnded implements ShouldQueue
             ? $this->listing->winner->id
             : null;
 
-        foreach($this->listing->watchers as $watcher) {
+        foreach ($this->listing->watchers as $watcher) {
             if ($winnerId === $watcher->id) {
                 continue;
             }

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\NotifyWatcherAuctionEnded;
+use App\Mail\NotifyWatcherAuctionEndingSoon;
 use App\Mail\NotifyWinner as NotifyWinnerEmail;
 use App\Mail\NotifyNoWinner as NotifyNoWinnerEmail;
 use App\Models\Listing;
@@ -43,7 +44,7 @@ class NotifyWatchersAuctionEndingSoon implements ShouldQueue
      */
     public function handle()
     {
-        foreach($this->listing->watchers as $watcher) {
+        foreach ($this->listing->watchers as $watcher) {
             Mail::to($watcher)
                 ->queue(new NotifyWatcherAuctionEndingSoon($this->listing));
         }

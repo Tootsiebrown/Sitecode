@@ -40,7 +40,7 @@ class NotifyWatchersBidReceived implements ShouldQueue
      */
     public function handle()
     {
-        foreach($this->bid->listing->watchers as $watcher) {
+        foreach ($this->bid->listing->watchers as $watcher) {
             if ($this->bid->user_id === $watcher->id) {
                 continue;
             }
