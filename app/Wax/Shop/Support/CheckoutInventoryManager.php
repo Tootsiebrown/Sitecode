@@ -46,6 +46,10 @@ class CheckoutInventoryManager
                     ->where('reserved_for_order_id', $order->id)
                     ->limit($item->quantity)
                     ->update(['order_item_id' => $item->id]);
+
+                if ($item->offer) {
+                    $item->offer->markPurchased();
+                }
             });
     }
 }

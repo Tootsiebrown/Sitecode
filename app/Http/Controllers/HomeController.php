@@ -11,18 +11,21 @@ class HomeController extends Controller
 
     public function index()
     {
-        $limit_regular_ads = get_option('number_of_free_ads_in_home');
+        $limitRegularAds = get_option('number_of_free_ads_in_home');
 
-        $ads = Listing::active()->with('categories', 'images')
-            ->limit($limit_regular_ads)
+        $listings = Listing::with('categories', 'images')
+            ->active()
+            ->limit($limitRegularAds)
             ->orderBy('id', 'desc')->get();
 
-        $total_ads_count = Listing::active()->count();
+        $totalListingsCount = Listing::active()->count();
 
         return view('index', [
-            'ads' => $ads,
-            'total_ads_count' => $total_ads_count,
+            'listings' => $listings,
+            'totalListingsCount' => $totalListingsCount,
+            'slides' => $this->getSlides(),
             'featuredListings' => Listing::with('images')->active()->featured()->take(12)->get(),
+
         ]);
     }
 
@@ -33,5 +36,37 @@ class HomeController extends Controller
     {
         session(['lang' => $lang]);
         return back();
+    }
+
+    protected function getSlides()
+    {
+        return collect(
+            [
+                [
+                    'title' => 'Shoes',
+                    'caption' => 'Get ready for Fall with great Dealz on boots and shoes for the whole family!',
+                    'cta' => 'View Shoes',
+                    'link' => '/search?category=325',
+                    'background_image' => '/assets/img/slider/HikingGearBackground.jpg',
+                    'image' => '/assets/img/slider/HikingShoes.png',
+                ],
+                [
+                    'title' => 'Apple iPhones and More',
+                    'caption' => 'Find iPhones, iPads, MacBooks, AirPods and accessories all below wholesale!',
+                    'cta' => 'View Electronics',
+                    'link' => '/search?category=45',
+                    'background_image' => '/assets/img/slider/iPHoneBackground.jpg',
+                    'image' => '/assets/img/slider/iPhoneINHand.png',
+                ],
+                [
+                    'title' => 'Fitness',
+                    'caption' => 'Catch the best prices on fitness apparel and nutrition to help you look your best!',
+                    'cta' => 'View Fitness',
+                    'link' => '/search?search=fitness',
+                    'background_image' => '/assets/img/slider/ProteinPowderBackground.jpg',
+                    'image' => '/assets/img/slider/ProteinPowder.png',
+                ],
+            ]
+        );
     }
 }

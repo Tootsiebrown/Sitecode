@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\ProcessEndedAuctions;
+use App\Console\Commands\ProcessExpiredOffers;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,6 +31,9 @@ class Kernel extends ConsoleKernel
 
          $schedule->command(ProcessEndedAuctions::class)
              ->everyMinute();
+
+         $schedule->command(ProcessExpiredOffers::class)
+             ->everyFiveMinutes();
     }
 
     /**

@@ -127,6 +127,8 @@ class AdsController extends Controller
             $adQuery = (new Listing())->newQuery();
         }
 
+        $adQuery->with(['images', 'brand']);
+
         if (is_null($searchBy)) {
             return $adQuery->orderBy('title', 'asc')->paginate(20);
         }
@@ -188,20 +190,24 @@ class AdsController extends Controller
             abort(404);
         }
 
+        $categories = ProductCategory::where('parent_id', 0)->get()->keyBy('id');
+        $children = ProductCategory::whereIn('parent_id', $categories->pluck('id'))->get()->keyBy('id');
+        $grandChildren = ProductCategory::whereIn('parent_id', $children->pluck('id'))->get()->keyBy('id');
+
+        $denormalizedCategories = $this->getDenormalizedProductCategories(
+            clone $categories,
+            clone $children,
+            clone $grandChildren
+        );
 
         return view('dashboard.listings.edit', [
             'listing' => $listing,
-            'categoryHierarchy' => $this->getDenormalizedProductCategories(),
+            'categoryHierarchy' => $denormalizedCategories,
             'brands' => Brand::all(),
-            'categories' => ProductCategory::where('parent_id', 0)->get(),
-            'children' => ProductCategory::whereIn('parent_id', function ($query) {
-                $query->select('id')
-                    ->from('product_categories')
-                    ->where('parent_id', 0);
-            })->get(),
-            'grandchildren' => collect(),
+            'categories' => $categories,
+            'children' => $children,
+            'grandchildren' => $grandChildren,
             'optionalFields' => $this->optionalFields,
-
         ]);
     }
 
@@ -537,7 +543,9 @@ class AdsController extends Controller
      */
     public function singleAuction($id, $slug)
     {
-        $listing = Listing::withoutGlobalScope('activeIfAuction')->find($id);
+        $listing = Listing::withoutGlobalScope('activeIfAuction')
+            ->withoutGlobalScope('withInventory')
+            ->find($id);
 
         if (! $listing) {
             return view('error_404');
@@ -562,7 +570,32 @@ class AdsController extends Controller
         //Get Related Ads, add [->whereCountryId($listing->country_id)] for more specific results
         $relatedListings = collect(); //Ad::active()->whereCategoryId($listing->category_id)->where('id', '!=', $listing->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
 
-        return view('single-listing', compact('listing', 'title', 'relatedListings'));
+        return view('single-listing', [
+            'listing' => $listing,
+            'title' => $title,
+            'relatedListings' => $relatedListings,
+            'alreadyHasOffer' => $this->alreadyHasOfferOn($listing),
+        ]);
+    }
+
+    protected function alreadyHasOfferOn(Listing $listing)
+    {
+        if (! Auth::check()) {
+            return false;
+        }
+
+        $pendingCount = Auth::user()->offers()->forListing($listing)
+            ->status('pending')->count();
+        $acceptedCount = Auth::user()->offers()->forListing($listing)
+            ->status('accepted')->count();
+        $counterAcceptedCount = Auth::user()->offers()->forListing($listing)
+            ->status('counter_accepted')->count();
+
+        if ($pendingCount + $acceptedCount + $counterAcceptedCount > 0) {
+            return true;
+        }
+
+        return false;
     }
 
 //    public function switchGridListView(Request $request)

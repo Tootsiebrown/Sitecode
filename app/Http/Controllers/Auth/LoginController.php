@@ -24,6 +24,18 @@ class LoginController extends Controller
     */
     use AuthenticatesUsers;
 
+    /**
+     * Show the application's login form.
+     */
+    public function showLoginForm()
+    {
+        if (empty(session()->get('url.intended'))) {
+            session(['url.intended' => url()->previous()]);
+        }
+        $this->redirectTo = session()->get('url.intended');
+
+        return view('auth.login');
+    }
 
     public function login(Request $request)
     {
@@ -87,7 +99,7 @@ class LoginController extends Controller
             return response()->json($user, 200);
         }
 
-        return redirect($this->redirectPath());
+        return redirect()->intended($this->redirectPath());
     }
 
     public function logout(Request $request)

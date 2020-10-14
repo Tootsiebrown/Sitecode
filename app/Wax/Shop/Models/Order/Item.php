@@ -4,11 +4,13 @@ namespace App\Wax\Shop\Models\Order;
 
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
+use App\Models\Offer;
 use Wax\Shop\Models\Order\Item as WaxItem;
 
 class Item extends WaxItem
 {
     protected $memoizedListing = null;
+    protected $memoizedOffer = null;
 
     public function getListingIdAttribute()
     {
@@ -30,6 +32,31 @@ class Item extends WaxItem
         return $this->memoizedListing;
     }
 
+    public function getOfferIdAttribute()
+    {
+        $offerCustomziation = $this
+            ->customizations
+            ->filter(fn($customization) => $customization->customization === 'offer_id')
+            ->first();
+
+        if ($offerCustomziation) {
+            return (int)$offerCustomziation->value;
+        }
+
+        return null;
+    }
+
+    public function getOfferAttribute()
+    {
+        if ($this->memoizedOffer) {
+            return $this->memoizedOffer;
+        }
+
+        $this->memoizedOffer = Offer::withoutGlobalScopes()->find($this->offer_id);
+
+        return $this->memoizedOffer;
+    }
+
     public function listingItems()
     {
         return $this->hasMany(ListingItem::class, 'order_item_id');
@@ -49,6 +76,10 @@ class Item extends WaxItem
     {
         if ($value > 0) {
             return $value;
+        }
+
+        if ($this->offer) {
+            return $this->offer->counter_price ?? $this->offer->price;
         }
 
         if ($this->listing->type === 'auction') {

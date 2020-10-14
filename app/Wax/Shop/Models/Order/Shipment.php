@@ -3,6 +3,7 @@
 namespace App\Wax\Shop\Models\Order;
 
 use App\Wax\Shop\Models\Order\Item;
+use Wax\Shop\Events\OrderChanged\CartContentsChangedEvent;
 use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
 use Wax\Shop\Models\Order\Shipment as WaxShipment;
 use Wax\Shop\Models\Order\ShippingRate;
@@ -10,6 +11,7 @@ use Wax\Shop\Tax\Support\Address;
 use Wax\Shop\Tax\Support\LineItem;
 use Wax\Shop\Tax\Support\Request;
 use Wax\Shop\Tax\Support\Shipping;
+use Wax\Shop\Validators\OrderItemValidator;
 
 class Shipment extends WaxShipment
 {
@@ -146,5 +148,24 @@ class Shipment extends WaxShipment
                     $item->delete();
                 }
             });
+    }
+
+    public function updateItemQuantity(int $itemId, int $quantity)
+    {
+        app()->make(OrderItemValidator::class)
+            ->setItemId($itemId)
+            ->setQuantity($quantity)
+            ->validate();
+
+        $item = $this->items->where('id', $itemId)->first();
+
+        if ($quantity === 0) {
+            $item->delete();
+        } else {
+            $item->quantity = $quantity;
+            $item->save();
+        }
+
+        event(new CartContentsChangedEvent($this->order));
     }
 }

@@ -395,4 +395,9 @@ class Listing extends Model
             return $this->winning_bid->user;
         }
     }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
 }

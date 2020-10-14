@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Wax\Shop\Models\Order\Item;
 use Wax\Shop\Repositories\OrderRepository;
 use Wax\Shop\Services\ShopService;
 use Illuminate\Http\Request;
@@ -60,5 +61,16 @@ class CartController extends Controller
         return redirect()
             ->route('shop.cart.index')
             ->with('success', 'Item deleted from cart');
+    }
+
+    public function update(Request $request)
+    {
+        foreach ($request->input('item') as $itemId => $quantity) {
+            $this->shopService->updateOrderItemQuantity($itemId, (int)$quantity);
+        }
+
+        return redirect()
+            ->route('shop.cart.index')
+            ->with('success', 'Updated cart quantities.');
     }
 }

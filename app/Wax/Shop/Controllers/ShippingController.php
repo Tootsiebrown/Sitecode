@@ -26,6 +26,10 @@ class ShippingController extends Controller
         $order = $this->shopService->getActiveOrder();
         $order->calculateTax();
 
+        if (config('shipping.custom_shipping')) {
+            $this->shippingService->refreshRatesfor($order);
+        }
+
         if (!$this->shopService->getActiveOrder()->validateHasItems()) {
             return redirect()->route('shop.cart.index');
         }
@@ -39,7 +43,8 @@ class ShippingController extends Controller
 
     public function saveShipping(Request $request)
     {
-        $shipment = $this->shopService->getActiveOrder()->default_shipment;
+        $order = $this->shopService->getActiveOrder();
+        $shipment = $order->default_shipment;
 
         $this->validate(
             $request,
@@ -91,6 +96,11 @@ class ShippingController extends Controller
             $request->input('zip', ''),
             'US'
         );
+
+        if (config('shipping.custom_shipping')) {
+            $this->shippingService->refreshRatesfor($order);
+            return redirect()->route('shop.checkout.showBilling');
+        }
 
         return redirect()->route('shop.checkout.showRates');
     }

@@ -9,17 +9,13 @@
     <ul class="checkout-cart">
         @foreach($order->items as $item)
             <li>
-                @if ($item->listing->has_available_items)
-                    <a href="{{ $item->listing->url }}">
-                        {{ $item->listing->title }}
-                    </a>
-                @else
+                <a href="{{ $item->listing->url }}">
                     {{ $item->listing->title }}
-                @endif
+                </a>
 
                 <div class="checkout-cart__details">
                     <div class="checkout-cart__price">
-                        ${{ $item->unit_price }}
+                        {{ Currency::format($item->unit_price) }}
                     </div>
                     <div class="checkout-cart__quantity">
                         Qty: <span>{{ $item->quantity }}</span>
@@ -29,12 +25,16 @@
         @endforeach
     </ul>
 
-        <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? '$' . $order->shipping_subtotal : 'TBD' }}</h4>
+        @if (config('shipping.custom_shipping'))
+            <h4 class="checkout-cart__tax">Shipping: {{ Currency::format($order->shipping_subtotal) }}</h4>
+        @else
+            <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? Currency::format($order->shipping_subtotal) : 'TBD' }}</h4>
+        @endif
         <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
 
     <h3>Total</h3>
     <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">
-        ${{ $order->gross_total }}
+        {{ Currency::format($order->gross_total) }}
     </div>
     @if (!empty($cta))
         <a href="{{ $cta['url'] }}" class="checkout-cart__continue">{{ $cta['text'] }}</a>

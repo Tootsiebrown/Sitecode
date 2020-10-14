@@ -3,7 +3,12 @@
 namespace App\Providers;
 
 use App\Events\AuctionEndedEvent;
+use App\Events\OfferCounterExpiredEvent;
+use App\Events\OfferExpiredEvent;
+use App\Listeners\RestoreOfferInventory;
 use App\Listeners\SendAuctionEndedNotification;
+use App\Listeners\SendCounterOfferExpiredNotification;
+use App\Listeners\SendOfferExpiredNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -23,6 +28,14 @@ class EventServiceProvider extends ServiceProvider
         AuctionEndedEvent::class => [
             SendAuctionEndedNotification::class,
         ],
+        OfferExpiredEvent::class => [
+            SendOfferExpiredNotification::class,
+            RestoreOfferInventory::class,
+        ],
+        OfferCounterExpiredEvent::class => [
+            SendCounterOfferExpiredNotification::class,
+            RestoreOfferInventory::class,
+        ]
     ];
 
     /**
