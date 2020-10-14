@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Jobs\NotifyOfferorsSomeoneElseBoughtIt as NotifyOfferorsSomeoneElseBoughtItJob;
 use Wax\Shop\Events\OrderPlacedEvent;
 
-class NotifyOfferorsSomoneElseBoughtIt
+class NotifyOfferorsSomeoneElseBoughtIt
 {
     public function handle(OrderPlacedEvent $event)
     {

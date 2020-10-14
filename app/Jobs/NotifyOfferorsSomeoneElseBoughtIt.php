@@ -43,27 +43,29 @@ class NotifyOfferorsSomeoneElseBoughtIt implements ShouldQueue
         $this->order->items
             ->each(function ($item) {
                 if ($item->listing->availableItems()->count() === 0) {
-                    $item
+                    $sql = $item
                         ->listing
                         ->offers()
                         ->where(function ($query) {
-                            $query->status('accepted');
-                        })
-                        ->orWhere(function ($query) {
-                            $query->status('countered');
-                        })
-                        ->orWhere(function ($query) {
-                            $query->status('counter_accepted');
-                        })
-                        ->orWhere(function ($query) {
-                            $query->status('pending');
+                            $query
+                                ->where(function ($query) {
+                                    $query->status('accepted');
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->status('countered');
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->status('counter_accepted');
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->status('pending');
+                                });
                         })
                         ->get()
                         ->each(function ($offer) {
                             $offer->reject();
                             Mail::queue(new SomeoneElseBoughtIt($offer));
-                        })
-                    ;
+                        });
                 }
             });
     }
