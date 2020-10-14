@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bid;
+use App\Events\BidReceivedEvent;
 use App\Models\Listing;
 use App\User;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class BidController extends Controller
         }
 
         $rules = [
-            'bid_amount' => 'required|gt:' . (string)($listing->current_bid() + 1),
+            'bid_amount' => 'required|gte:' . (string)($listing->current_bid() + 1),
         ];
         $this->validate($request, $rules);
 
@@ -52,7 +53,7 @@ class BidController extends Controller
             'is_accepted'   => 0,
         ]);
 
-        event(new BidReceived($bid));
+        event(new BidReceivedEvent($bid));
 
         return back()->with('success', trans('app.your_bid_posted'));
     }

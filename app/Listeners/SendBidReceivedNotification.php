@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\BidReceivedEvent;
+use App\Jobs\NotifyWatchersBidReceived;
 
 class SendBidReceivedNotification
 {

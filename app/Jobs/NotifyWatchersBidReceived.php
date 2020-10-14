@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Bid;
-use App\Mail\NotifyWatcherAuctionEnded;
+use App\Mail\NotifyWatcherBidReceived;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -46,7 +46,7 @@ class NotifyWatchersBidReceived implements ShouldQueue
             }
 
             Mail::to($watcher)
-                ->queue(new NotifyWatcherBidReceived($this->listing));
+                ->queue(new NotifyWatcherBidReceived($this->bid));
         }
     }
 }

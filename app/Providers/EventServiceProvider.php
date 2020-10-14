@@ -8,6 +8,7 @@ use App\Events\OfferCounterExpiredEvent;
 use App\Events\OfferExpiredEvent;
 use App\Listeners\RestoreOfferInventory;
 use App\Listeners\SendAuctionEndedNotification;
+use App\Listeners\SendBidReceivedNotification;
 use App\Listeners\SendCounterOfferExpiredNotification;
 use App\Listeners\SendOfferExpiredNotification;
 use Illuminate\Auth\Events\Registered;
