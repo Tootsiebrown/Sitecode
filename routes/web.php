@@ -201,6 +201,15 @@ Route::group(
                     ->name('delete');
             });
 
+        Route::prefix('auctions')
+            ->name('dashboard.auctions.')
+            ->middleware('privilege:Listings')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('AuctionsController@index');
+            });
+
         Route::prefix('bins')
             ->name('dashboard.bins.')
             ->middleware('privilege:Bins')

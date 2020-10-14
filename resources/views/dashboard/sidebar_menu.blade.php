@@ -30,6 +30,9 @@
                     {{--                        <li>  <a href="{{ route('admin_pending_ads') }}">@lang('app.pending_for_approval')</a> </li>--}}
                     {{--                    </ul>--}}
                 </li>
+                <li>
+                    <a href="{{ route('dashboard.auctions.index') }}"><i class="fa fa-hourglass"></i> Shop Auctions</a>
+                </li>
             @endif
 
             @if($lUser->hasPrivilege('Bins'))
