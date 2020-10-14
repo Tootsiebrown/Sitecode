@@ -58,6 +58,14 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-group {{ $errors->has('price')? 'has-error':'' }}">
+                                        <label for="price" class="col-sm-4 control-label"> <span class="ad_text"> Price </span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="price" value="{{ round(old('price') ?? $product->price, 2) }}" name="price" placeholder="Listing Price">
+                                            {!! $errors->has('price')? '<p class="help-block">'.$errors->first('price').'</p>':'' !!}
+                                        </div>
+                                    </div>
+
                                     <div class="listing-type-select" data-component="listing-type-select">
                                         <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                             <label for="type" class="col-sm-4 control-label">Listing Type</label>

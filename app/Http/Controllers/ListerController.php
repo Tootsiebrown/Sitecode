@@ -429,7 +429,8 @@ class ListerController extends Controller
             'bid_deadline' => 'required_if:type,auction',
             'product_id' => 'exists:products,id',
             'type' => 'required|in:auction,set-price',
-            'quantity' => 'integer|required_if:type,set-price'
+            'quantity' => 'integer|required_if:type,set-price',
+            'price' => 'required|numeric',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -460,7 +461,7 @@ class ListerController extends Controller
                 'features' => $product->features,
                 'brand_id' => $product->brand_id,
                 'upc' => $product->upc,
-                'price' => $product->price,
+                'price' => $request->input('price'),
                 'meta_description' => $product->meta_description,
                 'meta_keywords' => $product->meta_keywords,
                 'original_price' => $product->original_price,
