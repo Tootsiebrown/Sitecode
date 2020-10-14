@@ -48,6 +48,6 @@ class OfferIsPayable implements Rule
      */
     public function message()
     {
-        return 'This offer has not been accepted.';
+        return 'This offer has not been accepted, or it has expired.';
     }
 }
