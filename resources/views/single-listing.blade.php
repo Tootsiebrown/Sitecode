@@ -71,7 +71,8 @@
                     @if ($listing->is_auction)
                         @if($listing->is_bidding_active)
                             <p class="single-ad__time-limit">
-                                {{sprintf(trans('app.bid_deadline_info'), $listing->bid_deadline(), $listing->bid_deadline_left())}}
+                                Bid Deadline: {{$listing->bid_deadline() }}<br>
+                                Closes {{ $listing->bid_deadline_left() }}.
                             </p>
                         @else
                             <div class="alert alert-warning">

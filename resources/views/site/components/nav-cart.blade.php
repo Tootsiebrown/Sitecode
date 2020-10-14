@@ -17,7 +17,7 @@
                         </form>
                     </div>
                     <div class="nav-cart__item-details">
-                        <p>${{ $item->gross_unit_price }}</p>
+                        <p>{{ Currency::format($item->gross_unit_price) }}</p>
                         <p>Qty: {{ $item->quantity }}</p>
                     </div>
                 </li>

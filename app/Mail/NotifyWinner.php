@@ -41,6 +41,8 @@ class NotifyWinner extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.notify-winner');
+        return $this
+            ->subject('Catch\'n Dealz: You won!')
+            ->view('mail.notify-winner');
     }
 }
