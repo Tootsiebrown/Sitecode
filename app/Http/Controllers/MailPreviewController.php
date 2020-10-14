@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CounterOfferExpired;
 use App\Mail\NotifyNoWinner;
 use App\Mail\NotifyWinner;
 use App\Mail\OfferCountered;
+use App\Mail\OfferExpired;
 use App\Mail\OfferRejected;
 use App\Mail\OfferSubmitted;
 use App\Mail\OfferAccepted;
@@ -34,6 +36,8 @@ class MailPreviewController extends Controller
         'offer-accepted' => 'Offer Accepted',
         'offer-rejected' => 'Offer Rejected',
         'offer-countered' => 'Offer Countered',
+        'offer-expired' => 'Offer Expired',
+        'counter-offer-expired' => 'Counter Offer Expired',
     ];
 
     public function index()
@@ -149,5 +153,35 @@ class MailPreviewController extends Controller
         ]);
 
         return new OfferCountered($offer);
+    }
+
+    public function offerExpired()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+        ]);
+
+        return new OfferExpired($offer);
+    }
+
+    public function counterOfferExpired()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+            'counter_quantity' => 1,
+            'counter_price' => 55.50,
+        ]);
+
+        return new CounterOfferExpired($offer);
     }
 }

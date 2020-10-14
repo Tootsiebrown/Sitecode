@@ -76,6 +76,11 @@ class Offer extends Model
         }
     }
 
+    public function scopeExpirationEventNotFired(Builder $query)
+    {
+        return $query->where('expired_event_fired', false);
+    }
+
     public function listing()
     {
         return $this->belongsTo(Listing::class)->withoutGlobalScopes();

@@ -347,6 +347,12 @@ Route::group(
                         Route::get('offer-countered')
                             ->name('offerCountered')
                             ->uses('MailPreviewController@offerCountered');
+                        Route::get('offer-expired')
+                            ->name('offerExpired')
+                            ->uses('MailPreviewController@offerExpired');
+                        Route::get('counter-offer-expired')
+                            ->name('counterOfferExpired')
+                            ->uses('MailPreviewController@counterOfferExpired');
                     });
 
 
