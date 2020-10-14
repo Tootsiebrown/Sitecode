@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\OfferExpiredEvent;
+use App\Events\OfferCounterExpiredEvent;
 use App\Mail\CounterOfferExpired;
-use App\Mail\OfferExpired;
 use Illuminate\Support\Facades\Mail;
 
 class SendCounterOfferExpiredNotification
@@ -22,10 +21,10 @@ class SendCounterOfferExpiredNotification
     /**
      * Handle the event.
      *
-     * @param  OfferExpiredEvent  $event
+     * @param  OfferCounterExpiredEvent  $event
      * @return void
      */
-    public function handle(OfferExpiredEvent $event)
+    public function handle(OfferCounterExpiredEvent $event)
     {
         $offer = $event->offer;
 
