@@ -3,9 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\OfferExpiredEvent;
-use App\Mail\CounterOfferExpired;
-use App\Mail\OfferExpired;
-use Illuminate\Support\Facades\Mail;
+use App\Jobs\RestoreOfferInventory as RestoreOfferInventoryJob;
 
 class RestoreOfferInventory
 {
