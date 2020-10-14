@@ -6,13 +6,14 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default login-form">
                     <div class="panel-heading">
-                        @include('auth.login_register_nav')
+                        @include('auth.login_register_nav', ['back' => $back ?? null])
                     </div>
                     <div class="panel-body">
                         @include('dashboard.flash_msg')
 
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}" novalidate>
                             {{ csrf_field() }}
+                            <input type="hidden" name="back" value="{{ old('back', $back ?? null) }}">
 
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                 <label for="email" class="col-md-4 control-label">E-Mail Address</label>

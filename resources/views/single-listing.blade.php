@@ -61,12 +61,6 @@
                         </div>
                     @endif
 
-                    @if($listing->is_auction && ! auth()->check())
-                        <div class="alert alert-warning">
-                            <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
-                        </div>
-                    @endif
-
                     <div class="single-ad__condition">{{ $listing->condition }}</div>
                     @if ($listing->is_auction)
                         @if($listing->is_bidding_active)
@@ -110,7 +104,9 @@
 
                             @if($listing->type == 'auction' && ! auth()->check())
                                 <div class="alert alert-warning">
-                                    <i class="fa fa-exclamation-circle"></i> @lang('app.before_bidding_sign_in_info')
+                                    <i class="fa fa-exclamation-circle"></i>
+                                    You&rsquo;ll need to <a href="{{ route('login', ['back' => $listing->url]) }}">sign in</a>
+                                    or <a href="{{ route('register', ['back' => $listing->url]) }}">register</a> before bidding.',
                                 </div>
                             @else
                                 <form action="{{ route('post_bid', $listing->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
@@ -202,7 +198,7 @@
                                 </form>
                             @endif
                         @elseif ($listing->availableItems()->count() > 0)
-                            <p>Please <a href="{{ route('login') }}">Login</a> if you want to make an offer</p>
+                            <p>Please <a href="{{ route('login', ['back' => $listing->url]) }}">Login</a> if you want to make an offer</p>
                         @endif
                     @endif
                 </div>
@@ -212,7 +208,7 @@
                             <div class="alert alert-warning"> <i class="fa fa-warning"></i> @lang('app.ad_not_published_warning')</div>
                         @endif
                         @if( ! empty($listing->video_url))
-                            <?php
+                            @php
                             $video_url = safe_output($listing->video_url);
                             if (strpos($video_url, 'youtube') > 0) {
                                 preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $video_url, $matches);
@@ -227,7 +223,7 @@
                                     }
                                 }
                             }
-                            ?>
+                            @endphp
                         @else
                             <div class="ads-gallery">
                                 <div class="fotorama"  data-nav="thumbs" data-allowfullscreen="true" data-width="100%">
