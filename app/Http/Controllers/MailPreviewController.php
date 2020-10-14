@@ -10,6 +10,7 @@ use App\Mail\OfferExpired;
 use App\Mail\OfferRejected;
 use App\Mail\OfferSubmitted;
 use App\Mail\OfferAccepted;
+use App\Mail\SomeoneElseboughtIt;
 use App\Models\Listing;
 use App\Models\Offer;
 use App\Rules\AuctionIsPayable;
@@ -38,6 +39,7 @@ class MailPreviewController extends Controller
         'offer-countered' => 'Offer Countered',
         'offer-expired' => 'Offer Expired',
         'counter-offer-expired' => 'Counter Offer Expired',
+        'someone-else-bought-it' => 'Someone Else Bought It.',
     ];
 
     public function index()
@@ -183,5 +185,21 @@ class MailPreviewController extends Controller
         ]);
 
         return new CounterOfferExpired($offer);
+    }
+
+    public function someoneElseBoughtIt()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+            'counter_quantity' => 1,
+            'counter_price' => 55.50,
+        ]);
+
+        return new SomeoneElseboughtIt($offer);
     }
 }

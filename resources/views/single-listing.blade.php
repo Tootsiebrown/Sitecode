@@ -161,7 +161,7 @@
                         @endif
 
                         @if (Auth::check())
-                            @if (Auth::user()->offers()->forListing($listing)->count() > 0)
+                            @if ($alreadyHasOffer)
                                 <p>You already have an offer on this listing</p>
                                 @if (Auth::user()->hasAcceptedOfferOn($listing))
                                     <a href="{{ route('payForAcceptedOffer', ['id' => Auth::user()->offers()->where('listing_id', $listing->id)->status('accepted')->first()->id]) }}">Pay for it now</a>

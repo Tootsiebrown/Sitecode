@@ -37,6 +37,7 @@ return [
             \Wax\Shop\Listeners\OrderPlaced\CommitTaxListener::class,
             \Wax\Shop\Listeners\OrderPlaced\ProcessOrderListener::class,
             \App\Listeners\SendOrderToShipstation::class,
+            \App\Listeners\NotifyOfferorsSomeoneElseBoughtIt::class
         ],
     ],
 
