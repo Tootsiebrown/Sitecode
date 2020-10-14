@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\AuctionEndedEvent;
 use App\Events\AuctionEndingInOneHourEvent;
 use App\Jobs\NotifyWatchersAuctionEnded;
+use App\Jobs\NotifyWatchersAuctionEndingSoon;
 use App\Jobs\NotifyWinner;
 
 class SendAuctionEndingSoonNotification
