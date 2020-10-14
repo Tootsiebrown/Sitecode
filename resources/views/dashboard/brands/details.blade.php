@@ -51,9 +51,6 @@
                 Delete the Brand
             </button>
         </p>
-
-
-
     </form>
 
 @endsection

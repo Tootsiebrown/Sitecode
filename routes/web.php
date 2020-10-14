@@ -266,10 +266,10 @@ Route::group(
                     ->uses('CategoriesController@show');
                 Route::post('{id}')
                     ->name('save')
-                    ->uses('CategoriesController@save');
+                    ->uses('CategoriesController@update');
                 Route::delete('{id}')
                     ->name('delete')
-                    ->uses('CategoriesController@delete');
+                    ->uses('CategoriesController@destroy');
             });
 
         Route::prefix('brands')
