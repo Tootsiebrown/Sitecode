@@ -570,7 +570,32 @@ class AdsController extends Controller
         //Get Related Ads, add [->whereCountryId($listing->country_id)] for more specific results
         $relatedListings = collect(); //Ad::active()->whereCategoryId($listing->category_id)->where('id', '!=', $listing->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
 
-        return view('single-listing', compact('listing', 'title', 'relatedListings'));
+        return view('single-listing', [
+            'listing' => $listing,
+            'title' => $title,
+            'relatedListings' => $relatedListings,
+            'alreadyHasOffer' => $this->alreadyHasOfferOn($listing),
+        ]);
+    }
+
+    protected function alreadyHasOfferOn(Listing $listing)
+    {
+        if (! Auth::check()) {
+            return false;
+        }
+
+        $pendingCount = Auth::user()->offers()->forListing($listing)
+            ->status('pending')->count();
+        $acceptedCount = Auth::user()->offers()->forListing($listing)
+            ->status('accepted')->count();
+        $counterAcceptedCount = Auth::user()->offers()->forListing($listing)
+            ->status('counter_accepted')->count();
+
+        if ($pendingCount + $acceptedCount + $counterAcceptedCount > 0) {
+            return true;
+        }
+
+        return false;
     }
 
 //    public function switchGridListView(Request $request)

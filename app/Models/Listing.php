@@ -402,4 +402,9 @@ class Listing extends Model
             ->belongsToMany(User::class, 'favorites', 'user_id', 'listing_id' )
             ->withTimestamps();
     }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
 }

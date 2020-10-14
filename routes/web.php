@@ -356,6 +356,15 @@ Route::group(
                         Route::get('auction-ending')
                             ->name('auctionEnding')
                             ->uses('MailPreviewController@notifyWatcherAuctionEndingSoon');
+                        Route::get('offer-expired')
+                            ->name('offerExpired')
+                            ->uses('MailPreviewController@offerExpired');
+                        Route::get('counter-offer-expired')
+                            ->name('counterOfferExpired')
+                            ->uses('MailPreviewController@counterOfferExpired');
+                        Route::get('someone-else-bought-it')
+                            ->name('someoneElseBoughtIt')
+                            ->uses('MailPreviewController@someoneElseBoughtIt');
                     });
 
 

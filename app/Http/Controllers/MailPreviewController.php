@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Bid;
+use App\Mail\CounterOfferExpired;
 use App\Mail\NotifyNoWinner;
 use App\Mail\NotifyWatcherAuctionEnded;
 use App\Mail\NotifyWatcherAuctionEndingSoon;
 use App\Mail\NotifyWatcherBidReceived;
 use App\Mail\NotifyWinner;
 use App\Mail\OfferCountered;
+use App\Mail\OfferExpired;
 use App\Mail\OfferRejected;
 use App\Mail\OfferSubmitted;
 use App\Mail\OfferAccepted;
+use App\Mail\SomeoneElseboughtIt;
 use App\Models\Listing;
 use App\Models\Offer;
 use App\Rules\AuctionIsPayable;
@@ -41,6 +44,9 @@ class MailPreviewController extends Controller
         'watcher-ended' => 'Notify Watcher Auction Ended',
         'bid-received' => 'Notify Watcher Bid Received',
         'auction-ending' => 'Notify Watcher Auction Ending Soon',
+        'offer-expired' => 'Offer Expired',
+        'counter-offer-expired' => 'Counter Offer Expired',
+        'someone-else-bought-it' => 'Someone Else Bought It.',
     ];
 
     public function index()
@@ -179,5 +185,51 @@ class MailPreviewController extends Controller
             ->first();
 
         return new NotifyWatcherAuctionEndingSoon($listing);
+    }
+
+    public function offerExpired()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+        ]);
+
+        return new OfferExpired($offer);
+    }
+
+    public function counterOfferExpired()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+            'counter_quantity' => 1,
+            'counter_price' => 55.50,
+        ]);
+
+        return new CounterOfferExpired($offer);
+    }
+
+    public function someoneElseBoughtIt()
+    {
+        $listing = Listing::first();
+        $offer = new Offer([
+            'listing_id' => $listing->id,
+            'user_id' => Auth::user()->id,
+            'quantity' => 2,
+            'price' => 49.99,
+            'id' => 5,
+            'counter_quantity' => 1,
+            'counter_price' => 55.50,
+        ]);
+
+        return new SomeoneElseboughtIt($offer);
     }
 }
