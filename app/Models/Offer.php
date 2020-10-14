@@ -140,7 +140,7 @@ class Offer extends Model
             $this->responded_at = Carbon::now()->toDateTimeString();
             $this->response = 'accepted';
             $this->save();
-        });
+        }, 3);
     }
 
     public function reject()
@@ -152,11 +152,22 @@ class Offer extends Model
 
     public function counter(array $input)
     {
-        $this->counter_quantity = $input['counter_quantity'];
-        $this->counter_price = $input['counter_price'];
-        $this->response = 'countered';
-        $this->responded_at = Carbon::now()->toDateTimeString();
-        $this->save();
+        DB::transaction(function () use ($input) {
+            $numberOfRowsAffected = $this
+                ->listing->items()->available()
+                ->limit($this->quantity)
+                ->update(['reserved_for_offer_id' => $this->id]);
+
+            if ($numberOfRowsAffected !== $this->quantity) {
+                throw ValidationException::withMessages(['error' => 'Insufficient Inventory for ' . $this->listing->title]);
+            }
+
+            $this->counter_quantity = $input['counter_quantity'];
+            $this->counter_price = $input['counter_price'];
+            $this->response = 'countered';
+            $this->responded_at = Carbon::now()->toDateTimeString();
+            $this->save();
+        }, 3);
     }
 
     public function customerAccept()
@@ -174,7 +185,7 @@ class Offer extends Model
             $this->counter_responded_at = Carbon::now()->toDateTimeString();
             $this->counter_accepted = 1;
             $this->save();
-        });
+        }, 3);
     }
 
     public function customerReject()
