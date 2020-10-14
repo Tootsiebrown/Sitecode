@@ -3,16 +3,12 @@
 namespace Tests\Unit;
 
 use App\Bid;
-use App\Jobs\NotifyWatchers;
-use App\Jobs\NotifyWinner;
-use App\Mail\NotifyNoWinner as NotifyNoWinnerEmail;
+use App\Jobs\NotifyWatchersAuctionEnded;
 use App\Mail\NotifyWatcherAuctionEnded;
-use App\Mail\NotifyWinner as NotifyWinnerEmail;
 use App\Models\Listing;
 use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Services\ShopService;
 
@@ -46,7 +42,7 @@ class NotifyWatchersTest extends WaxAppTestCase
 
         $listing->watchers()->attach($watcher->id);
 
-        (new NotifyWatchers($listing))->handle();
+        (new NotifyWatchersAuctionEnded($listing))->handle();
 
         Mail::assertQueued(NotifyWatcherAuctionEnded::class, function ($mail) use ($listing, $watcher) {
             return $mail->listing->id === $listing->id

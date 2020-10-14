@@ -36,7 +36,7 @@ class WinnerNotificationTest extends WaxAppTestCase
 
         (new SendAuctionEndedNotification())->handle(new AuctionEndedEvent($listing));
 
-        Queue::assertPushed(NotifyWatchers::class, function ($job) use ($listing) {
+        Queue::assertPushed(NotifyWinner::class, function ($job) use ($listing) {
             return $job->listing->id === $listing->id;
         });
     }

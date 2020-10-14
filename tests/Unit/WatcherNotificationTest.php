@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Events\AuctionEndedEvent;
-use App\Jobs\NotifyWatchers;
+use App\Jobs\NotifyWatchersAuctionEnded;
 use App\Listeners\SendAuctionEndedNotification;
 use App\Models\Listing;
 use Illuminate\Support\Carbon;
@@ -36,7 +36,7 @@ class WatcherNotificationTest extends WaxAppTestCase
 
         (new SendAuctionEndedNotification())->handle(new AuctionEndedEvent($listing));
 
-        Queue::assertPushed(NotifyWatchers::class, function ($job) use ($listing) {
+        Queue::assertPushed(NotifyWatchersAuctionEnded::class, function ($job) use ($listing) {
             return $job->listing->id === $listing->id;
         });
     }
