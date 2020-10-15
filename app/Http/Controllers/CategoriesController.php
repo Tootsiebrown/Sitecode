@@ -3,24 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\ProductCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
-     *
      * parent categories
      */
     public function index()
     {
-        $title = trans('app.categories');
-        $categories = Category::orderBy('category_name', 'asc')->get();
-
-        return view('dashboard.categories', compact('title', 'categories'));
+        return view('dashboard.categories.index', [
+            'title' => trans('app.categories'),
+            'categories' => ProductCategory::with(['listings', 'products', 'children'])->top()->orderBy('name', 'asc')->get()
+        ]);
     }
 
     /**
@@ -39,93 +40,92 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $rules = [
-            'category_name' => 'required'
-        ];
-        $this->validate($request, $rules);
-        $slug = str_slug($request->category_name);
-
-        $data = [
-            'category_name' => $request->category_name,
-            'category_slug' => $slug,
-            'description'   => $request->description,
-            'category_type'   => 'auction',
-        ];
-
-        Category::create($data);
-        return back()->with('success', trans('app.category_created'));
-    }
+//    public function store(Request $request)
+//    {
+//        $rules = [
+//            'category_name' => 'required'
+//        ];
+//        $this->validate($request, $rules);
+//        $slug = str_slug($request->category_name);
+//
+//        $data = [
+//            'category_name' => $request->category_name,
+//            'category_slug' => $slug,
+//            'description'   => $request->description,
+//            'category_type'   => 'auction',
+//        ];
+//
+//        Category::create($data);
+//        return back()->with('success', trans('app.category_created'));
+//    }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id = null)
+    public function show($id)
     {
-        $title = trans('app.categories');
-        $is_category_single = false;
-        if ($id) {
-            $category = Category::find($id);
-            if ($category) {
-                $title = $category->category_name;
-                $is_category_single = true;
+        $category = ProductCategory::findOrFail($id);
+
+        $breadcrumb = $category->name;
+        if ($category->parent) {
+            $parent = $category->parent;
+            $breadcrumb = $parent->name . '>' . $breadcrumb;
+            if ($parent->parent) {
+                $grandparent = $parent->parent;
+                $breadcrumb = $grandparent->name . '>' . $breadcrumb;
             }
         }
 
-
-        $top_categories = Category::whereCategoryId(0)->orderBy('category_name', 'asc')->get();
-        return view('categories', compact('top_categories', 'title', 'category', 'id', 'is_category_single'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $title = trans('app.edit_category');
-        $edit_category = Category::find($id);
-
-        if (! $edit_category) {
-            return redirect(route('parent_categories'))->with('error', trans('app.request_url_not_found'));
+        if ($category->parent_id === 0) {
+            $peerCategories = ProductCategory::where('parent_id', 0)
+                ->where('id', '!=', $category->id)
+                ->orderBy('name')
+                ->get();
+        } else {
+            $peerCategories = $category->parent->children()->where('id', '!=', $category->id)->orderBy('name')->get();
         }
 
-        return view('dashboard.edit_category', compact('title', 'categories', 'edit_category'));
+        return view('dashboard.categories.details', [
+            'category' => $category,
+            'children' => $category->children()->with('listings', 'products', 'children')->get(),
+            'peerCategories' => $peerCategories,
+            'breadcrumb' => $breadcrumb,
+        ]);
     }
+
+
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $rules = [
-            'category_name' => 'required'
+            'name' => 'required'
         ];
         $this->validate($request, $rules);
 
-        $slug = str_slug($request->category_name);
+        $category = ProductCategory::find($id);
 
-        $duplicate = Category::where('category_slug', $slug)->where('id', '!=', $id)->count();
+        $duplicate = ProductCategory::where('id', '!=', $id)
+            ->where('parent_id', $category->parent_id)
+            ->where('name', $request->input('name'))
+            ->count();
+
         if ($duplicate > 0) {
-            return back()->with('error', trans('app.category_exists_in_db'));
+            return back()->with('error', 'Another category of the same name exists under the same parent category. No duplicate categories allowed');
         }
 
         $data = [
-            'category_name' => $request->category_name,
-            'category_slug' => $slug,
-            'description'   => $request->description,
+            'name' => $request->input('name'),
+            'url_slug' => Str::slug($request->input('name')),
         ];
-        Category::where('id', $id)->update($data);
+        ProductCategory::where('id', $id)->update($data);
 
         return back()->with('success', trans('app.category_updated'));
     }
@@ -134,16 +134,51 @@ class CategoriesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $id = $request->data_id;
+        $category = ProductCategory::findOrFail($id);
 
-        $delete = Category::where('id', $id)->delete();
-        if ($delete) {
-            return ['success' => 1, 'msg' => trans('app.category_deleted_success')];
+        if ($request->input('delete') === 'delete_only') {
+            $delete = ProductCategory::where('id', $id)->delete();
+            if ($delete) {
+                return redirect()
+                    ->route('dashboard.categories.index')
+                    ->with('success', trans('app.category_deleted_success'));
+            }
+
+            return redirect()
+                ->back()
+                ->with('error', trans('app.error_msg'));
+        } else if ($request->input('delete') === 'delete_and_move') {
+
+            DB::transaction(function () use ($category, $request) {
+                $toCategory = ProductCategory::findOrFail($request->input('move_to'));
+
+                $category
+                    ->products
+                    ->each(function ($product) use ($category, $toCategory) {
+                        $product->categories()->detach($category->id);
+                        $product->categories()->attach($toCategory->id);
+                    });
+
+                $category
+                    ->listings
+                    ->each(function ($listing) use ($category, $toCategory) {
+                        $listing->categories()->detach($category->id);
+                        $listing->categories()->attach($toCategory->id);
+                    });
+
+                $category->children()->update(['parent_id' => $toCategory->id]);
+
+                $category->delete();
+            }, 3);
+
+            return redirect()
+                ->route('dashboard.categories.index')
+                ->with('success', 'Category deleted, and relations moved.');
         }
-        return ['success' => 0, 'msg' => trans('app.error_msg')];
+
+        throw new \Exception('No delete logic for input data');
     }
 }

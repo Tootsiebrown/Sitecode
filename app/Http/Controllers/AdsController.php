@@ -504,16 +504,16 @@ class AdsController extends Controller
 
         $filterOptions = $this->repo->getFilterOptions();
 
-        $brand = null;
-        if (request('brand')) {
-            $brand = Brand::find(request('brand'));
-        }
+//        $brand = null;
+//        if (request('brand')) {
+//            $brand = Brand::find(request('brand'));
+//        }
 
         return view('pages.search', [
             'listings' => $paginatedListings,
             'filterOptions' => $filterOptions,
             'filterValues' => $this->getFilterValuesFromRequest($request),
-            'brand' => $brand,
+//            'brand' => $brand,
             'title' => 'Search Results'
         ]);
 

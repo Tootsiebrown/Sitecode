@@ -33,4 +33,13 @@
 
 form.form-horizontal {
     margin-bottom: 24px;
+
+    hr {
+        border-top-color: $color-brown;
+    }
+
+    p.delete-or-move {
+        margin-top: 48px;
+        margin-bottom: 48px;
+    }
 }
