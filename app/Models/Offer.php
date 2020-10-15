@@ -190,9 +190,17 @@ class Offer extends Model
 
     public function customerReject()
     {
-        $this->counter_responded_at = Carbon::now()->toDateTimeString();
-        $this->counter_accepted = 0;
-        $this->save();
+        DB::transaction(function () {
+            $this
+                ->listing
+                ->items()
+                ->reservedForOffer($this->id)
+                ->update(['reserved_for_offer_id' => null]);
+
+            $this->counter_responded_at = Carbon::now()->toDateTimeString();
+            $this->counter_accepted = 0;
+            $this->save();
+        });
     }
 
     public function markPurchased()
