@@ -13,7 +13,11 @@
         </tr>
         @foreach ($listings as $listing)
             <tr>
-                <td>{{ $listing->title }}</td>
+                <td>
+                    <a href="{{ $listing->url }}">
+                        {{ $listing->title }}
+                    </a>
+                </td>
                 <td>{{ $listing->expired_at->format('Y-m-d H:i') }}</td>
                 <td>{{ $listing->bids->count() }}</td>
                 <td>
