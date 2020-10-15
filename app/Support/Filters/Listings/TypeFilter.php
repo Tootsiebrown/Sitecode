@@ -32,24 +32,26 @@ class TypeFilter extends Filter
             ->whereIn('id', $possibilities);
         $possibleSetPrice = Listing::where('type', 'set-price')
             ->whereIn('id', $possibilities);
+        $possibleAuctionsCount = $possibleAuctions->count();
+        $possibleSetPriceCount = $possibleSetPrice->count();
 
         return [
             new FilterOption(
                 'Auction',
                 'auction',
                 [
-                    'count' => $possibleAuctions->count(),
+                    'count' => $possibleAuctionsCount,
                 ],
-                $possibleAuctions->count() === 0,
+                $possibleAuctionsCount === 0,
                 $this->value === 'auction'
             ),
             new FilterOption(
                 'Set Price',
                 'set-price',
                 [
-                    'count' => $possibleSetPrice->count(),
+                    'count' => $possibleSetPriceCount,
                 ],
-                $possibleSetPrice->count() === 0,
+                $possibleSetPriceCount === 0,
                 $this->value === 'set-price',
             )
         ];

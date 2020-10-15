@@ -52,6 +52,18 @@
                 </li>
             @endif
 
+            @if ($lUser->hasPrivilege('Categories'))
+                <li>
+                    <a href="{{ route('dashboard.categories.index') }}"><i class="fa fa-folder"></i> Categories</a>
+                </li>
+            @endif
+
+            @if ($lUser->hasPrivilege('Brands'))
+                <li>
+                    <a href="{{ route('dashboard.brands.index') }}"><i class="fa fa-registered"></i> Brands</a>
+                </li>
+            @endif
+
             <li>
                 <a href="{{ route('dashboard.auction-activity') }}">
                     <i class="fa fa-hourglass"></i>

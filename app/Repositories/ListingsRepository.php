@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ListingsRepository extends BaseFilterableRepository
 {
+    protected $with = ['images'];
+
     public function getQuery($unfiltered = false): Builder
     {
         $query = !empty($this->with)
