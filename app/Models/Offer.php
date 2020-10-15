@@ -200,7 +200,7 @@ class Offer extends Model
             $this->counter_responded_at = Carbon::now()->toDateTimeString();
             $this->counter_accepted = 0;
             $this->save();
-        });
+        }, 3);
     }
 
     public function markPurchased()
