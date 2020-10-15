@@ -151,7 +151,6 @@ class CategoriesController extends Controller
                 ->back()
                 ->with('error', trans('app.error_msg'));
         } else if ($request->input('delete') === 'delete_and_move') {
-
             DB::transaction(function () use ($category, $request) {
                 $toCategory = ProductCategory::findOrFail($request->input('move_to'));
 
