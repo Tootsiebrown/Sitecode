@@ -57,6 +57,7 @@
                             </form>
                         </span>
                     </div>
+                    @include('site.components.field-error', ['field' => 'inventory'])
                 </td>
             </tr>
         @endif
