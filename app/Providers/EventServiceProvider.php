@@ -3,10 +3,14 @@
 namespace App\Providers;
 
 use App\Events\AuctionEndedEvent;
+use App\Events\AuctionEndingInOneHourEvent;
+use App\Events\BidReceivedEvent;
 use App\Events\OfferCounterExpiredEvent;
 use App\Events\OfferExpiredEvent;
 use App\Listeners\RestoreOfferInventory;
 use App\Listeners\SendAuctionEndedNotification;
+use App\Listeners\SendAuctionEndingSoonNotification;
+use App\Listeners\SendBidReceivedNotification;
 use App\Listeners\SendCounterOfferExpiredNotification;
 use App\Listeners\SendOfferExpiredNotification;
 use Illuminate\Auth\Events\Registered;
@@ -28,6 +32,9 @@ class EventServiceProvider extends ServiceProvider
         AuctionEndedEvent::class => [
             SendAuctionEndedNotification::class,
         ],
+        BidReceivedEvent::class => [
+            SendBidReceivedNotification::class,
+        ],
         OfferExpiredEvent::class => [
             SendOfferExpiredNotification::class,
             RestoreOfferInventory::class,
@@ -35,7 +42,10 @@ class EventServiceProvider extends ServiceProvider
         OfferCounterExpiredEvent::class => [
             SendCounterOfferExpiredNotification::class,
             RestoreOfferInventory::class,
-        ]
+        ],
+        AuctionEndingInOneHourEvent::class => [
+            SendAuctionEndingSoonNotification::class,
+        ],
     ];
 
     /**

@@ -397,8 +397,8 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        $slug = $request->slug;
-        $listing = Listing::whereSlug($slug)->first();
+        $id = $request->input('id');
+        $listing = Listing::where('id', $id)->first();
 
         if ($listing) {
             $existingFavorite = Favorite::where('user_id', $user->id)->where('listing_id', $listing->id)->first();

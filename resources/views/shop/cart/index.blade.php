@@ -39,6 +39,8 @@
                                     <p>${{ $item->gross_unit_price }}</p>
                                     @if ($item->offer)
                                         <i>Cannot change the quantity of an accepted offer.</i>
+                                    @elseif ($item->listing->is_auction)
+                                        <i>Cannot change the quantity of an auction.</i>
                                     @else
                                         <form class="cart-quantity-form" data-component="cart-item-quantity" method="POST" action="{{ route('shop.cart.update') }}">
                                             @csrf

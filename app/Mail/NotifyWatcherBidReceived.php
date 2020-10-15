@@ -2,36 +2,30 @@
 
 namespace App\Mail;
 
-use App\Models\Listing;
-use App\User;
+use App\Bid;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NotifyWinner extends Mailable
+class NotifyWatcherBidReceived extends Mailable
 {
     use Queueable;
     use SerializesModels;
 
     /**
-     * @var Listing
+     * @var Bid
      */
-    public Listing $listing;
-
-    /**
-     * @var User
-     */
-    public User $user;
+    public Bid $bid;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Listing $listing, User $user)
+    public function __construct(Bid $bid)
     {
-        $this->listing = $listing;
-        $this->user = $user;
+        $this->bid = $bid;
     }
 
     /**
@@ -42,7 +36,7 @@ class NotifyWinner extends Mailable
     public function build()
     {
         return $this
-            ->subject('Catch\'n Dealz: You won!')
-            ->view('mail.notify-winner');
+            ->subject('Catch\'n Dealz: New Bid on an Auction You\'re Watcing')
+            ->view('mail.notify-watcher-bid-received');
     }
 }
