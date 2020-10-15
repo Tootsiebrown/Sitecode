@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ProcessAuctionsEndingInOneHour;
 use App\Console\Commands\ProcessEndedAuctions;
 use App\Console\Commands\ProcessExpiredOffers;
 use Illuminate\Console\Scheduling\Schedule;
@@ -30,6 +31,9 @@ class Kernel extends ConsoleKernel
             ->weekly();
 
          $schedule->command(ProcessEndedAuctions::class)
+             ->everyMinute();
+
+         $schedule->command(ProcessAuctionsEndingInOneHour::class)
              ->everyMinute();
 
          $schedule->command(ProcessExpiredOffers::class)

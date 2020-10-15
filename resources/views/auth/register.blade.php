@@ -6,7 +6,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default register-form">
                 <div class="panel-heading">
-                    @include('auth.login_register_nav')
+                    @include('auth.login_register_nav', ['back' => $back ?? null])
                 </div>
                 <div class="panel-body">
 
@@ -14,6 +14,7 @@
 
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
+                        <input type="hidden" name="back" value="{{ old('back', $back ?? null) }}">
 
                         <div class="form-group{{ $errors->has('firstName') ? ' has-error' : '' }}">
                             <label for="firstName" class="col-md-4 control-label">@lang('app.first_name')</label>

@@ -35,7 +35,7 @@
             class="listing-boxes__listing-bottom listing-boxes__listing-watch"
             href="#"
             data-component="watch-listing"
-            data-slug="{{ $listing->slug }}"
+            data-id="{{ $listing->id }}"
         >
             @if( ! $listing->is_my_favorite())
                 @lang('app.save_ad_as_favorite') <i class="fa fa-eye"></i>

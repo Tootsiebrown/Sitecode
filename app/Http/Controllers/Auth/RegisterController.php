@@ -30,7 +30,6 @@ class RegisterController extends Controller
      * Handle a registration request for the application.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function register(Request $request)
     {
@@ -55,7 +54,18 @@ class RegisterController extends Controller
         $this->guard()->login($user);
 
         return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+            ?: redirect($request->input('back', $this->redirectPath()));
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     */
+    public function showRegistrationForm(Request $request)
+    {
+        return view('auth.register', [
+            'back' => $request->input('back'),
+        ]);
     }
 
     /**

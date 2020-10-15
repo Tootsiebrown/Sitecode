@@ -3,10 +3,12 @@
 namespace App\Listeners;
 
 use App\Events\AuctionEndedEvent;
+use App\Events\AuctionEndingInOneHourEvent;
 use App\Jobs\NotifyWatchersAuctionEnded;
+use App\Jobs\NotifyWatchersAuctionEndingSoon;
 use App\Jobs\NotifyWinner;
 
-class SendAuctionEndedNotification
+class SendAuctionEndingSoonNotification
 {
     /**
      * Create the event listener.
@@ -24,11 +26,10 @@ class SendAuctionEndedNotification
      * @param  AuctionEndedEvent  $event
      * @return void
      */
-    public function handle(AuctionEndedEvent $event)
+    public function handle(AuctionEndingInOneHourEvent $event)
     {
         $listing = $event->listing;
 
-        NotifyWinner::dispatch($listing);
-        NotifyWatchersAuctionEnded::dispatch($listing);
+        NotifyWatchersAuctionEndingSoon::dispatch($listing);
     }
 }

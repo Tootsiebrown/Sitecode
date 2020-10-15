@@ -55,12 +55,14 @@ class OfferSubmitted extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.offer-submitted', [
-            'offer' => $this->offer,
-            'listing' => $this->listing,
-            'quantity' => $this->quantity,
-            'price' => $this->price,
-            'user' => $this->user,
-        ]);
+        return $this
+            ->subject('Catch\'n Dealz: New offer submitted.')
+            ->view('mail.offer-submitted', [
+                'offer' => $this->offer,
+                'listing' => $this->listing,
+                'quantity' => $this->quantity,
+                'price' => $this->price,
+                'user' => $this->user,
+            ]);
     }
 }

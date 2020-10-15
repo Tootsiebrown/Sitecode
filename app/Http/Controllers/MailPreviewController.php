@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Bid;
 use App\Mail\CounterOfferExpired;
 use App\Mail\NotifyNoWinner;
+use App\Mail\NotifyWatcherAuctionEnded;
+use App\Mail\NotifyWatcherAuctionEndingSoon;
+use App\Mail\NotifyWatcherBidReceived;
 use App\Mail\NotifyWinner;
 use App\Mail\OfferCountered;
 use App\Mail\OfferExpired;
@@ -37,6 +41,9 @@ class MailPreviewController extends Controller
         'offer-accepted' => 'Offer Accepted',
         'offer-rejected' => 'Offer Rejected',
         'offer-countered' => 'Offer Countered',
+        'watcher-ended' => 'Notify Watcher Auction Ended',
+        'bid-received' => 'Notify Watcher Bid Received',
+        'auction-ending' => 'Notify Watcher Auction Ending Soon',
         'offer-expired' => 'Offer Expired',
         'counter-offer-expired' => 'Counter Offer Expired',
         'someone-else-bought-it' => 'Someone Else Bought It.',
@@ -155,6 +162,29 @@ class MailPreviewController extends Controller
         ]);
 
         return new OfferCountered($offer);
+    }
+
+    public function notifyWatcherAuctionEnded()
+    {
+        $listing = Listing::typeIsAuction()
+            ->first();
+
+        return new NotifyWatcherAuctionEnded($listing);
+    }
+
+    public function notifyWatcherBidReceived()
+    {
+        $bid = Bid::first();
+
+        return new NotifyWatcherBidReceived($bid);
+    }
+
+    public function notifyWatcherAuctionEndingSoon()
+    {
+        $listing = Listing::typeIsAuction()
+            ->first();
+
+        return new NotifyWatcherAuctionEndingSoon($listing);
     }
 
     public function offerExpired()

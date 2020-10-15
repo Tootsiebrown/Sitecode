@@ -222,7 +222,7 @@ class Listing extends Model
     {
         if ($this->expired_at) {
             $dt = Carbon::createFromTimestamp(strtotime($this->expired_at));
-            $deadline = $dt->timezone(get_option('default_timezone'))->format(get_option('date_format_custom'));
+            $deadline = $dt->timezone(get_option('default_timezone'))->format('F j, Y \a\t g:ia T');
             return $deadline;
         }
         return false;
@@ -394,6 +394,13 @@ class Listing extends Model
         if (!$this->bids->isEmpty() && $this->winning_bid->bid_amount > $this->price) {
             return $this->winning_bid->user;
         }
+    }
+
+    public function watchers()
+    {
+        return $this
+            ->belongsToMany(User::class, 'favorites', 'listing_id', 'user_id')
+            ->withTimestamps();
     }
 
     public function offers()

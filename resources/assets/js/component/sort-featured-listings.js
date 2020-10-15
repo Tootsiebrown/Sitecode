@@ -13,8 +13,8 @@ export default class SortFeaturedListings {
             itemSerializer: this.serializer,
         });
 
-        sortable(this.element)[0].addEventListener('sortstart', this.sortStart)
         sortable(this.element)[0].addEventListener('sortupdate', this.sortUpdate)
+        this.sortUpdate()
     }
 
     serializer = (item, container) => {
@@ -22,10 +22,6 @@ export default class SortFeaturedListings {
             position: item.index +1,
             id: $(item.node).data('id')
         }
-    }
-
-    sortStart = (e) => {
-        this.$input.val(JSON.stringify(sortable(this.element, 'serialize')[0].items));
     }
 
     sortUpdate = (e) => {
