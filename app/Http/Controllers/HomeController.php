@@ -46,7 +46,7 @@ class HomeController extends Controller
                     'title' => 'Shoes',
                     'caption' => 'Get ready for Fall with great Dealz on boots and shoes for the whole family!',
                     'cta' => 'View Shoes',
-                    'link' => '/search?category=325',
+                    'link' => '/search?category=1449',
                     'background_image' => '/assets/img/slider/HikingGearBackground.jpg',
                     'image' => '/assets/img/slider/HikingShoes.png',
                 ],
