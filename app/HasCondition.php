@@ -5,17 +5,17 @@ namespace App;
 trait HasCondition
 {
     protected static $conditions = [
-        'Sealed - New',
+        'Sealed',
         'Sealed - Damaged Package',
 
-        'Open - New',
-        'Open - Damaged or no Package',
+        'Open',
+        'Open - Damaged Package',
 
-        'New with tags',
-        'New without tags',
+        'With Tags',
+        'Without Tags',
 
         'Used',
-        'Used - Damaged or no Package',
+        'Used Damaged Package / Missing Package',
     ];
 
     public static function getConditions()
