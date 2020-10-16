@@ -10,7 +10,13 @@
                   href="#modal-product-details-{{ $product->id }}"
                   data-element="modalTrigger"
                 >{{ $product-> name }} <i class="fa fa-info-circle"></i></a>
-                <p>Product SKU: {{ $product->id }}</p>
+                <p>
+                    Product SKU: {{ $product->id }}
+                    <b>|</b> Condition: {{ $product->condition }}
+                    @if ($product->size)
+                        <b>|</b> Size: {{ $product->size }}
+                    @endif
+                </p>
                 <hr />
 
                 <ul class="product-suggestion__actions">
