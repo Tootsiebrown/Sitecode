@@ -70,6 +70,7 @@ class SyncShipmentShipped implements ShouldQueue
             $orderShipment = $order->default_shipment;
             $orderShipment->shipped_at = $shippedAt;
             $orderShipment->tracking_number = $shipment->trackingNumber;
+            $orderShipment->save();
 
             Mail::to($order->email)
                 ->queue(new OrderShipped($order));

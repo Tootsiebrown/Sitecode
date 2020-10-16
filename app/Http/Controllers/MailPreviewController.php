@@ -82,7 +82,7 @@ class MailPreviewController extends Controller
 
     public function orderShipped()
     {
-        return new OrderShipped(Order::placed()->first());
+        return new OrderShipped(Order::shipped()->first());
     }
 
     public function auctionEndedNoWinner()

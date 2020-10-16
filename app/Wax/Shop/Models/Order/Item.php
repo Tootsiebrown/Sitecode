@@ -64,7 +64,7 @@ class Item extends WaxItem
 
     public function getUrlAttribute(): ?string
     {
-        return $this->listing->url;
+        return $this->listing->url ?? '';
     }
 
     public function getNameAttribute($value): string
