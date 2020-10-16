@@ -63,6 +63,10 @@ class NotifyOfferorsSomeoneElseBoughtIt implements ShouldQueue
                         })
                         ->get()
                         ->each(function ($offer) {
+                            if ($offer->user_id === $this->order->user_id) {
+                                return;
+                            }
+
                             $offer->reject();
                             Mail::queue(new SomeoneElseBoughtIt($offer));
                         });
