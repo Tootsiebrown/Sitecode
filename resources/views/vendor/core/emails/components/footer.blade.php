@@ -2,7 +2,7 @@
     <tbody>
     <tr>
         <td align="center">
-              <p>&copy; {{ date('Y') . ' ' . config('app.name') }}, All Rights Reserved</p>
+            <p>&copy; {{ date('Y') . ' ' . config('app.name') }}, All Rights Reserved</p>
         </td>
     </tr>
     </tbody>
