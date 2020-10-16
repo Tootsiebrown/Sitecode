@@ -76,7 +76,7 @@ class ShopServiceProvider extends WaxShopServiceProvider
             StripeClient::class,
             function ($app) {
                 return new StripeClient(
-                    config('services.stripe.secret')
+                    config('wax.shop.payment.drivers.stripe.secret_key')
                 );
             }
         );
