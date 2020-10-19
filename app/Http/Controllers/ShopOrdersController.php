@@ -92,6 +92,8 @@ class ShopOrdersController extends Controller
                         ->with('error', 'Order must be processed to be marked as shipped.');
                 }
 
+                $order->shipped_at = Carbon::now()->toDateTimeString();
+                $order->save();
                 $order->default_shipment->shipped_at = Carbon::now()->toDateTimeString();
                 $order->default_shipment->save();
                 break;
