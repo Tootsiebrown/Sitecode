@@ -11,7 +11,13 @@
                   data-element="modalTrigger"
                 >{{ $listing->title }} <i class="fa fa-info-circle"></i></a>
                 <p>Listing SKU: {{ $listing->id }}</p>
-                <p>Product SKU: {{ $listing->product_id }}</p>
+                <p>
+                    Product SKU: {{ $listing->product_id }}
+                    <b>|</b> Condition: {{ $listing->condition }}
+                    @if ($listing->size)
+                        <b>|</b> Size: {{ $listing->size }}
+                    @endif
+                </p>
                 <hr />
 
                 <ul class="listing-results__actions">

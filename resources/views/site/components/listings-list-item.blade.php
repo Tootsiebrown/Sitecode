@@ -9,7 +9,13 @@
 
     <div class="listing-boxes__listing-title">
         <a class="" href="{{ route('single_ad', [$listing->id, $listing->slug]) }}" title="{{ $listing->title }}">
-            {{ str_limit($listing->title, 40) }}
+            {{ $listing->title }}
+
+            <br><br>
+            Condition: {{ $listing->condition }}
+            @if ($listing->size)
+                <br>Size: {{ $listing->size }}
+            @endif
         </a>
     </div>
 
