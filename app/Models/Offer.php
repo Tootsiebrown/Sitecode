@@ -38,6 +38,10 @@ class Offer extends Model
                 return $query
                     ->where('responded_at', '<', Carbon::now()->subHours(24)->toDateTimeString())
                     ->where('response', 'countered')
+                    ->where(function ($query) {
+                        $query->orWhere('counter_accepted', true)
+                            ->orWhereNull('counter_accepted');
+                    })
                     ->whereNull('purchased_at');
                 break;
             case 'countered':
@@ -54,7 +58,7 @@ class Offer extends Model
                 break;
             case 'counter_rejected':
                 return $query
-                    ->where('counter_rejected', true);
+                    ->where('counter_accepted', false);
                 break;
             case 'expired':
                 return $query
