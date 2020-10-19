@@ -41,12 +41,15 @@
 
                         <div data-element="shipmentBillingInfo" class="hidden">
                             <p>
-                                {{ $shipment->firstname }} {{ $shipment->lastname }}<br>
-                                {{ $shipment->address1 }}<br>
+                                <span data-shipping-info="first-name">{{ $shipment->firstname }}</span>
+                                <span data-shipping-info="last-name">{{ $shipment->lastname }}</span><br>
+                                <span data-shipping-info="address1">{{ $shipment->address1 }}</span><br>
                                 @if ($shipment->address2)
-                                    {{ $shipment->address2 }}<br>
+                                    <span data-shipping-info="address2">{{ $shipment->address2 }}</span><br>
+                                @else
+                                    <span data-shipping-info="address2"></span>
                                 @endif
-                                {{ $shipment->city }}, {{ $shipment->state }}
+                                <span data-shipping-info="city">{{ $shipment->city }}</span>, <span data-shipping-info="state">{{ $shipment->state }}</span>
                             </p>
                         </div>
 

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use LaravelShipStation\ShipStation;
+use Stripe\StripeClient;
 use Wax\Core\Contracts\FilterAggregatorContract;
 use Wax\Core\Events\SessionMigrationEvent;
 use Wax\Shop\Contracts\OrderChangedEventContract;
@@ -67,6 +68,15 @@ class ShopServiceProvider extends WaxShopServiceProvider
                     config('services.ship_station.api_key'),
                     config('services.ship_station.api_secret'),
                     config('services.ship_station.api_url')
+                );
+            }
+        );
+
+        $this->app->bind(
+            StripeClient::class,
+            function ($app) {
+                return new StripeClient(
+                    config('wax.shop.payment.drivers.stripe.secret_key')
                 );
             }
         );
