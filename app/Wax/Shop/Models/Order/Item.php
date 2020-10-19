@@ -12,6 +12,11 @@ class Item extends WaxItem
     protected $memoizedListing = null;
     protected $memoizedOffer = null;
 
+    protected $appends = [
+        'listing_id',
+        'offer_id',
+    ];
+
     public function getListingIdAttribute()
     {
         return (int) $this
