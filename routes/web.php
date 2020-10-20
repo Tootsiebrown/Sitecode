@@ -299,6 +299,21 @@ Route::group(
                     ->uses('BrandsController@delete');
             });
 
+        Route::prefix('promo-codes')
+            ->middleware('privilege:Promo Codes')
+            ->name('dashboard.promoCodes.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('PromoCodesController@index');
+                Route::post('/')
+                    ->name('store')
+                    ->uses('PromoCodesController@store');
+                Route::get('create')
+                    ->name('create')
+                    ->uses('PromoCodesController@create');
+            });
+
         Route::get('auction-activity')
             ->uses('AuctionActivityController@index')
             ->name('dashboard.auction-activity');
