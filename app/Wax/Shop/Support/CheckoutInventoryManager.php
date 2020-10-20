@@ -19,7 +19,7 @@ class CheckoutInventoryManager
                     ->when($item->offer_id, function ($query) use ($item) {
                         $query->where('reserved_for_offer_id', $item->id);
                     })
-                    ->when (is_null($item->offer_id), function ($query) {
+                    ->when(is_null($item->offer_id), function ($query) {
                         $query->whereNull('reserved_for_offer_id');
                     })
                     ->whereNull('order_item_id')

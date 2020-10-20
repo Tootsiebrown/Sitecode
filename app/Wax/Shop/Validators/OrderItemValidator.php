@@ -47,7 +47,12 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
             }
             $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->reservedForOffer($offerId)->count();
         } else {
-            $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->availableForOrder($this->item->shipment->order)->count() - $pendingQuantity;
+            if ($this->item) {
+                $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->availableForOrder($this->item->shipment->order)->count() - $pendingQuantity;
+            } else {
+                $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->available()->count() - $pendingQuantity;
+            }
+
         }
 
         if ($effectiveInventory < $this->quantity) {

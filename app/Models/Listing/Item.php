@@ -25,7 +25,8 @@ class Item extends Model
             ->whereNull('reserved_for_order_id');
     }
 
-    public function scopeAvailableForOrder($query, $order) {
+    public function scopeAvailableForOrder($query, $order)
+    {
         return $query->where(function ($query) use ($order) {
             $query
                 ->orWhere(function ($query) {
@@ -53,7 +54,6 @@ class Item extends Model
                     ->orWhereNotNull('reserved_for_order_id')
                     ->orWhereNotNull('reserved_for_offer_id');
             });
-
     }
 
     public function scopeReservedForOffer($query, $offerId)
