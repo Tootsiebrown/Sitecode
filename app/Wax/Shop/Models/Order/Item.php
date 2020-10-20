@@ -13,6 +13,18 @@ class Item extends WaxItem
     protected $memoizedOffer = null;
 
     protected $appends = [
+        'brand',
+
+        'gross_unit_price',
+        'unit_price',
+        'gross_subtotal',
+        'subtotal',
+
+        'image',
+        'url',
+        'category',
+        'bundles',
+
         'listing_id',
         'offer_id',
     ];

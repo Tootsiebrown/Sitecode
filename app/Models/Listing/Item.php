@@ -25,6 +25,21 @@ class Item extends Model
             ->whereNull('reserved_for_order_id');
     }
 
+    public function scopeAvailableForOrder($query, $order) {
+        return $query->where(function ($query) use ($order) {
+            $query
+                ->orWhere(function ($query) {
+                    $query->available();
+                })
+                ->orWhere(function ($query) use ($order) {
+                    $query
+                        ->where('reserved_for_order_id', $order->id)
+                        ->whereNull('reserved_for_offer_id')
+                        ->whereNull('order_item_id');
+                });
+        });
+    }
+
     public function scopeSold($query)
     {
         return $query->whereNotNull('order_item_id');
