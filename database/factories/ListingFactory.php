@@ -9,5 +9,7 @@ $factory->define(App\Models\Listing::class, function (Faker $faker) {
         'title' => $title,
         'slug' => Str::slug($title),
         'status' => 1,
+        'type' => 'set-price',
+        'price' => 10,
     ];
 });

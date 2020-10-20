@@ -16,6 +16,12 @@ class CheckoutInventoryManager
             ->each(function ($item) use ($order) {
                 $numberOfRowsAffected = DB::table('listing_items')
                     ->where('listing_id', $item->listing_id)
+                    ->when($item->offer_id, function ($query) use ($item) {
+                        $query->where('reserved_for_offer_id', $item->id);
+                    })
+                    ->when (is_null($item->offer_id), function ($query) {
+                        $query->whereNull('reserved_for_offer_id');
+                    })
                     ->whereNull('order_item_id')
                     ->whereNull('reserved_for_order_id')
                     ->limit($item->quantity)
