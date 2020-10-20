@@ -38,7 +38,6 @@ class Item extends Model
                     ->orWhereNotNull('reserved_for_order_id')
                     ->orWhereNotNull('reserved_for_offer_id');
             });
-
     }
 
     public function scopeReservedForOffer($query, $offerId)
