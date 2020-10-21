@@ -8,6 +8,7 @@ use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use App\Wax\Shop\Support\CheckoutInventoryManager;
 use Throwable;
 use Illuminate\Http\Request;
+use Wax\Shop\Exceptions\ValidationException;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -101,13 +102,18 @@ class CheckoutController extends Controller
         }
 
         try {
-            $this->shopService->applyPayment(
+            $payment = $this->shopService->applyPayment(
                 $token
             );
         } catch (Throwable $e) {
             $this->inventoryManager->releaseItems($order);
 
             throw $e;
+        }
+
+        if (! $payment) {
+            $this->inventoryManager->releaseItems($order);
+            throw ValidationException::withMessages(['general' => 'There was an error paying for your order']);
         }
 
         $order->refresh();

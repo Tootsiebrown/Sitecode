@@ -21,6 +21,7 @@
                 <form method="POST" action="{{ route('shop.checkout.saveBilling') }}" data-component="stripe-form">
                     @csrf
                     @include('dashboard.flash_msg')
+                    @include('site.components.field-error', ['field' => 'general'])
                     <div data-component="billing-same-as-shipping">
                         @if(! $shipment->in_store_pickup)
                             <div class="row">
