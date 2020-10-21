@@ -68,6 +68,10 @@
             'type' => 'boolean',
             'checked' => $coupon->exists ? $coupon->one_time : true,
         ])
+
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'submit',
+        ])
     </form>
 @endsection
 
