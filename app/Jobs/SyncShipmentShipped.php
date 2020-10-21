@@ -74,6 +74,11 @@ class SyncShipmentShipped implements ShouldQueue
 
             Mail::to($order->email)
                 ->queue(new OrderShipped($order));
+
+            if (config('shipping.copy_shipped_email')) {
+                Mail::to(config('shipping.copy_shipped_email'))
+                    ->queue(new OrderShipped($order));
+            }
         }
     }
 }

@@ -22,7 +22,7 @@
                 <td>{{ $listing->bids->count() }}</td>
                 <td>
                     @if ($listing->bids->isNotEmpty())
-                        {{ Currency::format($listing->bids->sortBy('bid_amount')->first()->bid_amount) }}
+                        {{ Currency::format($listing->bids->sortByDesc('bid_amount')->first()->bid_amount) }}
                     @else
                         N/A
                     @endif

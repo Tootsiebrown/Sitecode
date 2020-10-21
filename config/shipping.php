@@ -27,4 +27,6 @@ return [
         10 => 5.99,
         0 => 2.99,
     ],
+
+    'copy_shipped_email' => env('COPY_SHIPPED_EMAIL'),
 ];
