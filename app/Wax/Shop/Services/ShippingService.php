@@ -4,6 +4,7 @@ namespace App\Wax\Shop\Services;
 
 use App\Wax\Shop\Models\Order;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use LaravelShipStation\Models\AdvancedOptions;
 use LaravelShipStation\Models\Weight;
@@ -138,7 +139,7 @@ class ShippingService
         $weight->value = $order->weight;
         $weight->units = 'ounces';
         $shipstationOrder = new \LaravelShipStation\Models\Order();
-        $shipstationOrder->orderNumber = $order->sequence;
+        $shipstationOrder->orderNumber = (App::environment() !== 'production' ? (App::environment() . '-') : '') . $order->sequence;
         $shipstationOrder->orderDate = $order->placed_at->setTimezone('America/Los_Angeles')->toDateTimeString();
         $shipstationOrder->orderStatus = 'awaiting_shipment';
         $shipstationOrder->amountPaid = $order->total;
@@ -158,6 +159,7 @@ class ShippingService
         }
 
         $result = $this->shipStation->orders->post($shipstationOrder, 'createorder');
+        \Log::info(print_r($result));
         if ($order->shipstation_key != $result->orderKey) {
             $order->shipstation_key = $result->orderKey;
             $order->save();
