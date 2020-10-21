@@ -39,6 +39,7 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
 
         $listingId = $this->customizations->first(fn($value, $key) => $key === 1);
         $offerId = $this->customizations->first(fn($value, $key) => $key === 2);
+
         if ($offerId) {
             if ($pendingQuantity > 0) {
                 $this->errors()
