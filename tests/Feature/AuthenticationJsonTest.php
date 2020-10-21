@@ -45,8 +45,8 @@ class AuthenticationJsonTest extends WaxAppTestCase
             'password' => $password,
         ]);
 
-        $response->assertStatus(302)
-            ->assertHeader('location', 'http://test.com/dashboard');
+        $response->assertStatus(200)
+            ->assertJson(['email' => $user->email]);
     }
 
     public function testRegisteredResponse()

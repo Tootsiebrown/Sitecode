@@ -52,7 +52,6 @@ class OrderItemValidator extends \Wax\Shop\Validators\OrderItemValidator
             } else {
                 $effectiveInventory = Listing::withoutGlobalScopes()->find($listingId)->items()->available()->count() - $pendingQuantity;
             }
-
         }
 
         if ($effectiveInventory < $this->quantity) {
