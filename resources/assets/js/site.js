@@ -58,7 +58,6 @@ export default function Site() {
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
         selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
-        console.log(selectComponent('dashboard-coupon-type'))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []
