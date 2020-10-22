@@ -47,7 +47,7 @@ class PromoCodesController extends Controller
             'include_shipping' => $request->input('include_shipping', false),
             'dollars' => $request->input('type') === 'dollars' ? $request->input('dollars') : null,
             'percent' => $request->input('type') === 'percent' ? $request->input('percent') : null,
-            'minimum_order' => $request->input('minimum_order'),
+            'minimum_order' => $request->input('minimum_order') ?: 0,
         ]);
 
         $coupon->save();
