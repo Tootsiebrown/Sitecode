@@ -1,11 +1,9 @@
-@dd($type)
 @if ($type === 'submit')
     <div class="form-group">
         <label class="col-sm-4 control-label">&nbsp;</label>
         <div class="col-sm-8">
-            <button type="submit" class="btn btn-primary" name="submit" value="submit">Submit</button>
+            <button type="submit" class="btn btn-primary" name="submit" value="submit">{{ $prettyTitle ?? 'Submit' }}</button>
         </div>
-        @include('site.components.field-error', ['field' => $name])
     </div>
 @else
     <div class="form-group" {{ $errors->has($name)? 'has-error':'' }}>
@@ -15,7 +13,7 @@
                 'name' => $name,
                 'value' => $value ?? '',
             ])
+            @include('site.components.field-error', ['field' => $name])
         </div>
-        @include('site.components.field-error', ['field' => $name])
     </div>
 @endif

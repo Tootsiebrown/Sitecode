@@ -1,4 +1,4 @@
-import selectComponent from "../utilities/select-component"
+import selectComponent from "../../utilities/select-component"
 
 export default class CartItemQuantity {
     constructor(element) {
