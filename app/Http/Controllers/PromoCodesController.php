@@ -76,7 +76,7 @@ class PromoCodesController extends Controller
             $request,
             [
                 'title' => 'required|unique:coupons,id,' . $id,
-                'code' => 'required|unique:coupons,id,' .$id,
+                'code' => 'required|unique:coupons,id,' . $id,
                 'type' => 'required|in:dollars,percent',
                 'dollars' => 'required_if:type,dollars|numeric',
                 'percent' => 'required_if:type,percent|numeric|max:100',
