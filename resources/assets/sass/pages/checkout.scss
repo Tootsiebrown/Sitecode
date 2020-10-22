@@ -54,9 +54,17 @@
     background-color: $color-tan-light;
     border-radius: 4px;
     padding: 8px;
+    margin-right: 24px;
 }
 
 .billing-loading-spinner {
     height: 24px;
     margin-left: 12px;
+}
+.powered-by-stripe {
+    vertical-align: top;
+    display: inline-block;
+    img {
+        height: 35px;
+    }
 }
