@@ -30,7 +30,7 @@
                 <td>{{ $coupon->type == 'dollars' ? Currency::format($coupon->dollars) : $coupon->percent . '%' }}</td>
                 <td>{{ $coupon->expired_at ? $coupon->expired_at->format('Y-m-d') : 'N/A' }}</td>
                 <td>{{ $coupon->one_time ? 'Yes' : 'No' }}</td>
-                <td>{{ $coupon->includes_shipping ? 'Yes' : 'No' }}</td>
+                <td>{{ $coupon->include_shipping ? 'Yes' : 'No' }}</td>
                 <td>{{ $coupon->minimum_order ? Currency::format($coupon->minimum_order) : '' }}</td>
             </tr>
         @endforeach
