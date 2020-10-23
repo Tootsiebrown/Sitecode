@@ -347,6 +347,9 @@ class ListerController extends Controller
         if ($request->input('redone')) {
             $data['redone_at'] = Carbon::now()->toDateTimeString();
             $data['redone_by_user_id'] = Auth::user()->id;
+        } else {
+            $data['redone_at'] = null;
+            $data['redone_by_user_id'] = null;
         }
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {

@@ -396,6 +396,13 @@
                         </div>
                     @else
                         <div class="form-group {{ $errors->has('redone')? 'has-error':'' }}">
+                            <label for="redone" class="col-sm-4 control-label">Redone</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="redone" value="1" checked name="redone" placeholder=""> <span>Uncheck to unmark as redone</span>
+                                {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
+                            </div>
+                        </div>
+                        <div class="form-group {{ $errors->has('redone')? 'has-error':'' }}">
                             <label for="redone" class="col-sm-4 control-label">By</label>
                             <div class="col-sm-8">
                                 <div class="form-control">
