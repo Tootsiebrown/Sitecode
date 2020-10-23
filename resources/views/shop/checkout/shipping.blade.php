@@ -110,7 +110,7 @@
                                             <select name="address_id" class="select2" data-element="addressPicker">
                                                 @foreach ($addresses as $address)
                                                     <option value="{{ $address->id }}">
-                                                        {{ $address->address1 }}, {{ $address->state }}
+                                                        {{ $address->firstname }} {{ $address->lastname }}, {{ $address->address1 }}, {{ $address->state }}
                                                     </option>
                                                 @endforeach
                                                 <option value="new">New Address</option>

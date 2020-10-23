@@ -7,6 +7,7 @@ use App\Wax\Shop\Models\Order\ShippingRate;
 use App\Wax\Shop\Services\ShippingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Wax\Core\Eloquent\Models\User\Address;
 use Wax\Core\Repositories\AddressBookRepository;
 use Wax\Shop\Services\ShopService;
 
@@ -52,36 +53,6 @@ class ShippingController extends Controller
         $order = $this->shopService->getActiveOrder();
         $shipment = $order->default_shipment;
 
-        $this->validate(
-            $request,
-            [
-                'firstname' => 'required',
-                'lastname' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'address1' => 'required',
-                'city' => 'required',
-                'state' => 'required|exists:tax,zone',
-                'zip' => 'required',
-            ],
-            [
-                'firstname.required' => ':attribute is required.',
-                'lastname.required' => ':attribute is required.',
-                'email.required' => ':attribute is required.',
-                'phone.required' => ':attribute is required.',
-                'address1.required' => ':attribute is required.',
-                'city.required' => ':attribute is required.',
-                'state.required' => ':attribute is required.',
-                'state.exists' => 'State must be a valid uppercase, two-letter abbreviation.',
-                'zip.required' => ':attribute is required.',
-            ],
-            [
-                'firstname' => 'first name',
-                'lastname' => 'last name',
-                'address1' => 'address line 1',
-            ],
-        );
-
         if ($request->input('in_store_pickup')) {
             $shipment->in_store_pickup = true;
         } else {
@@ -89,19 +60,79 @@ class ShippingController extends Controller
         }
         $shipment->save();
 
-        $shipment->setAddress(
-            $request->input('firstname'),
-            $request->input('lastname'),
-            '',
-            $request->input('email'),
-            $request->input('phone'),
-            $request->input('address1', ''),
-            $request->input('address2', ''),
-            $request->input('city', ''),
-            $request->input('state', ''),
-            $request->input('zip', ''),
-            'US'
-        );
+        $address = null;
+
+        if (Auth::check() && $request->input('address_id')) {
+            $address = Address::where('user_id', Auth::user()->id)
+                ->where('id', $request->input('address_id'))
+                ->first();
+        }
+
+        if (! $address) {
+            $this->validate(
+                $request,
+                [
+                    'firstname' => 'required',
+                    'lastname' => 'required',
+                    'email' => 'required',
+                    'phone' => 'required',
+                    'address1' => 'required',
+                    'city' => 'required',
+                    'state' => 'required|exists:tax,zone',
+                    'zip' => 'required',
+                ],
+                [
+                    'firstname.required' => ':attribute is required.',
+                    'lastname.required' => ':attribute is required.',
+                    'email.required' => ':attribute is required.',
+                    'phone.required' => ':attribute is required.',
+                    'address1.required' => ':attribute is required.',
+                    'city.required' => ':attribute is required.',
+                    'state.required' => ':attribute is required.',
+                    'state.exists' => 'State must be a valid uppercase, two-letter abbreviation.',
+                    'zip.required' => ':attribute is required.',
+                ],
+                [
+                    'firstname' => 'first name',
+                    'lastname' => 'last name',
+                    'address1' => 'address line 1',
+                ],
+            );
+
+            $data = [
+                'firstname' => $request->input('firstname'),
+                'lastname' => $request->input('lastname'),
+                'company' => '',
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'address1' => $request->input('address1', ''),
+                'address2' => $request->input('address2', ''),
+                'city' => $request->input('city', ''),
+                'state' => $request->input('state', ''),
+                'zip' => $request->input('zip', ''),
+                'country' => 'US'
+            ];
+
+            if (Auth::check() && $request->input('save_address')) {
+                $this->addressBookRepo->create($data);
+            }
+
+            $shipment->setAddress(...array_values($data));
+        } else {
+            $shipment->setAddress(
+                $address->firstname,
+                $address->lastname,
+                $address->company ?? '',
+                $address->email,
+                $address->phone,
+                $address->address1,
+                $address->address2,
+                $address->city,
+                $address->state,
+                $address->zip,
+                $address->country
+            );
+        }
 
         if (config('shipping.custom_shipping')) {
             $this->shippingService->refreshRatesfor($order);

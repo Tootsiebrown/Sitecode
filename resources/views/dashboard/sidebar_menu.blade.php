@@ -98,8 +98,12 @@
                 </a>
             </li>
 
-            <li> <a href="{{ route('payments') }}"><i class="fa fa-money"></i> @lang('app.payments')</a>  </li>
-
+            <li>
+                <a href="{{ route('dashboard.shippingAddresses.index') }}">
+                    <i class="fa fa-address-book"></i>
+                    Shipping Addresses
+                </a>
+            </li>
 
             @if($lUser->hasPrivilege('Manager'))
 {{--                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
