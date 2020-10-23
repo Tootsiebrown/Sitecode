@@ -46,7 +46,7 @@
         <h3>Total</h3>
         <ul>
             @if ($order->gross_total != $order->total)
-                <li>Cart Subtotal: {{ Currency::format($order->gross_total) }}</li>
+                <li>Cart Subtotal: {{ Currency::format($order->item_gross_subtotal) }}</li>
             @endif
 
             @if ($order->shipping_gross_subtotal > 0)
@@ -62,7 +62,7 @@
             @endforeach
 
             @if (!empty($order->coupon))
-                <li>{{ $order->coupon->title }} '{{ $order->coupon->code }}': {{ Currency::format($order->coupon->calculated_value) }}</li>
+                <li>{{ $order->coupon->title }} '{{ $order->coupon->code }}': -{{ Currency::format($order->coupon->calculated_value) }}</li>
             @endif
 
             <li>Total: {{ Currency::format($order->total) }}</li>

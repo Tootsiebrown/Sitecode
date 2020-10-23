@@ -139,8 +139,8 @@
         <section>
             <h3>Total</h3>
             <ul>
-                @if ($order->gross_total != $order->total)
-                    <li>Cart Subtotal: {{ Currency::format($order->gross_total) }}</li>
+                @if ($order->item_gross_subtotal != $order->total)
+                    <li>Cart Subtotal: {{ Currency::format($order->item_gross_subtotal) }}</li>
                 @endif
 
                 @if ($order->shipping_gross_subtotal > 0)

@@ -13,7 +13,7 @@
                 <td><a href="{{ route('dashboard.shop.orders.details', ['id' => $order->id]) }}">{{ $order->sequence }}</a></td>
                 <td>{{ $order->email }}</td>
                 <td>{{ $order->placed_at->format('F j, Y g:i A') }}</td>
-                <td class="money">${{ $order->gross_total }}</td>
+                <td class="money">${{ $order->total }}</td>
             </tr>
         @empty
             <tr>

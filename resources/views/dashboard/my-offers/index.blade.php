@@ -16,7 +16,7 @@
         </tr>
         @foreach ($offers as $offer)
             <tr>
-                <td>{{ $offer->listing->title }}</td>
+                <td><a href="{{ $offer->listing->url }}">{{ $offer->listing->title }}</a></td>
                 <td>{{ $offer->counter_quantity ?? $offer->quantity }}</td>
                 <td>{{ Currency::format($offer->counter_price ?? $offer->price) }}</td>
                 <td>{{ $offer->pretty_status }}</td>

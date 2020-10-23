@@ -46,7 +46,7 @@
                                 </a>
                             </td>
                             <td class="email-cart__product-val"
-                                style="padding: 12px 16px; border-bottom: 1px solid #E9ECEF;">{{ Currency::format($item['subtotal']) }}</td>
+                                style="padding: 12px 16px; border-bottom: 1px solid #E9ECEF;">{{ Currency::format($item['gross_subtotal']) }}</td>
                         </tr>
                     @endforeach
                 </table>
