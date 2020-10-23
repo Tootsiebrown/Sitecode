@@ -95,17 +95,29 @@
                                             data-element="bidDeadline"
                                         >
                                             <label for="bid_deadline" class="col-sm-4 control-label"> @lang('app.bid_deadline')</label>
-                                        <div class="col-sm-8">
-                                            <input
-                                              type="text"
-                                              class="form-control"
-                                              id="bid_deadline"
-                                              value="{{ old('bid_deadline') }}"
-                                              name="bid_deadline"
-                                              placeholder="@lang('app.bid_deadline')"
-                                              data-component="datetime-picker"
-                                            >
-                                            {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
+                                            <div class="col-sm-8">
+                                                <input
+                                                  type="text"
+                                                  class="form-control"
+                                                  id="bid_deadline"
+                                                  value="{{ old('bid_deadline') }}"
+                                                  name="bid_deadline"
+                                                  placeholder="@lang('app.bid_deadline')"
+                                                  data-component="datetime-picker"
+                                                >
+                                                {!! $errors->has('bid_deadline')? '<p class="help-block">'.$errors->first('bid_deadline').'</p>':'' !!}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group {{ $errors->has('offers_enabled')? 'has-error':'' }} listing-type-select__offers-enabled" data-element="offersEnabled">
+                                            <label for="offers_enabled" class="col-sm-4 control-label">
+                                                Accepts Offers
+                                            </label>
+                                            <div class="col-sm-8">
+                                                <input type="checkbox" id="offers_enabled" {{ old('offers_enabled', true) ? 'checked' : '' }} value="1" name="offers_enabled">
+                                                {!! $errors->has('offers_enabled')? '<p class="help-block">'.$errors->first('offers_enabled').'</p>':'' !!}
+                                            </div>
                                         </div>
                                     </div>
 
@@ -137,9 +149,6 @@
                                     <div class="form-group">
                                         <div class="col-sm-offset-4 col-sm-8">
                                             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save New Listing</button>
-                                        </div>
-                                        <div class="col-sm-offset-4 col-sm-8">
-                                            <p>Note: listings are not yet feature complete. Please do not yet depend on this feature.</p>
                                         </div>
                                     </div>
                                 </form>

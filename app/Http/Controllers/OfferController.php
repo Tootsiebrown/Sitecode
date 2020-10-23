@@ -8,6 +8,7 @@ use App\Mail\OfferRejected;
 use App\Mail\OfferSubmitted;
 use App\Models\Listing;
 use App\Models\Offer;
+use App\Rules\ListingCanTakeOffers;
 use App\Rules\ListingGteInventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -29,6 +30,7 @@ class OfferController extends Controller
                     'numeric',
                     'min:1',
                     new ListingGteInventory($listing),
+                    new ListingCanTakeOffers($listing),
                 ],
                 'offer_price' => 'required|numeric|min:1'
             ]

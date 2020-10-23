@@ -259,6 +259,8 @@ class ListerController extends Controller
                 Rule::in(Product::getConditions()),
             ],
 
+            'offers_enabled' => 'boolean',
+
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
 
@@ -340,6 +342,9 @@ class ListerController extends Controller
             'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
                 ? null
                 : $request->input('shipping_weight_oz'),
+            'offers_enabled' => $request->has('offers_enabled')
+                ? $request->input('offers_enabled')
+                : false,
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -431,6 +436,7 @@ class ListerController extends Controller
             'type' => 'required|in:auction,set-price',
             'quantity' => 'integer|required_if:type,set-price',
             'price' => 'required|numeric',
+            'offers_enabled' => 'boolean',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -467,6 +473,9 @@ class ListerController extends Controller
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
                 'shipping_weight_oz' => $product->shipping_weight_oz,
+                'offers_enabled' => $request->has('offers_enabled')
+                    ? $request->input('offers_enabled')
+                    : false,
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
