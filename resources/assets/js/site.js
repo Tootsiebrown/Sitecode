@@ -10,20 +10,23 @@ import ProductCategoriesHierarchy from "./component/product-categories-hierarchy
 import FocusableInputGroup from "./component/focusable-input-group";
 import TaxonomyNav from "./component/taxonomy-nav";
 import ListingResult from "./component/listing-result";
-import StripeForm from "./component/stripe-form";
+import StripeForm from "./component/checkout/stripe-form";
 import NavCart from "./component/nav-cart";
 import StickyThing from "./component/sticky-thing";
 import AutoSelectOnFocus from "./component/auto-select-on-focus";
 import ListingBinBulkEditor from "./component/listing-bin-bulk-editor";
-import BillingSameAsShipping from "./component/billing-same-as-shipping";
+import BillingSameAsShipping from "./component/checkout/billing-same-as-shipping";
 import WatchListing from "./component/watch-listing";
 import ListingItemAdder from "./component/listing-item-adder";
 import ConfirmIfDeleteItems from "./component/confirm-if-delete-items";
 import CancelOrder from "./component/cancel-order";
 import SearchSidebar from "./component/search-sidebar";
 import SortFeaturedListings from "./component/sort-featured-listings";
-import CartItemQuantity from "./component/cart-item-quantity";
+import CartItemQuantity from "./component/checkout/cart-item-quantity";
 import OfferActionForm from "./component/offer-action-form";
+import DashboardCouponType from "./component/dashboard-coupon-type";
+import FormControlDate from "./component/form-control-date";
+import CheckoutSidebarCart from "./component/checkout/checkout-sidebar-cart";
 
 export default function Site() {
 
@@ -56,7 +59,9 @@ export default function Site() {
         selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
-        console.log(selectComponent('offer-action-form'))
+        selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
+        selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
+        selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

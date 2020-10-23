@@ -18,22 +18,7 @@
 
         }
 
-        .input-group {
-            background-color: $color-tan-light;
-            border: 2px solid $color-tan-dark;
-            border-radius: 4px;
 
-            .form-control {
-                height: 40px;
-            }
-
-            .input-group-btn {
-                padding: 3px;
-                button.btn {
-                    border-radius: 2px;
-                }
-            }
-        }
     }
 
     &__header {

@@ -299,6 +299,30 @@ Route::group(
                     ->uses('BrandsController@delete');
             });
 
+        Route::prefix('promo-codes')
+            ->middleware('privilege:Promo Codes')
+            ->name('dashboard.promoCodes.')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('PromoCodesController@index');
+                Route::post('/')
+                    ->name('store')
+                    ->uses('PromoCodesController@store');
+                Route::get('create')
+                    ->name('create')
+                    ->uses('PromoCodesController@create');
+                Route::get('{id}/edit')
+                    ->name('edit')
+                    ->uses('PromoCodesController@edit');
+                Route::put('{id}')
+                    ->name('update')
+                    ->uses('PromoCodesController@update');
+                Route::delete('{id}')
+                    ->name('destroy')
+                    ->uses('PromoCodesController@destroy');
+            });
+
         Route::get('auction-activity')
             ->uses('AuctionActivityController@index')
             ->name('dashboard.auction-activity');
@@ -707,6 +731,13 @@ Route::name('shop.')
                 Route::get('confirmation')
                     ->uses('\App\Wax\Shop\Controllers\CheckoutController@showConfirmation')
                     ->name('confirmation');
+
+                Route::post('code')
+                    ->uses('CheckoutPromoCodesController@store')
+                    ->name('applyCode');
+                Route::delete('code')
+                    ->uses('CheckoutPromoCodesController@destroy')
+                    ->name('removeCode');
             });
     });
 
