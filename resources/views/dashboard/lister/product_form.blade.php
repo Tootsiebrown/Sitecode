@@ -385,6 +385,34 @@
                         </div>
                     @endforeach
 
+                    <legend>Redone</legend>
+                    @if (is_null($product->redone_at))
+                        <div class="form-group {{ $errors->has('redone')? 'has-error':'' }}">
+                            <label for="redone" class="col-sm-4 control-label">Redone</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" id="redone" value="1" @if (old('redone')) checked @endif name="redone" placeholder="">
+                                {!! $errors->has($optionalFieldName)? '<p class="help-block">'.$errors->first($optionalFieldName).'</p>':'' !!}
+                            </div>
+                        </div>
+                    @else
+                        <div class="form-group {{ $errors->has('redone')? 'has-error':'' }}">
+                            <label for="redone" class="col-sm-4 control-label">By</label>
+                            <div class="col-sm-8">
+                                <div class="form-control">
+                                    {{ $product->redoneBy->name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group {{ $errors->has('redone')? 'has-error':'' }}">
+                            <label for="redone" class="col-sm-4 control-label">At</label>
+                            <div class="col-sm-8">
+                                <div class="form-control">
+                                    {{ $product->redone_at->format('Y-m-d H:i') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-8">
                             <button type="submit" class="btn btn-primary">Save Product</button>
