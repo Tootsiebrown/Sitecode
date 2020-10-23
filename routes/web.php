@@ -616,6 +616,12 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('ShippingAddressesController@index');
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('ShippingAddressesController@show');
+                Route::put('{id}')
+                    ->name('update')
+                    ->uses('ShippingAddressesController@update');
             });
 
 

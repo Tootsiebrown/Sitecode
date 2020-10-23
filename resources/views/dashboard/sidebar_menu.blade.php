@@ -100,7 +100,7 @@
 
             <li>
                 <a href="{{ route('dashboard.shippingAddresses.index') }}">
-                    <i class="fa fa-address-book"></i>
+                    <i class="fa fa-address-card"></i>
                     Shipping Addresses
                 </a>
             </li>

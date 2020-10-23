@@ -44,7 +44,7 @@ class ShippingController extends Controller
             'order' => $order,
             'shipment' => $order->default_shipment,
             'inStorePickup' => $request->old('in_store_pickup'),
-            'addresses' => Auth::check() ? $this->addressBookRepo->getAll() : collect(),
+            'addresses' => Auth::check() ? $this->addressBookRepo->getAll()->sortByDesc('default_shipping') : collect(),
         ]);
     }
 
