@@ -24,6 +24,7 @@ import SearchSidebar from "./component/search-sidebar";
 import SortFeaturedListings from "./component/sort-featured-listings";
 import CartItemQuantity from "./component/cart-item-quantity";
 import OfferActionForm from "./component/offer-action-form";
+import ShippingAddressPicker from "./component/checkout/shipping-address-picker";
 
 export default function Site() {
 
@@ -56,6 +57,7 @@ export default function Site() {
         selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
+        selectComponent('shipping-address-picker').each((index, element) => new ShippingAddressPicker(element))
         console.log(selectComponent('offer-action-form'))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {

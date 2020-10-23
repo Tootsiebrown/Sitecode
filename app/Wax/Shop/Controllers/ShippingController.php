@@ -6,19 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Wax\Shop\Models\Order\ShippingRate;
 use App\Wax\Shop\Services\ShippingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Wax\Core\Repositories\AddressBookRepository;
 use Wax\Shop\Services\ShopService;
 
 class ShippingController extends Controller
 {
     protected ShopService $shopService;
     protected ShippingService $shippingService;
+    protected AddressBookRepository $addressBookRepo;
 
     public function __construct(
         ShopService $shopService,
-        ShippingService $shippingService
+        ShippingService $shippingService,
+        AddressBookRepository $addressBookRepo
     ) {
         $this->shopService = $shopService;
         $this->shippingService = $shippingService;
+        $this->addressBookRepo = $addressBookRepo;
     }
 
     public function showShipping(Request $request)
@@ -37,7 +42,8 @@ class ShippingController extends Controller
         return view('shop.checkout.shipping', [
             'order' => $order,
             'shipment' => $order->default_shipment,
-            'inStorePickup' => $request->old('in_store_pickup')
+            'inStorePickup' => $request->old('in_store_pickup'),
+            'addresses' => Auth::check() ? $this->addressBookRepo->getAll() : collect(),
         ]);
     }
 
@@ -49,8 +55,8 @@ class ShippingController extends Controller
         $this->validate(
             $request,
             [
-                'first_name' => 'required',
-                'last_name' => 'required',
+                'firstname' => 'required',
+                'lastname' => 'required',
                 'email' => 'required',
                 'phone' => 'required',
                 'address1' => 'required',
@@ -59,8 +65,8 @@ class ShippingController extends Controller
                 'zip' => 'required',
             ],
             [
-                'first_name.required' => ':attribute is required.',
-                'last_name.required' => ':attribute is required.',
+                'firstname.required' => ':attribute is required.',
+                'lastname.required' => ':attribute is required.',
                 'email.required' => ':attribute is required.',
                 'phone.required' => ':attribute is required.',
                 'address1.required' => ':attribute is required.',
@@ -70,8 +76,8 @@ class ShippingController extends Controller
                 'zip.required' => ':attribute is required.',
             ],
             [
-                'first_name' => 'first name',
-                'last_name' => 'last name',
+                'firstname' => 'first name',
+                'lastname' => 'last name',
                 'address1' => 'address line 1',
             ],
         );
@@ -84,8 +90,8 @@ class ShippingController extends Controller
         $shipment->save();
 
         $shipment->setAddress(
-            $request->input('first_name'),
-            $request->input('last_name'),
+            $request->input('firstname'),
+            $request->input('lastname'),
             '',
             $request->input('email'),
             $request->input('phone'),
