@@ -109,7 +109,7 @@
                                     or <a href="{{ route('register', ['back' => $listing->url]) }}">register</a> before bidding.',
                                 </div>
                             @else
-                                <form action="{{ route('post_bid', $listing->id) }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                                <form action="{{ route('post_bid', $listing->id) }}" class="form-inline form-standalone place-bid" method="post" enctype="multipart/form-data" novalidate>
                                     @csrf
                                     <div class="form-group">
                                         <div class="input-group">
@@ -138,7 +138,7 @@
                         @if ($listing->availableItems->count() === 0)
                             <p>Sorry, we&rsquo;re out of inventory.</p>
                         @else
-                            <form action="{{ route('shop.cart.add') }}" class="form-inline place-bid" method="post" enctype="multipart/form-data" novalidate>
+                            <form action="{{ route('shop.cart.add') }}" class="form-inline form-standalone place-bid" method="post" enctype="multipart/form-data" novalidate>
                                 @csrf
                                 <input type="hidden" name="customizations[1]" value="{{ $listing->id }}">
                                 <input type="hidden" name="product_id" value="1">

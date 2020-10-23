@@ -64,6 +64,12 @@
                 </li>
             @endif
 
+            @if ($lUser->hasPrivilege('Promo Codes'))
+                <li>
+                    <a href="{{ route('dashboard.promoCodes.index') }}"><i class="fa fa-percent"></i> Promo Codes</a>
+                </li>
+            @endif
+
             <li>
                 <a href="{{ route('dashboard.auction-activity') }}">
                     <i class="fa fa-hourglass"></i>

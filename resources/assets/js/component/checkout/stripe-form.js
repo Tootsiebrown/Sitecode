@@ -1,4 +1,4 @@
-import selectComponent from "../utilities/select-component";
+import selectComponent from "../../utilities/select-component";
 import * as $ from 'jquery'
 
 export default class StripeForm
