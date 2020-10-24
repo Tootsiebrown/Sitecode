@@ -103,7 +103,7 @@ class ShippingAddressesController extends Controller
         $address->delete();
 
         return redirect()
-            ->back()
+            ->route('dashboard.shippingAddresses.index')
             ->with('success', 'Address Deleted');
     }
 }
