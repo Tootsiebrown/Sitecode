@@ -622,6 +622,9 @@ Route::group(
                 Route::put('{id}')
                     ->name('update')
                     ->uses('ShippingAddressesController@update');
+                Route::delete('{id}')
+                    ->name('destroy')
+                    ->uses('ShippingAddressesController@destroy');
             });
 
 

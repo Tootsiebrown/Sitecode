@@ -81,10 +81,29 @@ class ShippingAddressesController extends Controller
         $address->country = 'US';
         $address->default_shipping = $request->input('default_shipping', false);
 
+        if ($address->default_shipping) {
+            Address::where('user_id', Auth::user()->id)
+                ->update(['default_shipping' => false]);
+        }
+
         $address->save();
+
 
         return redirect()
             ->back()
             ->with('success', 'Address Updated.');
+    }
+
+    public function destroy($id)
+    {
+        $address = Address::where('user_id', Auth::user()->id)
+            ->where('id', $id)
+            ->firstOrFail();
+
+        $address->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Address Deleted');
     }
 }

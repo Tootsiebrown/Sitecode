@@ -83,4 +83,14 @@
         ])
 
     </form>
+
+    <form action="{{ route('dashboard.shippingAddresses.destroy', ['id' => $address->id]) }}" method="POST" class="form-horizontal">
+        @csrf
+        @method('DELETE')
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'submit',
+            'prettyTitle' => 'Delete',
+        ])
+    </form>
+
 @endsection
