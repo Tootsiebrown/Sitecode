@@ -60,7 +60,7 @@
     </div>
     <div class="footer__corporate">
         <div class="container">
-            &copy;{{ date('Y') }} Catch N Dealz. A US owned company. All rights reserved.
+            &copy;{{ date('Y') }} Catch N Dealz. All rights reserved.
             <a href="/privacy">Privacy</a>
         </div>
     </div>
