@@ -22,7 +22,7 @@ return [
                 'secret_key' => env('STRIPE_SECRET_KEY'),
             ]
         ],
-        'stored_payment_driver' => \Wax\Shop\Payment\Drivers\StoredStripeDriver::class,
+        'stored_payment_driver' => App\Wax\Shop\Payment\Drivers\StoredStripeDriver::class,
         'credit_card_payment_driver' => App\Wax\Shop\Payment\Drivers\StripeDriver::class,
         'types' => [
             'credit_card' => \Wax\Shop\Payment\Types\CreditCard::class,

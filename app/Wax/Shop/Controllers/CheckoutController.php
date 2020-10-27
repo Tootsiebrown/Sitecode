@@ -3,12 +3,16 @@
 namespace App\Wax\Shop\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use App\Wax\Shop\Support\CheckoutInventoryManager;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 use Illuminate\Http\Request;
 use Wax\Shop\Exceptions\ValidationException;
+use Wax\Shop\Models\User\PaymentMethod;
+use Wax\Shop\Payment\Repositories\PaymentMethodRepository;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -19,10 +23,17 @@ class CheckoutController extends Controller
     /** @var CheckoutInventoryManager */
     protected $inventoryManager;
 
-    public function __construct(ShopService $shopService, CheckoutInventoryManager $inventoryManager)
-    {
+    /** @var PaymentMethodRepository */
+    protected PaymentMethodRepository $paymentMethodRepo;
+
+    public function __construct(
+        ShopService $shopService,
+        CheckoutInventoryManager $inventoryManager,
+        PaymentMethodRepository $paymentMethodRepo
+    ) {
         $this->shopService = $shopService;
         $this->inventoryManager = $inventoryManager;
+        $this->paymentMethodRepo = $paymentMethodRepo;
     }
 
     public function checkout()
@@ -83,15 +94,15 @@ class CheckoutController extends Controller
 
         $order = $this->shopService->getActiveOrder();
         $order->calculateTax();
-        $token = new TokenPaymentType();
 
-        $token->loadData([
+
+        $tokenData = [
             'token' => $request->input('token'),
             'lastFour' => $request->input('last_four'),
             'zip' => $request->input('zip'),
             'brand' => $request->input('brand'),
             'address' => $this->getBillingAddress($request, $order),
-        ]);
+        ];
 
         try {
             $this->inventoryManager->reserveItems($order);
@@ -102,9 +113,27 @@ class CheckoutController extends Controller
         }
 
         try {
-            $payment = $this->shopService->applyPayment(
-                $token
-            );
+            if (Auth::check() && $request->input('billing_id')) {
+                $paymentMethod = PaymentMethod::where('user_id', Auth::user()->id)
+                    ->where('id', $request->input('billing_id'))
+                    ->firstOrFail();
+
+                $payment = $this->paymentMethodRepo->makePayment($order, $paymentMethod);
+            } elseif (Auth::check() && $request->input('save_billing')) {
+                if (is_null(Auth::user()->payment_profile_id)) {
+                    $this->createPaymentProfile(Auth::user());
+                }
+
+                $tokenData['customerReference'] = Auth::user()->payment_profile_id;
+                $paymentMethod = $this->paymentMethodRepo->create($tokenData);
+                $payment = $this->paymentMethodRepo->makePayment($order, $paymentMethod);
+            } else {
+                $token = new TokenPaymentType();
+                $token->loadData($tokenData);
+                $payment = $this->shopService->applyPayment(
+                    $token
+                );
+            }
         } catch (Throwable $e) {
             $this->inventoryManager->releaseItems($order);
 
@@ -159,5 +188,15 @@ class CheckoutController extends Controller
         return view('shop.checkout.confirmation', [
             'order' => $order,
         ]);
+    }
+
+    protected function createPaymentProfile(User $user)
+    {
+        $stripe = app()->make(config('wax.shop.payment.stored_payment_driver'))->setUser($user);
+
+        $profileId = $stripe->createProfile();
+
+        $user->payment_profile_id = $profileId;
+        $user->save();
     }
 }

@@ -8,9 +8,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Wax\Core\Eloquent\Models\User as UserBase;
+use Wax\Shop\Traits\ShopUser;
 
 class User extends UserBase
 {
+    use ShopUser;
+
     public function country()
     {
         return $this->belongsTo(Country::class);

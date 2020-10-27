@@ -171,6 +171,24 @@
                     <input type="hidden" name="zip" value="" data-element="zipField">
                     <input type="hidden" name="brand" value="" data-element="brandField">
 
+                    @if (Auth::check())
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="save_billing">Save this Credit Card?</label><br/>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="save_billing"
+                                        value="1"
+                                        id="save_billing"
+                                        @if (old('save_billing')) checked @endif
+                                    > Save
+                                </label>
+                                @include('site.components.field-error', ['field' => 'save_billing'])
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="row">
                         <div class="col-xs-6">
                             <label for="terms_and_conditions">Terms and Conditions</label><br/>
