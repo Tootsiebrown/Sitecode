@@ -5,6 +5,7 @@
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="/assets/img/catchndealz.svg" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
+                <span class="a-us-company">A US Company</span>
             </a>
 
             <!-- Search -->
@@ -69,7 +70,7 @@
 
 
             <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right nav-sarchbar">
+            <ul class="nav navbar-nav navbar-right">
                 <li class="nav-cart__container" data-component="nav-cart">
                     @render(App\ViewComponents\NavCartComponent::class)
                 </li>
@@ -82,6 +83,7 @@
                     </a>
                 </li>
             </ul>
+            <div class="a-us-company">A US Company</div>
         </div>
     </div>
 </nav>
