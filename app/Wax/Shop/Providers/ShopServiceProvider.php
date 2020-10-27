@@ -24,8 +24,10 @@ use Wax\Shop\Listeners\LoginListener;
 use Wax\Shop\Listeners\RecalculateDiscountsListener;
 use Wax\Shop\Listeners\SessionMigrationListener;
 use Wax\Shop\Models\Order\Bundle;
+use Wax\Shop\Models\User\PaymentMethod;
 use Wax\Shop\Observers\OrderBundleObserver;
 use Wax\Shop\Observers\OrderItemObserver;
+use Wax\Shop\Policies\PaymentMethodPolicy;
 use Wax\Shop\Providers\ShopServiceProvider as WaxShopServiceProvider;
 use Wax\Shop\Repositories\ProductRepository;
 use Wax\Shop\Services\ShopService;
@@ -90,6 +92,7 @@ class ShopServiceProvider extends WaxShopServiceProvider
         $this->loadTranslationsFrom(base_path('vendor/oohology/wax-shop/resources/lang'), 'shop');
 
         Gate::define('get-order', 'App\Wax\Shop\Policies\OrderPolicy@get');
+        $this->registerPolicies();
 
         $this->registerListeners();
     }

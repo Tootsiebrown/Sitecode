@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Wax\Shop\Exceptions\ValidationException;
 use Wax\Shop\Models\User\PaymentMethod;
 use Wax\Shop\Payment\Repositories\PaymentMethodRepository;
+use Wax\Shop\Payment\Validators\OrderPaymentParser;
 use Wax\Shop\Services\ShopService;
 
 class CheckoutController extends Controller
@@ -121,13 +122,13 @@ class CheckoutController extends Controller
             'address' => $this->getBillingAddress($request, $order),
         ];
 
-        try {
-            $this->inventoryManager->reserveItems($order);
-        } catch (Throwable $e) {
-            $this->inventoryManager->releaseItems($order);
-
-            throw $e;
-        }
+//        try {
+//            $this->inventoryManager->reserveItems($order);
+//        } catch (Throwable $e) {
+//            $this->inventoryManager->releaseItems($order);
+//
+//            throw $e;
+//        }
 
         try {
             if (Auth::check() && $request->input('payment_method_id')) {
@@ -136,6 +137,10 @@ class CheckoutController extends Controller
                     ->firstOrFail();
 
                 $payment = $this->paymentMethodRepo->makePayment($order, $paymentMethod);
+                if ($payment) {
+                    (new OrderPaymentParser($payment))->validate();
+                    $order->place();
+                }
             } elseif (Auth::check() && $request->input('save_billing')) {
                 if (is_null(Auth::user()->payment_profile_id)) {
                     $this->createPaymentProfile(Auth::user());
@@ -144,6 +149,10 @@ class CheckoutController extends Controller
                 $tokenData['customerReference'] = Auth::user()->payment_profile_id;
                 $paymentMethod = $this->paymentMethodRepo->create($tokenData);
                 $payment = $this->paymentMethodRepo->makePayment($order, $paymentMethod);
+                if ($payment) {
+                    (new OrderPaymentParser($payment))->validate();
+                    $order->place();
+                }
             } else {
                 $token = new TokenPaymentType();
                 $token->loadData($tokenData);

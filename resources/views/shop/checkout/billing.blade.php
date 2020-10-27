@@ -22,6 +22,7 @@
                     @csrf
                     @include('dashboard.flash_msg')
                     @include('site.components.field-error', ['field' => 'general'])
+                    @include('site.components.field-error', ['field' => 'payment'])
                     <div data-component="payment-method-picker">
                         @if ($paymentMethods->isNotEmpty())
                             <div class="row">
@@ -29,7 +30,7 @@
                                     <select name="payment_method_id" class="select2" data-element="paymentMethodPicker">
                                         @foreach ($paymentMethods as $paymentMethod)
                                             <option value="{{ $paymentMethod->id }}">
-                                                {{ $paymentMethod->name }},
+                                                {{ $paymentMethod->firstname }} {{ $paymentMethod->lastname }},
                                                 {{ $paymentMethod->address }},
                                                 {{ $paymentMethod->brand }}
                                                 {{ $paymentMethod->masked_card_number }}
@@ -179,7 +180,6 @@
                                     <div id="card-element">
                                         <!-- A Stripe Element will be inserted here. -->
                                     </div>
-                                    <br>@include('site.components.field-error', ['field' => 'payment'])
 
                                     <!-- Used to display Element errors. -->
                                     <div id="card-errors" role="alert"></div>
@@ -209,7 +209,7 @@
                             @endif
                         </div>
 
-                        @if (!Auth::check() || (Auth::check() && !is_null(Auth::user()->accepted_terms_at)))
+                        @if (!Auth::check() || (Auth::check() && is_null(Auth::user()->accepted_terms_at)))
                             <div class="row">
                                 <div class="col-xs-6">
                                     <label for="terms_and_conditions">Terms and Conditions</label><br/>

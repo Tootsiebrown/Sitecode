@@ -2,6 +2,7 @@
 
 namespace App\Wax\Shop\Payment\Drivers;
 
+use Illuminate\Support\Carbon;
 use Omnipay\Stripe\Gateway;
 use Wax\Core\Eloquent\Models\User;
 use Wax\Shop\Models\Order;
@@ -33,6 +34,10 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
 
         $responseData = $response->getData();
 
+        $namePieces = explode(' ', $responseData['name']);
+        $firstname = array_shift($namePieces);
+        $lastname = implode(' ', $namePieces);
+
         return new PaymentMethod([
             'payment_profile_id' => $response->getCardReference(),
             'brand' => $responseData['brand'],
@@ -40,7 +45,8 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
             'expiration_date' => $responseData['exp_month'] . '/' . $responseData['exp_year'],
             'address' => $responseData['address_line1'],
             'zip' => $responseData['address_zip'],
-            'name' => $responseData['name'],
+            'firstname' => $firstname,
+            'lastname' => $lastname,
         ]);
     }
 
@@ -70,6 +76,53 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
 
     public function purchase(Order $order, PaymentMethod $paymentMethod, float $amount): Payment
     {
-        // TODO: Implement purchase() method.
+        $response = $this->gateway->purchase([
+            'amount' => $amount,
+            'currency' => 'USD',
+            'paymentMethod' => $paymentMethod->payment_profile_id,
+            'description' => 'order_id ' . $order->id,
+            'customerReference' => $paymentMethod->user->payment_profile_id
+        ])->send();
+
+        if ($response->isSuccessful()) {
+            // payment was successful: update database
+            return new Payment([
+                'type' => 'stripe-stored',
+                'authorized_at' => Carbon::now(),
+                'captured_at' => Carbon::now(),
+                'account' => $paymentMethod->masked_card_number,
+                'error' => 'The payment was successful.',
+                'response' => 'CAPTURED',
+                'amount' => $amount,
+                'zip' => $paymentMethod->zip,
+                'brand' => $paymentMethod->brand,
+                'transaction_ref' => $response->getTransactionReference(),
+                'auth_code' => $response->getBalanceTransactionReference(),
+                'firstname' => $paymentMethod->firstname,
+                'lastname' => $paymentMethod->lastname,
+                'address1' => $paymentMethod->address,
+                'address2' => isset($response->getData()['source']['address_line2'])
+                    ? $response->getData()['source']['address_line2']
+                    : '',
+                'city' => isset($response->getData()['source']['address_city'])
+                    ? $response->getData()['source']['address_city']
+                    : '',
+                'state' => isset($response->getData()['source']['address_state'])
+                    ? $response->getData()['source']['address_state']
+                    : '',
+            ]);
+        }
+
+        // payment failed: display message to customer
+        return new Payment([
+            'type' => 'stripe_cc',
+            'account' => $paymentMethod->masked_card_number,
+            'error' => $response->getMessage(),
+            'response' => 'ERROR',
+            'amount' => $amount,
+            'zip' => $paymentMethod->zip,
+            'brand' => $paymentMethod->brand,
+            'transaction_ref' => $response->getTransactionReference(),
+        ]);
     }
 }
