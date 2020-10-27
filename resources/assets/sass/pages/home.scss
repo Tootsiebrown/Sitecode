@@ -157,6 +157,14 @@
         }
     }
 
+    .a-us-company {
+        text-align: center;
+
+        @media (min-width: $bp-tablet) {
+            display: none;
+        }
+    }
+
     p:last-child {
         margin-bottom: 0;
     }

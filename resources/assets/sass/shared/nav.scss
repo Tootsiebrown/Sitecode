@@ -88,8 +88,12 @@
 
         .a-us-company {
             display: none;
-            font-size: .8em;
+            font-size: .7em;
             text-align: center;
+
+            @media (min-width: $bp-laptop) {
+                font-size: .8em;
+            }
         }
 
         @media (min-width: $bp-tablet) {

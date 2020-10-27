@@ -5,7 +5,7 @@
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="/assets/img/catchndealz.svg" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
-                <span class="a-us-company">A US Company</span>
+                <span class="a-us-company">A USA Made Company</span>
             </a>
 
             <!-- Search -->
@@ -83,7 +83,7 @@
                     </a>
                 </li>
             </ul>
-            <div class="a-us-company">A US Company</div>
+            <div class="a-us-company">A USA Made Company</div>
         </div>
     </div>
 </nav>
