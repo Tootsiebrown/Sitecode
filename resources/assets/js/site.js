@@ -27,6 +27,7 @@ import OfferActionForm from "./component/offer-action-form";
 import DashboardCouponType from "./component/dashboard-coupon-type";
 import FormControlDate from "./component/form-control-date";
 import CheckoutSidebarCart from "./component/checkout/checkout-sidebar-cart";
+import PaymentMethodPicker from "./component/checkout/payment-method-picker";
 
 export default function Site() {
 
@@ -62,6 +63,7 @@ export default function Site() {
         selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
         selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
         selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))
+        selectComponent('payment-method-picker').each((index, element) => new PaymentMethodPicker(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []

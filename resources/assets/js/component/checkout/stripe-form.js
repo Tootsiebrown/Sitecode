@@ -40,6 +40,12 @@ export default class StripeForm
     }
 
     handleSubmit = (event) => {
+        let $paymentMethodSelect = $('[name=payment_method_id]')
+
+        if ($paymentMethodSelect.length > 0 && $paymentMethodSelect.val() != 'new') {
+            return;
+        }
+
         event.preventDefault();
 
         this.$component.off('submit', this.handleSubmit)

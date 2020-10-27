@@ -7,6 +7,7 @@ use App\User;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Payment\Types\TokenPaymentType;
 use App\Wax\Shop\Support\CheckoutInventoryManager;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 use Illuminate\Http\Request;
@@ -59,14 +60,14 @@ class CheckoutController extends Controller
         return view('shop.checkout.billing', [
             'stripePublishableKey' => config('wax.shop.payment.drivers.stripe.publishable_key'),
             'shipment' => $order->default_shipment,
+            'paymentMethods' => Auth::check() ? $this->paymentMethodRepo->getAll() : collect(),
         ]);
     }
 
     public function pay(Request $request)
     {
-        $this->validate(
-            $request,
-            [
+        if (! $request->has('payment_method_id')) {
+            $rules = [
                 'first_name' => 'required_unless:same_as_shipping,1',
                 'last_name' => 'required_unless:same_as_shipping,1',
                 'email' => 'required_unless:same_as_shipping,1',
@@ -74,23 +75,39 @@ class CheckoutController extends Controller
                 'address1' => 'required_unless:same_as_shipping,1',
                 'city' => 'required_unless:same_as_shipping,1',
                 'state' => 'required_unless:same_as_shipping,1',
-                'terms_and_conditions' => 'required|accepted',
-            ],
-            [
-                'first_name.required_unless' => ':attribute is required.',
-                'last_name.required_unless' => ':attribute is required.',
-                'email.required_unless' => ':attribute is required.',
-                'phone.required_unless' => ':attribute is required.',
-                'address1.required_unless' => ':attribute is required.',
-                'city.required_unless' => ':attribute is required.',
-                'state.required_unless' => ':attribute is required.',
-            ],
-            [
-                'first_name' => 'first name',
-                'last_name' => 'last name',
-                'address1' => 'address line 1',
-            ],
-        );
+            ];
+
+            if ($this->mustAcceptTerms()) {
+                $rules['terms_and_conditions'] = 'required|accepted';
+            }
+
+            $this->validate(
+                $request,
+                $rules,
+                [
+                    'first_name.required_unless' => ':attribute is required.',
+                    'last_name.required_unless' => ':attribute is required.',
+                    'email.required_unless' => ':attribute is required.',
+                    'phone.required_unless' => ':attribute is required.',
+                    'address1.required_unless' => ':attribute is required.',
+                    'city.required_unless' => ':attribute is required.',
+                    'state.required_unless' => ':attribute is required.',
+                ],
+                [
+                    'first_name' => 'first name',
+                    'last_name' => 'last name',
+                    'address1' => 'address line 1',
+                ],
+            );
+        }
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (is_null($user->accepted_terms_at)) {
+                $user->accepted_terms_at = Carbon::now()->toDateTimeString();
+                $user->save();
+            }
+        }
 
         $order = $this->shopService->getActiveOrder();
         $order->calculateTax();
@@ -113,9 +130,9 @@ class CheckoutController extends Controller
         }
 
         try {
-            if (Auth::check() && $request->input('billing_id')) {
+            if (Auth::check() && $request->input('payment_method_id')) {
                 $paymentMethod = PaymentMethod::where('user_id', Auth::user()->id)
-                    ->where('id', $request->input('billing_id'))
+                    ->where('id', $request->input('payment_method_id'))
                     ->firstOrFail();
 
                 $payment = $this->paymentMethodRepo->makePayment($order, $paymentMethod);
@@ -198,5 +215,11 @@ class CheckoutController extends Controller
 
         $user->payment_profile_id = $profileId;
         $user->save();
+    }
+
+    protected function mustAcceptTerms()
+    {
+        return !Auth::check()
+            || (Auth::check() && !is_null(Auth::user()->accepted_terms_at));
     }
 }
