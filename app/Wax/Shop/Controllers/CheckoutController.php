@@ -131,7 +131,8 @@ class CheckoutController extends Controller
         }
 
         try {
-            if (Auth::check()
+            if (
+                Auth::check()
                 && $request->has('payment_method_id')
                 && $request->input('payment_method_id') !== 'new'
             ) {

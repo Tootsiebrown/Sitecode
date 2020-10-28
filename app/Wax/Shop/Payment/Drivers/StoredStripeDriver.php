@@ -23,7 +23,7 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
         $gateway->setApiKey(config('wax.shop.payment.drivers.stripe.secret_key'));
     }
 
-    public function setUser(User $user) : StoredCreditCardDriverContract
+    public function setUser(User $user): StoredCreditCardDriverContract
     {
         $this->user = $user;
 
@@ -70,8 +70,6 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
             ])
             ->send()
             ->getCustomerReference();
-
-
     }
 
     public function updateCard($data, PaymentMethod $originalPaymentMethod): PaymentMethod
