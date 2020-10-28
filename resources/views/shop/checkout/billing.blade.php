@@ -29,14 +29,14 @@
                                 <div class="col-sm-12">
                                     <select name="payment_method_id" class="select2" data-element="paymentMethodPicker">
                                         @foreach ($paymentMethods as $paymentMethod)
-                                            <option value="{{ $paymentMethod->id }}">
+                                            <option value="{{ $paymentMethod->id }}" @if (old('payment_method_id') == $paymentMethod->id) selected @endif>
                                                 {{ $paymentMethod->firstname }} {{ $paymentMethod->lastname }},
                                                 {{ $paymentMethod->address }},
                                                 {{ $paymentMethod->brand }}
                                                 {{ $paymentMethod->masked_card_number }}
                                             </option>
                                         @endforeach
-                                        <option value="new">New Payment Method</option>
+                                        <option value="new"@if (old('payment_method_id') == 'new') selected @endif>New Payment Method</option>
                                     </select>
                                 </div>
                             </div>

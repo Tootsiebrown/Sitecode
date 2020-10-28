@@ -7,12 +7,12 @@ export default class PaymentMethodPicker {
         if ('paymentMethodPicker' in this.$component.elements) {
             this.$paymentMethodPicker = this.$component.elements.paymentMethodPicker
         }
-console.log('what is happening')
-console.log(this.$paymentMethodPicker)
+
         this.$newPaymentMethod = this.$component.elements.newPaymentMethod
 
         if (this.$paymentMethodPicker) {
             this.$paymentMethodPicker.on('change', this.handlePaymentMethodChange)
+            this.$paymentMethodPicker.trigger('change')
         }
     }
 

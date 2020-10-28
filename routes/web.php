@@ -357,6 +357,16 @@ Route::group(
 
             });
 
+        Route::prefix('payment-methods')
+            ->name('dashboard.paymentMethods.')
+            ->group(function () {
+                Route::get('/')
+                    ->uses('Dashboard\PaymentMethodsController@index')
+                    ->name('index');
+                Route::get('delete/{id}')
+                    ->name('destroy')
+                    ->uses('Dashboard\PaymentMethodsController@destroy');
+            });
 
 
         Route::prefix('offers')
@@ -606,8 +616,8 @@ Route::group(
             });
 
         //All user can access this route
-        Route::get('payments', ['as' => 'payments', 'uses' => 'PaymentController@index']);
-        Route::get('payments-info/{trand_id}', ['as' => 'payment_info', 'uses' => 'PaymentController@paymentInfo']);
+//        Route::get('payments', ['as' => 'payments', 'uses' => 'PaymentController@index']);
+//        Route::get('payments-info/{trand_id}', ['as' => 'payment_info', 'uses' => 'PaymentController@paymentInfo']);
         //End all users access
 
 

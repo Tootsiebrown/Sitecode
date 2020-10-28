@@ -122,16 +122,19 @@ class CheckoutController extends Controller
             'address' => $this->getBillingAddress($request, $order),
         ];
 
-//        try {
-//            $this->inventoryManager->reserveItems($order);
-//        } catch (Throwable $e) {
-//            $this->inventoryManager->releaseItems($order);
-//
-//            throw $e;
-//        }
+        try {
+            $this->inventoryManager->reserveItems($order);
+        } catch (Throwable $e) {
+            $this->inventoryManager->releaseItems($order);
+
+            throw $e;
+        }
 
         try {
-            if (Auth::check() && $request->input('payment_method_id')) {
+            if (Auth::check()
+                && $request->has('payment_method_id')
+                && $request->input('payment_method_id') !== 'new'
+            ) {
                 $paymentMethod = PaymentMethod::where('user_id', Auth::user()->id)
                     ->where('id', $request->input('payment_method_id'))
                     ->firstOrFail();

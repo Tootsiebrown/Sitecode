@@ -40,16 +40,18 @@ export default class StripeForm
     }
 
     handleSubmit = (event) => {
+        this.$component.off('submit', this.handleSubmit)
+        this.$spinner.removeClass('hidden');
+        this.$submitButton.prop('disabled', true)
+
         let $paymentMethodSelect = $('[name=payment_method_id]')
 
         if ($paymentMethodSelect.length > 0 && $paymentMethodSelect.val() != 'new') {
+            this.$submitButton.prop('disabled', true)
             return;
         }
 
         event.preventDefault();
-
-        this.$component.off('submit', this.handleSubmit)
-        this.$spinner.removeClass('hidden');
 
         stripe.createToken(this.card, this.getBillingData()).then((result) => {
             if (result.error) {
