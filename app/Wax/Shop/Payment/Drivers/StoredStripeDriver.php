@@ -81,7 +81,10 @@ class StoredStripeDriver implements StoredCreditCardDriverContract
 
     public function deleteCard(PaymentMethod $paymentMethod)
     {
-        // TODO: Implement deleteCard() method.
+        $this->gateway->deleteCard([
+            'customerReference' => $paymentMethod->user->payment_profile_id,
+            'cardReference' => $paymentMethod->payment_profile_id,
+        ])->send();
     }
 
     public function purchase(Order $order, PaymentMethod $paymentMethod, float $amount): Payment
