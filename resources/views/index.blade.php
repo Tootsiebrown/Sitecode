@@ -56,6 +56,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <p class="a-us-company">A USA Made Company</p>
             </div>
 
             <h2>Featured Items</h2>

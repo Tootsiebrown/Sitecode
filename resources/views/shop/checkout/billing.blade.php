@@ -154,12 +154,15 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-12">
                             <label>Credit Card *</label>
                             <br>
                             <div id="card-element">
                                 <!-- A Stripe Element will be inserted here. -->
                             </div>
+                            <a class="powered-by-stripe" href="https://stripe.com" target="_blank">
+                                <img alt="Powered by Stripe" src="/assets/img/powered-by-stripe.png">
+                            </a>
                             <br>@include('site.components.field-error', ['field' => 'payment'])
 
                             <!-- Used to display Element errors. -->

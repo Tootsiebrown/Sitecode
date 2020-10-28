@@ -86,6 +86,16 @@
             max-height: 38px;
         }
 
+        .a-us-company {
+            display: none;
+            font-size: .7em;
+            text-align: center;
+
+            @media (min-width: $bp-laptop) {
+                font-size: .8em;
+            }
+        }
+
         @media (min-width: $bp-tablet) {
             display: flex;
             flex-direction: column;
@@ -97,11 +107,16 @@
             & > img {
                 max-height: 60px;
             }
+
+            .a-us-company {
+                display: block;
+            }
         }
 
         @media (min-width: $bp-phablet) {
             & > img {
-                max-height: 90px;
+                max-height: 80px;
+                margin-bottom: 4px;
             }
         }
     }
@@ -168,6 +183,16 @@
     .navbar-collapse {
         .navbar-search-wrap {
             display: none;
+        }
+
+        .a-us-company {
+            font-size: .9em;
+            margin: 8px 0 16px;
+            text-align: center;
+
+            @media (min-width: $bp-tablet) {
+                display: none;
+            }
         }
     }
 
@@ -243,7 +268,7 @@
             flex-grow: 1;
             text-align: left;
         }
-        
+
         & > li {
             @media (min-width: $bp-tablet) {
                 text-align: center;
