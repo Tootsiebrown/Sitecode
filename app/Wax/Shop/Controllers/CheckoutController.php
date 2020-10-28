@@ -232,6 +232,6 @@ class CheckoutController extends Controller
     protected function mustAcceptTerms()
     {
         return !Auth::check()
-            || (Auth::check() && !is_null(Auth::user()->accepted_terms_at));
+            || (Auth::check() && is_null(Auth::user()->accepted_terms_at));
     }
 }
