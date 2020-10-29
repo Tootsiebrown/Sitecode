@@ -12,6 +12,8 @@ use App\ProductCategory;
 use App\ProductImage;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -346,6 +348,14 @@ class ListerController extends Controller
                 ? $request->input('offers_enabled')
                 : false,
         ];
+
+        if ($request->input('redone')) {
+            $data['redone_at'] = Carbon::now()->toDateTimeString();
+            $data['redone_by_user_id'] = Auth::user()->id;
+        } else {
+            $data['redone_at'] = null;
+            $data['redone_by_user_id'] = null;
+        }
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
             $data[$fieldName] = $request->input($fieldName);

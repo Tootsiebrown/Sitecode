@@ -16,6 +16,7 @@ class Product extends Model
     use HasProductCategories;
 
     protected $guarded = [];
+    protected $dates = ['redone_at'];
 
     public function categories()
     {
@@ -41,5 +42,10 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function redoneBy()
+    {
+        return $this->belongsTo(User::class, 'redone_by_user_id');
     }
 }

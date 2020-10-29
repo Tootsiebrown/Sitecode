@@ -149,7 +149,9 @@ class ShippingService
         $shipstationOrder->shipTo = $this->getShipstationShipTo($order);
         $shipstationOrder->items = $this->getShipstationItems($order);
         $shipstationOrder->requestedShippingService = $order->default_shipment->shipping_service_name;
-        $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
+        if (! config('shipping.custom_shipping')) {
+            $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
+        }
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
         $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order);
         $shipstationOrder->weight = $weight;
@@ -159,7 +161,7 @@ class ShippingService
         }
 
         $result = $this->shipStation->orders->post($shipstationOrder, 'createorder');
-        \Log::info(print_r($result));
+
         if ($order->shipstation_key != $result->orderKey) {
             $order->shipstation_key = $result->orderKey;
             $order->save();
