@@ -606,9 +606,26 @@ Route::group(
             });
 
         //All user can access this route
-        Route::get('payments', ['as' => 'payments', 'uses' => 'PaymentController@index']);
-        Route::get('payments-info/{trand_id}', ['as' => 'payment_info', 'uses' => 'PaymentController@paymentInfo']);
+//        Route::get('payments', ['as' => 'payments', 'uses' => 'PaymentController@index']);
+//        Route::get('payments-info/{trand_id}', ['as' => 'payment_info', 'uses' => 'PaymentController@paymentInfo']);
         //End all users access
+
+        Route::name('dashboard.shippingAddresses.')
+            ->prefix('shipping-addresses')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('ShippingAddressesController@index');
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('ShippingAddressesController@show');
+                Route::put('{id}')
+                    ->name('update')
+                    ->uses('ShippingAddressesController@update');
+                Route::delete('{id}')
+                    ->name('destroy')
+                    ->uses('ShippingAddressesController@destroy');
+            });
 
 
         Route::group(

@@ -24,9 +24,11 @@ import SearchSidebar from "./component/search-sidebar";
 import SortFeaturedListings from "./component/sort-featured-listings";
 import CartItemQuantity from "./component/checkout/cart-item-quantity";
 import OfferActionForm from "./component/offer-action-form";
+import ShippingAddressPicker from "./component/checkout/shipping-address-picker";
 import DashboardCouponType from "./component/dashboard-coupon-type";
 import FormControlDate from "./component/form-control-date";
 import CheckoutSidebarCart from "./component/checkout/checkout-sidebar-cart";
+
 
 export default function Site() {
 
@@ -59,6 +61,7 @@ export default function Site() {
         selectComponent('sort-featured-listings').each((index, element) => new SortFeaturedListings(element))
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
+        selectComponent('shipping-address-picker').each((index, element) => new ShippingAddressPicker(element))
         selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
         selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
         selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))

@@ -6,19 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Wax\Shop\Models\Order\ShippingRate;
 use App\Wax\Shop\Services\ShippingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Wax\Core\Eloquent\Models\User\Address;
+use Wax\Core\Repositories\AddressBookRepository;
 use Wax\Shop\Services\ShopService;
 
 class ShippingController extends Controller
 {
     protected ShopService $shopService;
     protected ShippingService $shippingService;
+    protected AddressBookRepository $addressBookRepo;
 
     public function __construct(
         ShopService $shopService,
-        ShippingService $shippingService
+        ShippingService $shippingService,
+        AddressBookRepository $addressBookRepo
     ) {
         $this->shopService = $shopService;
         $this->shippingService = $shippingService;
+        $this->addressBookRepo = $addressBookRepo;
     }
 
     public function showShipping(Request $request)
@@ -37,7 +43,8 @@ class ShippingController extends Controller
         return view('shop.checkout.shipping', [
             'order' => $order,
             'shipment' => $order->default_shipment,
-            'inStorePickup' => $request->old('in_store_pickup')
+            'inStorePickup' => $request->old('in_store_pickup'),
+            'addresses' => Auth::check() ? $this->addressBookRepo->getAll()->sortByDesc('default_shipping') : collect(),
         ]);
     }
 
@@ -46,36 +53,6 @@ class ShippingController extends Controller
         $order = $this->shopService->getActiveOrder();
         $shipment = $order->default_shipment;
 
-        $this->validate(
-            $request,
-            [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'address1' => 'required',
-                'city' => 'required',
-                'state' => 'required|exists:tax,zone',
-                'zip' => 'required',
-            ],
-            [
-                'first_name.required' => ':attribute is required.',
-                'last_name.required' => ':attribute is required.',
-                'email.required' => ':attribute is required.',
-                'phone.required' => ':attribute is required.',
-                'address1.required' => ':attribute is required.',
-                'city.required' => ':attribute is required.',
-                'state.required' => ':attribute is required.',
-                'state.exists' => 'State must be a valid uppercase, two-letter abbreviation.',
-                'zip.required' => ':attribute is required.',
-            ],
-            [
-                'first_name' => 'first name',
-                'last_name' => 'last name',
-                'address1' => 'address line 1',
-            ],
-        );
-
         if ($request->input('in_store_pickup')) {
             $shipment->in_store_pickup = true;
         } else {
@@ -83,19 +60,79 @@ class ShippingController extends Controller
         }
         $shipment->save();
 
-        $shipment->setAddress(
-            $request->input('first_name'),
-            $request->input('last_name'),
-            '',
-            $request->input('email'),
-            $request->input('phone'),
-            $request->input('address1', ''),
-            $request->input('address2', ''),
-            $request->input('city', ''),
-            $request->input('state', ''),
-            $request->input('zip', ''),
-            'US'
-        );
+        $address = null;
+
+        if (Auth::check() && $request->input('address_id')) {
+            $address = Address::where('user_id', Auth::user()->id)
+                ->where('id', $request->input('address_id'))
+                ->first();
+        }
+
+        if (! $address) {
+            $this->validate(
+                $request,
+                [
+                    'firstname' => 'required',
+                    'lastname' => 'required',
+                    'email' => 'required',
+                    'phone' => 'required',
+                    'address1' => 'required',
+                    'city' => 'required',
+                    'state' => 'required|exists:tax,zone',
+                    'zip' => 'required',
+                ],
+                [
+                    'firstname.required' => ':attribute is required.',
+                    'lastname.required' => ':attribute is required.',
+                    'email.required' => ':attribute is required.',
+                    'phone.required' => ':attribute is required.',
+                    'address1.required' => ':attribute is required.',
+                    'city.required' => ':attribute is required.',
+                    'state.required' => ':attribute is required.',
+                    'state.exists' => 'State must be a valid uppercase, two-letter abbreviation.',
+                    'zip.required' => ':attribute is required.',
+                ],
+                [
+                    'firstname' => 'first name',
+                    'lastname' => 'last name',
+                    'address1' => 'address line 1',
+                ],
+            );
+
+            $data = [
+                'firstname' => $request->input('firstname'),
+                'lastname' => $request->input('lastname'),
+                'company' => '',
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'address1' => $request->input('address1', ''),
+                'address2' => $request->input('address2', ''),
+                'city' => $request->input('city', ''),
+                'state' => $request->input('state', ''),
+                'zip' => $request->input('zip', ''),
+                'country' => 'US'
+            ];
+
+            if (Auth::check() && $request->input('save_address')) {
+                $this->addressBookRepo->create($data);
+            }
+
+            $shipment->setAddress(...array_values($data));
+        } else {
+            $shipment->setAddress(
+                $address->firstname,
+                $address->lastname,
+                $address->company ?? '',
+                $address->email,
+                $address->phone,
+                $address->address1,
+                $address->address2,
+                $address->city,
+                $address->state,
+                $address->zip,
+                $address->country
+            );
+        }
 
         if (config('shipping.custom_shipping')) {
             $this->shippingService->refreshRatesfor($order);
