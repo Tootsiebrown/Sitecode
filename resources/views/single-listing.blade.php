@@ -163,7 +163,7 @@
                                 @if (Auth::user()->hasAcceptedOfferOn($listing))
                                     <a href="{{ route('payForAcceptedOffer', ['id' => Auth::user()->offers()->where('listing_id', $listing->id)->status('accepted')->first()->id]) }}">Pay for it now</a>
                                 @endif
-                            @elseif ($listing->availableItems()->count() > 0)
+                            @elseif ($listing->availableItems()->count() > 0 && $listing->offers_enabled)
                                 <p><b>OR</b></p>
 {{--                                <div class="make-an-offer" data-component="make-an-offer">--}}
 {{--                                    <button data-element="button">Make and Offer</button>--}}

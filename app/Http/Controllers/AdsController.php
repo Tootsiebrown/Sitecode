@@ -184,7 +184,8 @@ class AdsController extends Controller
 
     public function showEdit(Request $request, $id)
     {
-        $listing = Listing::find($id);
+        $listing = Listing::withoutGlobalScopes()
+            ->find($id);
 
         if (! $listing) {
             abort(404);
@@ -213,7 +214,8 @@ class AdsController extends Controller
 
     public function saveEdit(Request $request, $id)
     {
-        $listing = Listing::find($id);
+        $listing = Listing::withoutGlobalScopes()
+            ->find($id);
 
         if (!$listing) {
             abort(404);
@@ -229,6 +231,8 @@ class AdsController extends Controller
                 'required',
                 Rule::in(Listing::getConditions()),
             ],
+
+            'offers_enabled' => 'boolean',
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
@@ -312,6 +316,9 @@ class AdsController extends Controller
             'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
                 ? null
                 : $request->input('shipping_weight_oz'),
+            'offers_enabled' => $request->has('offers_enabled')
+                ? $request->input('offers_enabled')
+                : false,
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
