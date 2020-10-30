@@ -127,6 +127,12 @@
                 </li>
             @endif
 
+            @if ($lUser->hasPrivilege('Carousel'))
+                <li>
+                    <a href="{{ route('dashboard.carousel.index') }}"><i class="fa fa-file-image-o"></i> Carousel</a>
+                </li>
+            @endif
+
             @if ($lUser->hasPrivilege('Offers'))
                 <li>
                     <a href="{{ route('dashboard.offers.index') }}">

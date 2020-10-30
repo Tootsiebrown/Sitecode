@@ -357,7 +357,14 @@ Route::group(
 
             });
 
-
+        Route::prefix('carousel')
+            ->name('dashboard.carousel.')
+            ->middleware('privilege:Carousel')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('Dashboard\CarouselController@index');
+            });
 
         Route::prefix('offers')
             ->name('dashboard.offers.')
