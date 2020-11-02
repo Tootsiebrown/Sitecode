@@ -37,7 +37,6 @@ class CarouselController extends Controller
         return redirect()
             ->route('dashboard.carousel.edit', ['id' => $slide->id])
             ->with('success', 'Slide Created');
-
     }
 
     public function edit($id)
