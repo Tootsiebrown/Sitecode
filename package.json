@@ -29,6 +29,7 @@
         "@ericblade/quagga2": "^1.2.1",
         "autosize": "^3.0.20",
         "babel-polyfill": "^6.23.0",
+        "cropperjs": "^1.5.9",
         "cross-env": "^5.0.1",
         "dotenv": "^2.0.0",
         "eonasdan-bootstrap-datetimepicker": "^4.17.47",

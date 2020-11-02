@@ -160,6 +160,10 @@ Route::group(
     function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@dashboard']);
 
+        Route::post('image-upload')
+            ->name('dashboard.uploadImage')
+            ->uses('Dashboard\ImageUploadController@upload');
+
         Route::middleware('privilege:Lister')
             ->prefix('lister')
             ->name('lister.')
@@ -364,6 +368,18 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('Dashboard\CarouselController@index');
+                Route::get('create')
+                    ->name('create')
+                    ->uses('Dashboard\CarouselController@create');
+                Route::post('store')
+                    ->name('store')
+                    ->uses('Dashboard\CarouselController@store');
+                Route::get('{id}')
+                    ->name('edit')
+                    ->uses('Dashboard\CarouselController@edit');
+                Route::patch('{id}')
+                    ->name('update')
+                    ->uses('Dashboard\CarouselController@update');
             });
 
         Route::prefix('offers')
