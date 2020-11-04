@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Listing;
 use App\Category;
+use App\Models\Slide;
 use App\ProductCategory;
 
 class HomeController extends Controller
@@ -40,6 +41,8 @@ class HomeController extends Controller
 
     protected function getSlides()
     {
+        return Slide::all();
+
         return collect(
             [
                 [

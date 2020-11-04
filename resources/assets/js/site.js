@@ -28,6 +28,7 @@ import ShippingAddressPicker from "./component/checkout/shipping-address-picker"
 import DashboardCouponType from "./component/dashboard-coupon-type";
 import FormControlDate from "./component/form-control-date";
 import CheckoutSidebarCart from "./component/checkout/checkout-sidebar-cart";
+import ImageField from "./component/dashboard/image-field";
 
 
 export default function Site() {
@@ -65,6 +66,7 @@ export default function Site() {
         selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
         selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
         selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))
+        selectComponent('image-field').each((index, element) => new ImageField(element))
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
             let otherTaxonomyNavs = []
