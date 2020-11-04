@@ -8,7 +8,7 @@
 @section('content')
     <div class="slider" data-component="home-slider">
         @foreach ($slides as $slide)
-            <div class="slide" style="background-image: url({{ $slide['background_image'] }});">
+            <div class="slide" style="background-image: url({{ $slide['background_image']->url }});">
                 <div class="container">
                     <div class="wavy"></div>
                     <div class="content">
@@ -16,10 +16,10 @@
                             <div class="content__copy">
                                 <h2>{{ $slide['title'] }}</h2>
                                 <p>{{ $slide['caption'] }}</p>
-                                <a href="{{ $slide['link'] }}" class="btn btn-default">{{ $slide['cta'] }} @svg(arrow)</a>
+                                <a href="{{ $slide['url'] }}" class="btn btn-default">{{ $slide['cta'] }} @svg(arrow)</a>
                             </div>
                         </div>
-                        <div class="content__image" style="background-image: url({{ $slide['image'] }})">
+                        <div class="content__image" style="background-image: url({{ $slide['image']->url }})">
                         </div>
                     </div>
                 </div>

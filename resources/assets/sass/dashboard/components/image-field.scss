@@ -1,0 +1,32 @@
+.image-field {
+    &__wrapper {
+
+        &.loading {
+            .image-field__spinner {
+                display: block;
+            }
+        }
+    }
+
+    &__spinner {
+        display: none;
+        img {
+            height: 24px;
+            width: 24px;
+        }
+    }
+
+    &__image {
+        max-width: 250px;
+    }
+
+    &__cropper-modal {
+        max-width: 1400px;
+
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
+@import 'node_modules/cropperjs/src/css/cropper.scss';

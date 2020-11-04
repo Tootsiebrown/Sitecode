@@ -1,19 +1,31 @@
-@if ($type === 'submit')
-    <div class="form-group">
-        <label class="col-sm-4 control-label">&nbsp;</label>
-        <div class="col-sm-8">
-            <button type="submit" class="btn btn-primary" name="submit" value="submit">{{ $prettyTitle ?? 'Submit' }}</button>
-        </div>
-    </div>
-@else
-    <div class="form-group" {{ $errors->has($name)? 'has-error':'' }}>
-        <label for="{{ $name }}" class="col-sm-4 control-label">{{ $prettyTitle }}</label>
-        <div class="col-sm-8">
-            @include('dashboard.form-elements.inputs.' . $type, [
-                'name' => $name,
-                'value' => $value ?? '',
-            ])
+<div class="form-group @if (isset($name)) {{$errors->has($name)? 'has-error':'' }} @endif">
+    <label class="col-sm-4 control-label" @if (isset($name)) for="{{ $name }}" @endif>{{ $prettyTitle ?? ' ' }}</label>
+    <div class="col-sm-8">
+        @switch($type)
+            @case ('submit')
+                <button type="submit" class="btn btn-primary" name="submit" value="submit">{{ $prettyTitle ?? 'Submit' }}</button>
+                @break
+            @case ('boolean')
+            @case ('select')
+            @case ('date')
+            @case ('text')
+                @include('dashboard.form-elements.inputs.' . $type, [
+                    'name' => $name,
+                    'value' => $value ?? '',
+                ])
+                @break
+            @case ('image')
+                @include('dashboard.form-elements.inputs.' . $type, [
+                    'name' => $name,
+                    'value' => $value ?? '',
+                    'imageMata' => $imageMeta,
+                    'path' => $path
+                ])
+                @break
+        @endswitch
+
+        @if (isset($name))
             @include('site.components.field-error', ['field' => $name])
-        </div>
+        @endif
     </div>
-@endif
+</div>

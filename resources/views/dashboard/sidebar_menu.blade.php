@@ -100,6 +100,13 @@
 
             <li> <a href="{{ route('dashboard.paymentMethods.index') }}"><i class="fa fa-money"></i> Payment Methods</a></li>
 
+            <li>
+                <a href="{{ route('dashboard.shippingAddresses.index') }}">
+                    <i class="fa fa-address-card"></i>
+                    Shipping Addresses
+                </a>
+            </li>
+
             @if($lUser->hasPrivilege('Manager'))
 {{--                <li> <a href="{{ route('parent_categories') }}"><i class="fa fa-list"></i> @lang('app.categories') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
 {{--                <li> <a href="{{ route('admin_comments') }}"><i class="fa fa-comment-o"></i> @lang('app.comments') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span></a>  </li>--}}
@@ -123,6 +130,12 @@
                         <i class="fa fa-list-alt"></i>
                         Order Processing Report
                     </a>
+                </li>
+            @endif
+
+            @if ($lUser->hasPrivilege('Carousel'))
+                <li>
+                    <a href="{{ route('dashboard.carousel.index') }}"><i class="fa fa-file-image-o"></i> Carousel</a>
                 </li>
             @endif
 

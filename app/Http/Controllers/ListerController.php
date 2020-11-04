@@ -12,6 +12,8 @@ use App\ProductCategory;
 use App\ProductImage;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -259,6 +261,8 @@ class ListerController extends Controller
                 Rule::in(Product::getConditions()),
             ],
 
+            'offers_enabled' => 'boolean',
+
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
 
@@ -340,7 +344,18 @@ class ListerController extends Controller
             'shipping_weight_oz' => empty($request->input('shipping_weight_oz'))
                 ? null
                 : $request->input('shipping_weight_oz'),
+            'offers_enabled' => $request->has('offers_enabled')
+                ? $request->input('offers_enabled')
+                : false,
         ];
+
+        if ($request->input('redone')) {
+            $data['redone_at'] = Carbon::now()->toDateTimeString();
+            $data['redone_by_user_id'] = Auth::user()->id;
+        } else {
+            $data['redone_at'] = null;
+            $data['redone_by_user_id'] = null;
+        }
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
             $data[$fieldName] = $request->input($fieldName);
@@ -431,6 +446,7 @@ class ListerController extends Controller
             'type' => 'required|in:auction,set-price',
             'quantity' => 'integer|required_if:type,set-price',
             'price' => 'required|numeric',
+            'offers_enabled' => 'boolean',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -467,6 +483,9 @@ class ListerController extends Controller
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
                 'shipping_weight_oz' => $product->shipping_weight_oz,
+                'offers_enabled' => $request->has('offers_enabled')
+                    ? $request->input('offers_enabled')
+                    : false,
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {

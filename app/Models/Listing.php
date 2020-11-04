@@ -28,6 +28,7 @@ class Listing extends Model
         'expired_at' => 'datetime',
         'price' => 'float',
         'featured' => 'boolean',
+        'offers_enabled' => 'boolean',
     ];
 
     protected $guarded = [];

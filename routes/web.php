@@ -160,6 +160,10 @@ Route::group(
     function () {
         Route::get('/', ['as' => 'dashboard', 'uses' => 'DashboardController@dashboard']);
 
+        Route::post('image-upload')
+            ->name('dashboard.uploadImage')
+            ->uses('Dashboard\ImageUploadController@upload');
+
         Route::middleware('privilege:Lister')
             ->prefix('lister')
             ->name('lister.')
@@ -368,6 +372,26 @@ Route::group(
                     ->uses('Dashboard\PaymentMethodsController@destroy');
             });
 
+        Route::prefix('carousel')
+            ->name('dashboard.carousel.')
+            ->middleware('privilege:Carousel')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('Dashboard\CarouselController@index');
+                Route::get('create')
+                    ->name('create')
+                    ->uses('Dashboard\CarouselController@create');
+                Route::post('store')
+                    ->name('store')
+                    ->uses('Dashboard\CarouselController@store');
+                Route::get('{id}')
+                    ->name('edit')
+                    ->uses('Dashboard\CarouselController@edit');
+                Route::patch('{id}')
+                    ->name('update')
+                    ->uses('Dashboard\CarouselController@update');
+            });
 
         Route::prefix('offers')
             ->name('dashboard.offers.')
@@ -619,6 +643,23 @@ Route::group(
 //        Route::get('payments', ['as' => 'payments', 'uses' => 'PaymentController@index']);
 //        Route::get('payments-info/{trand_id}', ['as' => 'payment_info', 'uses' => 'PaymentController@paymentInfo']);
         //End all users access
+
+        Route::name('dashboard.shippingAddresses.')
+            ->prefix('shipping-addresses')
+            ->group(function () {
+                Route::get('/')
+                    ->name('index')
+                    ->uses('ShippingAddressesController@index');
+                Route::get('{id}')
+                    ->name('show')
+                    ->uses('ShippingAddressesController@show');
+                Route::put('{id}')
+                    ->name('update')
+                    ->uses('ShippingAddressesController@update');
+                Route::delete('{id}')
+                    ->name('destroy')
+                    ->uses('ShippingAddressesController@destroy');
+            });
 
 
         Route::group(

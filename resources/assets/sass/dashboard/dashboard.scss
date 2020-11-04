@@ -5,6 +5,7 @@
 @import "components/product-images";
 @import "components/new-product-image";
 @import "components/listing-type-select";
+@import "components/image-field";
 
 @import "bins/bins";
 @import "auction-activity/auction-activity";
@@ -22,6 +23,10 @@
 
         &:last-child {
             padding-right: 0;
+        }
+
+        img {
+            max-width: 200px;
         }
     }
 

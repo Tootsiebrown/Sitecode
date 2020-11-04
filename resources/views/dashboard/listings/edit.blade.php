@@ -114,6 +114,18 @@
             </div>
         </div>
 
+        @if ($listing->type == 'set-price')
+            <div class="form-group {{ $errors->has('offers_enabled')? 'has-error':'' }}">
+                <label for="offers_enabled" class="col-sm-4 control-label">
+                    Accepts Offers
+                </label>
+                <div class="col-sm-8">
+                    <input type="checkbox" id="offers_enabled" {{ old('offers_enabled', $listing->offers_enabled) ? 'checked' : '' }} value="1" name="offers_enabled">
+                    {!! $errors->has('offers_enabled')? '<p class="help-block">'.$errors->first('offers_enabled').'</p>':'' !!}
+                </div>
+            </div>
+        @endif
+
         <div class="form-group {{ $errors->has('shipping_weight_oz')? 'has-error':'' }}">
             <label for="shipping_weight_oz" class="col-sm-4 control-label">Shipping Weight (oz)</label>
             <div class="col-sm-8">

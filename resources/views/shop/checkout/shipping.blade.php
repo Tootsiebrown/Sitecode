@@ -49,22 +49,22 @@
 {{--                                    <input--}}
 {{--                                        type="text"--}}
 {{--                                        class="form-control"--}}
-{{--                                        name="first_name"--}}
+{{--                                        name="firstname"--}}
 {{--                                        id="first-name"--}}
-{{--                                        value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"--}}
+{{--                                        value="{{ old('firstname') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"--}}
 {{--                                    >--}}
-{{--                                    @include('site.components.field-error', ['field' => 'first_name'])--}}
+{{--                                    @include('site.components.field-error', ['field' => 'firstname'])--}}
 {{--                                </div>--}}
 {{--                                <div class="col-xs-6">--}}
 {{--                                    <label for="last-name">Last Name *</label>--}}
 {{--                                    <input--}}
 {{--                                        type="text"--}}
 {{--                                        class="form-control"--}}
-{{--                                        name="last_name"--}}
+{{--                                        name="lastname"--}}
 {{--                                        id="last-name"--}}
-{{--                                        value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"--}}
+{{--                                        value="{{ old('lastname') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"--}}
 {{--                                    >--}}
-{{--                                    @include('site.components.field-error', ['field' => 'last_name'])--}}
+{{--                                    @include('site.components.field-error', ['field' => 'lastname'])--}}
 {{--                                </div>--}}
 {{--                            </div>--}}
 {{--                            <div class="row">--}}
@@ -102,123 +102,143 @@
                             @include('dashboard.flash_msg')
                             @csrf
                             <input type="hidden" name="in_store_pickup" value="0">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label for="first-name">First Name *</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="first_name"
-                                      id="first-name"
-                                      value="{{ old('first_name') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'first_name'])
-                                </div>
-                                <div class="col-xs-6">
-                                    <label for="last-name">Last Name *</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="last_name"
-                                      id="last-name"
-                                      value="{{ old('last_name') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'last_name'])
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label for="email">Email *</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="email"
-                                      id="email"
-                                      value="{{ old('email') ?? $shipment->email ?? $lUser->email ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'email'])
-                                </div>
-                                <div class="col-xs-6">
-                                    <label for="phone">Phone Number *</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="phone"
-                                      id="phone"
-                                      value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone ?? '' }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'phone'])
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-8">
-                                    <label for="address1">Address Line 1 *</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="address1"
-                                      id="address1"
-                                      value="{{ old('address1') ?? $shipment->address1 }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'address1'])
-                                </div>
-                                <div class="col-xs-4">
-                                    <label for="address2">Line 2</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="address2"
-                                      id="address2"
-                                      value="{{ old('address2') ?? $shipment->address2 }}"
-                                    >
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <label for="city">City*</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="city"
-                                      id="city"
-                                      value="{{ old('city') ?? $shipment->city }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'city'])
-                                </div>
-                                <div class="col-xs-3">
-                                    <label for="state">State*</label>
-                                    <input
-                                       type="text"
-                                      class="form-control"
-                                      name="state"
-                                      id="state"
-                                      value="{{ old('state') ?? $shipment->state }}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'state'])
-                                </div>
-                                <div class="col-xs-3">
-                                    <label for="zip">Zip*</label>
-                                    <input
-                                      type="text"
-                                      class="form-control"
-                                      name="zip"
-                                      id="zip"
-                                      value="{{ old('zip') ?? $shipment->zip}}"
-                                    >
-                                    @include('site.components.field-error', ['field' => 'zip'])
-                                </div>
-                            </div>
 
-                            @if ($lUser)
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <label>
-                                            <input type="checkbox" name="save_address" value="1" @if (old('save_address')) checked @endif>
-                                            Save this address
-                                        </label>
+                            <div data-component="shipping-address-picker">
+                                @if ($addresses->isNotEmpty())
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <select name="address_id" class="select2" data-element="addressPicker">
+                                                @foreach ($addresses as $address)
+                                                    <option value="{{ $address->id }}">
+                                                        {{ $address->firstname }} {{ $address->lastname }}, {{ $address->address1 }}, {{ $address->state }}
+                                                    </option>
+                                                @endforeach
+                                                <option value="new">New Address</option>
+                                            </select>
+                                        </div>
                                     </div>
+                                @endif
+
+                                <div data-element="newAddress" @if ($addresses->isNotEmpty()) class="hidden" @endif>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <label for="first-name">First Name *</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="firstname"
+                                              id="first-name"
+                                              value="{{ old('firstname') ?? $shipment->firstname ?? $lUser->firstname ?? '' }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'firstname'])
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <label for="last-name">Last Name *</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="lastname"
+                                              id="last-name"
+                                              value="{{ old('lastname') ?? $shipment->lastname ?? $lUser->lastname ?? ''}}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'lastname'])
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <label for="email">Email *</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="email"
+                                              id="email"
+                                              value="{{ old('email') ?? $shipment->email ?? $lUser->email ?? '' }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'email'])
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <label for="phone">Phone Number *</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="phone"
+                                              id="phone"
+                                              value="{{ old('phone') ?? $shipment->phone ?? $lUser->phone ?? '' }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'phone'])
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <label for="address1">Address Line 1 *</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="address1"
+                                              id="address1"
+                                              value="{{ old('address1') ?? $shipment->address1 }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'address1'])
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="address2">Line 2</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="address2"
+                                              id="address2"
+                                              value="{{ old('address2') ?? $shipment->address2 }}"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <label for="city">City*</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="city"
+                                              id="city"
+                                              value="{{ old('city') ?? $shipment->city }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'city'])
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label for="state">State*</label>
+                                            <input
+                                               type="text"
+                                              class="form-control"
+                                              name="state"
+                                              id="state"
+                                              value="{{ old('state') ?? $shipment->state }}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'state'])
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label for="zip">Zip*</label>
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              name="zip"
+                                              id="zip"
+                                              value="{{ old('zip') ?? $shipment->zip}}"
+                                            >
+                                            @include('site.components.field-error', ['field' => 'zip'])
+                                        </div>
+                                    </div>
+
+                                    @if ($lUser)
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <label>
+                                                    <input type="checkbox" name="save_address" value="1" @if (old('save_address')) checked @endif>
+                                                    Save this address
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
 
                             <div class="row row-right">
                                 <div class="col-xs-12">
