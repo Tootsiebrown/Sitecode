@@ -15,6 +15,7 @@ class StripeDriver
         $this->gateway = $gateway;
         $gateway->setApiKey(config('wax.shop.payment.drivers.stripe.secret_key'));
     }
+
     public function purchase(
         $order,
         $token,

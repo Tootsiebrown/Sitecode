@@ -98,6 +98,8 @@
                 </a>
             </li>
 
+            <li> <a href="{{ route('dashboard.paymentMethods.index') }}"><i class="fa fa-money"></i> Payment Methods</a></li>
+
             <li>
                 <a href="{{ route('dashboard.shippingAddresses.index') }}">
                     <i class="fa fa-address-card"></i>

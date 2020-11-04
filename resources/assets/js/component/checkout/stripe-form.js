@@ -6,12 +6,12 @@ export default class StripeForm
     constructor(element, options = {}) {
         this.form = element
         this.$component = selectComponent(element)
-        this.$tokenField = this.$component.elements.tokenField
-        this.$lastFourField = this.$component.elements.lastFourField
-        this.$zipField = this.$component.elements.zipField
-        this.$brandField = this.$component.elements.brandField
-        this.$submitButton = this.$component.elements.submitButton
-        this.$spinner = this.$component.elements.spinner
+        this.$tokenField = this.$component.find('[data-element=tokenField]')
+        this.$lastFourField = this.$component.find('[data-element=lastFourField]')
+        this.$zipField = this.$component.find('[data-element=zipField]')
+        this.$brandField = this.$component.find('[data-element=brandField]')
+        this.$submitButton = this.$component.find('[data-element=submitButton]')
+        this.$spinner = this.$component.find('[data-element=spinner]')
         this.$sameAsShipping = this.$component.find('[name=same_as_shipping]');
 
         this.stripeElements = stripe.elements()
@@ -40,10 +40,18 @@ export default class StripeForm
     }
 
     handleSubmit = (event) => {
-        event.preventDefault();
-
         this.$component.off('submit', this.handleSubmit)
         this.$spinner.removeClass('hidden');
+        this.$submitButton.prop('disabled', true)
+
+        let $paymentMethodSelect = $('[name=payment_method_id]')
+
+        if ($paymentMethodSelect.length > 0 && $paymentMethodSelect.val() != 'new') {
+            this.$submitButton.prop('disabled', true)
+            return;
+        }
+
+        event.preventDefault();
 
         stripe.createToken(this.card, this.getBillingData()).then((result) => {
             if (result.error) {

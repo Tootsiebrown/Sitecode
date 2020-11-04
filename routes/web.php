@@ -361,6 +361,17 @@ Route::group(
 
             });
 
+        Route::prefix('payment-methods')
+            ->name('dashboard.paymentMethods.')
+            ->group(function () {
+                Route::get('/')
+                    ->uses('Dashboard\PaymentMethodsController@index')
+                    ->name('index');
+                Route::get('delete/{id}')
+                    ->name('destroy')
+                    ->uses('Dashboard\PaymentMethodsController@destroy');
+            });
+
         Route::prefix('carousel')
             ->name('dashboard.carousel.')
             ->middleware('privilege:Carousel')
