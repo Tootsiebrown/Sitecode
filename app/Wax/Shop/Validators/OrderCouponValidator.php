@@ -4,6 +4,7 @@ namespace App\Wax\Shop\Validators;
 
 use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use Wax\Shop\Validators\AbstractValidator;
 
@@ -29,9 +30,11 @@ class OrderCouponValidator extends AbstractValidator
         $this->messages = new MessageBag;
 
         $this->validateSingleUse();
+        $this->validateLoggedIn();
         $this->validateNotExpired();
         $this->validateOrderMinimum();
         $this->validateNumberOfUses();
+        $this->validateUserHasNotUsedBefore();
 
         return $this->messages->isEmpty();
     }
@@ -50,6 +53,20 @@ class OrderCouponValidator extends AbstractValidator
             'general',
             __('shop::coupon.validation_too_many_uses')
         );
+    }
+
+    protected function validateLoggedIn()
+    {
+        if ($this->coupon->one_time) {
+            return;
+        }
+
+        if (! Auth::check()) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_not_logged_in')
+            );
+        }
     }
 
     protected function validateNotExpired()
@@ -84,6 +101,37 @@ class OrderCouponValidator extends AbstractValidator
             $this->errors()->add(
                 'general',
                 __('shop::coupon.validation_too_many_uses')
+            );
+        }
+    }
+
+    public function validateUserHasNotUsedBefore()
+    {
+        if ($this->coupon->one_time) {
+            return;
+        }
+
+        if (! Auth::check() ) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_not_logged_in')
+            );
+            return;
+        }
+
+        $hasUsedBefore = Auth::user()
+            ->orders()
+            ->with('coupon')
+            ->placed()
+            ->whereHas('coupon')
+            ->get()
+            ->pluck('coupon.code')
+            ->contains($this->coupon->code);
+
+        if ($hasUsedBefore) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_user_used_before')
             );
         }
     }

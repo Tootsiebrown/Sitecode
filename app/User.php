@@ -132,4 +132,9 @@ class User extends UserBase
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(config('wax.shop.models.order'), 'user_id');
+    }
 }

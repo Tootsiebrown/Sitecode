@@ -4,9 +4,11 @@ namespace Tests\Unit;
 
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
+use App\User;
 use App\Wax\Shop\Models\Coupon;
+use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Validators\OrderCouponValidator;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Models\Product;
 use Wax\Shop\Services\ShopService;
@@ -24,6 +26,8 @@ class CouponValidatorTest extends WaxAppTestCase
 
         $this->listing = factory(Listing::class)->create(['price' => 26]);
         $this->listing->items()->saveMany(factory(ListingItem::class, 3)->make());
+
+        $this->user = factory(User::class)->create();
     }
 
     public function testMinimumOrder()
@@ -32,6 +36,7 @@ class CouponValidatorTest extends WaxAppTestCase
             ->create([
                 'dollars' => 20,
                 'minimum_order' => 50,
+                'one_time' => true,
             ]);
 
         // minimum order has not been met
@@ -64,6 +69,7 @@ class CouponValidatorTest extends WaxAppTestCase
             ->create([
                 'percent' => 10,
                 'expired_at' => Carbon::yesterday(),
+                'one_time' => true,
             ]);
 
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
@@ -123,6 +129,28 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertFalse($this->shopService->applyCoupon($coupon->code));
     }
 
+    public function testRequiresLogin()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => false,
+                'uses' => 5,
+                'permitted_uses' => 4,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_not_logged_in')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon->code));
+    }
+
     public function testMultipleUsesLeft()
     {
         $coupon = factory(Coupon::class)
@@ -132,6 +160,8 @@ class CouponValidatorTest extends WaxAppTestCase
                 'uses' => 1,
                 'permitted_uses' => 2,
             ]);
+
+        $this->be($this->user);
 
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
         $order = $this->shopService->getActiveOrder();
@@ -151,6 +181,8 @@ class CouponValidatorTest extends WaxAppTestCase
                 'permitted_uses' => null,
             ]);
 
+        $this->be($this->user);
+
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
         $order = $this->shopService->getActiveOrder();
 
@@ -169,6 +201,8 @@ class CouponValidatorTest extends WaxAppTestCase
                 'permitted_uses' => 5,
             ]);
 
+        $this->be($this->user);
+
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
         $order = $this->shopService->getActiveOrder();
 
@@ -177,6 +211,37 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertEquals(
             $couponValidator->messages()->first('general'),
             __('shop::coupon.validation_too_many_uses')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testUserHasAlreadyUsedCoupon()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => false,
+                'uses' => 5,
+                'permitted_uses' => 6,
+            ]);
+
+        $oldOrder = new Order();
+        $oldOrder->user_id = $this->user->id;
+        $oldOrder->placed_at = Carbon::now()->toDateTimeString();
+        $oldOrder->save();
+
+        $oldOrder->coupon()->save(new Order\Coupon(['code' => $coupon->code]));
+
+        $this->be($this->user);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_user_used_before')
         );
         $this->assertFalse($this->shopService->applyCoupon($coupon->code));
     }

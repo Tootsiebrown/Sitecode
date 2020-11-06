@@ -11,5 +11,6 @@ $factory->define(App\Wax\Shop\Models\Coupon::class, function (Faker\Generator $f
         'minimum_order' => 0,
         'one_time' => false,
         'include_shipping' => false,
+        'uses' => 0,
     ];
 });
