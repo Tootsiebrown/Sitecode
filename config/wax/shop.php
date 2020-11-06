@@ -31,7 +31,7 @@ return [
     ],
     'listeners' => [
         'place_order' => [
-            \Wax\Shop\Listeners\OrderPlaced\CouponListener::class,
+            \App\Listeners\OrderPlacedCouponListener::class,
             \Wax\Shop\Listeners\OrderPlaced\EmailListener::class,
             \Wax\Shop\Listeners\OrderPlaced\InventoryListener::class,
             \Wax\Shop\Listeners\OrderPlaced\CommitTaxListener::class,
