@@ -27,5 +27,8 @@
         @if (isset($name))
             @include('site.components.field-error', ['field' => $name])
         @endif
+        @if (isset($note))
+            <p class="note">{{ $note }}</p>
+        @endif
     </div>
 </div>
