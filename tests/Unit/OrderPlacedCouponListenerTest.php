@@ -54,6 +54,7 @@ class OrderPlacedCouponListenerTest extends WaxAppTestCase
             ->create([
                 'percent' => 10,
                 'expired_at' => Carbon::tomorrow(),
+                'one_time' => true,
             ]);
 
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
@@ -84,6 +85,7 @@ class OrderPlacedCouponListenerTest extends WaxAppTestCase
             ->create([
                 'percent' => 10,
                 'expired_at' => Carbon::tomorrow(),
+                'one_time' => true,
             ]);
 
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
