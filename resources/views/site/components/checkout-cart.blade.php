@@ -31,7 +31,6 @@
             <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? Currency::format($order->shipping_subtotal) : 'TBD' }}</h4>
         @endif
 
-
         <div class="checkout-cart__discount">
             @if ($order->coupon)
                 <h4>Discount: {{ Currency::format($order->coupon_value) }}</h4>
@@ -48,7 +47,7 @@
                         </form>
                     @endif
                 </div>
-            @else
+            @elseif (! $order->placed_at)
                 @if (isset($couponMessage))
                     <h3 class="alert alert-danger">{{ $couponMessage }}</h3>
                 @endif
