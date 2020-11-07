@@ -19,7 +19,7 @@ class OrderCouponValidator extends AbstractValidator
      */
     private Coupon $coupon;
 
-    public function __construct (Order $order, Coupon $coupon)
+    public function __construct(Order $order, Coupon $coupon)
     {
         $this->order = $order;
         $this->coupon = $coupon;
@@ -27,7 +27,7 @@ class OrderCouponValidator extends AbstractValidator
 
     public function passes(): bool
     {
-        $this->messages = new MessageBag;
+        $this->messages = new MessageBag();
 
         $this->validateSingleUse();
         $this->validateLoggedIn();
@@ -111,11 +111,12 @@ class OrderCouponValidator extends AbstractValidator
             return;
         }
 
-        if (! Auth::check() ) {
+        if (! Auth::check()) {
             $this->errors()->add(
                 'general',
                 __('shop::coupon.validation_not_logged_in')
             );
+
             return;
         }
 

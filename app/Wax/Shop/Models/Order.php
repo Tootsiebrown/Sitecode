@@ -17,7 +17,7 @@ class Order extends WaxOrder
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
     }
 
-    public function applyCoupon(string $code) : bool
+    public function applyCoupon(string $code): bool
     {
         $coupon = Coupon::where('code', $code)->first();
         if (!$coupon) {
