@@ -13,6 +13,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <!--  Non-Essential, But Recommended -->
     <meta property="og:site_name" content="{{ get_option('site_name') }}">
+    <meta property="og:type" content="product" />
 @endsection
 
 @section('page-css')
