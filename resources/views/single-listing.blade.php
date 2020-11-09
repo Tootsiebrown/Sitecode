@@ -4,10 +4,10 @@
 @section('social-meta')
     <meta property="og:title" content="{{ safe_output($listing->title) }}">
     <meta property="og:description" content="{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}">
-    @if($listing->images->first())
-        <meta property="og:image" content="{{ $listing->images->first()->url }}">
-    @else
-        <meta property="og:image" content="{{ asset('uploads/placeholder.png') }}">
+    @if($listing->featured_image)
+        <meta property="og:image" content="{{ $listing->featured_image->url }}">
+        <meta property="og:image:width" content="{{ $listing->featured_image->width }}">
+        <meta property="og:image:height" content="{{ $listing->featured_image->height }}">
     @endif
     <meta property="og:url" content="{{  route('single_ad', [$listing->id, $listing->slug]) }}">
     <meta name="twitter:card" content="summary_large_image">
