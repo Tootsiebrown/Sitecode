@@ -16,6 +16,9 @@
             @if ($listing->size)
                 <br>Size: {{ $listing->size }}
             @endif
+            @if ($listing->model_number)
+                <br>Model: {{ $listing->model_number }}
+            @endif
         </a>
     </div>
 
