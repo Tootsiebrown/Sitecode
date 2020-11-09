@@ -12,7 +12,7 @@
     <meta property="og:url" content="{{  route('single_ad', [$listing->id, $listing->slug]) }}">
     <meta name="twitter:card" content="summary_large_image">
     <!--  Non-Essential, But Recommended -->
-    <meta name="og:site_name" content="{{ get_option('site_name') }}">
+    <meta property="og:site_name" content="{{ get_option('site_name') }}">
 @endsection
 
 @section('page-css')
