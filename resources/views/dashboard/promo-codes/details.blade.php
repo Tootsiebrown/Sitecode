@@ -62,12 +62,30 @@
             'value' => $coupon->minimum_order ? number_format($coupon->minimum_order, 2, ".", "") : null,
         ])
 
-        @include('dashboard.form-elements.form-group', [
-            'name' => 'one_time',
-            'prettyTitle' => 'One Time',
-            'type' => 'boolean',
-            'checked' => $coupon->one_time,
-        ])
+        <div data-component="dashboard-coupon-usage-restrictions">
+            @include('dashboard.form-elements.form-group', [
+                'name' => 'usage_restrictions',
+                'prettyTitle' => 'Usage Restriction',
+                'type' => 'select',
+                'value' => $coupon->exists
+                    ? $coupon->one_time
+                        ? 'one_time'
+                        : 'once_per_user'
+                    : 'one_time',
+                'options' => [
+                    'one_time' => 'One time',
+                    'once_per_user' => 'Once Per User',
+                ]
+            ])
+
+            @include('dashboard.form-elements.form-group', [
+                'name' => 'permitted_uses',
+                'prettyTitle' => 'Number of Uses',
+                'type' => 'text',
+                'value' => $coupon->permitted_uses,
+                'note' => 'Leave blank for unlimited uses.'
+            ])
+        </div>
 
         @include('dashboard.form-elements.form-group', [
             'name' => 'include_shipping',

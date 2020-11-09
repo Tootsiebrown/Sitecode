@@ -25,12 +25,13 @@ import SortFeaturedListings from "./component/sort-featured-listings";
 import CartItemQuantity from "./component/checkout/cart-item-quantity";
 import OfferActionForm from "./component/offer-action-form";
 import ShippingAddressPicker from "./component/checkout/shipping-address-picker";
-import DashboardCouponType from "./component/dashboard-coupon-type";
+import Type from "./component/dashboard/coupons/type";
 import FormControlDate from "./component/form-control-date";
 import CheckoutSidebarCart from "./component/checkout/checkout-sidebar-cart";
 import PaymentMethodPicker from "./component/checkout/payment-method-picker";
 import ConfirmLink from "./component/confirm-link";
 import ImageField from "./component/dashboard/image-field";
+import UsageRestrictions from "./component/dashboard/coupons/usage-restrictions";
 
 export default function Site() {
 
@@ -64,7 +65,8 @@ export default function Site() {
         selectComponent('cart-item-quantity').each((index, element) => new CartItemQuantity(element))
         selectComponent('offer-action-form').each((index, element) => new OfferActionForm(element))
         selectComponent('shipping-address-picker').each((index, element) => new ShippingAddressPicker(element))
-        selectComponent('dashboard-coupon-type').each((index, element) => new DashboardCouponType(element))
+        selectComponent('dashboard-coupon-type').each((index, element) => new Type(element))
+        selectComponent('dashboard-coupon-usage-restrictions').each((index, element) => new UsageRestrictions(element))
         selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
         selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))
         selectComponent('payment-method-picker').each((index, element) => new PaymentMethodPicker(element))

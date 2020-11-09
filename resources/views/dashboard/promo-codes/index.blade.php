@@ -13,10 +13,10 @@
             <th>ID</th>
             <th>Title</th>
             <th>Code</th>
-            <th>Type</th>
             <th>Amount</th>
             <th>Expiration</th>
-            <th>One-Time</th>
+            <th>Permitted Uses</th>
+            <th>Used Count</th>
             <th>Includes Shipping</th>
             <th>Minimum Order</th>
         </tr>
@@ -26,12 +26,12 @@
                 <td>{{ $coupon->id }}</td>
                 <td>{{ $coupon->title }}</td>
                 <td>{{ $coupon->code }}</td>
-                <td>{{ $coupon->type }}</td>
                 <td>{{ $coupon->type == 'dollars' ? Currency::format($coupon->dollars) : $coupon->percent . '%' }}</td>
                 <td>{{ $coupon->expired_at ? $coupon->expired_at->format('Y-m-d') : 'N/A' }}</td>
-                <td>{{ $coupon->one_time ? 'Yes' : 'No' }}</td>
+                <td>{{ $coupon->one_time ? 1 : ($coupon->permitted_uses ?: '∞') }}</td>
+                <td>{{ $coupon->uses }}</td>
                 <td>{{ $coupon->include_shipping ? 'Yes' : 'No' }}</td>
-                <td>{{ $coupon->minimum_order ? Currency::format($coupon->minimum_order) : '' }}</td>
+                <td>{{ $coupon->minimum_order ? Currency::format($coupon->minimum_order) : 'N/A' }}</td>
             </tr>
         @endforeach
     </table>

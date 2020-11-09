@@ -35,20 +35,27 @@ class PromoCodesController extends Controller
                 'percent' => 'required_if:type,percent|numeric|max:100',
                 'minimum_order' => 'numeric|min:1',
                 'include_shipping' => 'boolean',
-                'one_time' => 'boolean',
+                'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
+                'permitted_uses' => 'numeric',
             ]
         );
 
-        $coupon = new Coupon([
+        $couponData = [
             'title' => $request->input('title'),
             'code' => $request->input('code'),
-            'one_time' => $request->input('one_time', false),
+            'one_time' => $request->input('usage_restrictions') === 'one_time',
+            'expired_at' => !empty($request->input('expired_at'))
+                ? $request->input('expired_at') . ' 23:59:59'
+                : null,
+            'permitted_uses' => $request->input('permitted_uses'),
             'include_shipping' => $request->input('include_shipping', false),
             'dollars' => $request->input('type') === 'dollars' ? $request->input('dollars') : null,
             'percent' => $request->input('type') === 'percent' ? $request->input('percent') : null,
             'minimum_order' => $request->input('minimum_order') ?: null,
-        ]);
+        ];
+
+        $coupon = new Coupon($couponData);
 
         $coupon->save();
 
@@ -82,18 +89,25 @@ class PromoCodesController extends Controller
                 'percent' => 'required_if:type,percent|numeric|max:100',
                 'minimum_order' => 'numeric|min:1',
                 'include_shipping' => 'boolean',
-                'one_time' => 'boolean',
+                'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
+                'permitted_uses' => 'numeric',
             ]
         );
 
-        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'one_time', 'include_shipping']);
+        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'include_shipping', 'permitted_uses']);
         if ($request->input('type') == 'dollars') {
             $data['dollars'] = $request->input('dollars');
             $data['percent'] = null;
         } else {
             $data['percent'] = $request->input('percent');
             $data['dollars'] = null;
+        }
+
+        if ($request->input('usage_restrictions') === 'one_time') {
+            $data['one_time'] = true;
+        } else {
+            $data['one_time'] = false;
         }
 
         if (!isset($data['include_shipping'])) {

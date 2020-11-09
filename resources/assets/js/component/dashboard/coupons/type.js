@@ -1,6 +1,6 @@
-import selectComponent from "../utilities/select-component"
+import selectComponent from "../../../utilities/select-component"
 
-export default class DashboardCouponType {
+export default class Type {
     constructor(element) {
         this.$component = selectComponent(element)
         this.$select = this.$component.find('[name=type]')

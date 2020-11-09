@@ -3322,12 +3322,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:oohology/wax-shop.git",
-                "reference": "0be8c96c132c370244ba5dc0ad8ee2740affc53a"
+                "reference": "7f5b609410b6c53f58a7d609f4a98fe600432ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-shop/repository/archive.zip?sha=0be8c96c132c370244ba5dc0ad8ee2740affc53a",
-                "reference": "0be8c96c132c370244ba5dc0ad8ee2740affc53a",
+                "url": "https://gitlab.com/api/v4/projects/oohology%2Fwax-shop/repository/archive.zip?sha=7f5b609410b6c53f58a7d609f4a98fe600432ce1",
+                "reference": "7f5b609410b6c53f58a7d609f4a98fe600432ce1",
                 "shasum": ""
             },
             "require": {
@@ -3378,7 +3378,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/4485490/issues"
             },
-            "time": "2020-09-15T01:39:37+00:00"
+            "time": "2020-11-05T21:26:47+00:00"
         },
         {
             "name": "opis/closure",

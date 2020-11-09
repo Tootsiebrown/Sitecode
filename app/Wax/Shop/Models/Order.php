@@ -17,6 +17,37 @@ class Order extends WaxOrder
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
     }
 
+    public function applyCoupon(string $code): bool
+    {
+        $coupon = Coupon::where('code', $code)->first();
+        if (!$coupon) {
+            return false;
+        }
+
+        if (!$coupon->validate($this)) {
+            return false;
+        }
+
+        if ($this->coupon) {
+            $this->coupon->delete();
+        }
+
+        $this->coupon()->create([
+            'title' => $coupon->title,
+            'code' => $coupon->code,
+            'expired_at' => $coupon->expired_at,
+            'dollars' => $coupon->dollars,
+            'percent' => $coupon->percent,
+            'minimum_order' => $coupon->minimum_order,
+            'one_time' => $coupon->one_time,
+            'include_shipping' => $coupon->include_shipping,
+        ]);
+
+        $this->calculateDiscounts();
+
+        return true;
+    }
+
     protected function applyBundleDiscounts()
     {
         $orderProductIds = $this->items->pluck('product_id');
