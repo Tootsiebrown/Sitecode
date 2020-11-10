@@ -55,6 +55,11 @@ class PromoCodesController extends Controller
             'minimum_order' => $request->input('minimum_order') ?: null,
         ];
 
+        if (empty($couponData['permitted_uses'])) {
+            unset($couponData['permitted_uses']);
+        }
+
+
         $coupon = new Coupon($couponData);
 
         $coupon->save();
@@ -123,8 +128,13 @@ class PromoCodesController extends Controller
         } else {
             $data['expired_at'] = $data['expired_at'] . ' 23:59:59';
         }
+
         if (empty($data['minimum_order'])) {
             unset($data['minimum_order']);
+        }
+
+        if (empty($data['permitted_uses'])) {
+            unset($data['permitted_uses']);
         }
 
         $coupon->fill($data);
