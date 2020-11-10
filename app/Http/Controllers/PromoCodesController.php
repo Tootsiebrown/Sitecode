@@ -56,7 +56,7 @@ class PromoCodesController extends Controller
         ];
 
         if (empty($couponData['permitted_uses'])) {
-            unset($couponData['permitted_uses']);
+            $couponData['permitted_uses'] = null;
         }
 
         $coupon = new Coupon($couponData);
@@ -129,11 +129,11 @@ class PromoCodesController extends Controller
         }
 
         if (empty($data['minimum_order'])) {
-            unset($data['minimum_order']);
+            $data['minimum_order'] = null;
         }
 
         if (empty($data['permitted_uses'])) {
-            unset($data['permitted_uses']);
+            $data['permitted_uses'] = null;
         }
 
         $coupon->fill($data);
