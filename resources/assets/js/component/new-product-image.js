@@ -77,6 +77,7 @@ export default class NewProductImage {
               type="hidden"
               name="new_images[]"
               value="${ filename }"
+              data-element="newImageFilename"
             />
             <input
               type="hidden"

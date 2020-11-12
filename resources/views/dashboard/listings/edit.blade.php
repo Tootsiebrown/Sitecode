@@ -336,7 +336,7 @@
         </div>
         <legend>Product Images</legend>
 
-        <div class="images-wrapper" data-component="lister-product-image-wrapper">
+        <div class="images-wrapper" data-component="multi-image-sort">
             @foreach($listing->images as $image)
                 @if ($errors->any() && !in_array($image->id, old('existing_images', [])))
                     {{-- if we already submitted, but this was deleted, don't bring it back.--}}
@@ -354,6 +354,7 @@
                 @endforeach
             @endif
         </div>
+        <input type="hidden" name="imageSortOrder" value="{{ old('imageSortOrder', $listing->image_sort_order) }}" data-element="sortOrderInput">
 
         <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
             <div class="col-sm-12">

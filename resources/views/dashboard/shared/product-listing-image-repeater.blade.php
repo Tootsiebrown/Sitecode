@@ -7,6 +7,7 @@
         type="hidden"
         name="existing_images[]"
         value="{{ $image->id }}"
+        data-element="existingImageId"
     />
     <input
         type="hidden"

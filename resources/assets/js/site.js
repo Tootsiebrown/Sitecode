@@ -32,6 +32,7 @@ import PaymentMethodPicker from "./component/checkout/payment-method-picker";
 import ConfirmLink from "./component/confirm-link";
 import ImageField from "./component/dashboard/image-field";
 import UsageRestrictions from "./component/dashboard/coupons/usage-restrictions";
+import MultiImageSort from "./component/dashboard/multi-image-sort";
 
 export default function Site() {
 
@@ -72,6 +73,7 @@ export default function Site() {
         selectComponent('payment-method-picker').each((index, element) => new PaymentMethodPicker(element))
         selectComponent('confirm-link').each((index, element) => new ConfirmLink(element))
         selectComponent('image-field').each((index, element) => new ImageField(element))
+        selectComponent('multi-image-sort').each((index, element) => new MultiImageSort(element))
 
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {
