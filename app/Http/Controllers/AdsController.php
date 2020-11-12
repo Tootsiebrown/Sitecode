@@ -348,6 +348,7 @@ class AdsController extends Controller
                 $listing,
                 $request->input('existing_images', []),
                 $request->input('deletable_images', [])
+
             );
 
             $this->cropImages(
