@@ -19,6 +19,9 @@
             @if ($listing->model_number)
                 <br>Model: {{ $listing->model_number }}
             @endif
+            @if ($listing->expiration_date)
+                <br>Expires: {{ $listing->expiration_date }}
+            @endif
         </a>
     </div>
 
