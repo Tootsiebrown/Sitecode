@@ -383,7 +383,7 @@ class AdsController extends Controller
         foreach ($deletableImages as $deletableImage) {
             current_disk()->delete(ListingImage::getDiskPath() . $deletableImage);
             current_disk()->delete(ListingImage::getDiskPath() . 'thumbs/' . $deletableImage);
-            current_disk()->delete(ListingImage::getDiskPath() . 'cropped/' . $deletableImage);            current_disk()->delete(ListingImage::getDiskPath() . 'thumbs/' . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . 'cropped/' . $deletableImage);
             current_disk()->delete(ListingImage::getDiskPath() . 'cropped/thumbs/' . $deletableImage);
         }
     }
