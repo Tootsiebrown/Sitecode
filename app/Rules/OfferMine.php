@@ -34,7 +34,7 @@ class OfferMine implements Rule
             return false;
         }
 
-        if (!$offer->user_id === Auth::user()->id) {
+        if ($offer->user_id !== Auth::user()->id) {
             return false;
         }
 
