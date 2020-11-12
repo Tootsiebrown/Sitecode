@@ -7,13 +7,15 @@ export default class MultiImageSort {
         this.element = element
         this.$component = selectComponent(element)
         this.$form = this.$component.closest('form');
-        this.$input = this.$form.find('input[data-element=imageSortOrder]');
+        this.$input = this.$form.find('input[data-element=sortOrderInput]');
 
         sortable(this.element, {
             itemSerializer: this.serializer,
+            forcePlaceholderSize: true
         });
 
         sortable(this.element)[0].addEventListener('sortupdate', this.sortUpdate)
+        sortable(this.element)[0].addEventListener('sortenter', this.sortUpdate)
         this.sortUpdate()
     }
 

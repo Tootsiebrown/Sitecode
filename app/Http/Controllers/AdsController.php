@@ -344,11 +344,13 @@ class AdsController extends Controller
             //fresh query
             $oldImages = $listing->images()->get();
 
+            $imageSortOrder = json_decode($request->input('imageSortOrder'));
+
             $this->syncListingImages(
                 $listing,
                 $request->input('existing_images', []),
-                $request->input('deletable_images', [])
-
+                $request->input('deletable_images', []),
+                $imageSortOrder
             );
 
             $this->cropImages(
@@ -360,7 +362,8 @@ class AdsController extends Controller
             $this->addProductImages(
                 $listing,
                 $request->input('new_images', []),
-                $request->input('new_images_metadata')
+                $request->input('new_images_metadata'),
+                $imageSortOrder
             );
         }
 
@@ -374,11 +377,23 @@ class AdsController extends Controller
         )->with('success', 'Listing Edited.');
     }
 
-    protected function syncListingImages(Listing $listing, array $existingImages, array $deletableImages)
-    {
+    protected function syncListingImages(
+        Listing $listing,
+        array $existingImages,
+        array $deletableImages,
+        $imageSortOrder
+    ) {
         ListingImage::whereNotIn('id', $existingImages)
             ->where('listing_id', $listing->id)
             ->delete();
+
+        foreach($imageSortOrder as $image) {
+            if (strpos($image->id, 'existing-') === 0) {
+                $imageId = substr($image->id, strlen('existing-'));
+                ListingImage::where('id', $imageId)
+                    ->update(['sort_id' => $image->position]);
+            }
+        }
 
         // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
@@ -389,17 +404,41 @@ class AdsController extends Controller
         }
     }
 
-    protected function addProductImages(Listing $listing, array $newImages, $newImagesMeta)
-    {
+    protected function addProductImages(
+        Listing $listing,
+        array $newImages,
+        $newImagesMeta,
+        $imageSortOrder
+    ) {
         $createdImages = collect();
         $createdImagesMeta = [];
+        $sortOrder = [];
+
+        foreach ($imageSortOrder as $item) {
+            if (strpos($item->id, 'new-') !== 0) {
+                continue;
+            }
+
+            $filename = substr($item->id, strlen('new-'));
+            $sortOrder[$filename] = $item->position;
+        }
+
+        $nextSortId = count($imageSortOrder) + 1;
 
         foreach ($newImages as $newImage) {
+            if (!empty($sortOrder[$newImage])) {
+                $imageSortId = $sortOrder[$newImage];
+            } else {
+                $imageSortId = $nextSortId;
+                $nextSortId++;
+            }
+
             $createdImage = ListingImage::create([
                 'listing_id' => $listing->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
-                'metadata' => $newImagesMeta[$newImage] ?? ''
+                'metadata' => $newImagesMeta[$newImage] ?? '',
+                'sort_id' => $imageSortId,
             ]);
 
             $createdImages->push($createdImage);

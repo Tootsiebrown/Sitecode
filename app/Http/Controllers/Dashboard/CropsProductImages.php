@@ -30,16 +30,18 @@ trait CropsProductImages
     {
         $cropData = json_decode($meta);
 
-        $stream = Image::make($image->file_path)
-            ->crop(
-                round($cropData->width),
-                round($cropData->height),
-                round($cropData->x),
-                round($cropData->y)
-            )
-            ->stream();
+        $stream = Image::make($image->file_path);
+        if ($cropData) {
+            $stream = $stream
+                ->crop(
+                    round($cropData->width),
+                    round($cropData->height),
+                    round($cropData->x),
+                    round($cropData->y)
+                );
+        }
 
-
+        $stream = $stream->stream();
 
         $imageFileName = $image::getDiskPath() . 'cropped/' . $image->media_name;
         //$imageThumbName = 'uploads/images/thumbs/cropped/' . $imageName;
