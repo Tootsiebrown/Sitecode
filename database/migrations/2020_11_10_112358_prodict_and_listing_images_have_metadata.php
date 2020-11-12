@@ -14,10 +14,10 @@ class ProdictAndListingImagesHaveMetadata extends Migration
     public function up()
     {
         Schema::table('product_images', function ($table) {
-            $table->text('metadata')->default('');
+            $table->text('metadata')->nullable();
         });
         Schema::table('listing_images', function ($table) {
-            $table->text('metadata')->default('');
+            $table->text('metadata')->nullable();
         });
     }
 
