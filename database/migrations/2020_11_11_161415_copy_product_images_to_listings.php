@@ -14,7 +14,7 @@ class CopyProductImagesToListings extends Migration
      */
     public function up()
     {
-        if (App::env() == 'testing') {
+        if (App::environment() == 'testing') {
             return;
         }
 
