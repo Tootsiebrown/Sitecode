@@ -11,7 +11,8 @@ export default class MultiImageSort {
 
         sortable(this.element, {
             itemSerializer: this.serializer,
-            forcePlaceholderSize: true
+            forcePlaceholderSize: true,
+            handle: '[data-element=sort-handle]'
         });
 
         sortable(this.element)[0].addEventListener('sortupdate', this.sortUpdate)

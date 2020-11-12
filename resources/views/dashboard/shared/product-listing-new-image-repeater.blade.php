@@ -26,6 +26,9 @@
         <a class="lister-product-image__control btn btn-default" href="#" data-element="startCrop">
             <i class="fa fa-crop"></i>
         </a>
+        <a class="lister-product-image__control btn btn-default" href="#" data-element="sort-handle">
+            <i class="fa fa-sort"></i>
+        </a>
     </div>
     <div class="mfp-hide image-field__cropper-modal" id="image-cropper-popup-new-{{ $imageId }}">
         <div class="image-field__cropper-wrapper">
