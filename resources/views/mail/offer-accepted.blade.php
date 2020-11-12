@@ -20,7 +20,7 @@
                     </tr>
                 </table>
 
-                <p>This deal is good for 24 hours. Please <a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">pay/a> promptly.</p>
+                <p>This deal is good for 24 hours. Please <a href="{{ route('payForAcceptedOffer', ['id' => $offer->id]) }}">pay</a> promptly.</p>
 
             </td>
         </tr>

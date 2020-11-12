@@ -38,4 +38,22 @@ trait HasDiskImage
     {
         return asset('assets/img/classified-placeholder.png');
     }
+
+    public function getHeightAttribute()
+    {
+        if (Storage::disk($this->disk)->exists(static::getDiskPath() . $this->media_name)) {
+            return getimagesize(Storage::disk($this->disk)->path(static::getDiskPath() . $this->media_name))[1];
+        }
+
+        return null;
+    }
+
+    public function getWidthAttribute()
+    {
+        if (Storage::disk($this->disk)->exists(static::getDiskPath() . $this->media_name)) {
+            return getimagesize(Storage::disk($this->disk)->path(static::getDiskPath() . $this->media_name))[0];
+        }
+
+        return null;
+    }
 }
