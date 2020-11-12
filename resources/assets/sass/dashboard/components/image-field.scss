@@ -22,10 +22,26 @@
 
     &__cropper-modal {
         max-width: 1400px;
+        max-height: calc(90vh - 50px);
 
         img {
             max-width: 100%;
         }
+    }
+
+    &__actions {
+        margin-top: 16px;
+        text-align: right;
+
+        button {
+            margin-left: 16px;
+
+        }
+    }
+
+    &__cropper-wrapper {
+        max-width: 1400px;
+        max-height: calc(90vh - 50px);
     }
 }
 

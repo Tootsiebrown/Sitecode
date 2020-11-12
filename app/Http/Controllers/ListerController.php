@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
+use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Models\Listing\Item;
@@ -11,6 +12,7 @@ use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,7 @@ use Intervention\Image\Facades\Image;
 class ListerController extends Controller
 {
     use GetsDenormalizedProductCategories;
+    use CropsProductImages;
 
     protected $datafinitiGateway;
 
@@ -379,11 +382,22 @@ class ListerController extends Controller
             if (!empty($grandchild)) {
                 $product->categories()->attach($grandchild->id);
             }
+
+            //fresh query
+            $oldImages = $product->images()->get();
+
             $this->syncProductImages(
                 $product,
                 $request->input('existing_images', []),
                 $request->input('deletable_images', [])
             );
+
+            $this->cropImages(
+                $oldImages,
+                $request->input('existing_images', []),
+                $request->input('existing_image_metadata', [])
+            );
+
             $this->addProductImages($product, $request->input('new_images', []));
         }
 
@@ -422,6 +436,8 @@ class ListerController extends Controller
             ]);
         }
     }
+
+
 
     public function newListing(Request $request)
     {
@@ -512,7 +528,27 @@ class ListerController extends Controller
                         'media_name' => $image->media_name,
                         'featured' => $image->featured,
                         'disk' => $image->disk,
+                        'metadata' => $image->metadata,
                     ]);
+
+                    $copies = [
+                        '',
+                        'thumbs/',
+                        'cropped/',
+                        'cropped/thumbs/',
+
+                    ];
+
+                    foreach ($copies as $copy) {
+                        if (! Storage::disk($image->disk)->exists($image::getDiskPath() . $copy . $image->media_name)) {
+                            continue;
+                        }
+
+                        (new Filesystem())->copy(
+                            Storage::disk($image->disk)->path($image::getDiskPath() . $copy . $image->media_name),
+                            Storage::disk($image->disk)->path(ListingImage::getDiskPath() . $copy . $image->media_name)
+                        );
+                    }
                 });
 
             $ad->categories()->attach(
@@ -582,8 +618,19 @@ class ListerController extends Controller
 
             $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
 
-            $imageFileName = 'uploads/images/' . $imageName;
-            $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+            switch (request('type')) {
+                case 'listing':
+                    $imageFileName = ListingImage::getDiskPath() . $imageName;
+                    $imageThumbName = ListingImage::getDiskPath() . 'thumbs/' . $imageName;
+                    break;
+                case 'product':
+                    $imageFileName = ProductImage::getDiskPath() . $imageName;
+                    $imageThumbName = ProductImage::getDiskPath() . 'thumbs/' . $imageName;
+                    break;
+                default:
+                    throw new \Exception('"' . request('type') . '" is not a supported upload type.');
+            }
+
 
             try {
                 current_disk()->put($imageFileName, $resized->__toString(), 'public');
@@ -602,7 +649,7 @@ class ListerController extends Controller
 
             $returnImages[] = [
                 'filename' => $imageName,
-                'url' => Storage::url($imageThumbName),
+                'url' => Storage::url($imageFileName),
             ];
         }
 

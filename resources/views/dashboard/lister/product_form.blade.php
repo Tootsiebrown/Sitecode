@@ -318,34 +318,15 @@
                                 {{-- if we already submitted, but this was deleted, don't bring it back.--}}
                                 @continue
                             @endif
-
-                            <div class="lister-product-image clearfix" data-component="lister-product-image">
-                                <input
-                                    type="hidden"
-                                    name="existing_images[]"
-                                    value="{{ $image->id }}"
-                                />
-                                <label class="col-sm-4 control-label"></label>
-                                <div class="col-sm-8 lister-product-image__display-container">
-                                    <div class="lister-product-image__image-wrapper"><img src="{{ $image->url }}"></div>
-                                    <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
-                                </div>
-                            </div>
+                            @include('dashboard.shared.product-listing-image-repeater')
                         @endforeach
                         @if (is_array(old('new_images')) && !empty(old('new_images')))
                             @foreach (old('new_images') as $newImage)
-                                    <div class="lister-product-image clearfix" data-component="lister-product-image" data-saved="false">
-                                        <input
-                                            type="hidden"
-                                            name="new_images[]"
-                                            value="{{ $newImage }}"
-                                        />
-                                        <label class="col-sm-4 control-label"></label>
-                                        <div class="col-sm-8 lister-product-image__display-container">
-                                            <div class="lister-product-image__image-wrapper"><img src="/{{ App\ProductImage::getUrlPath() . $newImage }}"></div>
-                                            <a href="#" data-element="delete"><i class="fa fa-trash"></i> Delete</a>
-                                        </div>
-                                    </div>
+                                @include('dashboard.shared.product-listing-new-image-repeater', [
+                                    'imageId' => $key + 1,
+                                    'urlPath' => \App\ProductImage::getUrlPath(),
+                                    'filename' => $filename,
+                                ])
                             @endforeach
                         @endif
                     </div>
@@ -355,7 +336,7 @@
 
                             <label class="col-sm-4 control-label">New Image</label>
                             <div class="col-sm-8">
-                                <div class="new-product-image" data-component="new-product-image">
+                                <div class="new-product-image" data-component="new-product-image" data-type="product">
                                     <input
                                       type="file"
                                       name="new_image"
