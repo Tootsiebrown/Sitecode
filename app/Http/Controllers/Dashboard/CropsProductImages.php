@@ -18,7 +18,7 @@ trait CropsProductImages
             // if the meta information hasn't changed, no need to reprocess.
             // if it's new, then it hasn't been cropped yet.
             if (
-                $image->metadata !== $submittedMetadata[$image->id]
+                $image->metadata != $submittedMetadata[$image->id]
                 || $image->wasRecentlyCreated
             ) {
                 $this->recropImage($image, $submittedMetadata[$image->id]);

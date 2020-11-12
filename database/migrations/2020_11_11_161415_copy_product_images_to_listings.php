@@ -14,6 +14,10 @@ class CopyProductImagesToListings extends Migration
      */
     public function up()
     {
+        if (App::env() == 'testing') {
+            return;
+        }
+
         (new \Illuminate\Filesystem\Filesystem())->copyDirectory(
             Storage::disk('public')->path(\App\ProductImage::getDiskPath()),
             Storage::disk('public')->path(\App\Models\Listing\Image::getDiskPath())
