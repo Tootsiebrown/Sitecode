@@ -49,6 +49,9 @@
         window.jsonData = {!! frontendLocalisedJson() !!};
     </script>
 
+    @yield('social-meta')
+
+
 </head>
 <body class="@if(is_rtl()) rtl @endif @if(isset($bodyClass)) {{ $bodyClass }} @endif">
 <div id="app">
