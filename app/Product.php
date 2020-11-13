@@ -32,7 +32,7 @@ class Product extends Model
     {
         return $this
             ->hasMany(ProductImage::class)
-            ->orderBy('sort_id');;
+            ->orderBy('sort_id');
     }
 
 
