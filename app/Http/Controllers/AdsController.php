@@ -387,7 +387,7 @@ class AdsController extends Controller
             ->where('listing_id', $listing->id)
             ->delete();
 
-        foreach($imageSortOrder as $image) {
+        foreach ($imageSortOrder as $image) {
             if (strpos($image->id, 'existing-') === 0) {
                 $imageId = substr($image->id, strlen('existing-'));
                 ListingImage::where('id', $imageId)

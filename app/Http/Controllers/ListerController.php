@@ -385,11 +385,13 @@ class ListerController extends Controller
 
             //fresh query
             $oldImages = $product->images()->get();
+            $imageSortOrder = json_decode($request->input('imageSortOrder'));
 
             $this->syncProductImages(
                 $product,
                 $request->input('existing_images', []),
-                $request->input('deletable_images', [])
+                $request->input('deletable_images', []),
+                $imageSortOrder,
             );
 
             $this->cropImages(
@@ -398,7 +400,12 @@ class ListerController extends Controller
                 $request->input('existing_image_metadata', [])
             );
 
-            $this->addProductImages($product, $request->input('new_images', []));
+            $this->addProductImages(
+                $product,
+                $request->input('new_images', []),
+                $request->input('new_images_metadata', []),
+                $imageSortOrder
+            );
         }
 
         return redirect(
@@ -411,30 +418,75 @@ class ListerController extends Controller
         )->with('success', trans('app.product_created'));
     }
 
-    protected function syncProductImages(Product $product, array $existingImages, array $deletableImages)
-    {
-        // don't delete images files for ProductImages in the database...
-        // product could have been cloned, and that will cause problems.
+    protected function syncProductImages(
+        Product $product,
+        array $existingImages,
+        array $deletableImages,
+        $imageSortOrder
+    ) {
         ProductImage::whereNotIn('id', $existingImages)
             ->where('product_id', $product->id)
             ->delete();
 
-        // but delete any images that were uploaded and then discarded.
+        foreach ($imageSortOrder as $image) {
+            if (strpos($image->id, 'existing-') === 0) {
+                $imageId = substr($image->id, strlen('existing-'));
+                ProductImage::where('id', $imageId)
+                    ->update(['sort_id' => $image->position]);
+            }
+        }
+
         foreach ($deletableImages as $deletableImage) {
             current_disk()->delete(ProductImage::getDiskPath() . $deletableImage);
             current_disk()->delete(ProductImage::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
-    protected function addProductImages(Product $product, array $newImages)
-    {
+    protected function addProductImages(
+        Product $product,
+        array $newImages,
+        $newImagesMeta,
+        $imageSortOrder
+    ) {
+        $createdImages = collect();
+        $createdImagesMeta = [];
+        $sortOrder = [];
+
+        foreach ($imageSortOrder as $item) {
+            if (strpos($item->id, 'new-') !== 0) {
+                continue;
+            }
+
+            $filename = substr($item->id, strlen('new-'));
+            $sortOrder[$filename] = $item->position;
+        }
+
+        $nextSortId = count($imageSortOrder) + 1;
+
         foreach ($newImages as $newImage) {
-            $created_img_db = ProductImage::create([
+            if (!empty($sortOrder[$newImage])) {
+                $imageSortId = $sortOrder[$newImage];
+            } else {
+                $imageSortId = $nextSortId;
+                $nextSortId++;
+            }
+
+            $createdImage = ProductImage::create([
                 'product_id' => $product->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
+                'sort_id' => $imageSortId,
             ]);
+
+            $createdImages->push($createdImage);
+            $createdImagesMeta[$createdImage->id] = $newImagesMeta[$newImage];
         }
+
+        $this->cropImages(
+            $createdImages,
+            $createdImages->pluck('id')->values()->toArray(),
+            $createdImagesMeta
+        );
     }
 
 

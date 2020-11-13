@@ -354,7 +354,7 @@
                 @endforeach
             @endif
         </div>
-        <input type="hidden" name="imageSortOrder" value="{{ old('imageSortOrder', $listing->image_sort_order) }}" data-element="sortOrderInput">
+        <input type="hidden" name="imageSortOrder" value="{{ old('imageSortOrder') }}" data-element="sortOrderInput">
 
         <div class="form-group {{ $errors->has('new_image')? 'has-error':'' }}">
             <div class="col-sm-12">
