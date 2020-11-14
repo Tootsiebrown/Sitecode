@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Shop\Coupon;
+use App\Wax\Shop\Models\Coupon;
 
 class PromoCodesController extends Controller
 {

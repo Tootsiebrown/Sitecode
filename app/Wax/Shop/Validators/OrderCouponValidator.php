@@ -35,6 +35,7 @@ class OrderCouponValidator extends AbstractValidator
         $this->validateOrderMinimum();
         $this->validateNumberOfUses();
         $this->validateUserHasNotUsedBefore();
+        $this->validateCategoryMatches();
 
         return $this->messages->isEmpty();
     }
@@ -135,5 +136,28 @@ class OrderCouponValidator extends AbstractValidator
                 __('shop::coupon.validation_user_used_before')
             );
         }
+    }
+
+    public function validateCategoryMatches()
+    {
+        if (is_null($this->coupon->category_id)) {
+            return;
+        }
+
+        $categoryIds = $this->order
+            ->items
+            ->map(fn($item) => $item->listing)
+            ->pluck('categories')
+            ->flatten()
+            ->pluck('id');
+
+        if ($categoryIds->contains($this->coupon->category_id)) {
+            return;
+        }
+
+        $this->errors()->add(
+            'general',
+            __('shop::coupon.validation_category', ['breadcrumb' => $this->coupon->category->breadcrumb])
+        );
     }
 }

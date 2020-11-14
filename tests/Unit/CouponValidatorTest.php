@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
+use App\ProductCategory;
 use App\User;
 use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order;
@@ -17,6 +18,9 @@ class CouponValidatorTest extends WaxAppTestCase
 {
     /* @var ShopService $shop */
     protected $shopService;
+
+    /* @var Listing */
+    private $listing;
 
     public function setUp(): void
     {
@@ -244,5 +248,60 @@ class CouponValidatorTest extends WaxAppTestCase
             __('shop::coupon.validation_user_used_before')
         );
         $this->assertFalse($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testValidationFailsWithoutCorrectCategoryForCoupon()
+    {
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_category', ['breadcrumb' => $category->breadcrumb])
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testValidationSucceedsWithCorrectCategoryForCoupon()
+    {
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $this->listing->categories()->attach($category->id);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($couponValidator->messages()->isEmpty());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
     }
 }
