@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use App\ProductCategory;
 use Wax\Shop\Models\Coupon as WaxCoupon;
 
 class Coupon extends WaxCoupon
@@ -16,6 +17,7 @@ class Coupon extends WaxCoupon
         'one_time',
         'include_shipping',
         'permitted_uses',
+        'category_id',
     ];
 
     public function getTypeAttribute()
@@ -26,5 +28,10 @@ class Coupon extends WaxCoupon
     public function getDiscountAttribute()
     {
         return $this->type == 'dollars' ? $this->dollars : $this->percent;
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 }

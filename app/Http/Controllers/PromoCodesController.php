@@ -38,6 +38,7 @@ class PromoCodesController extends Controller
                 'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
+                'category_id' => 'exists:product_categories',
             ]
         );
 
@@ -53,6 +54,7 @@ class PromoCodesController extends Controller
             'dollars' => $request->input('type') === 'dollars' ? $request->input('dollars') : null,
             'percent' => $request->input('type') === 'percent' ? $request->input('percent') : null,
             'minimum_order' => $request->input('minimum_order') ?: null,
+            'category_id' => $request->input('category_id'),
         ];
 
         if (empty($couponData['permitted_uses'])) {
@@ -96,10 +98,11 @@ class PromoCodesController extends Controller
                 'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
+                'category_id' => 'exists:product_categories,id',
             ]
         );
 
-        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'include_shipping', 'permitted_uses']);
+        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'include_shipping', 'permitted_uses', 'category_id']);
         if ($request->input('type') == 'dollars') {
             $data['dollars'] = $request->input('dollars');
             $data['percent'] = null;
@@ -134,6 +137,10 @@ class PromoCodesController extends Controller
 
         if (empty($data['permitted_uses'])) {
             $data['permitted_uses'] = null;
+        }
+
+        if (empty($data['category_id'])) {
+            $data['category_id'] = null;
         }
 
         $coupon->fill($data);

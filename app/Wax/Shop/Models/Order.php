@@ -41,6 +41,7 @@ class Order extends WaxOrder
             'minimum_order' => $coupon->minimum_order,
             'one_time' => $coupon->one_time,
             'include_shipping' => $coupon->include_shipping,
+            'category_id' => $coupon->category_id,
         ]);
 
         $this->calculateDiscounts();

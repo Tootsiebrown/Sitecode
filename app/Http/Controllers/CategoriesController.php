@@ -68,16 +68,6 @@ class CategoriesController extends Controller
     {
         $category = ProductCategory::findOrFail($id);
 
-        $breadcrumb = $category->name;
-        if ($category->parent) {
-            $parent = $category->parent;
-            $breadcrumb = $parent->name . '>' . $breadcrumb;
-            if ($parent->parent) {
-                $grandparent = $parent->parent;
-                $breadcrumb = $grandparent->name . '>' . $breadcrumb;
-            }
-        }
-
         if ($category->parent_id === 0) {
             $peerCategories = ProductCategory::where('parent_id', 0)
                 ->where('id', '!=', $category->id)
@@ -91,7 +81,7 @@ class CategoriesController extends Controller
             'category' => $category,
             'children' => $category->children()->with('listings', 'products', 'children')->get(),
             'peerCategories' => $peerCategories,
-            'breadcrumb' => $breadcrumb,
+            'breadcrumb' => $category->breadcrumb,
         ]);
     }
 
@@ -124,8 +114,13 @@ class CategoriesController extends Controller
         $data = [
             'name' => $request->input('name'),
             'url_slug' => Str::slug($request->input('name')),
+//            'breadcrumb' => $category->getFreshBreadcrumb(),
         ];
         ProductCategory::where('id', $id)->update($data);
+
+        $category->refresh();
+        $category->regenerateBreadcrumb();
+        $category->regenerateChildrenBreadcrumbs();
 
         return back()->with('success', trans('app.category_updated'));
     }

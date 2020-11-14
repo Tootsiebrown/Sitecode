@@ -56,4 +56,29 @@ class ProductCategory extends Model
     {
         return $this->belongsToMany(Product::class, 'product_category_links', 'category_id');
     }
+
+    public function regenerateBreadcrumb()
+    {
+        $breadcrumb = $this->name;
+
+        if ($this->parent) {
+            $breadcrumb = $this->parent->name . ' » ' . $breadcrumb;
+
+            if ($this->parent->parent) {
+                $breadcrumb = $this->parent->parent->name . ' » ' . $breadcrumb;
+            }
+        }
+
+        $this->breadcrumb = $breadcrumb;
+        $this->save();
+    }
+
+    public function regenerateChildrenBreadcrumbs()
+    {
+        $this->children
+            ->each(function ($child) {
+                $child->regenerateBreadcrumb();
+                $child->regenerateChildrenBreadcrumbs();
+            });
+    }
 }
