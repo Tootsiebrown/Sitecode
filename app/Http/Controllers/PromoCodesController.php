@@ -38,7 +38,7 @@ class PromoCodesController extends Controller
                 'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
-                'category_id' => 'exists:product_categories',
+                'category_id' => 'exists:product_categories,id',
             ]
         );
 
