@@ -2,13 +2,16 @@
 
 namespace App\Wax\Shop\Models;
 
+use App\Support\CouponInterface;
 use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Wax\Shop\Models\Bundle;
 use Wax\Shop\Models\Order as WaxOrder;
+use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order\Shipment;
+use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
 
 class Order extends WaxOrder
 {
@@ -20,6 +23,7 @@ class Order extends WaxOrder
     public function applyCoupon(string $code): bool
     {
         $coupon = Coupon::where('code', $code)->first();
+
         if (!$coupon) {
             return false;
         }
@@ -47,6 +51,15 @@ class Order extends WaxOrder
         $this->calculateDiscounts();
 
         return true;
+    }
+
+    public function getDiscountableTotalFor(CouponInterface $coupon)
+    {
+        if (is_null($coupon->category_id)) {
+            return $this->discountable_total;
+        }
+
+        return $this->shipments->sum(fn($shipment) => $shipment->getDiscountableTotalFor($coupon));
     }
 
     protected function applyBundleDiscounts()
@@ -175,5 +188,10 @@ class Order extends WaxOrder
     public function scopeNotShipped($query)
     {
         return $query->whereNull('shipped_at');
+    }
+
+    public function coupon()
+    {
+        return $this->hasOne(OrderCoupon::class, 'order_id');
     }
 }

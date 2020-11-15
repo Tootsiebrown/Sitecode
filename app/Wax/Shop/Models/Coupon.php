@@ -3,11 +3,12 @@
 namespace App\Wax\Shop\Models;
 
 use App\ProductCategory;
+use App\Support\CouponInterface;
 use App\Wax\Shop\Validators\OrderCouponValidator;
 use Wax\Shop\Models\Coupon as WaxCoupon;
 use Wax\Shop\Models\Order;
 
-class Coupon extends WaxCoupon
+class Coupon extends WaxCoupon implements CouponInterface
 {
     protected $fillable = [
         'title',

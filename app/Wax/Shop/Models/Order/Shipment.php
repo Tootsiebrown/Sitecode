@@ -2,7 +2,7 @@
 
 namespace App\Wax\Shop\Models\Order;
 
-use App\Wax\Shop\Models\Order\Item;
+use App\Support\CouponInterface;
 use Wax\Shop\Events\OrderChanged\CartContentsChangedEvent;
 use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
 use Wax\Shop\Models\Order\Shipment as WaxShipment;
@@ -167,5 +167,18 @@ class Shipment extends WaxShipment
         }
 
         event(new CartContentsChangedEvent($this->order));
+    }
+
+    public function getDiscountableTotalFor(CouponInterface $coupon)
+    {
+        if (is_null($coupon->category_id)) {
+            return $this->items->where('discountable', 1)->sum('gross_subtotal');
+        } else {
+            return $this
+                ->items
+                ->where('discountable', 1)
+                ->filter(fn($item) => $item->isDiscountableFor($coupon))
+                ->sum('gross_subtotal');
+        }
     }
 }
