@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Brand;
@@ -31,6 +32,7 @@ class AdsController extends Controller
 {
     use GetsDenormalizedProductCategories;
     use CanUseFilters;
+    use CropsProductImages;
 
     protected $repo;
 
@@ -338,12 +340,31 @@ class AdsController extends Controller
             if (!empty($grandchild)) {
                 $listing->categories()->attach($grandchild->id);
             }
+
+            //fresh query
+            $oldImages = $listing->images()->get();
+
+            $imageSortOrder = json_decode($request->input('imageSortOrder'));
+
             $this->syncListingImages(
                 $listing,
                 $request->input('existing_images', []),
-                $request->input('deletable_images', [])
+                $request->input('deletable_images', []),
+                $imageSortOrder
             );
-            $this->addProductImages($listing, $request->input('new_images', []));
+
+            $this->cropImages(
+                $oldImages,
+                $request->input('existing_images', []),
+                $request->input('existing_image_metadata', [])
+            );
+
+            $this->addProductImages(
+                $listing,
+                $request->input('new_images', []),
+                $request->input('new_images_metadata'),
+                $imageSortOrder
+            );
         }
 
         return redirect(
@@ -356,30 +377,79 @@ class AdsController extends Controller
         )->with('success', 'Listing Edited.');
     }
 
-    protected function syncListingImages(Listing $listing, array $existingImages, array $deletableImages)
-    {
-        // don't delete images files for ProductImages in the database...
-        // product could have been cloned, and that will cause problems.
+    protected function syncListingImages(
+        Listing $listing,
+        array $existingImages,
+        array $deletableImages,
+        $imageSortOrder
+    ) {
         ListingImage::whereNotIn('id', $existingImages)
             ->where('listing_id', $listing->id)
             ->delete();
+
+        foreach ($imageSortOrder as $image) {
+            if (strpos($image->id, 'existing-') === 0) {
+                $imageId = substr($image->id, strlen('existing-'));
+                ListingImage::where('id', $imageId)
+                    ->update(['sort_id' => $image->position]);
+            }
+        }
 
         // but delete any images that were uploaded and then discarded.
         foreach ($deletableImages as $deletableImage) {
             current_disk()->delete(ListingImage::getDiskPath() . $deletableImage);
             current_disk()->delete(ListingImage::getDiskPath() . 'thumbs/' . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . 'cropped/' . $deletableImage);
+            current_disk()->delete(ListingImage::getDiskPath() . 'cropped/thumbs/' . $deletableImage);
         }
     }
 
-    protected function addProductImages(Listing $listing, array $newImages)
-    {
+    protected function addProductImages(
+        Listing $listing,
+        array $newImages,
+        $newImagesMeta,
+        $imageSortOrder
+    ) {
+        $createdImages = collect();
+        $createdImagesMeta = [];
+        $sortOrder = [];
+
+        foreach ($imageSortOrder as $item) {
+            if (strpos($item->id, 'new-') !== 0) {
+                continue;
+            }
+
+            $filename = substr($item->id, strlen('new-'));
+            $sortOrder[$filename] = $item->position;
+        }
+
+        $nextSortId = count($imageSortOrder) + 1;
+
         foreach ($newImages as $newImage) {
-            $created_img_db = ListingImage::create([
+            if (!empty($sortOrder[$newImage])) {
+                $imageSortId = $sortOrder[$newImage];
+            } else {
+                $imageSortId = $nextSortId;
+                $nextSortId++;
+            }
+
+            $createdImage = ListingImage::create([
                 'listing_id' => $listing->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
+                'metadata' => $newImagesMeta[$newImage] ?? '',
+                'sort_id' => $imageSortId,
             ]);
+
+            $createdImages->push($createdImage);
+            $createdImagesMeta[$createdImage->id] = $newImagesMeta[$newImage];
         }
+
+        $this->cropImages(
+            $createdImages,
+            $createdImages->pluck('id')->values()->toArray(),
+            $createdImagesMeta
+        );
     }
 
     public function favoriteAds()
@@ -391,106 +461,6 @@ class AdsController extends Controller
 
         return view('dashboard.favourite_ads', compact('title', 'ads'));
     }
-
-
-
-//    public function uploadAdsImage(Request $request, $ad_id = 0)
-//    {
-//        $user_id = 0;
-//
-//        if (Auth::check()) {
-//            $user_id = Auth::user()->id;
-//        }
-//
-//        if ($request->hasFile('images')) {
-//            $images = $request->file('images');
-//            foreach ($images as $image) {
-//                $valid_extensions = ['jpg','jpeg','png'];
-//                if (! in_array(strtolower($image->getClientOriginalExtension()), $valid_extensions)) {
-//                    return redirect()->back()->withInput($request->input())->with('error', 'Only .jpg, .jpeg and .png is allowed extension') ;
-//                }
-//
-//                $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-//                $resized = Image::make($image)->resize(640, null, function ($constraint) {
-//                    $constraint->aspectRatio();
-//                })->stream();
-//                $resized_thumb = Image::make($image)->resize(320, 213)->stream();
-//
-//                $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
-//
-//                $imageFileName = 'uploads/images/' . $image_name;
-//                $imageThumbName = 'uploads/images/thumbs/' . $image_name;
-//
-//                try {
-//                    //Upload original image
-//                    $is_uploaded = current_disk()->put($imageFileName, $resized->__toString(), 'public');
-//
-//                    if ($is_uploaded) {
-//                        //Save image name into db
-//                        $created_img_db = Media::create(['user_id' => $user_id, 'ad_id' => $ad_id, 'media_name' => $image_name, 'type' => 'image', 'storage' => get_option('default_storage'), 'ref' => 'ad']);
-//
-//                        //upload thumb image
-//                        current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-//                        $img_url = media_url($created_img_db, false);
-//                    }
-//                } catch (\Exception $e) {
-//                    return redirect()->back()->withInput($request->input())->with('error', $e->getMessage()) ;
-//                }
-//            }
-//        }
-//    }
-    /**
-     * @param Request $request
-     * @return array
-     */
-
-//    public function deleteMedia(Request $request)
-//    {
-//        abort(400);
-//        $media_id = $request->media_id;
-//        $media = Media::find($media_id);
-//
-//        $storage = Storage::disk($media->storage);
-//        if ($storage->has('uploads/images/' . $media->media_name)) {
-//            $storage->delete('uploads/images/' . $media->media_name);
-//        }
-//
-//        if ($media->type == 'image') {
-//            if ($storage->has('uploads/images/thumbs/' . $media->media_name)) {
-//                $storage->delete('uploads/images/thumbs/' . $media->media_name);
-//            }
-//        }
-//
-//        $media->delete();
-//        return ['success' => 1, 'msg' => trans('app.media_deleted_msg')];
-//    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-//    public function featureMediaCreatingAds(Request $request)
-//    {
-//        $user_id = Auth::user()->id;
-//        $media_id = $request->media_id;
-//
-//        Media::whereUserId($user_id)->whereAdId(0)->whereRef('ad')->update(['is_feature' => '0']);
-//        Media::whereId($media_id)->update(['is_feature' => '1']);
-//
-//        return ['success' => 1, 'msg' => trans('app.media_featured_msg')];
-//    }
-
-    /**
-     * @return mixed
-     */
-
-//    public function appendMediaImage()
-//    {
-//        $user_id = Auth::user()->id;
-//        $ads_images = Media::whereUserId($user_id)->whereAdId(0)->whereRef('ad')->get();
-//
-//        return view('dashboard.append_media', compact('ads_images'));
-//    }
 
     /**
      * @param Request $request
@@ -511,36 +481,12 @@ class AdsController extends Controller
 
         $filterOptions = $this->repo->getFilterOptions();
 
-//        $brand = null;
-//        if (request('brand')) {
-//            $brand = Brand::find(request('brand'));
-//        }
-
         return view('pages.search', [
             'listings' => $paginatedListings,
             'filterOptions' => $filterOptions,
             'filterValues' => $this->getFilterValuesFromRequest($request),
-//            'brand' => $brand,
             'title' => 'Search Results'
         ]);
-
-        //Sort by filter
-        // maybe add this back in at some point
-//        if (request('sortBy')) {
-//            switch (request('sortBy')) {
-//                case 'price_high_to_low':
-//                    $listings = $listings->orderBy('price', 'desc');
-//                    break;
-//                case 'price_low_to_high':
-//                    $listings = $listings->orderBy('price', 'asc');
-//                    break;
-//                case 'latest':
-//                    $listings = $listings->orderBy('id', 'desc');
-//                    break;
-//            }
-//        } else {
-//            $listings = $listings->orderBy('id', 'desc');
-//        }
     }
 
 
