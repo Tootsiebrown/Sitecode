@@ -321,7 +321,7 @@
                             @include('dashboard.shared.product-listing-image-repeater')
                         @endforeach
                         @if (is_array(old('new_images')) && !empty(old('new_images')))
-                            @foreach (old('new_images') as $newImage)
+                            @foreach (old('new_images') as $key => $filename)
                                 @include('dashboard.shared.product-listing-new-image-repeater', [
                                     'imageId' => $key + 1,
                                     'urlPath' => \App\ProductImage::getUrlPath(),
