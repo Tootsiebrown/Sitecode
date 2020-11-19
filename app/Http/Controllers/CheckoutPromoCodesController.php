@@ -57,11 +57,12 @@ class CheckoutPromoCodesController extends Controller
         ]);
     }
 
-    public function destroy()
+    public function destroy($code)
     {
-        $this->shopService->removeCoupon();
-
         $order = $this->shopService->getActiveOrder();
+        $order->removeCouponByCode($code);
+        $order->refresh();
+
         return view('site.components.checkout-cart', [
             'order' => $order,
             'couponMessage' => 'Coupon Removed',

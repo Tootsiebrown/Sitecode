@@ -7,6 +7,8 @@ use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Wax\Core\Support\Localization\Currency;
+use Wax\Shop\Events\OrderChanged\CouponChangedEvent;
 use Wax\Shop\Models\Bundle;
 use Wax\Shop\Models\Order as WaxOrder;
 use App\Wax\Shop\Models\Coupon;
@@ -32,11 +34,7 @@ class Order extends WaxOrder
             return false;
         }
 
-        if ($this->coupon) {
-            $this->coupon->delete();
-        }
-
-        $this->coupon()->create([
+        $this->coupons()->create([
             'title' => $coupon->title,
             'code' => $coupon->code,
             'expired_at' => $coupon->expired_at,
@@ -53,6 +51,31 @@ class Order extends WaxOrder
         return true;
     }
 
+    public function getCouponValueAttribute()
+    {
+        return Currency::round($this->coupons->sum->calculated_value ?? 0);
+    }
+
+    public function calculateDiscounts()
+    {
+        // make sure coupon / bundle relations are up to date
+        $this->refresh();
+
+        $this->resetDiscounts();
+
+        if ($this->coupons->isNotEmpty()) {
+            $this->coupons->each->calculateValue();
+            $this->refresh();
+        }
+
+        $bundlesTouched = $this->applyBundleDiscounts();
+
+        if ($bundlesTouched > 0) {
+            $this->refresh();
+        }
+        event(new CouponChangedEvent($this));
+    }
+
     public function getDiscountableTotalFor(CouponInterface $coupon)
     {
         if (is_null($coupon->category_id)) {
@@ -60,6 +83,21 @@ class Order extends WaxOrder
         }
 
         return $this->shipments->sum(fn($shipment) => $shipment->getDiscountableTotalFor($coupon));
+    }
+
+    public function removeCouponByCode(string $code)
+    {
+        if ($this->coupons->isEmpty()) {
+            return;
+        }
+
+        $this
+            ->coupons
+            ->filter(fn ($coupon) => $coupon->code === $code)
+            ->first()
+            ->delete();
+
+        $this->calculateDiscounts();
     }
 
     protected function applyBundleDiscounts()
@@ -191,8 +229,8 @@ class Order extends WaxOrder
         return $query->whereNull('shipped_at');
     }
 
-    public function coupon()
+    public function coupons()
     {
-        return $this->hasOne(OrderCoupon::class, 'order_id');
+        return $this->hasMany(OrderCoupon::class, 'order_id');
     }
 }

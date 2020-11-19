@@ -786,7 +786,7 @@ Route::name('shop.')
                 Route::post('code')
                     ->uses('CheckoutPromoCodesController@store')
                     ->name('applyCode');
-                Route::delete('code')
+                Route::delete('code/{code}')
                     ->uses('CheckoutPromoCodesController@destroy')
                     ->name('removeCode');
             });
