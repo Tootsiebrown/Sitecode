@@ -17,6 +17,7 @@ use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
 
 class Order extends WaxOrder
 {
+    protected $with = ['shipments', 'payments', 'coupons', 'bundles'];
     public function shipments()
     {
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
