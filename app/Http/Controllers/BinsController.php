@@ -19,7 +19,7 @@ class BinsController extends Controller
         if ($searchBy) {
             switch ($searchBy) {
                 case 'listing_sku':
-                    $listing = Listing::find($listingSku);
+                    $listing = Listing::withoutGlobalScopes()->find($listingSku);
                     if ($listing) {
                         return redirect()->route('dashboard.bins.showListingBins', ['id' => $listing->id]);
                     }
@@ -47,7 +47,8 @@ class BinsController extends Controller
 
     public function showListingBins($listingId)
     {
-        $listing = Listing::with(['items'])
+        $listing = Listing::withoutGlobalScopes()
+            ->with(['items'])
             ->findOrFail($listingId);
 
         return view('dashboard.bins.listing', ['listing' => $listing]);
@@ -62,7 +63,8 @@ class BinsController extends Controller
             ]
         );
 
-        $listing = Listing::with(['items'])
+        $listing = Listing::withoutGlobalScopes()
+            ->with(['items'])
             ->findOrFail($listingId);
 
         $listing->items->each(function ($item) {
@@ -137,7 +139,7 @@ class BinsController extends Controller
             ]
         );
 
-        $listing = Listing::with(['items'])
+        $listing = Listing::withoutGlobalScopes()->with(['items'])
             ->findOrFail($request->input('listing_id'));
 
         $quantity = request('quantity');

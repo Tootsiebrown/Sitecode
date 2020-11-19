@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Gateways\DatafinitiGateway;
+use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Models\Listing\Item;
@@ -11,6 +12,7 @@ use App\Product;
 use App\ProductCategory;
 use App\ProductImage;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,7 @@ use Intervention\Image\Facades\Image;
 class ListerController extends Controller
 {
     use GetsDenormalizedProductCategories;
+    use CropsProductImages;
 
     protected $datafinitiGateway;
 
@@ -379,12 +382,30 @@ class ListerController extends Controller
             if (!empty($grandchild)) {
                 $product->categories()->attach($grandchild->id);
             }
+
+            //fresh query
+            $oldImages = $product->images()->get();
+            $imageSortOrder = json_decode($request->input('imageSortOrder'));
+
             $this->syncProductImages(
                 $product,
                 $request->input('existing_images', []),
-                $request->input('deletable_images', [])
+                $request->input('deletable_images', []),
+                $imageSortOrder,
             );
-            $this->addProductImages($product, $request->input('new_images', []));
+
+            $this->cropImages(
+                $oldImages,
+                $request->input('existing_images', []),
+                $request->input('existing_image_metadata', [])
+            );
+
+            $this->addProductImages(
+                $product,
+                $request->input('new_images', []),
+                $request->input('new_images_metadata', []),
+                $imageSortOrder
+            );
         }
 
         return redirect(
@@ -397,31 +418,78 @@ class ListerController extends Controller
         )->with('success', trans('app.product_created'));
     }
 
-    protected function syncProductImages(Product $product, array $existingImages, array $deletableImages)
-    {
-        // don't delete images files for ProductImages in the database...
-        // product could have been cloned, and that will cause problems.
+    protected function syncProductImages(
+        Product $product,
+        array $existingImages,
+        array $deletableImages,
+        $imageSortOrder
+    ) {
         ProductImage::whereNotIn('id', $existingImages)
             ->where('product_id', $product->id)
             ->delete();
 
-        // but delete any images that were uploaded and then discarded.
+        foreach ($imageSortOrder as $image) {
+            if (strpos($image->id, 'existing-') === 0) {
+                $imageId = substr($image->id, strlen('existing-'));
+                ProductImage::where('id', $imageId)
+                    ->update(['sort_id' => $image->position]);
+            }
+        }
+
         foreach ($deletableImages as $deletableImage) {
             current_disk()->delete(ProductImage::getDiskPath() . $deletableImage);
             current_disk()->delete(ProductImage::getDiskPath() . 'thumbs/' . $deletableImage);
         }
     }
 
-    protected function addProductImages(Product $product, array $newImages)
-    {
+    protected function addProductImages(
+        Product $product,
+        array $newImages,
+        $newImagesMeta,
+        $imageSortOrder
+    ) {
+        $createdImages = collect();
+        $createdImagesMeta = [];
+        $sortOrder = [];
+
+        foreach ($imageSortOrder as $item) {
+            if (strpos($item->id, 'new-') !== 0) {
+                continue;
+            }
+
+            $filename = substr($item->id, strlen('new-'));
+            $sortOrder[$filename] = $item->position;
+        }
+
+        $nextSortId = count($imageSortOrder) + 1;
+
         foreach ($newImages as $newImage) {
-            $created_img_db = ProductImage::create([
+            if (!empty($sortOrder[$newImage])) {
+                $imageSortId = $sortOrder[$newImage];
+            } else {
+                $imageSortId = $nextSortId;
+                $nextSortId++;
+            }
+
+            $createdImage = ProductImage::create([
                 'product_id' => $product->id,
                 'media_name' => $newImage,
                 'disk' => get_option('default_storage'),
+                'sort_id' => $imageSortId,
             ]);
+
+            $createdImages->push($createdImage);
+            $createdImagesMeta[$createdImage->id] = $newImagesMeta[$newImage];
         }
+
+        $this->cropImages(
+            $createdImages,
+            $createdImages->pluck('id')->values()->toArray(),
+            $createdImagesMeta
+        );
     }
+
+
 
     public function newListing(Request $request)
     {
@@ -512,7 +580,27 @@ class ListerController extends Controller
                         'media_name' => $image->media_name,
                         'featured' => $image->featured,
                         'disk' => $image->disk,
+                        'metadata' => $image->metadata,
                     ]);
+
+                    $copies = [
+                        '',
+                        'thumbs/',
+                        'cropped/',
+                        'cropped/thumbs/',
+
+                    ];
+
+                    foreach ($copies as $copy) {
+                        if (! Storage::disk($image->disk)->exists($image::getDiskPath() . $copy . $image->media_name)) {
+                            continue;
+                        }
+
+                        (new Filesystem())->copy(
+                            Storage::disk($image->disk)->path($image::getDiskPath() . $copy . $image->media_name),
+                            Storage::disk($image->disk)->path(ListingImage::getDiskPath() . $copy . $image->media_name)
+                        );
+                    }
                 });
 
             $ad->categories()->attach(
@@ -582,8 +670,19 @@ class ListerController extends Controller
 
             $imageName = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
 
-            $imageFileName = 'uploads/images/' . $imageName;
-            $imageThumbName = 'uploads/images/thumbs/' . $imageName;
+            switch (request('type')) {
+                case 'listing':
+                    $imageFileName = ListingImage::getDiskPath() . $imageName;
+                    $imageThumbName = ListingImage::getDiskPath() . 'thumbs/' . $imageName;
+                    break;
+                case 'product':
+                    $imageFileName = ProductImage::getDiskPath() . $imageName;
+                    $imageThumbName = ProductImage::getDiskPath() . 'thumbs/' . $imageName;
+                    break;
+                default:
+                    throw new \Exception('"' . request('type') . '" is not a supported upload type.');
+            }
+
 
             try {
                 current_disk()->put($imageFileName, $resized->__toString(), 'public');
@@ -602,7 +701,7 @@ class ListerController extends Controller
 
             $returnImages[] = [
                 'filename' => $imageName,
-                'url' => Storage::url($imageThumbName),
+                'url' => Storage::url($imageFileName),
             ];
         }
 

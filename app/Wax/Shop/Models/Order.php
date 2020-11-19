@@ -135,6 +135,7 @@ class Order extends WaxOrder
                 'reserved_for_order_id' => null,
                 'order_item_id' => null,
                 'removed_at' => null,
+                'reserved_for_offer_id' => null,
             ]);
 
         $this->canceled_by_user_id = Auth::user()->id;
