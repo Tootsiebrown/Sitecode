@@ -22,6 +22,9 @@ class CouponValidatorTest extends WaxAppTestCase
     /* @var Listing */
     private $listing;
 
+    /* @var Listing */
+    private $listing2;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -426,5 +429,46 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertTrue($couponValidator->passes());
         $this->assertTrue($couponValidator->messages()->isEmpty());
         $this->assertTrue($this->shopService->applyCoupon($peerCoupon->code));
+    }
+
+    public function testValidationSucceedsWithCorrectListingForCoupon()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => $this->listing->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($couponValidator->messages()->isEmpty());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testValidationFailsWithIncorrectListingForCoupon ()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => $this->listing2->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_invalid_listing')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon->code));
     }
 }

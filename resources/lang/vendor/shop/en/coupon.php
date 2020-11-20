@@ -8,5 +8,6 @@ return [
     'validation_user_used_before' => 'You have already used this promo in a previous order.',
     'validation_category' => 'Order must have at least one item in category :breadcrumb.',
     'validation_duplicate' => 'Promo code cannot be used twice on the same order.',
-    'validation_overlapping_discount' => 'You cannot use two promo codes that apply to the same product.'
+    'validation_overlapping_discount' => 'You cannot use two promo codes that apply to the same product.',
+    'validation_invalid_listing' => 'You must have a cart item eligible for this coupon.'
 ];
