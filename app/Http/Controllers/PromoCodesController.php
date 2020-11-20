@@ -152,7 +152,7 @@ class PromoCodesController extends Controller
             $data['permitted_uses'] = null;
         }
 
-        switch($request->input('which')) {
+        switch ($request->input('which')) {
             case 'category':
                 $data['category_id'] = $request->input('category_id');
                 $data['listing_id'] = null;
