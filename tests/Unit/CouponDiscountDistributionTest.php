@@ -33,6 +33,9 @@ class CouponDiscountDistributionTest extends WaxAppTestCase
     private $coupon;
 
     /* @var Coupon */
+    private $coupon2;
+
+    /* @var Coupon */
     private $bigCoupon;
 
     /* @var Coupon */
@@ -41,18 +44,29 @@ class CouponDiscountDistributionTest extends WaxAppTestCase
     /* @var ProductCategory */
     private $category;
 
+    /* @var ProductCategory */
+    private $category2;
+
     public function setUp(): void
     {
         parent::setUp();
 
         $this->shopService = app()->make(ShopService::class);
         $this->category = factory(ProductCategory::class)->create();
+        $this->category2 = factory(ProductCategory::class)->create();
 
         $this->coupon = factory(Coupon::class)
             ->create([
                 'dollars' => 20,
                 'one_time' => true,
-                'category_id' => $this->category
+                'category_id' => $this->category->id
+            ]);
+
+        $this->coupon2 = factory(Coupon::class)
+            ->create([
+                'dollars' => 15,
+                'one_time' => true,
+                'category_id' => $this->category2->id
             ]);
 
         $this->bigCoupon = factory(Coupon::class)
@@ -200,5 +214,78 @@ class CouponDiscountDistributionTest extends WaxAppTestCase
                 $this->assertEquals(0, $item->discount_amount);
             }
         });
+    }
+
+    public function testMultipleCoupons()
+    {
+        $listing = factory(Listing::class)->create(['price' => 30]);
+        $listing->items()->saveMany(factory(ListingItem::class, 3)->make());
+        $listing->categories()->attach($this->category->id);
+
+        $listing2 = factory(Listing::class)->create(['price' => 30]);
+        $listing2->items()->saveMany(factory(ListingItem::class, 3)->make());
+        $listing2->categories()->attach($this->category2->id);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $listing->id]);
+        $this->shopService->addOrderItem(1, 1, [], [1 => $listing2->id]);
+
+        $this->assertTrue($this->shopService->applyCoupon($this->coupon->code));
+        $this->assertTrue($this->shopService->applyCoupon($this->coupon2->code));
+
+        $this->shopService->getActiveOrder()->items->each(function ($item) use ($listing, $listing2) {
+            if ($item->listing_id == $listing->id) {
+                $this->assertEquals(20, $item->discount_amount);
+            } elseif ($item->listing_id == $listing2->id) {
+                $this->assertEquals(15, $item->discount_amount);
+            } else {
+                throw new \Exception('This case should not be hit by this test.');
+            }
+        });
+
+        $order = $this->shopService->getActiveOrder();
+        $this->assertEquals("60.00", $order->gross_total);
+        $this->assertEquals("25.00", $order->item_subtotal);
+        $this->assertEquals("35.00", $order->discount_amount);
+        $this->assertEquals("25.00", $order->balance_due);
+    }
+
+    public function testMultipleCouponsAndDistribution()
+    {
+        $listing = factory(Listing::class)->create(['price' => 30]);
+        $listing->items()->saveMany(factory(ListingItem::class, 3)->make());
+        $listing->categories()->attach($this->category->id);
+
+        $listing2 = factory(Listing::class)->create(['price' => 30]);
+        $listing2->items()->saveMany(factory(ListingItem::class, 3)->make());
+        $listing2->categories()->attach($this->category2->id);
+
+        $listing3 = factory(Listing::class)->create(['price' => 25]);
+        $listing3->items()->saveMany(factory(ListingItem::class, 3)->make());
+        $listing3->categories()->attach($this->category->id);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $listing->id]);
+        $this->shopService->addOrderItem(1, 1, [], [1 => $listing2->id]);
+        $this->shopService->addOrderItem(1, 1, [], [1 => $listing3->id]);
+
+        $this->assertTrue($this->shopService->applyCoupon($this->coupon->code));
+        $this->assertTrue($this->shopService->applyCoupon($this->coupon2->code));
+
+        $this->shopService->getActiveOrder()->items->each(function ($item) use ($listing, $listing2, $listing3) {
+            if ($item->listing_id == $listing->id) {
+                $this->assertEquals(10.91, $item->discount_amount); //54%
+            } elseif ($item->listing_id == $listing2->id) {
+                $this->assertEquals(15, $item->discount_amount);
+            } elseif ($item->listing_id == $listing3->id) {
+                $this->assertEquals(9.09, $item->discount_amount);
+            } else {
+                throw new \Exception('This case should not be hit by this test.');
+            }
+        });
+
+        $order = $this->shopService->getActiveOrder();
+        $this->assertEquals("85.00", $order->gross_total);
+        $this->assertEquals("50.00", $order->item_subtotal);
+        $this->assertEquals("35.00", $order->discount_amount);
+        $this->assertEquals("50.00", $order->balance_due);
     }
 }
