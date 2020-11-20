@@ -30,6 +30,22 @@ class ProductCategory extends Model
         return $this->hasMany(static::class, 'parent_id');
     }
 
+    public function getAllDescendantsAttribute()
+    {
+        $this->load('children.children');
+
+        $children = $this->children;
+
+        $grandchildren = $this->children
+            ->map(function ($child) {
+                return $child->children;
+            })
+            ->filter()
+            ->flatten();
+
+        return $children->merge($grandchildren);
+    }
+
     public function parent()
     {
         return $this->belongsTo(static::class, 'parent_id');

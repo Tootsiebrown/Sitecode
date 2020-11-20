@@ -31,6 +31,9 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->listing = factory(Listing::class)->create(['price' => 26]);
         $this->listing->items()->saveMany(factory(ListingItem::class, 3)->make());
 
+        $this->listing2 = factory(Listing::class)->create(['price' => 26]);
+        $this->listing2->items()->saveMany(factory(ListingItem::class, 3)->make());
+
         $this->user = factory(User::class)->create();
     }
 
@@ -303,5 +306,125 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertTrue($couponValidator->passes());
         $this->assertTrue($couponValidator->messages()->isEmpty());
         $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testSameCouponTwice()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+        $order->refresh();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_duplicate')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon->code));
+    }
+
+    public function testOverlappingCategoryCoupons()
+    {
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+
+        $childCategory = factory(ProductCategory::class)
+            ->create([
+                'name' => 'iPhones',
+                'breadcrumb' => 'who cares',
+                'parent_id' => $category->id,
+            ]);
+
+        $this->listing->categories()->attach($category->id);
+        $this->listing->categories()->attach($childCategory->id);
+
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $childCoupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $childCategory->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+        $order->refresh();
+
+        $couponValidator = new OrderCouponValidator($order, $childCoupon);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_overlapping_discount')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($childCoupon->code));
+    }
+
+    public function testNonOverlappingCategoryCoupons()
+    {
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+
+        $peerCategory = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Samsung',
+                'breadcrumb' => 'Samsung',
+            ]);
+
+        $this->listing->categories()->attach($category->id);
+        $this->listing2->categories()->attach($peerCategory->id);
+
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $peerCoupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $peerCategory->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing2->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+        $order->refresh();
+
+        $couponValidator = new OrderCouponValidator($order, $peerCoupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($couponValidator->messages()->isEmpty());
+        $this->assertTrue($this->shopService->applyCoupon($peerCoupon->code));
     }
 }

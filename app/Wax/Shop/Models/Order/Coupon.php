@@ -2,6 +2,7 @@
 
 namespace App\Wax\Shop\Models\Order;
 
+use App\ProductCategory;
 use App\Support\CouponInterface;
 use App\Wax\Shop\Models\Coupon as RawCoupon;
 use App\Wax\Shop\Validators\OrderCouponValidator;
@@ -88,5 +89,10 @@ class Coupon extends WaxCoupon implements CouponInterface
                 break;
             }
         }
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 }
