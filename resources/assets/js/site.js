@@ -33,6 +33,7 @@ import ConfirmLink from "./component/confirm-link";
 import ImageField from "./component/dashboard/image-field";
 import UsageRestrictions from "./component/dashboard/coupons/usage-restrictions";
 import MultiImageSort from "./component/dashboard/multi-image-sort";
+import ApplicabilityRestrictions from "./component/dashboard/coupons/applicability-restrictions";
 
 export default function Site() {
 
@@ -74,6 +75,7 @@ export default function Site() {
         selectComponent('confirm-link').each((index, element) => new ConfirmLink(element))
         selectComponent('image-field').each((index, element) => new ImageField(element))
         selectComponent('multi-image-sort').each((index, element) => new MultiImageSort(element))
+        selectComponent('dashboard-coupon-applicability-restrictions').each((index, element) => new ApplicabilityRestrictions(element))
 
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))
         taxonomyNavs.each((index, thisNav) => {

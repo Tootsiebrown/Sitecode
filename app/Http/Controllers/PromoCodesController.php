@@ -18,6 +18,7 @@ class PromoCodesController extends Controller
 
         return view('dashboard.promo-codes.details', [
             'coupon' => $coupon,
+            'which' => null,
             'method' => 'POST',
             'action' => route('dashboard.promoCodes.store'),
         ]);
@@ -39,6 +40,7 @@ class PromoCodesController extends Controller
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
                 'category_id' => 'exists:product_categories,id',
+                'listing_id' => 'exists:listings,id',
             ]
         );
 
@@ -54,7 +56,8 @@ class PromoCodesController extends Controller
             'dollars' => $request->input('type') === 'dollars' ? $request->input('dollars') : null,
             'percent' => $request->input('type') === 'percent' ? $request->input('percent') : null,
             'minimum_order' => $request->input('minimum_order') ?: null,
-            'category_id' => $request->input('category_id') ?: null,
+            'category_id' => $request->input('which') === 'category' ? $request->input('category_id') : null,
+            'listing_id' => $request->input('which') === 'listing' ? $request->input('listing_id') : null
         ];
 
         if (empty($couponData['permitted_uses'])) {
@@ -74,8 +77,17 @@ class PromoCodesController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
 
+        $which = null;
+        if ($coupon->category_id) {
+            $which = 'category';
+        }
+        if ($coupon->listing_id) {
+            $which = 'listing';
+        }
+
         return view('dashboard.promo-codes.details', [
             'coupon' => $coupon,
+            'which' => $which,
             'method' => 'PUT',
             'action' => route('dashboard.promoCodes.update', ['id' => $id]),
         ]);
@@ -99,10 +111,11 @@ class PromoCodesController extends Controller
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
                 'category_id' => 'exists:product_categories,id',
+                'listing_id' => 'exists:listings,id',
             ]
         );
 
-        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'include_shipping', 'permitted_uses', 'category_id']);
+        $data = $request->only(['title', 'code', 'expired_at', 'minimum_order', 'include_shipping', 'permitted_uses']);
         if ($request->input('type') == 'dollars') {
             $data['dollars'] = $request->input('dollars');
             $data['percent'] = null;
@@ -139,8 +152,18 @@ class PromoCodesController extends Controller
             $data['permitted_uses'] = null;
         }
 
-        if (empty($data['category_id'])) {
-            $data['category_id'] = null;
+        switch($request->input('which')) {
+            case 'category':
+                $data['category_id'] = $request->input('category_id');
+                $data['listing_id'] = null;
+                break;
+            case 'listing':
+                $data['category_id'] = null;
+                $data['listing_id'] = $request->input('listing_id');
+                break;
+            default:
+                $data['category_id'] = null;
+                $data['listing_id'] = null;
         }
 
         $coupon->fill($data);

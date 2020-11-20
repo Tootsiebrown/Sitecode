@@ -94,22 +94,50 @@
             'checked' => $coupon->exists ? $coupon->include_shipping : true,
         ])
 
-        @php
-            $categoryOptions = \App\ProductCategory::orderBy('breadcrumb')
-                    ->get()
-                    ->mapWithKeys(function ($category) {
-                        return [$category->id => $category->breadcrumb];
-                    })
-                    ->prepend('Any & All', '')
-                    ->toArray();
-        @endphp
-        @include('dashboard.form-elements.form-group', [
-                'name' => 'category_id',
-                'prettyTitle' => 'Category',
-                'type' => 'select',
-                'value' => $coupon->category_id,
-                'options' => $categoryOptions,
-            ])
+        <div data-component="dashboard-coupon-applicability-restrictions">
+            <input type="hidden" name="which" data-element="which" value="{{ $which }}">
+
+           <div data-element="categoryWrapper">
+                @php
+                    $categoryOptions = \App\ProductCategory::orderBy('breadcrumb')
+                            ->get()
+                            ->mapWithKeys(function ($category) {
+                                return [$category->id => $category->breadcrumb];
+                            })
+                            ->prepend('Any & All', '')
+                            ->toArray();
+                @endphp
+
+                @include('dashboard.form-elements.form-group', [
+                    'name' => 'category_id',
+                    'prettyTitle' => 'Category',
+                    'type' => 'select',
+                    'value' => $coupon->category_id,
+                    'options' => $categoryOptions,
+                ])
+           </div>
+
+            <div data-element="listingWrapper">
+                @php
+                    $listingOptions = \App\Models\Listing::orderBy('title')
+                            ->get()
+                            ->mapWithKeys(function ($listing) {
+                                return [$listing->id => $listing->title];
+                            })
+                            ->prepend('Any & All', '')
+                            ->toArray();
+                @endphp
+
+                @include('dashboard.form-elements.form-group', [
+                    'name' => 'listing_id',
+                    'prettyTitle' => 'Listing',
+                    'type' => 'select',
+                    'value' => $coupon->listing_id,
+                    'options' => $listingOptions,
+                ])
+            </div>
+
+        </div>
 
         @include('dashboard.form-elements.form-group', [
             'type' => 'submit',

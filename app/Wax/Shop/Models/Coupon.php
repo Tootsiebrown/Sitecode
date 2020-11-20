@@ -21,6 +21,7 @@ class Coupon extends WaxCoupon implements CouponInterface
         'include_shipping',
         'permitted_uses',
         'category_id',
+        'listing_id',
     ];
 
     protected $casts = [
