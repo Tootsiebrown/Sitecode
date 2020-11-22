@@ -39,6 +39,7 @@ class OrderCouponValidator extends AbstractValidator
         $this->validateNotDuplicate();
         $this->validateNotOverlapping();
         $this->validateCorrectListing();
+        $this->validateListingNotOverlapping();
 
         return $this->messages->isEmpty();
     }
@@ -247,5 +248,36 @@ class OrderCouponValidator extends AbstractValidator
             'general',
             __('shop::coupon.validation_invalid_listing')
         );
+    }
+
+    public function validateListingNotOverlapping()
+    {
+        if (is_null($this->coupon->listing_id)) {
+            return;
+        }
+
+        $hasOverlappingListing = $this->order
+            ->items
+            ->filter(function ($item) {
+                return $item->listing_id === $this->coupon->listing_id;
+            })
+            ->reduce(function ($carry, $item) {
+                if ($carry) {
+                    return $carry;
+                }
+
+                if ($item->discount_amount > 0) {
+                    return true;
+                }
+
+                return false;
+            });
+
+        if ($hasOverlappingListing) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_overlapping_discount')
+            );
+        }
     }
 }

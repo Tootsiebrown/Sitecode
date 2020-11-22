@@ -30,11 +30,11 @@ class Order extends WaxOrder
         if (!$coupon) {
             return false;
         }
-
+dump($coupon->toArray());
         if (!$coupon->validate($this)) {
             return false;
         }
-
+dump('it validated');
         $this->coupons()->create([
             'title' => $coupon->title,
             'code' => $coupon->code,

@@ -24,6 +24,12 @@ class Coupon extends WaxCoupon implements CouponInterface
         'category_id',
     ];
 
+
+    protected $casts = [
+        'expired_at' => 'datetime',
+        'listing_id' => 'integer',
+    ];
+
     public function validate()
     {
         $rawCoupon = $this->getOriginalCoupon();

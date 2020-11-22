@@ -471,4 +471,80 @@ class CouponValidatorTest extends WaxAppTestCase
         );
         $this->assertFalse($this->shopService->applyCoupon($coupon->code));
     }
+
+    public function testCategoryCouponOverlappingWithListing()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => $this->listing->id,
+            ]);
+
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+        $this->listing->categories()->attach($category->id);
+
+        $coupon2 = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon2);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_overlapping_discount')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon2->code));
+    }
+
+    public function testListingCouponOverlappingWithCategory()
+    {
+        $category = factory(ProductCategory::class)
+            ->create([
+                'name' => 'Apple',
+                'breadcrumb' => 'Apple Breadcrumb',
+            ]);
+
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'category_id' => $category->id,
+            ]);
+
+        $this->listing->categories()->attach($category->id);
+
+        $coupon2 = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => (integer)$this->listing->id,
+                'code' => 'bad_code',
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon2);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_overlapping_discount')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon2->code));
+    }
 }

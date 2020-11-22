@@ -30,6 +30,7 @@ class Coupon extends WaxCoupon implements CouponInterface
         'permitted_uses' => 'integer',
         'one_time' => 'boolean',
         'category_id' => 'integer',
+        'listing_id' => 'integer',
     ];
 
     public function getTypeAttribute()

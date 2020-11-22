@@ -13,5 +13,6 @@ $factory->define(App\Wax\Shop\Models\Coupon::class, function (Faker\Generator $f
         'include_shipping' => false,
         'uses' => 0,
         'category_id' => null,
+        'listing_id' => null,
     ];
 });
