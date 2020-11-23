@@ -113,6 +113,12 @@ class Item extends WaxItem
 
     public function isDiscountableFor(CouponInterface $coupon)
     {
-        return $this->listing->categories->pluck('id')->contains($coupon->category_id);
+        if ($coupon->category_id) {
+            return $this->listing->categories->pluck('id')->contains($coupon->category_id);
+        } elseif ($coupon->listing_id) {
+            return $this->listing_id === $coupon->listing_id;
+        } else {
+            return true;
+        }
     }
 }

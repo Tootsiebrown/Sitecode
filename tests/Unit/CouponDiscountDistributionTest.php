@@ -84,6 +84,13 @@ class CouponDiscountDistributionTest extends WaxAppTestCase
                 'include_shipping' => true,
             ]);
 
+        $this->normalOlCoupon = factory(Coupon::class)
+            ->create([
+                'dollars' => 10,
+                'one_time' => true,
+                'include_shipping' => true,
+            ]);
+
         $this->discountableListing = factory(Listing::class)->create(['price' => 30]);
         $this->discountableListing->items()->saveMany(factory(ListingItem::class, 3)->make());
         $this->discountableListing->categories()->attach($this->category->id);
@@ -100,6 +107,26 @@ class CouponDiscountDistributionTest extends WaxAppTestCase
         config(['services.ship_station.api_key' => 'asdf']);
         config(['services.ship_station.api_secret' => 'asdf']);
         config(['services.ship_station.api_url' => 'asdf']);
+    }
+
+    public function testDiscountDistributionWithNoConditions()
+    {
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->discountableListing->id]);
+
+        $this->assertTrue($this->shopService->applyCoupon($this->normalOlCoupon->code));
+
+        $order = $this->shopService->getActiveOrder();
+
+        // order total is $35
+        $this->assertEquals("20.00", $order->total);
+
+        $order->items->each(function ($item) {
+            if ($item->listing_id == $this->discountableListing->id) {
+                $this->assertEquals(10, $item->discount_amount);
+            } else {
+                throw new \Exception('whoops');
+            }
+        });
     }
 
     public function testDiscountableTotalOnlyInCategory()

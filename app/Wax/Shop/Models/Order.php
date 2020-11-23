@@ -79,7 +79,7 @@ class Order extends WaxOrder
 
     public function getDiscountableTotalFor(CouponInterface $coupon)
     {
-        if (is_null($coupon->category_id)) {
+        if (is_null($coupon->category_id) && is_null($coupon->listing_id)) {
             return $this->discountable_total;
         }
 
@@ -233,5 +233,45 @@ class Order extends WaxOrder
     public function coupons()
     {
         return $this->hasMany(OrderCoupon::class, 'order_id');
+    }
+
+    protected function resetDiscounts()
+    {
+        // trigger individual deletes so the 'deleting' event is caught
+        $this->bundles->each->delete();
+
+        $wereShipmentsModified = $this->shipments->map(function ($shipment) {
+            $shipment->shipping_discount_amount = null;
+            $shipment->save();
+            return $shipment->wasChanged();
+        })->reduce(function ($carry, $item) {
+            return $carry || $item;
+        });
+
+        $wereItemsModified = $this->items->map(function ($item) {
+            $item->discountable = null;
+            $item->discount_amount = null;
+            $item->bundle_id = null;
+            $item->save();
+            return $item->wasChanged();
+        })->reduce(function ($carry, $item) {
+            return $carry || $item;
+        });
+
+        $wasCouponModified = false;
+        if ($this->coupons->isNotEmpty()) {
+            $wasCouponModified = $this->coupons->reduce(function ($wasCouponModified, $coupon) {
+                $coupon->calculated_value = null;
+                $coupon->save();
+                $wasThisCouponModified = $this->coupon->wasChanged();
+
+                return $wasThisCouponModified|| $wasCouponModified;
+
+            }, $wasCouponModified);
+        }
+
+        if ($wereShipmentsModified || $wereItemsModified || $wasCouponModified) {
+            $this->refresh();
+        }
     }
 }

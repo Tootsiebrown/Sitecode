@@ -171,7 +171,7 @@ class Shipment extends WaxShipment
 
     public function getDiscountableTotalFor(CouponInterface $coupon)
     {
-        if (is_null($coupon->category_id)) {
+        if (is_null($coupon->category_id) && is_null($coupon->listing_id)) {
             return $this->items->where('discountable', 1)->sum('gross_subtotal');
         } else {
             return $this
