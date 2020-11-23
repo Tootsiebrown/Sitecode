@@ -548,6 +548,36 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertFalse($this->shopService->applyCoupon($coupon2->code));
     }
 
+    public function testListingCouponOverlappingWithAnotherListingCoupon()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => $this->listing->id,
+            ]);
+
+        $coupon2 = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => true,
+                'listing_id' => $this->listing->id,
+            ]);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon2);
+        $this->assertFalse($couponValidator->passes());
+        $this->assertEquals(
+            $couponValidator->messages()->first('general'),
+            __('shop::coupon.validation_overlapping_discount')
+        );
+        $this->assertFalse($this->shopService->applyCoupon($coupon2->code));
+    }
+
     public function testGeneralOverlapping()
     {
         $category = factory(ProductCategory::class)
