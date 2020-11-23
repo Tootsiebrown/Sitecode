@@ -16,6 +16,8 @@ trait HasCondition
 
         'Used',
         'Used Damaged Package / Missing Package',
+
+        'Varied',
     ];
 
     public static function getConditions()
