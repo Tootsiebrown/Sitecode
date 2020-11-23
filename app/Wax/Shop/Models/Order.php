@@ -265,8 +265,7 @@ class Order extends WaxOrder
                 $coupon->save();
                 $wasThisCouponModified = $this->coupon->wasChanged();
 
-                return $wasThisCouponModified|| $wasCouponModified;
-
+                return $wasThisCouponModified || $wasCouponModified;
             }, $wasCouponModified);
         }
 
