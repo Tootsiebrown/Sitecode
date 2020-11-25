@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Shop\Coupon;
+use App\Wax\Shop\Models\Coupon;
 
 class PromoCodesController extends Controller
 {
@@ -18,6 +18,7 @@ class PromoCodesController extends Controller
 
         return view('dashboard.promo-codes.details', [
             'coupon' => $coupon,
+            'which' => null,
             'method' => 'POST',
             'action' => route('dashboard.promoCodes.store'),
         ]);
@@ -38,6 +39,8 @@ class PromoCodesController extends Controller
                 'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
+                'category_id' => 'exists:product_categories,id',
+                'listing_id' => 'exists:listings,id',
             ]
         );
 
@@ -53,6 +56,8 @@ class PromoCodesController extends Controller
             'dollars' => $request->input('type') === 'dollars' ? $request->input('dollars') : null,
             'percent' => $request->input('type') === 'percent' ? $request->input('percent') : null,
             'minimum_order' => $request->input('minimum_order') ?: null,
+            'category_id' => $request->input('which') === 'category' ? $request->input('category_id') : null,
+            'listing_id' => $request->input('which') === 'listing' ? $request->input('listing_id') : null
         ];
 
         if (empty($couponData['permitted_uses'])) {
@@ -72,8 +77,17 @@ class PromoCodesController extends Controller
     {
         $coupon = Coupon::findOrFail($id);
 
+        $which = null;
+        if ($coupon->category_id) {
+            $which = 'category';
+        }
+        if ($coupon->listing_id) {
+            $which = 'listing';
+        }
+
         return view('dashboard.promo-codes.details', [
             'coupon' => $coupon,
+            'which' => $which,
             'method' => 'PUT',
             'action' => route('dashboard.promoCodes.update', ['id' => $id]),
         ]);
@@ -96,6 +110,8 @@ class PromoCodesController extends Controller
                 'usage_restrictions' => 'required|in:one_time,once_per_user',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
+                'category_id' => 'exists:product_categories,id',
+                'listing_id' => 'exists:listings,id',
             ]
         );
 
@@ -134,6 +150,20 @@ class PromoCodesController extends Controller
 
         if (empty($data['permitted_uses'])) {
             $data['permitted_uses'] = null;
+        }
+
+        switch ($request->input('which')) {
+            case 'category':
+                $data['category_id'] = $request->input('category_id');
+                $data['listing_id'] = null;
+                break;
+            case 'listing':
+                $data['category_id'] = null;
+                $data['listing_id'] = $request->input('listing_id');
+                break;
+            default:
+                $data['category_id'] = null;
+                $data['listing_id'] = null;
         }
 
         $coupon->fill($data);

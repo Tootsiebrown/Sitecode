@@ -5,6 +5,7 @@ namespace App\Wax\Shop\Models\Order;
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
 use App\Models\Offer;
+use App\Support\CouponInterface;
 use Wax\Shop\Models\Order\Item as WaxItem;
 
 class Item extends WaxItem
@@ -108,5 +109,16 @@ class Item extends WaxItem
         }
 
         throw new \Exception('Listing id: ' . $this->listing->id . 'of type ' . $this->listing->type . ' cannot have price calcualted properly.');
+    }
+
+    public function isDiscountableFor(CouponInterface $coupon)
+    {
+        if ($coupon->category_id) {
+            return $this->listing->categories->pluck('id')->contains($coupon->category_id);
+        } elseif ($coupon->listing_id) {
+            return $this->listing_id === $coupon->listing_id;
+        } else {
+            return true;
+        }
     }
 }

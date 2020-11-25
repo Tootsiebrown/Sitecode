@@ -61,9 +61,11 @@
                 <li>{{ $bundle->name }}: {{ Currency::format($bundle->calculated_value) }}</li>
             @endforeach
 
-            @if (!empty($order->coupon))
-                <li>{{ $order->coupon->title }} '{{ $order->coupon->code }}': -{{ Currency::format($order->coupon->calculated_value) }}</li>
-            @endif
+                @if ($order->coupons->isNotEmpty())
+                    @foreach($order->coupons as $coupon)
+                        <li>Promo Code {{ $coupon->title }} '{{ $coupon->code }}': {{ Currency::format($coupon->calculated_value) }}</li>
+                    @endforeach
+                @endif
 
             <li>Total: {{ Currency::format($order->total) }}</li>
         </ul>

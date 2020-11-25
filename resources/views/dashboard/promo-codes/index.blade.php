@@ -19,6 +19,7 @@
             <th>Used Count</th>
             <th>Includes Shipping</th>
             <th>Minimum Order</th>
+            <th>Category</th>
         </tr>
         @foreach ($coupons as $coupon)
             <tr>
@@ -32,6 +33,7 @@
                 <td>{{ $coupon->uses }}</td>
                 <td>{{ $coupon->include_shipping ? 'Yes' : 'No' }}</td>
                 <td>{{ $coupon->minimum_order ? Currency::format($coupon->minimum_order) : 'N/A' }}</td>
+                <td>{{ $coupon->category ? $coupon->category->breadcrumb : 'N/A' }}</td>
             </tr>
         @endforeach
     </table>
