@@ -35,6 +35,12 @@ class OrderCouponValidator extends AbstractValidator
         $this->validateOrderMinimum();
         $this->validateNumberOfUses();
         $this->validateUserHasNotUsedBefore();
+        $this->validateCategoryMatches();
+        $this->validateNotDuplicate();
+        $this->validateCategoryNotOverlapping();
+        $this->validateCorrectListing();
+        $this->validateListingNotOverlapping();
+        $this->validateGeneralNotOverlapping();
 
         return $this->messages->isEmpty();
     }
@@ -122,17 +128,170 @@ class OrderCouponValidator extends AbstractValidator
 
         $hasUsedBefore = Auth::user()
             ->orders()
-            ->with('coupon')
+            ->with('coupons')
             ->placed()
-            ->whereHas('coupon')
+            ->whereHas('coupons')
             ->get()
-            ->pluck('coupon.code')
+            ->pluck('coupons')
+            ->flatten()
+            ->pluck('code')
             ->contains($this->coupon->code);
 
         if ($hasUsedBefore) {
             $this->errors()->add(
                 'general',
                 __('shop::coupon.validation_user_used_before')
+            );
+        }
+    }
+
+    public function validateCategoryMatches()
+    {
+        if (is_null($this->coupon->category_id)) {
+            return;
+        }
+
+        $categoryIds = $this->order
+            ->items
+            ->map(fn($item) => $item->listing)
+            ->pluck('categories')
+            ->flatten()
+            ->pluck('id');
+
+        if ($categoryIds->contains($this->coupon->category_id)) {
+            return;
+        }
+
+        $this->errors()->add(
+            'general',
+            __('shop::coupon.validation_category', ['breadcrumb' => $this->coupon->category->breadcrumb])
+        );
+    }
+
+    public function validateNotDuplicate()
+    {
+        if ($this->order->coupons->isEmpty()) {
+            return;
+        }
+
+        if ($this->order->coupons->pluck('code')->contains($this->coupon->code)) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_duplicate')
+            );
+        }
+    }
+
+    public function validateCategoryNotOverlapping()
+    {
+        if ($this->order->coupons->isEmpty()) {
+            return;
+        }
+
+        if (
+            // the order has a coupon without a category, so
+            // of course it overlaps with any other coupon
+            $this->order->coupons
+                ->filter(fn ($coupon) => is_null($coupon->category))
+                ->isNotEmpty()
+        ) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_overlapping_discount')
+            );
+        }
+
+        $categories = $this->order->coupons
+            ->pluck('category')
+            ->filter();
+
+        $descendantCategories = $categories
+            ->map(function ($category) {
+                return $category->all_descendants;
+            })
+            ->flatten();
+
+        $categories = $categories->merge($descendantCategories);
+
+        $couponCategory = $this->coupon->category;
+
+        if (is_null($couponCategory)) {
+            return;
+        }
+
+        $couponCategoryDescendants = collect($couponCategory->all_descendants->all());
+
+        $couponCategories = $couponCategoryDescendants->push($couponCategory);
+
+        if ($categories->pluck('id')->intersect($couponCategories->pluck('id'))->isNotEmpty()) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_overlapping_discount')
+            );
+        }
+    }
+
+    public function validateCorrectListing()
+    {
+        if (is_null($this->coupon->listing_id)) {
+            return;
+        }
+
+        $orderListings = $this->order->items->map(function ($item) {
+            return $item->listing_id;
+        });
+
+        if ($orderListings->contains($this->coupon->listing_id)) {
+            return;
+        }
+
+        $this->errors()->add(
+            'general',
+            __('shop::coupon.validation_invalid_listing')
+        );
+    }
+
+    public function validateListingNotOverlapping()
+    {
+        if (is_null($this->coupon->listing_id)) {
+            return;
+        }
+
+        $hasOverlappingListing = $this->order
+            ->items
+            ->filter(function ($item) {
+                return $item->listing_id === $this->coupon->listing_id;
+            })
+            ->reduce(function ($carry, $item) {
+                if ($carry) {
+                    return $carry;
+                }
+
+                if ($item->discount_amount > 0) {
+                    return true;
+                }
+
+                return false;
+            });
+
+        if ($hasOverlappingListing) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_overlapping_discount')
+            );
+        }
+    }
+
+    public function validateGeneralNotOverlapping()
+    {
+        if (
+            is_null($this->coupon->listing_id)
+            && is_null($this->coupon->category_id)
+            && $this->order->coupons->isNotEmpty()
+        ) {
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_overlapping_discount')
             );
         }
     }

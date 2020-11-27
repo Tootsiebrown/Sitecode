@@ -46,10 +46,12 @@
                                         -{{ Currency::format($bundle['calculated_value']) }}</li>
                                 @endforeach
 
-                                @if (!empty($order['coupon']))
-                                    <li style="margin-bottom: 4px;">{{ $order['coupon']['title'] }}
-                                        '{{ $order['coupon']['code'] }}':
-                                        -{{ Currency::format($order['coupon']['calculated_value']) }}</li>
+                                @if (!empty($order['coupons']))
+                                    @foreach($order['coupons'] as $coupon)
+                                        <li style="margin-bottom: 4px;">{{ $coupon['title'] }}
+                                            '{{ $coupon['code'] }}':
+                                            -{{ Currency::format($coupon['calculated_value']) }}</li>
+                                    @endforeach
                                 @endif
 
                                 @if ($order['shipping_subtotal'] > 0)

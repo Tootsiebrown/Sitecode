@@ -32,22 +32,25 @@
         @endif
 
         <div class="checkout-cart__discount">
-            @if ($order->coupon)
+            @if ($order->coupons->isNotEmpty())
                 <h4>Discount: {{ Currency::format($order->coupon_value) }}</h4>
-                <div class="checkout-cart__discount-details">
-                    <h3>
-                        Code: {{ $order->coupon->code }} |
-                        {{ $order->coupon->dollars ? Currency::format($order->coupon_value) : $order->coupon->percent . '%' }}
-                    </h3>
-                    @if (is_null($order->placed_at))
-                        <form class="solo-button remove-code" action="{{ route('shop.checkout.removeCode') }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button data-element="remove-coupon" class="btn btn-default" name="submit" value="submit">Remove</button>
-                        </form>
-                    @endif
-                </div>
-            @elseif (! $order->placed_at)
+                @foreach($order->coupons as $coupon)
+                    <div class="checkout-cart__discount-details" data-component="cart-coupon" data-code="{{ $coupon->code }}">
+                        <h3>
+                            Code: {{ $coupon->code }} |
+                            {{ $order->coupon->dollars ? Currency::format($coupon->calculated_value) : $coupon->percent . '%' }}
+                        </h3>
+                        @if (is_null($order->placed_at))
+                            <form class="solo-button remove-code" action="{{ route('shop.checkout.removeCode', ['code' => $coupon->code]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button data-element="remove-coupon" class="btn btn-default" name="submit" value="submit">Remove</button>
+                            </form>
+                        @endif
+                    </div>
+                @endforeach
+            @endif
+            @if (! $order->placed_at)
                 @if (isset($couponMessage))
                     <h3 class="alert alert-danger">{{ $couponMessage }}</h3>
                 @endif
@@ -57,7 +60,7 @@
                         <div class="input-group">
                             <input type="text" name="code" class="form-control" placeholder="promo code">
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit">Apply</button>
+                                <button class="btn btn-default" type="submit" data-element="apply-code">Apply</button>
                             </span>
                         </div>
                     </div>

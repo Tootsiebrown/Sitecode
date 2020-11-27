@@ -10,6 +10,7 @@ use LaravelShipStation\Models\AdvancedOptions;
 use LaravelShipStation\Models\Weight;
 use LaravelShipStation\ShipStation;
 use App\Wax\Shop\Models\Order\ShippingRate;
+use Wax\Shop\Events\OrderChanged\ShippingServiceChangedEvent;
 
 class ShippingService
 {
@@ -102,6 +103,8 @@ class ShippingService
         if (config('shipping.custom_shipping')) {
             $order->default_shipment->setShippingService($rates->first());
         }
+
+        event(new ShippingServiceChangedEvent($order->fresh()));
 
         return $rates;
     }
