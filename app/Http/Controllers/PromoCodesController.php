@@ -9,7 +9,7 @@ class PromoCodesController extends Controller
 {
     public function index()
     {
-        return view('dashboard.promo-codes.index', ['coupons' => Coupon::paginate(20)]);
+        return view('dashboard.promo-codes.index', ['coupons' => Coupon::withoutGlobalScopes()->paginate(20)]);
     }
 
     public function create()
@@ -70,7 +70,7 @@ class PromoCodesController extends Controller
 
     public function edit($id)
     {
-        $coupon = Coupon::findOrFail($id);
+        $coupon = Coupon::withoutGlobalScopes()->findOrFail($id);
 
         return view('dashboard.promo-codes.details', [
             'coupon' => $coupon,
@@ -81,7 +81,7 @@ class PromoCodesController extends Controller
 
     public function update($id, Request $request)
     {
-        $coupon = Coupon::findOrFail($id);
+        $coupon = Coupon::withoutGlobalScopes()->findOrFail($id);
 
         $this->validate(
             $request,
