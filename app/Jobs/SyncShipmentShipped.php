@@ -41,7 +41,7 @@ class SyncShipmentShipped implements ShouldQueue
     public function handle(ShipStation $shipStation)
     {
         $info = $shipStation->shipments->get($this->vars);
-
+\Log::info(print_r($info, 1));
         $orderKeys = [];
 
         foreach ($info->shipments as $shipment) {
@@ -70,6 +70,10 @@ class SyncShipmentShipped implements ShouldQueue
             $orderShipment = $order->default_shipment;
             $orderShipment->shipped_at = $shippedAt;
             $orderShipment->tracking_number = $shipment->trackingNumber;
+            $orderShipment->shipping_carrier = $shipment->carrierCode;
+            $orderShipment->shipping_service_actual_amount = $shipment->shipmentCost;
+            $orderShipment->shipping_service_code = $shipment->serviceCode;
+
             $orderShipment->save();
 
             Mail::to($order->email)

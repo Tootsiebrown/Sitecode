@@ -14,11 +14,21 @@
                     @foreach ($trackedShipments as $shipment)
                         <p>
                             @if (!empty($shipment['shipping_service_name']))
-                                {{ $shipment['shipping_carrier'] }} {{ $shipment['shipping_service_name'] }}:
+                                {{ $shipment['carrier_name'] }} {{ $shipment['shipping_service_name'] }}:
+                            @elseif (!empty($shipment['carrier_name']))
+                                {{ $shipment['carrier_name'] }}:
                             @else
                                 Shipment {{ $loop->iteration }}:
                             @endif
+
+                            @if (!empty($shipment['tracking_url']))
+                                <a href="{{ $shipment['tracking_url'] }}">
+                            @endif
                             {{ $shipment['tracking_number'] }}
+                            @if (!empty($shipment['tracking_url']))
+                                </a>
+                            @endif
+
                         </p>
                     @endforeach
                 @endif

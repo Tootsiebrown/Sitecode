@@ -15,6 +15,11 @@ use Wax\Shop\Validators\OrderItemValidator;
 
 class Shipment extends WaxShipment
 {
+    protected $appends = [
+        'carrier_name',
+        'tracking_url',
+    ];
+
     public function items()
     {
         return $this->hasMany(Item::class);
@@ -179,6 +184,37 @@ class Shipment extends WaxShipment
                 ->where('discountable', 1)
                 ->filter(fn($item) => $item->isDiscountableFor($coupon))
                 ->sum('gross_subtotal');
+        }
+    }
+
+    public function getCarrierNameAttribute()
+    {
+
+        $carriers = [
+            'fedex' => 'Fedex',
+            'stamps_com' => 'US Postal Service',
+            'ups_walleted' => 'UPS',
+        ];
+
+        if (array_key_exists($this->shipping_carrier, $carriers)) {
+            return $carriers[$this->shipping_carrier];
+        }
+
+        return $this->shipping_carrier;
+    }
+
+    public function getTrackingUrlAttribute()
+    {
+        if ($this->shipping_carrier === 'fedex' && !empty($this->tracking_number)) {
+            return 'https://www.fedex.com/apps/fedextrack/?action=track&trackingnumber=' . $this->tracking_number . '&cntry_code=us&locale=en_US';
+        }
+
+        if ($this->shipping_carrier === 'stamps_com') {
+            return 'https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=' . $this->tracking_number . '%2C&tABt=false';
+        }
+
+        if ($this->shipping_carrier === 'ups_walleted') {
+            return 'https://www.ups.com/track?loc=null&tracknum=' . $this->tracking_number . '&requester=MB/trackdetails';
         }
     }
 }
