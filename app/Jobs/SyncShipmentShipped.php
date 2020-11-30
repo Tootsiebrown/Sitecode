@@ -41,7 +41,7 @@ class SyncShipmentShipped implements ShouldQueue
     public function handle(ShipStation $shipStation)
     {
         $info = $shipStation->shipments->get($this->vars);
-\Log::info(print_r($info, 1));
+
         $orderKeys = [];
 
         foreach ($info->shipments as $shipment) {
