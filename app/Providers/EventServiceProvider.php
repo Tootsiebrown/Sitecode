@@ -13,6 +13,7 @@ use App\Listeners\SendAuctionEndingSoonNotification;
 use App\Listeners\SendBidReceivedNotification;
 use App\Listeners\SendCounterOfferExpiredNotification;
 use App\Listeners\SendOfferExpiredNotification;
+use App\Listeners\StartAuctionEndedChain;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,6 +32,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         AuctionEndedEvent::class => [
             SendAuctionEndedNotification::class,
+            StartAuctionEndedChain::class,
         ],
         BidReceivedEvent::class => [
             SendBidReceivedNotification::class,
