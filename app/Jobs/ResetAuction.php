@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ResetAuction implements ShouldQueue
 {
@@ -41,6 +43,17 @@ class ResetAuction implements ShouldQueue
             return;
         }
 
+        DB::transaction(function () {
+            $this->endedAuction->listing->expired_at = Carbon::now()
+                ->addDays(2)
+                ->setHour(20)
+                ->setMinute(0)
+                ->setSecond(0);
+            $this->endedAuction->listing->save();
+            $this->endedAuction->listing->bids()->delete();
+
+            $this->endedAuction->delete();
+        }, 3);
 
     }
 }
