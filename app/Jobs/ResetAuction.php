@@ -54,6 +54,5 @@ class ResetAuction implements ShouldQueue
 
             $this->endedAuction->delete();
         }, 3);
-
     }
 }

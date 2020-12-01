@@ -52,7 +52,7 @@ class ProcessAuctionsNeedingPayment extends Command
         $bar = $this->output->createProgressBar(count($remindableAuctions));
         $bar->start();
 
-        foreach($remindableAuctions as $remindable) {
+        foreach ($remindableAuctions as $remindable) {
             $listing = $remindable->listing;
 
             Mail::to($listing->winner)

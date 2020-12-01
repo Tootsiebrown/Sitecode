@@ -47,7 +47,7 @@ class ProcessResetAuctions extends Command
         $bar = $this->output->createProgressBar(count($resetableAuctions));
         $bar->start();
 
-        foreach($resetableAuctions as $auction) {
+        foreach ($resetableAuctions as $auction) {
             ResetAuction::dispatch($auction);
             $bar->advance();
         }
