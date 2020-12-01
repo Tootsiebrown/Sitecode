@@ -9,6 +9,7 @@ use App\Mail\NotifyWatcherAuctionEnded;
 use App\Mail\NotifyWatcherAuctionEndingSoon;
 use App\Mail\NotifyWatcherBidReceived;
 use App\Mail\NotifyWinner;
+use App\Mail\NotifyWinnerPaymentNeeded;
 use App\Mail\OfferCountered;
 use App\Mail\OfferExpired;
 use App\Mail\OfferRejected;
@@ -46,7 +47,8 @@ class MailPreviewController extends Controller
         'auction-ending' => 'Notify Watcher Auction Ending Soon',
         'offer-expired' => 'Offer Expired',
         'counter-offer-expired' => 'Counter Offer Expired',
-        'someone-else-bought-it' => 'Someone Else Bought It.',
+        'someone-else-bought-it' => 'Someone Else Bought It',
+        'auction-payment-needed' => '12-Hour Auction Payment Needed',
     ];
 
     public function index()
@@ -231,5 +233,10 @@ class MailPreviewController extends Controller
         ]);
 
         return new SomeoneElseboughtIt($offer);
+    }
+
+    public function auctionPaymentNeeded()
+    {
+        return new NotifyWinnerPaymentNeeded(Listing::first());
     }
 }

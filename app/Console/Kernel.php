@@ -33,8 +33,11 @@ class Kernel extends ConsoleKernel
          $schedule->command(ProcessEndedAuctions::class)
              ->everyMinute();
 
-         $schedule->command(ProcessAuctionsEndingInOneHour::class)
-             ->everyMinute();
+        $schedule->command(ProcessAuctionsEndingInOneHour::class)
+            ->everyMinute();
+
+        $schedule->command(ProcessAuctionsNeedingPayment::class)
+            ->everyFiveMinutes();
 
          $schedule->command(ProcessExpiredOffers::class)
              ->everyFiveMinutes();

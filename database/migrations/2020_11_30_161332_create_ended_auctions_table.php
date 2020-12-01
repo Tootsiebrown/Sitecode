@@ -19,6 +19,8 @@ class CreateEndedAuctionsTable extends Migration
             $table->bigInteger('listing_id')->unsigned();
             $table->timestamp('reminder_sent_at')->nullable();
             $table->timestamp('purchased_at')->nullable();
+
+            $table->index(['purchased_at', 'reminder_sent_at', 'created_at']);
         });
     }
 
