@@ -4,13 +4,11 @@ namespace Tests\Unit;
 
 use App\Bid;
 use App\Jobs\ResetAuction;
-use App\Mail\NotifyWinnerPaymentNeeded;
 use App\Models\EndedAuction;
 use App\Models\Listing;
 use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 
@@ -30,7 +28,7 @@ class ProcessUnpaidAuctionsNeedingResetTest extends WaxAppTestCase
     public function testNoEndedAuctions()
     {
         Artisan::call('auction:process-resets');
-        Queue::assertNotPushed(RelistAuction::class);
+        Queue::assertNotPushed(ResetAuction::class);
     }
 
     public function testNoAuctionEndedOver24HoursAgo()
@@ -41,7 +39,7 @@ class ProcessUnpaidAuctionsNeedingResetTest extends WaxAppTestCase
         ]);
 
         Artisan::call('auction:process-resets');
-        Queue::assertNotPushed(RelistAuction::class);
+        Queue::assertNotPushed(ResetAuction::class);
     }
 
     public function testAuctionEndedButWasAlreadyPaidfor()
@@ -53,7 +51,7 @@ class ProcessUnpaidAuctionsNeedingResetTest extends WaxAppTestCase
         ]);
 
         Artisan::call('auction:process-resets');
-        Queue::assertNotPushed(RelistAuction::class);
+        Queue::assertNotPushed(ResetAuction::class);
     }
 
     public function testAuctionNeedsReset()
