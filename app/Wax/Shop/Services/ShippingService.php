@@ -2,8 +2,10 @@
 
 namespace App\Wax\Shop\Services;
 
+use App\Support\ShipstationListingItems;
 use App\Wax\Shop\Models\Order;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use LaravelShipStation\Models\AdvancedOptions;
@@ -138,6 +140,9 @@ class ShippingService
 
     public function record(Order $order)
     {
+        $order->refresh();
+        $listingItemIds = new ShipstationListingItems($order);
+
         $weight = new Weight();
         $weight->value = $order->weight;
         $weight->units = 'ounces';
@@ -150,13 +155,19 @@ class ShippingService
         $shipstationOrder->shippingAmount = $order->shipping_subtotal;
         $shipstationOrder->billTo = $this->getShipstationBillTo($order);
         $shipstationOrder->shipTo = $this->getShipstationShipTo($order);
-        $shipstationOrder->items = $this->getShipstationItems($order);
+        $shipstationOrder->items = $this->getShipstationItems($order, $listingItemIds);
         $shipstationOrder->requestedShippingService = $order->default_shipment->shipping_service_name;
         if (! config('shipping.custom_shipping')) {
             $shipstationOrder->carrierCode = $order->default_shipment->shipping_carrier;
         }
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
-        $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order);
+        $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order, $listingItemIds);
+
+        if ($this->tooLongForCustomField($shipstationOrder->advancedOptions->customField1)
+            || $listingItemIds->haveOverflow()
+        ) {
+            $shipstationOrder->internalNotes = 'Listing SKUs or item SKUs to long to show in shipstation. Please refer to website.';
+        }
         $shipstationOrder->weight = $weight;
 
         if ($order->shipstation_key) {
@@ -201,7 +212,7 @@ class ShippingService
         return $address;
     }
 
-    protected function getShipstationItems(Order $order)
+    protected function getShipstationItems(Order $order, ShipstationListingItems $listingItemIds)
     {
         $shipstationItems = [];
 
@@ -209,7 +220,8 @@ class ShippingService
             $shipstationItem = new \LaravelShipStation\Models\OrderItem();
 
             $shipstationItem->lineItemKey = $item->id;
-            $shipstationItem->sku = $item->listing_id;
+            // this field has a max-length of 230
+            $shipstationItem->sku = $listingItemIds->getShipstationItemSku($listingItemIds);
             $shipstationItem->name = $item->name;
             $shipstationItem->quantity = $item->quantity;
             $shipstationItem->unitPrice = $item->price;
@@ -231,21 +243,26 @@ class ShippingService
         return trim($location, ',');
     }
 
-    public function getAdvancedOptions(Order $order)
+    public function getAdvancedOptions(Order $order, ShipstationListingItems $listingItems)
     {
+        //customFields have maxlength of 114
         $advancedOptions = new AdvancedOptions();
 
-        $location = 'ItemId:Bin,';
-        foreach ($order->items as $orderItem) {
-            foreach ($orderItem->listing->items as $listingItem) {
-                if ($listingItem->order_item_id !== $orderItem->id) {
-                    continue;
-                }
-                $location .= $listingItem->id . ':' . $listingItem->bin . ',';
-            }
+        $listingSkus = $order
+            ->items
+            ->map(fn($item) => $item->listing)
+            ->pluck('id')
+            ->implode(', ');
+
+        $advancedOptions->customField1 = "Listing SKUs: $listingSkus";
+
+        if ($listingItems->hasCustomFieldTwoOverflow()) {
+            $advancedOptions->customField2 = 'Item SKUs: ' . $listingItems->customerFieldTwoOverflows();
         }
 
-        $advancedOptions->customField1 = trim($location, ',');
+        if ($listingItems->hasCustomFieldThreeOverflow()) {
+            $advancedOptions->customField3 = 'Item SKUs: ' . $listingItems->customerFieldTwoOverflows();
+        }
 
         return $advancedOptions;
     }
