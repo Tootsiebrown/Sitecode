@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\RequiredIf;
 use Wax\Shop\Facades\ShopServiceFacade as ShopService;
 
 class ShopOrdersController extends Controller
@@ -173,6 +176,21 @@ class ShopOrdersController extends Controller
 
     public function salesByCategory(Request $request)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'from' => [
+                    Rule::requiredIf($request->input('to')),
+                    'date'
+                ],
+                'to' => 'date|after:' . $request->input('from') . '|before:tomorrow',
+            ]
+        );
+
+        $doDateFiltering = $validator->passes()
+            && $request->input('to')
+            && $request->input('from');
+
         $categories = DB::table('orders')
             ->selectRaw('product_categories.name, product_categories.id, product_categories.parent_id, sum(order_items.quantity) as quantity_sold, sum(order_items.quantity * order_items.price) as dollars_sold')
             ->join('order_shipments', 'order_shipments.order_id', '=', 'orders.id')
@@ -186,11 +204,18 @@ class ShopOrdersController extends Controller
             ->join('product_categories','ad_category_links.category_id', '=', 'product_categories.id')
             ->whereNotNull('placed_at')
             ->groupBy('name', 'id', 'parent_id')
+            ->when($doDateFiltering, function ($query) use ($request) {
+                $query->where('placed_at', '>=', $request->input('from'))
+                    ->where('placed_at', '<=', $request->input('to') . ' 23:59:59');
+            })
             ->get();
 
 
         return view('dashboard.category-sales-report', [
             'categories' => $categories,
+            'errors' => $validator->errors(),
+            'to' => $request->input('to'),
+            'from' => $request->input('from'),
         ]);
 
         /*

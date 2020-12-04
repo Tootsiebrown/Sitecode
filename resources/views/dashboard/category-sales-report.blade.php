@@ -3,6 +3,34 @@
 @section('dashboard-content')
     <h1>Category Sales Report</h1>
 
+    <form class="form-horizontal" action="{{ route('dashboard.shop.orders.salesByCategory') }}" method="GET">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @include('dashboard.form-elements.form-group', [
+            'name' => 'from',
+            'prettyTitle' => 'From',
+            'type' => 'date',
+            'value' => $from,
+        ])
+
+        @include('dashboard.form-elements.form-group', [
+            'name' => 'to',
+            'prettyTitle' => 'to',
+            'type' => 'date',
+            'value' => $to,
+        ])
+
+        @include('dashboard.form-elements.form-group', ['type' => 'submit'])
+    </form>
+
     <table class="dashboard-table">
         <thead>
             <tr>
