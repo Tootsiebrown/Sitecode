@@ -195,13 +195,13 @@ class ShopOrdersController extends Controller
             ->selectRaw('product_categories.name, product_categories.id, product_categories.parent_id, sum(order_items.quantity) as quantity_sold, sum(order_items.quantity * order_items.price) as dollars_sold')
             ->join('order_shipments', 'order_shipments.order_id', '=', 'orders.id')
             ->join('order_items', 'order_items.shipment_id', '=', 'order_shipments.id')
-            ->join('order_item_customizations',function ($join) {
+            ->join('order_item_customizations', function ($join) {
                 $join->on('order_item_customizations.item_id', '=', 'order_items.id')
                     ->where('customization_id', 1);
             })
             ->join('listings', 'listings.id', '=', 'order_item_customizations.value')
-            ->join('ad_category_links','listings.id', '=', 'ad_category_links.ad_id')
-            ->join('product_categories','ad_category_links.category_id', '=', 'product_categories.id')
+            ->join('ad_category_links', 'listings.id', '=', 'ad_category_links.ad_id')
+            ->join('product_categories', 'ad_category_links.category_id', '=', 'product_categories.id')
             ->whereNotNull('placed_at')
             ->groupBy('name', 'id', 'parent_id')
             ->when($doDateFiltering, function ($query) use ($request) {
