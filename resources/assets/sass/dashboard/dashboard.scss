@@ -38,6 +38,14 @@
     td.numeric {
         text-align: right;
     }
+
+    td.indent {
+        padding-left: 4rem;
+    }
+
+    td.double-indent {
+        padding-left: 8rem;
+    }
 }
 
 form.form-horizontal {

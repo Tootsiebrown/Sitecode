@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Models\Listing\Item as ListingItem;
 use App\Wax\Shop\Models\Order;
+use App\Wax\Shop\Models\Order\Item as OrderItem;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 use Wax\Shop\Facades\ShopServiceFacade as ShopService;
 
 class ShopOrdersController extends Controller
@@ -166,5 +169,42 @@ class ShopOrdersController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function salesByCategory(Request $request)
+    {
+        $categories = DB::table('orders')
+            ->selectRaw('product_categories.name, product_categories.id, product_categories.parent_id, sum(order_items.quantity) as quantity_sold, sum(order_items.quantity * order_items.price) as dollars_sold')
+            ->join('order_shipments', 'order_shipments.order_id', '=', 'orders.id')
+            ->join('order_items', 'order_items.shipment_id', '=', 'order_shipments.id')
+            ->join('order_item_customizations',function ($join) {
+                $join->on('order_item_customizations.item_id', '=', 'order_items.id')
+                    ->where('customization_id', 1);
+            })
+            ->join('listings', 'listings.id', '=', 'order_item_customizations.value')
+            ->join('ad_category_links','listings.id', '=', 'ad_category_links.ad_id')
+            ->join('product_categories','ad_category_links.category_id', '=', 'product_categories.id')
+            ->whereNotNull('placed_at')
+            ->groupBy('name', 'id', 'parent_id')
+            ->get();
+
+
+        return view('dashboard.category-sales-report', [
+            'categories' => $categories,
+        ]);
+
+        /*
+            select product_categories.name, product_categories.id, product_categories.parent_id, sum(order_items.quantity) as quantity_sold, sum(order_items.quantity * order_items.price) as dollars_sold
+            from orders
+                inner join order_shipments ON order_shipments.order_id = orders.id
+                inner join order_items ON order_items.shipment_id = order_shipments.`id`
+                inner join order_item_customizations ON order_item_customizations.item_id = order_items.id AND customization_id = 1
+                inner join listings ON listings.id = order_item_customizations.value
+                inner join `ad_category_links` on listings.id = ad_category_links.`ad_id`
+                inner join product_categories on ad_category_links.`category_id` = product_categories.id
+            where placed_at is not null
+            group by name, id, parent_id
+            order by name
+        */
     }
 }
