@@ -163,8 +163,9 @@ class ShippingService
         $shipstationOrder->serviceCode = $order->default_shipment->shipping_service_code;
         $shipstationOrder->advancedOptions = $this->getAdvancedOptions($order, $listingItemIds);
 
-        if ($this->tooLongForCustomField($shipstationOrder->advancedOptions->customField1)
-            || $listingItemIds->haveOverflow()
+        if (
+            $listingItemIds->tooLongForCustomField($shipstationOrder->advancedOptions->customField1)
+            || $listingItemIds->hasTotalOverflow()
         ) {
             $shipstationOrder->internalNotes = 'Listing SKUs or item SKUs to long to show in shipstation. Please refer to website.';
         }
@@ -221,7 +222,7 @@ class ShippingService
 
             $shipstationItem->lineItemKey = $item->id;
             // this field has a max-length of 230
-            $shipstationItem->sku = $listingItemIds->getShipstationItemSku($listingItemIds);
+            $shipstationItem->sku = $listingItemIds->getSku();
             $shipstationItem->name = $item->name;
             $shipstationItem->quantity = $item->quantity;
             $shipstationItem->unitPrice = $item->price;
@@ -245,7 +246,6 @@ class ShippingService
 
     public function getAdvancedOptions(Order $order, ShipstationListingItems $listingItems)
     {
-        //customFields have maxlength of 114
         $advancedOptions = new AdvancedOptions();
 
         $listingSkus = $order
@@ -257,11 +257,11 @@ class ShippingService
         $advancedOptions->customField1 = "Listing SKUs: $listingSkus";
 
         if ($listingItems->hasCustomFieldTwoOverflow()) {
-            $advancedOptions->customField2 = 'Item SKUs: ' . $listingItems->customerFieldTwoOverflows();
+            $advancedOptions->customField2 = 'Item SKUs: ' . $listingItems->getCustomFieldTwo();
         }
 
         if ($listingItems->hasCustomFieldThreeOverflow()) {
-            $advancedOptions->customField3 = 'Item SKUs: ' . $listingItems->customerFieldTwoOverflows();
+            $advancedOptions->customField3 = 'Item SKUs: ' . $listingItems->getCustomFieldThree();
         }
 
         return $advancedOptions;
