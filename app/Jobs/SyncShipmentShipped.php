@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use LaravelShipStation\ShipStation;
 use Wax\Shop\Mail\OrderShipped;
@@ -51,14 +52,26 @@ class SyncShipmentShipped implements ShouldQueue
 
             $orderKeys[] = $shipment->orderKey;
 
+            $environment = App::environment();
+            if ($environment !== 'production' && strpos($shipment->orderNumber, $environment) !== 0) {
+                // we're in a non-production environment and the order
+                // doesn't have this environment string identifier
+                continue;
+            } elseif ($environment === 'production' && strpos($shipment->orderNumber, '-') !== false) {
+                // we're in the production environment, and the order has
+                // some identifier.. prod should have no such identifier
+                continue;
+            }
+
+
             $order = Order::where('shipstation_key', $shipment->orderKey)
                 ->first();
 
             if (!$order) {
                 throw new ShipstationOrderNotFoundException(
-                    'Failed to find order key ' .
-                    $shipment->orderKey . ' in environment "' .
-                    config('app.env') . "'"
+                    'Failed to find order key ' . $shipment->orderKey .
+                    ' for order ID' . $shipment->orderId .
+                    ' in environment "' . config('app.env') . "'"
                 );
             }
 
