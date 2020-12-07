@@ -235,7 +235,7 @@ class AdsController extends Controller
             ],
 
             'offers_enabled' => 'boolean',
-            'secreat' => 'boolean',
+            'secret' => 'boolean',
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
