@@ -120,6 +120,4 @@ class ShipstationListingItems
     {
         return $this->customFieldThree;
     }
-
-
 }
