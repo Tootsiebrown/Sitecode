@@ -468,6 +468,9 @@ Route::group(
                         Route::get('someone-else-bought-it')
                             ->name('someoneElseBoughtIt')
                             ->uses('MailPreviewController@someoneElseBoughtIt');
+                        Route::get('auction-payment-needed')
+                            ->name('auctionPaymentNeeded')
+                            ->uses('MailPreviewController@auctionPaymentNeeded');
                     });
 
 
