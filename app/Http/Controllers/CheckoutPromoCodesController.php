@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Wax\Shop\Validators\OrderCouponValidator;
 use Illuminate\Http\Request;
-use Wax\Shop\Exceptions\ValidationException;
 use App\Wax\Shop\Models\Coupon;
 use Wax\Shop\Repositories\OrderRepository;
 use Wax\Shop\Services\ShopService;
@@ -58,11 +57,12 @@ class CheckoutPromoCodesController extends Controller
         ]);
     }
 
-    public function destroy()
+    public function destroy($code)
     {
-        $this->shopService->removeCoupon();
-
         $order = $this->shopService->getActiveOrder();
+        $order->removeCouponByCode($code);
+        $order->refresh();
+
         return view('site.components.checkout-cart', [
             'order' => $order,
             'couponMessage' => 'Coupon Removed',

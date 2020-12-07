@@ -39,6 +39,7 @@ return [
             \App\Listeners\SendOrderToShipstation::class,
             \App\Listeners\NotifyOfferorsSomeoneElseBoughtIt::class,
             \App\Listeners\UpdateStripeOrderId::class,
+            \App\Listeners\AuctionPurchasedListener::class,
         ],
     ],
 

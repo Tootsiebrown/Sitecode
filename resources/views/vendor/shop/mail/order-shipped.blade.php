@@ -14,11 +14,21 @@
                     @foreach ($trackedShipments as $shipment)
                         <p>
                             @if (!empty($shipment['shipping_service_name']))
-                                {{ $shipment['shipping_carrier'] }} {{ $shipment['shipping_service_name'] }}:
+                                {{ $shipment['carrier_name'] }} {{ $shipment['shipping_service_name'] }}:
+                            @elseif (!empty($shipment['carrier_name']))
+                                {{ $shipment['carrier_name'] }}:
                             @else
                                 Shipment {{ $loop->iteration }}:
                             @endif
+
+                            @if (!empty($shipment['tracking_url']))
+                                <a href="{{ $shipment['tracking_url'] }}">
+                            @endif
                             {{ $shipment['tracking_number'] }}
+                            @if (!empty($shipment['tracking_url']))
+                                </a>
+                            @endif
+
                         </p>
                     @endforeach
                 @endif
@@ -61,10 +71,12 @@
                                         -{{ Currency::format($bundle['calculated_value']) }}</li>
                                 @endforeach
 
-                                @if (!empty($order['coupon']))
-                                    <li style="margin-bottom: 4px;">{{ $order['coupon']['title'] }}
-                                        '{{ $order['coupon']['code'] }}':
-                                        -{{ Currency::format($order['coupon']['calculated_value']) }}</li>
+                                @if (!empty($order['coupons']))
+                                    @foreach($order['coupons'] as $coupon)
+                                        <li style="margin-bottom: 4px;">{{ $coupon['title'] }}
+                                            '{{ $coupon['code'] }}':
+                                            -{{ Currency::format($coupon['calculated_value']) }}</li>
+                                    @endforeach
                                 @endif
 
                                 @if ($order['tax_subtotal'] > 0)

@@ -2,16 +2,22 @@
 
 namespace App\Wax\Shop\Models;
 
+use App\Support\CouponInterface;
 use App\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Wax\Core\Support\Localization\Currency;
+use Wax\Shop\Events\OrderChanged\CouponChangedEvent;
 use Wax\Shop\Models\Bundle;
 use Wax\Shop\Models\Order as WaxOrder;
+use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order\Shipment;
+use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
 
 class Order extends WaxOrder
 {
+    protected $with = ['shipments', 'payments', 'coupons', 'bundles'];
     public function shipments()
     {
         return $this->hasMany(Shipment::class)->orderBy('id', 'asc');
@@ -20,6 +26,7 @@ class Order extends WaxOrder
     public function applyCoupon(string $code): bool
     {
         $coupon = Coupon::where('code', $code)->first();
+
         if (!$coupon) {
             return false;
         }
@@ -28,11 +35,7 @@ class Order extends WaxOrder
             return false;
         }
 
-        if ($this->coupon) {
-            $this->coupon->delete();
-        }
-
-        $this->coupon()->create([
+        $this->coupons()->create([
             'title' => $coupon->title,
             'code' => $coupon->code,
             'expired_at' => $coupon->expired_at,
@@ -41,11 +44,61 @@ class Order extends WaxOrder
             'minimum_order' => $coupon->minimum_order,
             'one_time' => $coupon->one_time,
             'include_shipping' => $coupon->include_shipping,
+            'category_id' => $coupon->category_id,
         ]);
 
         $this->calculateDiscounts();
 
         return true;
+    }
+
+    public function getCouponValueAttribute()
+    {
+        return Currency::round($this->coupons->sum->calculated_value ?? 0);
+    }
+
+    public function calculateDiscounts()
+    {
+        // make sure coupon / bundle relations are up to date
+        $this->refresh();
+
+        $this->resetDiscounts();
+
+        if ($this->coupons->isNotEmpty()) {
+            $this->coupons->each->calculateValue();
+            $this->refresh();
+        }
+
+        $bundlesTouched = $this->applyBundleDiscounts();
+
+        if ($bundlesTouched > 0) {
+            $this->refresh();
+        }
+        event(new CouponChangedEvent($this));
+    }
+
+    public function getDiscountableTotalFor(CouponInterface $coupon)
+    {
+        if (is_null($coupon->category_id) && is_null($coupon->listing_id)) {
+            return $this->discountable_total;
+        }
+
+        return $this->shipments->sum(fn($shipment) => $shipment->getDiscountableTotalFor($coupon));
+    }
+
+    public function removeCouponByCode(string $code)
+    {
+        if ($this->coupons->isEmpty()) {
+            return;
+        }
+
+        $this
+            ->coupons
+            ->filter(fn ($coupon) => $coupon->code === $code)
+            ->first()
+            ->delete();
+
+        $this->calculateDiscounts();
     }
 
     protected function applyBundleDiscounts()
@@ -175,5 +228,49 @@ class Order extends WaxOrder
     public function scopeNotShipped($query)
     {
         return $query->whereNull('shipped_at');
+    }
+
+    public function coupons()
+    {
+        return $this->hasMany(OrderCoupon::class, 'order_id');
+    }
+
+    protected function resetDiscounts()
+    {
+        // trigger individual deletes so the 'deleting' event is caught
+        $this->bundles->each->delete();
+
+        $wereShipmentsModified = $this->shipments->map(function ($shipment) {
+            $shipment->shipping_discount_amount = null;
+            $shipment->save();
+            return $shipment->wasChanged();
+        })->reduce(function ($carry, $item) {
+            return $carry || $item;
+        });
+
+        $wereItemsModified = $this->items->map(function ($item) {
+            $item->discountable = null;
+            $item->discount_amount = null;
+            $item->bundle_id = null;
+            $item->save();
+            return $item->wasChanged();
+        })->reduce(function ($carry, $item) {
+            return $carry || $item;
+        });
+
+        $wasCouponModified = false;
+        if ($this->coupons->isNotEmpty()) {
+            $wasCouponModified = $this->coupons->reduce(function ($wasCouponModified, $coupon) {
+                $coupon->calculated_value = null;
+                $coupon->save();
+                $wasThisCouponModified = $this->coupon->wasChanged();
+
+                return $wasThisCouponModified || $wasCouponModified;
+            }, $wasCouponModified);
+        }
+
+        if ($wereShipmentsModified || $wereItemsModified || $wasCouponModified) {
+            $this->refresh();
+        }
     }
 }
