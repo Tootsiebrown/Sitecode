@@ -50,6 +50,10 @@ class Listing extends Model
                 });
             });
         });
+
+        static::addGlobalScope('notSecret', function (Builder $query) {
+            $query->where('secret', false);
+        });
     }
 
     public function user()

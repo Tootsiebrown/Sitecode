@@ -186,14 +186,17 @@ class SiteSearchRepository extends WaxSiteSearchRepository
         );
 
         // save to the search log
-        DB::insert(
+        // this is happening multiple times per search because it's a filter.
+        // and this data isn't used anywhere anyway.
+        // and it's a slow query for some reason.
+        /*DB::insert(
             'insert into search_history (`query`, `results`, `timestamp`) values(:query, :results, :timestamp)',
             [
                 'query' => $query,
                 'results' => $rows->count(),
                 'timestamp' => time(),
             ]
-        );
+        );*/
 
         return $results;
     }
