@@ -32,7 +32,9 @@
                         @foreach ($order->items as $item)
                             <li class="checkout-cart-list-item">
                                 <div class="checkout-cart-list-item__image-container">
-                                    <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->name }}">
+                                    @if (isset($item->listing->featured_image->url))
+                                        <img src="{{ $item->listing->featured_image->url }}" alt="{{ $item->name }}">
+                                    @endif
                                 </div>
                                 <div class="checkout-cart-list-item__main">
                                     <p class="checkout-cart-list-item__name">{{ $item->name }}</p>

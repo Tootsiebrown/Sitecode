@@ -131,6 +131,13 @@
                         Order Processing Report
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('dashboard.shop.orders.salesByCategory') }}">
+                        <i class="fa fa-list-alt"></i>
+                        Sales By Category
+                    </a>
+                </li>
             @endif
 
             @if ($lUser->hasPrivilege('Carousel'))

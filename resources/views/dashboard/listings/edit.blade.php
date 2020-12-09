@@ -126,6 +126,14 @@
             </div>
         @endif
 
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'boolean',
+            'checked' => $listing->secret,
+            'prettyTitle' => 'Secret',
+            'note' => 'hidden from search and front page',
+            'name' => 'secret',
+        ])
+
         <div class="form-group {{ $errors->has('shipping_weight_oz')? 'has-error':'' }}">
             <label for="shipping_weight_oz" class="col-sm-4 control-label">Shipping Weight (oz)</label>
             <div class="col-sm-8">

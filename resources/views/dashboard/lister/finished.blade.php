@@ -24,6 +24,7 @@
                 <div class="finished-listing">
                     <h1>{{ $listing->title }}</h1>
                     <p><a href="{{ route('lister.index') }}">Back to Make a New Listing</a></p>
+                    <p><a href="{{ $listing->url }}">View New Listing</a></p>
                     <p><a href="{{ route('dashboard.bins.showListingBins', ['id' => $listing->id]) }}">Edit Bins</a></p>
                     <h3>Item IDs</h3>
                     <ul class="item-ids">

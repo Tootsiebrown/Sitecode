@@ -235,6 +235,7 @@ class AdsController extends Controller
             ],
 
             'offers_enabled' => 'boolean',
+            'secret' => 'boolean',
 
             'brand_id' => 'exclude_if:brand_id,new|required|exists:brands,id',
             'brand' => 'exclude_unless:brand_id,new|required',
@@ -320,6 +321,9 @@ class AdsController extends Controller
                 : $request->input('shipping_weight_oz'),
             'offers_enabled' => $request->has('offers_enabled')
                 ? $request->input('offers_enabled')
+                : false,
+            'secret' => $request->has('secret')
+                ? $request->input('secret')
                 : false,
         ];
 
@@ -498,6 +502,7 @@ class AdsController extends Controller
     {
         $listing = Listing::withoutGlobalScope('activeIfAuction')
             ->withoutGlobalScope('withInventory')
+            ->withoutGlobalScope('notSecret')
             ->find($id);
 
         if (! $listing) {
