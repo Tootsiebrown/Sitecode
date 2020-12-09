@@ -515,6 +515,7 @@ class ListerController extends Controller
             'quantity' => 'integer|required_if:type,set-price',
             'price' => 'required|numeric',
             'offers_enabled' => 'boolean',
+            'secret' => 'boolean',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -553,6 +554,9 @@ class ListerController extends Controller
                 'shipping_weight_oz' => $product->shipping_weight_oz,
                 'offers_enabled' => $request->has('offers_enabled')
                     ? $request->input('offers_enabled')
+                    : false,
+                'secret' => $request->has('secret')
+                    ? $request->input('secret')
                     : false,
             ];
 
@@ -618,7 +622,7 @@ class ListerController extends Controller
 
     public function listingFinished($id)
     {
-        $listing = Listing::find($id);
+        $listing = Listing::withoutGlobalScopes()->find($id);
 
         if (!$listing) {
             abort(404);
