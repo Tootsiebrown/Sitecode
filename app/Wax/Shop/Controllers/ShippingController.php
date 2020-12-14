@@ -74,7 +74,7 @@ class ShippingController extends Controller
                 [
                     'firstname' => 'required',
                     'lastname' => 'required',
-                    'email' => 'required',
+                    'email' => 'required|email:rfc,filter,dns',
                     'phone' => 'required',
                     'address1' => 'required',
                     'city' => 'required',

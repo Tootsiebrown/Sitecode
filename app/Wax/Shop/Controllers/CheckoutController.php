@@ -71,7 +71,7 @@ class CheckoutController extends Controller
             $rules = [
                 'first_name' => 'required_unless:same_as_shipping,1',
                 'last_name' => 'required_unless:same_as_shipping,1',
-                'email' => 'required_unless:same_as_shipping,1',
+                'email' => 'required_unless:same_as_shipping,1|email:rfc,filter,dns',
                 'phone' => 'required_unless:same_as_shipping,1',
                 'address1' => 'required_unless:same_as_shipping,1',
                 'city' => 'required_unless:same_as_shipping,1',
