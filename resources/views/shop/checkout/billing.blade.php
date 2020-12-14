@@ -96,7 +96,7 @@
                                                 id="last-name"
                                                 value="{{ old('last_name') ?? $lUser->lastname ?? '' }}"
                                             >
-                                            @include('site.components.field-error', ['field' => 'first_name'])
+                                            @include('site.components.field-error', ['field' => 'last_name'])
                                         </div>
                                     </div>
                                     <div class="row">
@@ -109,7 +109,7 @@
                                                 id="email"
                                                 value="{{ old('email')  ?? $lUser->email ?? '' }}"
                                             >
-                                            @include('site.components.field-error', ['field' => 'first_name'])
+                                            @include('site.components.field-error', ['field' => 'email'])
                                         </div>
                                         <div class="col-xs-6">
                                             <label for="phone">Phone Number *</label>
