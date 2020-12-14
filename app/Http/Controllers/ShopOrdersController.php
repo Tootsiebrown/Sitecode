@@ -183,7 +183,7 @@ class ShopOrdersController extends Controller
                     Rule::requiredIf($request->input('to')),
                     'date'
                 ],
-                'to' => 'date|after:' . $request->input('from') . '|before:tomorrow',
+                'to' => 'date|after_or_equal:' . $request->input('from') . '|before:tomorrow',
             ]
         );
 
