@@ -5,7 +5,7 @@ import ProductSuggestion from "./component/product-suggestion";
 import SelectOrNew from "./component/select-or-new";
 import NewProductImage from "./component/new-product-image";
 import ProductImage from "./component/product-image";
-import ListingTypeSelect from "./component/listing-type-select";
+import ListingTypeSelect from "./component/dashboard/listing-type-select";
 import ProductCategoriesHierarchy from "./component/product-categories-hierarchy";
 import FocusableInputGroup from "./component/focusable-input-group";
 import TaxonomyNav from "./component/taxonomy-nav";

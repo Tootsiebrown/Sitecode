@@ -104,6 +104,32 @@
 
                             </div>
 
+                            <div class="send-to-ebay">
+                                @include('dashboard.form-elements.form-group', [
+                                    'type' => 'boolean',
+                                    'name' => 'send_to_ebay',
+                                    'prettyTitle' => 'Send To eBay',
+                                    'checked' => false,
+                                    'groupClass' => 'send-to-ebay'
+                                ])
+
+                                <div class="send-to-ebay-settings">
+                                    @include('dashboard.form-elements.form-group', [
+                                        'type' => 'text',
+                                        'name' => 'send_to_ebay_days',
+                                        'prettyTitle' => 'Days Until eBay',
+                                        'value' => old('send_to_ebay_days', 3),
+                                    ])
+
+                                    @include('dashboard.form-elements.form-group', [
+                                        'type' => 'text',
+                                        'name' => 'send_to_ebay_markup',
+                                        'prettyTitle' => 'eBay Markup %',
+                                        'value' => old('send_to_ebay_markup', 30)
+                                    ])
+                                </div>
+                            </div>
+
                             <div class="form-group {{ $errors->has('offers_enabled')? 'has-error':'' }} listing-type-select__offers-enabled" data-element="offersEnabled">
                                 <label for="offers_enabled" class="col-sm-4 control-label">
                                     Accepts Offers
