@@ -8,6 +8,7 @@ use App\Repositories\ListingsRepository;
 use App\Support\Filters\FilterAggregatorContract;
 use App\Support\Filters\Listings\ListingsFilterAggreggator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,24 @@ class AppServiceProvider extends ServiceProvider
 
         Carbon::macro('wasOver24HoursAgo', function () {
             return Carbon::now()->subHours(24)->greaterThan($this);
+        });
+
+        Builder::macro('createdAtDaysAgoColumn', function ($column) {
+            switch ($this->connection->getDriverName()) {
+                case 'sqlite':
+                    $this->whereRaw('(cast(julianday("now", "localtime") as int) - cast(julianday("created_at") as int)) = "' . $column . '"');
+                    break;
+
+                case 'mysql':
+                    $this->whereRaw("DATEDIFF(CURRENT_DATE, created_at) = send_to_ebay_days");
+                    break;
+
+                default:
+                    throw new Exception('This macro does not support the database driver you\'re using.');
+                    break;
+            }
+
+            return $this;
         });
     }
 

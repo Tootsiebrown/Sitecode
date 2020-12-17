@@ -131,6 +131,25 @@ class Listing extends Model
             ->orderBy('featured_sort_id');
     }
 
+    public function scopeReadyForEbay($query)
+    {
+        return $query->notYetSentToEbay()
+            ->withoutGlobalScope('notSecret')
+            ->where('type', 'set-price')
+            ->goesToEbayToday();
+    }
+
+    public function scopeNotYetSentToEbay($query)
+    {
+        return $query->whereNull('sent_to_ebay_at');
+    }
+
+    public function scopeGoesToEbayToday($query)
+    {
+        return $query->whereNotNull('send_to_ebay_days')
+            ->createdAtDaysAgoColumn('send_to_ebay_days');
+    }
+
     public function getFeaturedImageAttribute()
     {
         return $this->images->sortByDesc('featured')->first();
