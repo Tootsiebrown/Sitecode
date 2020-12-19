@@ -49,4 +49,11 @@ return [
         'store_id' => env('SHIPSTATION_STORE_ID'),
     ],
 
+    'ebay' => [
+        'api_token' => env('EBAY_TOKEN'),
+        'test_mode' => env('EBAY_TEST_MODE', false),
+        'app_id' => env('EBAY_APP_ID'),
+        'api_version' => env('EBAY_API_VERSION')
+    ]
+
 ];

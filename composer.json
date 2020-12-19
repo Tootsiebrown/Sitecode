@@ -39,7 +39,8 @@
         "oohology/wax-cms": "1.x-dev",
         "oohology/wax-shop": "dev-cnd",
         "stripe/stripe-php": "^7.2",
-        "tightenco/ziggy": "^0.9.4"
+        "tightenco/ziggy": "^0.9.4",
+        "ext-soap": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

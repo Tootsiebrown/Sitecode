@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Ebay\Sdk;
 use App\Models\Listing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,8 +34,11 @@ class SendListingToEbay implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Sdk $sdk)
     {
-        // send to ebay
+        $ebayListingId = $sdk->newListing($this->listing);
+
+        $this->listing->ebay_id = $ebayListingId;
+        $this->listing->save();
     }
 }
