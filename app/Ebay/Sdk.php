@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Ebay;
-
 
 use App\Ebay\Requests\AddFixedPriceItem;
 use App\Models\Listing;
@@ -19,7 +17,8 @@ class Sdk
     public function __construct()
     {
         $ebayConfig = config('services.ebay');
-        if (empty($ebayConfig)
+        if (
+            empty($ebayConfig)
             || empty($ebayConfig['api_token'])
             || empty($ebayConfig['app_id'])
         ) {
