@@ -14,7 +14,7 @@ class AddFixedPriceItem extends AbstractRequest
                 'CategoryMappingAllowed' => true,
                 'Currency' => 'USD',
                 'Country' => 'US',
-                'ConditionDescription' =>null,
+                'ConditionDescription' => null,
                 'ConditionID' => null,
                 'Description' => null,
                 'ListingDuration' => 'GTC',
