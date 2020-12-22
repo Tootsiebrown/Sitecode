@@ -9,6 +9,7 @@ use App\Jobs\SendListingToEbay;
 use App\Models\Listing;
 use App\Models\Offer;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 

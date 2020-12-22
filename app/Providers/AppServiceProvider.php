@@ -56,13 +56,15 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Builder::macro('createdAtDaysAgoColumn', function ($column) {
+            // using Carbon::now() for testability
+
             switch ($this->connection->getDriverName()) {
                 case 'sqlite':
-                    $this->whereRaw('(cast(julianday("now", "localtime") as int) - cast(julianday("created_at") as int)) = "' . $column . '"');
+                    $this->whereRaw('(cast(julianday("' . Carbon::now()->toDateString() . '", "localtime") as int) - cast(julianday("created_at") as int)) = "' . $column . '"');
                     break;
 
                 case 'mysql':
-                    $this->whereRaw("DATEDIFF(CURRENT_DATE, created_at) = send_to_ebay_days");
+                    $this->whereRaw('DATEDIFF(' . Carbon::now()->toDateString() . ', created_at) = send_to_ebay_days');
                     break;
 
                 default:

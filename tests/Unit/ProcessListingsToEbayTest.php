@@ -33,7 +33,7 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
 
     public function testListingReady()
     {
-        Carbon::setTestNow(Carbon::now()->addDays(3));
+        Carbon::setTestNow(Carbon::now()->addDays(4)->setHour(23));
         Artisan::call('ebay:process-ready-listings');
         Queue::assertPushed(SendListingToEbay::class);
     }
@@ -43,7 +43,7 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
         $this->listing->sent_to_ebay_at = Carbon::now()->toDateTimeString();
         $this->listing->save();
 
-        Carbon::setTestNow(Carbon::now()->addDays(3));
+        Carbon::setTestNow(Carbon::now()->addDays(4));
         Artisan::call('ebay:process-ready-listings');
         Queue::assertNotPushed(SendListingToEbay::class);
     }
