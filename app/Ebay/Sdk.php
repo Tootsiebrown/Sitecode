@@ -35,6 +35,9 @@ class Sdk
     public function newListing(Listing $listing): int
     {
         $request = new AddFixedPriceItem();
+        $request->setConditionId($listing->ebay_condition_id);
+        $request->setConditionDescription($listing->condition);
+        $request->setDescription($listing->description . ' ' . strip_tags($listing->features));
 
         $response = $this->sendRequest('addFixedPriceItem', $request);
 
