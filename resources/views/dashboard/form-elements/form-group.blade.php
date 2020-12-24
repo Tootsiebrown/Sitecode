@@ -16,6 +16,7 @@
             @case ('select')
             @case ('date')
             @case ('text')
+            @case ('note')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'name' => $name,
                     'value' => $value ?? '',

@@ -3,6 +3,7 @@
 namespace App\Ebay;
 
 use App\Ebay\Requests\AddFixedPriceItem;
+use App\Ebay\Requests\GetCategories;
 use App\Models\Listing;
 use Exception;
 use SoapClient;
@@ -46,6 +47,29 @@ class Sdk
         return 1;
     }
 
+    public function getCategories(int $parentId = null, $levelLimit = null)
+    {
+        $request = new GetCategories();
+
+        if (is_null($levelLimit)) {
+            $request->setLevelLimit(1);
+        } else {
+            $request->setLevelLimit($levelLimit);
+        }
+
+        if ($parentId) {
+            $request->setCategoryParent($parentId);
+        }
+
+        $response = $this->sendRequest('getCategories', $request);
+
+        if (is_array($response->CategoryArray->Category)) {
+            return collect($response->CategoryArray->Category);
+        } else {
+            return collect($response->CategoryArray);
+        }
+    }
+
     public function sendRequest($method, $request)
     {
         $client = new SoapClient(
@@ -67,8 +91,6 @@ class Sdk
         try {
             return $client->__soapCall($method, $request->toArray(), null, $header);
         } catch (SoapFault $e) {
-            dump($client->__getLastRequest());
-            dd($e);
             throw new Exception('ebay API not available', 0, $e);
         }
     }

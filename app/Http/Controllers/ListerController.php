@@ -418,6 +418,25 @@ class ListerController extends Controller
         )->with('success', trans('app.product_created'));
     }
 
+    protected function getEbayCategories(Request $request)
+    {
+        $ebayCategories = [];
+        for ($i = 1; $i <= 7; $i++) {
+            $inputName = 'ebay_category_' . $i;
+            if ($request->has($inputName) && !empty($request->input($inputName))) {
+                $ebayCategories[] = $request->input($inputName);
+            }
+        }
+
+        $ebayCategories = implode(',', $ebayCategories);
+
+        if (empty($ebayCategories)) {
+            return null;
+        }
+
+        return $ebayCategories;
+    }
+
     protected function syncProductImages(
         Product $product,
         array $existingImages,
@@ -530,7 +549,6 @@ class ListerController extends Controller
         $product = Product::find($request->product_id);
 
         $ad = DB::transaction(function () use ($request, $product) {
-
             $data = [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
@@ -557,6 +575,7 @@ class ListerController extends Controller
                 'shipping_weight_oz' => $product->shipping_weight_oz,
                 'offers_enabled' => $request->input('offers_enabled', false),
                 'secret' => $request->input('secret', false),
+                'ebay_categories' => $this->getEbayCategories($request),
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {

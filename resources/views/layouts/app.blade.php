@@ -76,6 +76,7 @@
 <script>
     var toastr_options = {closeButton : true};
 </script>
+@stack('scripts')
 
 @if(App::environment('production'))
     <!-- Global site tag (gtag.js) - Google Analytics -->

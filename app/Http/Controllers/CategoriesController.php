@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Ebay\Sdk;
 use App\ProductCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -25,41 +26,6 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-//    public function store(Request $request)
-//    {
-//        $rules = [
-//            'category_name' => 'required'
-//        ];
-//        $this->validate($request, $rules);
-//        $slug = str_slug($request->category_name);
-//
-//        $data = [
-//            'category_name' => $request->category_name,
-//            'category_slug' => $slug,
-//            'description'   => $request->description,
-//            'category_type'   => 'auction',
-//        ];
-//
-//        Category::create($data);
-//        return back()->with('success', trans('app.category_created'));
-//    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -68,24 +34,25 @@ class CategoriesController extends Controller
     {
         $category = ProductCategory::findOrFail($id);
 
-        if ($category->parent_id === 0) {
-            $peerCategories = ProductCategory::where('parent_id', 0)
-                ->where('id', '!=', $category->id)
-                ->orderBy('name')
-                ->get();
-        } else {
-            $peerCategories = $category->parent->children()->where('id', '!=', $category->id)->orderBy('name')->get();
-        }
-
         return view('dashboard.categories.details', [
             'category' => $category,
             'children' => $category->children()->with('listings', 'products', 'children')->get(),
-            'peerCategories' => $peerCategories,
+            'peerCategories' => $this->getPeerCategories($category),
             'breadcrumb' => $category->breadcrumb,
         ]);
     }
 
-
+    protected function getPeerCategories(ProductCategory $category)
+    {
+        if ($category->parent_id === 0) {
+            return ProductCategory::where('parent_id', 0)
+                ->where('id', '!=', $category->id)
+                ->orderBy('name')
+                ->get();
+        } else {
+            return $category->parent->children()->where('id', '!=', $category->id)->orderBy('name')->get();
+        }
+    }
 
     /**
      * Update the specified resource in storage.
@@ -96,8 +63,9 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => 'required'
+            'name' => 'required',
         ];
+
         $this->validate($request, $rules);
 
         $category = ProductCategory::find($id);
@@ -114,8 +82,8 @@ class CategoriesController extends Controller
         $data = [
             'name' => $request->input('name'),
             'url_slug' => Str::slug($request->input('name')),
-//            'breadcrumb' => $category->getFreshBreadcrumb(),
         ];
+
         ProductCategory::where('id', $id)->update($data);
 
         $category->refresh();

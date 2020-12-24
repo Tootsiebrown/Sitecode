@@ -3,6 +3,7 @@
 
 @section('page-css')
     <link href="{{asset('assets/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet">
+    @livewireStyles
 @endsection
 
 @section('dashboard-content')
@@ -109,8 +110,8 @@
                                     'type' => 'boolean',
                                     'name' => 'send_to_ebay',
                                     'prettyTitle' => 'Send To eBay',
-                                    'checked' => false,
-                                    'groupClass' => 'send-to-ebay'
+                                    'checked' => old('send_to_ebay', false),
+                                    'groupClass' => 'send-to-ebay',
                                 ])
 
                                 <div class="send-to-ebay-settings">
@@ -127,6 +128,9 @@
                                         'prettyTitle' => 'eBay Markup %',
                                         'value' => old('send_to_ebay_markup', 30)
                                     ])
+                                    <div id="ebay-categories-container">
+                                        @livewire('ebay-categories', ['listing' => null])
+                                    </div>
                                 </div>
                             </div>
 
@@ -190,6 +194,7 @@
 @endsection
 
 @section('page-js')
+    @livewireScripts
     <script>
         @if(session('success'))
         toastr.success('{{ session('success') }}', '<?php echo trans('app.success') ?>', toastr_options);
@@ -199,4 +204,5 @@
     @if(get_option('enable_recaptcha_post_ad') == 1)
         <script src='https://www.google.com/recaptcha/api.js'></script>
     @endif
+
 @endsection
