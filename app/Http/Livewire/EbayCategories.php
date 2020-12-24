@@ -49,7 +49,6 @@ class EbayCategories extends Component
                 $propertyName = "ebayCategory${i}";
                 $this->$propertyName = null;
             }
-
         }
     }
 
@@ -80,7 +79,7 @@ class EbayCategories extends Component
         return Cache::remember(
             $key,
             Carbon::now()->addDays(30),
-            function() use ($parentId, $level) {
+            function () use ($parentId, $level) {
                 $ebayCategories = $this->ebay->getCategories($parentId, $level)
                     ->filter(fn($category) => $category->CategoryID != $parentId)
                     ->mapWithKeys(fn($cat) => [$cat->CategoryID => $cat->CategoryName])
