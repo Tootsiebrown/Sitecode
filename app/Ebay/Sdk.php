@@ -39,6 +39,7 @@ class Sdk
         $request->setConditionId($listing->ebay_condition_id);
         $request->setConditionDescription($listing->condition);
         $request->setDescription($listing->description . ' ' . strip_tags($listing->features));
+        $request->setPrimaryCategoryId($listing->ebay_primary_category_id);
 
         $response = $this->sendRequest('addFixedPriceItem', $request);
 

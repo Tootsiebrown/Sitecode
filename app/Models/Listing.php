@@ -407,6 +407,11 @@ class Listing extends Model
         return ! is_null($this->items->first()->order_item_id);
     }
 
+    public function getEbayPrimaryCategoryIdAttribute()
+    {
+        return last(explode(',', $this->ebay_categories));
+    }
+
     public function getWinnerAttribute()
     {
         if (!$this->is_auction) {

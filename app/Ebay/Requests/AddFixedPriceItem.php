@@ -18,7 +18,10 @@ class AddFixedPriceItem extends AbstractRequest
                 'ConditionID' => null,
                 'Description' => null,
                 'ListingDuration' => 'GTC',
-                'ListingType' => 'FixedPriceItem'
+                'ListingType' => 'FixedPriceItem',
+                'PrimaryCategory' => [
+                    'CategoryID' => null,
+                ],
             ],
         ],
     ];
@@ -41,5 +44,10 @@ class AddFixedPriceItem extends AbstractRequest
     public function setDescription(string $description)
     {
         $this->data['AddFixedPriceItemRequest']['Item']['Description'] = $description;
+    }
+
+    public function setPrimaryCategoryId($categoryId)
+    {
+        $this->data['AddFixedPriceItemRequest']['Item']['PrimaryCategory']['CategoryID'] = $categoryId;
     }
 }
