@@ -53,7 +53,11 @@ return [
         'api_token' => env('EBAY_TOKEN'),
         'test_mode' => env('EBAY_TEST_MODE', false),
         'app_id' => env('EBAY_APP_ID'),
-        'api_version' => env('EBAY_API_VERSION')
+        'api_version' => env('EBAY_API_VERSION'),
+        'managed_payments' => env('EBAY_MANAGED_PAYMENTS', false),
+        'shipping_profile' => env('EBAY_SELLER_SHIPPING_PROFILE'),
+        'item_postal_code' => 40701,
+        'paypal_email' => env('EBAY_PAYPAL_EMAIL')
     ]
 
 ];
