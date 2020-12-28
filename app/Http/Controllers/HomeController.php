@@ -42,34 +42,5 @@ class HomeController extends Controller
     protected function getSlides()
     {
         return Slide::all();
-
-        return collect(
-            [
-                [
-                    'title' => 'Shoes',
-                    'caption' => 'Get ready for Fall with great Dealz on boots and shoes for the whole family!',
-                    'cta' => 'View Shoes',
-                    'link' => '/search?category=1449',
-                    'background_image' => '/assets/img/slider/HikingGearBackground.jpg',
-                    'image' => '/assets/img/slider/HikingShoes.png',
-                ],
-                [
-                    'title' => 'Apple iPhones and More',
-                    'caption' => 'Find iPhones, iPads, MacBooks, AirPods and accessories all below wholesale!',
-                    'cta' => 'View Electronics',
-                    'link' => '/search?category=45',
-                    'background_image' => '/assets/img/slider/iPHoneBackground.jpg',
-                    'image' => '/assets/img/slider/iPhoneINHand.png',
-                ],
-                [
-                    'title' => 'Fitness',
-                    'caption' => 'Catch the best prices on fitness apparel and nutrition to help you look your best!',
-                    'cta' => 'View Fitness',
-                    'link' => '/search?search=fitness',
-                    'background_image' => '/assets/img/slider/ProteinPowderBackground.jpg',
-                    'image' => '/assets/img/slider/ProteinPowder.png',
-                ],
-            ]
-        );
     }
 }

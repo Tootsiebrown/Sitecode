@@ -9,6 +9,7 @@
             @case ('select')
             @case ('date')
             @case ('text')
+            @case ('email')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'name' => $name,
                     'value' => $value ?? '',

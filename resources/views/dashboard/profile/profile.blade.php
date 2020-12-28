@@ -38,6 +38,11 @@
                                 <th>@lang('app.created_at')</th>
                                 <td>{{ $user->signed_up_datetime() }}</td>
                             </tr>
+
+                            <tr>
+                                <th>Newsletter</th>
+                                <td>{{ $user->newsletter_subscription ? 'Subscribed' : 'Not Subscribed'  }}</td>
+                            </tr>
                         </table>
 
                         @if($user->id == auth()->user()->id)

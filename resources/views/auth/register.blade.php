@@ -72,6 +72,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('newsletter_subscription') ? ' has-error' : '' }}">
+                            <label for="email" class="col-md-4 control-label">Newsletter</label>
+
+                            <div class="col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input id="email" type="checkbox" class="" name="newsletter_subscription" value="1" {{ old('newsletter_subscription', false) ? 'checked' : ''}}>
+                                        Subscribe
+                                    </label>
+                                </div>
+
+                                @if ($errors->has('newsletter_subscription'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('newsletter_subscription') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">@lang('app.password')</label>
 
