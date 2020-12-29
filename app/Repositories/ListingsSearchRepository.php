@@ -92,18 +92,13 @@ class ListingsSearchRepository extends SiteSearchRepository
             ->select('search_pages.id')
             ->distinct()
             ->where('module', 'listings')
-            ->where(function($query) use ($stems, $likeStems) {
+            ->where(function ($query) use ($stems, $likeStems) {
                 $query
                     ->whereIn('search_pages_words.stem', $stems)
                     ->orWhere(function ($query) use ($likeStems) {
-                        $likeStems->each(function ($stem) use ($query) {
-                            $query->orWhere('word', 'like', "$stem%");
-                        });
+                        $likeStems->each(fn($stem) => $query->orWhere('word', 'like', "$stem%"));
                     });
             });
-
-//        dd(DB::table(DB::raw('(' . $searchPages->toSql() . ') as subquery'))
-//            ->mergeBindings($searchPages)->getBindings());
 
         $recordsCount = DB::table(DB::raw('(' . $searchPages->toSql() . ') as subquery'))
             ->selectRaw('count(id) as count')
@@ -150,27 +145,6 @@ class ListingsSearchRepository extends SiteSearchRepository
             ->get()
             ->map(function ($row) use ($wordStr) {
                 $row->url = (0 === strpos($row->url, 'http') ? $row->url : '/' . ltrim($row->url, '/'));
-
-                // build a hilighted excerpt paragraph
-                $pattern = '.{0,50}?(' . $wordStr . ').{0,200}';
-                if (mb_eregi($pattern, $row->content, $match)) {
-                    $excerpt = $match[0];
-                    $unBoldedExcerpt = preg_replace('/<\/?strong>/', '', $excerpt);
-
-                    if (strpos(strrev($row->content), strrev($unBoldedExcerpt)) !== 0) {
-                        $excerpt .= '&hellip;';
-                    }
-                    if (strpos($row->content, $unBoldedExcerpt) !== 0) {
-                        $excerpt = '&hellip;' . $excerpt;
-                    }
-
-                    $row->excerpt = $excerpt;
-                } else {
-                    $row->excerpt = Str::limit($row->content, 250);
-                }
-
-                $row->excerpt = preg_replace('/(' . $wordStr . ')/iu', '<strong>\1</strong>', $row->excerpt);
-
                 return (array) $row;
             });
 
