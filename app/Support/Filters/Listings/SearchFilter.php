@@ -3,6 +3,7 @@
 namespace App\Support\Filters\Listings;
 
 use App\Models\Listing;
+use App\Repositories\ListingsSearchRepository;
 use App\Support\Filters\Filter;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +19,7 @@ class SearchFilter extends Filter
     public function filterQuery(Builder $query)
     {
         if ($this->isActive) {
-            $searchRepo = app()->make(SiteSearchRepositoryContract::class);
+            $searchRepo = app()->make(ListingsSearchRepository::class);
             $results = $searchRepo->search($this->value, 1, 100, 'listings');
 
             if ($results['count'] == 0) {
