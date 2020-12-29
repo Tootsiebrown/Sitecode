@@ -36,7 +36,7 @@ class AddFixedPriceItem extends AbstractRequest
 
     public function setConditionId(int $conditionId)
     {
-        $this->data['AddFixedPriceItemRequest']['Item']['ConditionId'] = $conditionId;
+        $this->data['AddFixedPriceItemRequest']['Item']['ConditionID'] = $conditionId;
     }
 
     public function setConditionDescription(string $conditionDescription)

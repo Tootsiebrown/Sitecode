@@ -38,7 +38,7 @@ class SendListingToEbay implements ShouldQueue
     {
         $ebayListingId = $sdk->newListing($this->listing);
 
-        $this->listing->ebay_id = $ebayListingId;
+        $this->listing->ebay_item_id = $ebayListingId;
         $this->listing->save();
     }
 }

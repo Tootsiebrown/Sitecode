@@ -10,4 +10,9 @@ abstract class AbstractRequest
     {
         return $this->data;
     }
+
+    public function __toString()
+    {
+        return print_r($this->data, true);
+    }
 }

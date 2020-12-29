@@ -2,11 +2,14 @@
 
 namespace App\Ebay;
 
+use App\Ebay\Requests\AbstractRequest;
 use App\Ebay\Requests\AddFixedPriceItem;
 use App\Ebay\Requests\GetCategories;
+use App\Ebay\Requests\GetCategoryFeatures;
 use App\Ebay\Requests\GetEbayDetails;
 use App\Models\Listing;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use SoapClient;
 use SoapFault;
 use SoapHeader;
@@ -62,11 +65,21 @@ class Sdk
                 $this->getCustomShippingCost($ebayPrice*2),
             );
         }
+
         $response = $this->sendRequest('addFixedPriceItem', $request);
 
-        dd($response);
+        if ($this->shouldLogResponse($response)) {
+            $this->logRequest($request);
+            $this->logResponse($response);
+        }
 
-        return 1;
+        if ($this->responseSomewhatSuccessful($response)) {
+            if ($response->ItemID) {
+                return $response->ItemID;
+            }
+        }
+
+        throw new Exception('Ebay API failure. See logs messages above.');
     }
 
     public function getCustomShippingCost($price)
@@ -114,6 +127,23 @@ class Sdk
         dd($response);
     }
 
+    public function getEbayCategoryFeatures($categoryId, $features = [])
+    {
+        $request = new GetCategoryFeatures();
+
+        if ($categoryId) {
+            $request->setCategoryId($categoryId);
+        }
+
+        if (!empty($features)) {
+            $request->setFeatures($features);
+        }
+
+        $response = $this->sendRequest('getCategoryFeatures', $request);
+
+        return $response;
+    }
+
     public function sendRequest($method, $request)
     {
         $client = new SoapClient(
@@ -150,5 +180,25 @@ class Sdk
                 'routing' => 'new',
             ]
         );
+    }
+
+    protected function shouldLogResponse($response)
+    {
+        return $response->Ack !== "Success";
+    }
+
+    protected function logRequest(AbstractRequest $request)
+    {
+        Log::info((string) $request);
+    }
+
+    protected function logResponse($response)
+    {
+        Log::info(print_r($response,1));
+    }
+
+    protected function responseSomewhatSuccessful($response)
+    {
+        return $response->Ack !== "Failure";
     }
 }
