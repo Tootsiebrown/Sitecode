@@ -92,18 +92,13 @@ class ListingsSearchRepository extends SiteSearchRepository
             ->select('search_pages.id')
             ->distinct()
             ->where('module', 'listings')
-            ->where(function($query) use ($stems, $likeStems) {
+            ->where(function ($query) use ($stems, $likeStems) {
                 $query
                     ->whereIn('search_pages_words.stem', $stems)
                     ->orWhere(function ($query) use ($likeStems) {
-                        $likeStems->each(function ($stem) use ($query) {
-                            $query->orWhere('word', 'like', "$stem%");
-                        });
+                        $likeStems->each(fn($stem) => $query->orWhere('word', 'like', "$stem%"));
                     });
             });
-
-//        dd(DB::table(DB::raw('(' . $searchPages->toSql() . ') as subquery'))
-//            ->mergeBindings($searchPages)->getBindings());
 
         $recordsCount = DB::table(DB::raw('(' . $searchPages->toSql() . ') as subquery'))
             ->selectRaw('count(id) as count')
