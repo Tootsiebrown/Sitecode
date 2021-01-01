@@ -32,7 +32,7 @@
         "google/recaptcha": "~1.1",
         "intervention/image": "^2.5",
         "laravel/framework": "^6.2",
-        "laravel/socialite": "^4.0",
+        "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/omnipay": "^3.0",

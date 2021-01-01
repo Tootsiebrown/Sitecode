@@ -57,7 +57,13 @@ return [
         'managed_payments' => env('EBAY_MANAGED_PAYMENTS', false),
         'shipping_profile' => env('EBAY_SELLER_SHIPPING_PROFILE'),
         'item_postal_code' => 40701,
-        'paypal_email' => env('EBAY_PAYPAL_EMAIL')
+        'paypal_email' => env('EBAY_PAYPAL_EMAIL'),
+        'oauth' => [
+            'client_id' => env('EBAY_OAUTH_CLIENT_ID'),
+            'client_secret' => env('EBAY_OAUTH_CLIENT_SECRET'),
+            'redirect' => env('EBAY_OAUTH_REDIRECT_URI'),
+            'test_mode' => env('EBAY_OATH_TEST_MODE', false),
+        ]
     ]
 
 ];

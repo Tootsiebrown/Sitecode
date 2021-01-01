@@ -18,9 +18,13 @@ class Sdk
 {
     private string $server;
     private array $config;
+    /** @var EbayTokenRepository */
+    private EbayTokenRepository $tokenRepo;
 
-    public function __construct()
+    public function __construct(EbayTokenRepository $tokenRepo)
     {
+        $this->tokenRepo = $tokenRepo;
+
         $ebayConfig = config('services.ebay');
         if (
             empty($ebayConfig)

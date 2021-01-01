@@ -28,13 +28,6 @@ if (App::environment() == 'local') {
 Route::get('exception')
     ->uses('ExceptionController@exception');
 
-//Route::get(
-//    '/site-information',
-//    function () {
-//        return view('site.pages.site-info');
-//    }
-//);
-
 /**
  * @project: LaraBid
  * @website: https://themeqx.com
@@ -43,7 +36,6 @@ Route::get('exception')
 Auth::routes();
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
-//Route::get('LanguageSwitch/{lang}', ['as' => 'switch_language', 'uses' => 'HomeController@switchLang']);
 
 //Account activating
 Route::get(
@@ -51,20 +43,10 @@ Route::get(
     ['as' => 'email_activation_link', 'uses' => 'UserController@activatingAccount']
 );
 
-//Route::get('category/{cat_id?}', ['uses' => 'CategoriesController@show'])->name('category');
-//Route::get('countries/{country_code?}', ['uses' => 'LocationController@countriesListsPublic'])->name('countries');
-//Route::get('set-country/{country_code}', ['uses' => 'LocationController@setCurrentCountry'])->name('set_country');
-
-//Route::get('searchCityJson', ['uses' => 'LocationController@searchCityJson'])->name('searchCityJson');
-
 
 Route::get('search')
     ->uses('AdsController@search')
     ->name('search');
-
-//Route::get('search-redirect', ['as' => 'search_redirect', 'uses' => 'AdsController@searchRedirect']);
-
-//Route::get('auctions-by-user/{id?}', ['as' => 'ads_by_user', 'uses' => 'AdsController@adsByUser']);
 
 Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
@@ -94,16 +76,6 @@ Route::middleware('auth')
             ->uses('PayForItController@acceptedOffer');
     });
 
-//Route::post('reply-by-email', ['as' => 'reply_by_email_post', 'uses' => 'UserController@replyByEmailPost']);
-//Route::post('post-comments/{id}', ['as' => 'post_comments', 'uses' => 'CommentController@postComments']);
-
-
-// Password reset routes...
-//Route::post('send-password-reset-link', ['as' => 'send_reset_link', 'uses' => 'Auth\PasswordController@postEmail']);
-
-//Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
-//Route::post('password/reset', ['as'=>'password_reset_post', 'uses'=>'Auth\PasswordController@postReset']);
-
 Route::post(
     'get-sub-category-by-category',
     ['as' => 'get_sub_category_by_category', 'uses' => 'AdsController@getSubCategoryByCategory']
@@ -116,41 +88,6 @@ Route::post('switch/product-view', ['as' => 'switch_grid_list_view', 'uses' => '
 
 Route::get('get-product-category-children', ['as' => 'getProductCategoryChildren', 'uses' => 'ListerController@getCategoryChildren']);
 
-//Route::get('post-new', ['as' => 'create_ad', 'uses' => 'AdsController@create']);
-//Route::post('post-new', ['uses' => 'AdsController@store']);
-
-
-
-//Checkout payment
-// disabled in favor of WAX's.
-//Route::get('checkout/{transaction_id}', ['as' => 'payment_checkout', 'uses' => 'PaymentController@checkout']);
-//Route::post('checkout/{transaction_id}', ['uses' => 'PaymentController@chargePayment']);
-////Payment success url
-//Route::any(
-//    'checkout/{transaction_id}/payment-success',
-//    ['as' => 'payment_success_url', 'uses' => 'PaymentController@paymentSuccess']
-//);
-//Route::any(
-//    'checkout/{transaction_id}/paypal-notify',
-//    ['as' => 'paypal_notify_url', 'uses' => 'PaymentController@paypalNotify']
-//);
-
-
-//Route::group(
-//    ['prefix' => 'login'],
-//    function () {
-//        //Social login route
-//
-//        Route::get('facebook', ['as' => 'facebook_redirect', 'uses' => 'SocialLogin@redirectFacebook']);
-//        Route::get('facebook-callback', ['as' => 'facebook_callback', 'uses' => 'SocialLogin@callbackFacebook']);
-//
-//        Route::get('google', ['as' => 'google_redirect', 'uses' => 'SocialLogin@redirectGoogle']);
-//        Route::get('google-callback', ['as' => 'google_callback', 'uses' => 'SocialLogin@callbackGoogle']);
-//
-//        Route::get('twitter', ['as' => 'twitter_redirect', 'uses' => 'SocialLogin@redirectTwitter']);
-//        Route::get('twitter-callback', ['as' => 'twitter_callback', 'uses' => 'SocialLogin@callbackTwitter']);
-//    }
-//);
 
 Route::resource('user', 'UserController');
 
@@ -473,7 +410,20 @@ Route::group(
                             ->uses('MailPreviewController@auctionPaymentNeeded');
                     });
 
-
+        Route::middleware('privilege:Ebay Authentication')
+            ->name('dashboard.ebayAuth.')
+            ->prefix('ebay-auth')
+            ->group(function () {
+                Route::get('status')
+                    ->name('status')
+                    ->uses('Dashboard\EbayOAuthController@showStatus');
+                Route::get('link')
+                    ->name('link')
+                    ->uses('Dashboard\EbayOAuthController@link');
+                Route::get('initiate-link')
+                    ->name('initiateLink')
+                    ->uses('Dashboard\EbayOAuthController@initiateLink');
+            });
 
 //                Route::group(
 //                    ['prefix' => 'settings'],

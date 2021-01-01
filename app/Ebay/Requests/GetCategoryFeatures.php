@@ -6,11 +6,10 @@ class GetCategoryFeatures extends AbstractRequest
 {
     protected array $data = [
         'GetCategoryFeaturesRequest' => [
-//            'AllFeaturesForCategory' => true,
-//            'ViewAllNodes' => true,
-//            'DetailLevel' > 'ReturnAll',
-            'OutputSelector' => 'Category',
-            'LevelLimit'
+            'AllFeaturesForCategory' => true,
+            'ViewAllNodes' => true,
+            'DetailLevel' => 'ReturnAll',
+            'LevelLimit' => 7
         ],
     ];
 
@@ -26,7 +25,7 @@ class GetCategoryFeatures extends AbstractRequest
 
     public function setFeatures(array $features)
     {
-//        $this->data['GetCategoryFeaturesRequest']['AllFeaturesForCategory'] = false;
+        $this->data['GetCategoryFeaturesRequest']['AllFeaturesForCategory'] = false;
         $this->data['GetCategoryFeaturesRequest']['FeatureID'] = $features;
 
     }

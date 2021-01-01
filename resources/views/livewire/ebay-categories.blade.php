@@ -76,6 +76,17 @@
         ])
     @endif
 
+    @if(! $conditions->isEmpty())
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'select',
+            'name' => 'ebay_condition',
+            'prettyTitle' => 'eBay Condition',
+            'options' => $conditions,
+            'inputAttributes' => 'id="ebay_condition"',
+            'value' => $ebayCondition
+        ])
+    @endif
+
     @push('scripts')
         <script>
             var $categoriesContainer = jQuery('#ebay-categories-container');
@@ -125,10 +136,17 @@
                         '[name=ebay_category_4],' +
                         '[name=ebay_category_5],' +
                         '[name=ebay_category_6],' +
-                        '[name=ebay_category_7]').select2()
+                        '[name=ebay_category_7],' +
+                        '[name=ebay_condition]'
+                    ).select2()
                 });
             });
         </script>
+        <style>
+            pre.sf-dump {
+                z-index: 1 !important;
+            }
+        </style>
     @endpush
 </div>
 
