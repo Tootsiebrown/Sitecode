@@ -4,7 +4,6 @@ namespace App\Ebay;
 
 use App\Models\EbayToken;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class EbayTokenRepository
 {
@@ -76,5 +75,31 @@ class EbayTokenRepository
     public function getToken()
     {
         return EbayToken::first();
+    }
+
+    public function isAccessTokenCurrent()
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            return false;
+        }
+
+        if ($token->access_token_expires_at->lte(Carbon::now())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getAccessToken()
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        return $token->access_token;
     }
 }

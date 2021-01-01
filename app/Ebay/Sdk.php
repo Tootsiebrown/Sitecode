@@ -9,10 +9,7 @@ use App\Ebay\Requests\GetCategoryFeatures;
 use App\Ebay\Requests\GetEbayDetails;
 use App\Models\Listing;
 use Exception;
-use Illuminate\Support\Facades\Log;
-use SoapClient;
-use SoapFault;
-use SoapHeader;
+use GuzzleHttp\ClientInterface;
 
 class Sdk
 {
@@ -20,10 +17,13 @@ class Sdk
     private array $config;
     /** @var EbayTokenRepository */
     private EbayTokenRepository $tokenRepo;
+    /** @var ClientInterface */
+    private ClientInterface $client;
 
-    public function __construct(EbayTokenRepository $tokenRepo)
+    public function __construct(EbayTokenRepository $tokenRepo, ClientInterface $client)
     {
         $this->tokenRepo = $tokenRepo;
+        $this->client = $client;
 
         $ebayConfig = config('services.ebay');
         if (
@@ -39,10 +39,58 @@ class Sdk
         }
 
         $this->server = $ebayConfig['test_mode']
-            ? "https://api.sandbox.ebay.com/wsapi"
-            : "https://api.ebay.com/wsapi";
+            ? "https://api.sandbox.ebay.com"
+            : "https://api.ebay.com";
 
         $this->config = $ebayConfig;
+    }
+
+    public function getLocations()
+    {
+        return $this->request('get', 'sell/inventory/v1/location')->locations;
+    }
+
+    public function createLocation($id, $data)
+    {
+        return $this->request('post', "sell/inventory/v1/location/$id", $data);
+    }
+
+    private function request($method, $url, $json = null)
+    {
+        $accessToken = $this->getCurrentAccessToken();
+
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer :' . $accessToken
+            ]
+        ];
+
+        if ($json) {
+            $options['json'] = $json;
+        }
+
+        $response = $this->client->request(
+            $method,
+            $url,
+            $options
+        );
+
+        return json_decode($response->getBody()->getContents());
+    }
+
+    private function getCurrentAccessToken()
+    {
+        if ($this->tokenRepo->isAccessTokenCurrent()) {
+            return $this->tokenRepo->getAccessToken();
+        }
+
+        if ($this->tokenRepo->isRefreshTokenCurrent()) {
+            $this->tokenRepo->refreshAccessToken();
+
+            return $this->tokenRepo->getAccessToken();
+        }
+
+        throw new Exception('Ebay Refresh Token has expired');
     }
 
     public function newListing(Listing $listing): int
@@ -148,61 +196,61 @@ class Sdk
         return $response;
     }
 
-    public function sendRequest($method, $request)
-    {
-        $client = new SoapClient(
-            base_path() . "/resources/ebay/eBaySvc.wsdl",
-            [
-                'cache_wsdl' => WSDL_CACHE_MEMORY,
-                'keep_alive' => false,
-                'location' => $this->buildRequestUrl($method)
-            ]
-        );
-
-        $requesterCredentials = new \stdClass();
-        $requesterCredentials->eBayAuthToken = $this->config['api_token'];
-
-        $header = new SoapHeader('urn:ebay:apis:eBLBaseComponents', 'RequesterCredentials', $requesterCredentials);
-
-        $request->setVersion($this->config['api_version']);
-
-        try {
-            return $client->__soapCall($method, $request->toArray(), null, $header);
-        } catch (SoapFault $e) {
-            throw new Exception('ebay API not available', 0, $e);
-        }
-    }
-
-    protected function buildRequestUrl(string $method)
-    {
-        return $this->server . '?' . http_build_query(
-            [
-                'callname' => $method,
-                'appid' => $this->config['app_id'],
-                'siteid' => 0,
-                'version' => $this->config['api_version'],
-                'routing' => 'new',
-            ]
-        );
-    }
-
-    protected function shouldLogResponse($response)
-    {
-        return $response->Ack !== "Success";
-    }
-
-    protected function logRequest(AbstractRequest $request)
-    {
-        Log::info((string) $request);
-    }
-
-    protected function logResponse($response)
-    {
-        Log::info(print_r($response,1));
-    }
-
-    protected function responseSomewhatSuccessful($response)
-    {
-        return $response->Ack !== "Failure";
-    }
+//    public function sendRequest($method, $request)
+//    {
+//        $client = new SoapClient(
+//            base_path() . "/resources/ebay/eBaySvc.wsdl",
+//            [
+//                'cache_wsdl' => WSDL_CACHE_MEMORY,
+//                'keep_alive' => false,
+//                'location' => $this->buildRequestUrl($method)
+//            ]
+//        );
+//
+//        $requesterCredentials = new \stdClass();
+//        $requesterCredentials->eBayAuthToken = $this->config['api_token'];
+//
+//        $header = new SoapHeader('urn:ebay:apis:eBLBaseComponents', 'RequesterCredentials', $requesterCredentials);
+//
+//        $request->setVersion($this->config['api_version']);
+//
+//        try {
+//            return $client->__soapCall($method, $request->toArray(), null, $header);
+//        } catch (SoapFault $e) {
+//            throw new Exception('ebay API not available', 0, $e);
+//        }
+//    }
+//
+//    protected function buildRequestUrl(string $method)
+//    {
+//        return $this->server . '?' . http_build_query(
+//            [
+//                'callname' => $method,
+//                'appid' => $this->config['app_id'],
+//                'siteid' => 0,
+//                'version' => $this->config['api_version'],
+//                'routing' => 'new',
+//            ]
+//        );
+//    }
+//
+//    protected function shouldLogResponse($response)
+//    {
+//        return $response->Ack !== "Success";
+//    }
+//
+//    protected function logRequest(AbstractRequest $request)
+//    {
+//        Log::info((string) $request);
+//    }
+//
+//    protected function logResponse($response)
+//    {
+//        Log::info(print_r($response,1));
+//    }
+//
+//    protected function responseSomewhatSuccessful($response)
+//    {
+//        return $response->Ack !== "Failure";
+//    }
 }
