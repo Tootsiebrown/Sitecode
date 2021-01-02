@@ -3,10 +3,19 @@
 namespace App\Ebay;
 
 use App\Models\EbayToken;
+use Exception;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Carbon;
 
 class EbayTokenRepository
 {
+    private ClientInterface $client;
+
+    public function __construct(ClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
     public function save(
         $accessToken,
         Carbon $accessTokenExpiration,
@@ -101,5 +110,63 @@ class EbayTokenRepository
         }
 
         return $token->access_token;
+    }
+
+    public function isRefreshTokenCurrent()
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            return false;
+        }
+
+        if ($token->refresh_token_expires_at->lte(Carbon::now())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function refreshAccessToken()
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            throw new Exception('Unable to refresh non-existant token');
+        }
+
+        $authorizationKey = base64_encode(config('services.ebay.oauth.client_id') . ':' . config('services.ebay.oauth.client_secret'));
+        $response = $this->client->request(
+            'post',
+            'identity/v1/oauth2/token',
+            [
+                'headers' => [
+                    'Authorization' => 'Basic ' . $authorizationKey,
+                ],
+                'form_params' => [
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $token->refresh_token,
+                    'scope' => 'https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope',
+                ]
+            ]
+        );
+
+        $data = json_decode($response->getBody()->getContents());
+
+        $this->saveRefreshedToken(
+            $token,
+            $data->access_token,
+            $data->expires_in
+        );
+    }
+
+    private function saveRefreshedToken($tokenRecord, $token, $expiresIn)
+    {
+        $tokenRecord->fill([
+            'access_token' => $token,
+            'access_token_expires_at' => Carbon::now()->addSeconds($expiresIn)->toDateTimeString(),
+        ]);
+
+        $tokenRecord->save();
     }
 }

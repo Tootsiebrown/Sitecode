@@ -10,6 +10,8 @@ use App\Ebay\Requests\GetEbayDetails;
 use App\Models\Listing;
 use Exception;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Sdk
 {
@@ -55,7 +57,51 @@ class Sdk
         return $this->request('post', "sell/inventory/v1/location/$id", $data);
     }
 
-    private function request($method, $url, $json = null)
+
+
+    public function getCategories(int $parentId = null, $levelLimit = null)
+    {
+        $treeVersion = $this->getCategoryTreeVersion();
+
+        dd($treeVersion);
+        $request = new GetCategories();
+
+        if (is_null($levelLimit)) {
+            $request->setLevelLimit(1);
+        } else {
+            $request->setLevelLimit($levelLimit);
+        }
+
+        if ($parentId) {
+            $request->setCategoryParent($parentId);
+        }
+
+        $response = $this->sendRequest('getCategories', $request);
+
+        if (is_array($response->CategoryArray->Category)) {
+            return collect($response->CategoryArray->Category);
+        } else {
+            return collect($response->CategoryArray);
+        }
+    }
+
+    private function getCategoryTreeVersion()
+    {
+        return Cache::remember(
+            'ebay-category-tree-version',
+            1, //Carbon::now()->addHours(24),
+            function () {
+                return $this->request(
+                    'get',
+                    'commerce/taxonomy/v1/get_default_category_tree_id',
+                    null,
+                    ['marketplace_id' => 'EBAY_US'],
+                );
+            }
+        );
+    }
+
+    private function request($method, $url, $json = [], $query = [])
     {
         $accessToken = $this->getCurrentAccessToken();
 
@@ -67,6 +113,10 @@ class Sdk
 
         if ($json) {
             $options['json'] = $json;
+        }
+
+        if ($query) {
+            $options['query'] = $query;
         }
 
         $response = $this->client->request(
@@ -140,29 +190,6 @@ class Sdk
             if ($price >= $orderCost) {
                 return $shippingCost;
             }
-        }
-    }
-
-    public function getCategories(int $parentId = null, $levelLimit = null)
-    {
-        $request = new GetCategories();
-
-        if (is_null($levelLimit)) {
-            $request->setLevelLimit(1);
-        } else {
-            $request->setLevelLimit($levelLimit);
-        }
-
-        if ($parentId) {
-            $request->setCategoryParent($parentId);
-        }
-
-        $response = $this->sendRequest('getCategories', $request);
-
-        if (is_array($response->CategoryArray->Category)) {
-            return collect($response->CategoryArray->Category);
-        } else {
-            return collect($response->CategoryArray);
         }
     }
 

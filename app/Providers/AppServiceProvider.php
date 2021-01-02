@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Ebay\EbayTokenRepository;
 use App\Ebay\Sdk;
 use App\Models\Listing;
 use App\Option;
@@ -60,6 +61,16 @@ class AppServiceProvider extends ServiceProvider
             ->give(function () {
                 return new Client([
                     'base_uri' => config('services.ebay.test_mode')
+                        ? 'https://api.sandbox.ebay.com/'
+                        : 'https://api.ebay.com/'
+                ]);
+            });
+
+        $this->app->when(EbayTokenRepository::class)
+            ->needs(ClientInterface::class)
+            ->give(function () {
+                return new Client([
+                    'base_uri' => config('services.ebay.oauth.test_mode')
                         ? 'https://api.sandbox.ebay.com/'
                         : 'https://api.ebay.com/'
                 ]);
