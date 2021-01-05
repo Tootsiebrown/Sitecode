@@ -215,6 +215,7 @@ class Sdk
                     ->map(fn ($image) => $image->raw_url)
                     ->all(),
                 'title' => $listing->title,
+                'brand' => $listing->brand->name,
             ],
         ];
 
