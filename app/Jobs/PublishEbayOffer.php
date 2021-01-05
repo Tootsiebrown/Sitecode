@@ -3,30 +3,26 @@
 namespace App\Jobs;
 
 use App\Ebay\Sdk;
-use App\Models\Listing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SendListingToEbay implements ShouldQueue
+class PublishEbayOffer implements ShouldQueue
 {
-    use Dispatchable;
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $listing;
+    private string $offerId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Listing $listing)
+    public function __construct(string $offerId)
     {
-        $this->listing = $listing;
+        $this->offerId = $offerId;
     }
 
     /**
@@ -34,10 +30,8 @@ class SendListingToEbay implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Sdk $sdk)
+    public function handle(Sdk $ebay)
     {
-        $sdk->createInventoryItem($this->listing);
-
-        CreateEbayOffer::dispatch($this->listing);
+        $ebay->publishOffer($this->offerId);
     }
 }

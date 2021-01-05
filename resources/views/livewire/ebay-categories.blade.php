@@ -3,7 +3,7 @@
         @include('dashboard.form-elements.form-group', [
             'type' => 'select',
             'name' => 'ebay_category_1',
-            'prettyTitle' => 'Primary Ebay Category',
+            'prettyTitle' => 'Ebay Category',
             'options' => $level1Categories,
             'inputAttributes' => 'id="ebay_category_1"',
             'value' => $ebayCategory1,
@@ -76,17 +76,29 @@
         ])
     @endif
 
-    @if(! $conditions->isEmpty())
+    @if($conditionsPolicy)
+        @if ($conditionsPolicy['required'])
+            <input type="hidden" name="conditionRequired" value="true">
+        @endif
+
         @include('dashboard.form-elements.form-group', [
             'type' => 'select',
             'name' => 'ebay_condition',
             'prettyTitle' => 'eBay Condition',
-            'options' => $conditions,
+            'options' => $conditionsPolicy['conditions'],
             'inputAttributes' => 'id="ebay_condition"',
             'value' => $ebayCondition
         ])
     @endif
 
+    <div wire:loading>
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'note',
+            'name' => '',
+            'prettyLabel' => '',
+            'value' => 'Requesting additional fields...'
+        ])
+    </div>
     @push('scripts')
         <script>
             var $categoriesContainer = jQuery('#ebay-categories-container');

@@ -11,11 +11,13 @@ use App\Models\Listing;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class Sdk
 {
-    private string $server;
     private array $config;
     /** @var EbayTokenRepository */
     private EbayTokenRepository $tokenRepo;
@@ -30,19 +32,10 @@ class Sdk
         $ebayConfig = config('services.ebay');
         if (
             empty($ebayConfig)
-            || empty($ebayConfig['api_token'])
             || empty($ebayConfig['app_id'])
         ) {
             throw new Exception('eBay SDK not properly configured');
         }
-
-        if (! $ebayConfig['managed_payments'] && empty($ebayConfig['paypal_email'])) {
-            throw new Exception('eBay SDK not properly configured for payments');
-        }
-
-        $this->server = $ebayConfig['test_mode']
-            ? "https://api.sandbox.ebay.com"
-            : "https://api.ebay.com";
 
         $this->config = $ebayConfig;
     }
@@ -59,44 +52,94 @@ class Sdk
 
 
 
-    public function getCategories(int $parentId = null, $levelLimit = null)
+    public function getCategories(int $parentId = null)
     {
-        $treeVersion = $this->getCategoryTreeVersion();
+        [$treeId, $treeVersion] = $this->getCategoryTreeMeta();
 
-        dd($treeVersion);
-        $request = new GetCategories();
+        $key = 'ebay-category-tree'
+            . '|version:' . $treeVersion
+            . '|treeId:' . $treeId
+            . '|parentId:' . ($parentId ?: 'null');
 
-        if (is_null($levelLimit)) {
-            $request->setLevelLimit(1);
-        } else {
-            $request->setLevelLimit($levelLimit);
-        }
+        $categories = Cache::rememberForever($key, function () use ($parentId, $treeId) {
+        //$categories = Cache::remember($key, 1, function () use ($parentId, $treeId) {
+            if (is_null($parentId)) {
+                $response = $this->request(
+                    'get',
+                    "commerce/taxonomy/v1/category_tree/$treeId"
+                );
 
-        if ($parentId) {
-            $request->setCategoryParent($parentId);
-        }
+                return collect($response->rootCategoryNode->childCategoryTreeNodes)
+                    ->map(fn ($node) => [
+                        'name' => $node->category->categoryName,
+                        'id' => $node->category->categoryId,
+                    ])
+                    ->sortBy('name')
+                    ->mapWithKeys(fn($category) => [$category['id'] => $category['name']]);
+            } else {
+                $response = $this->request(
+                    'get',
+                    "commerce/taxonomy/v1/category_tree/$treeId/get_category_subtree",
+                    null,
+                    ['category_id' => $parentId],
+                );
 
-        $response = $this->sendRequest('getCategories', $request);
+                if (!isset($response->categorySubtreeNode->childCategoryTreeNodes)) {
+                    return collect();
+                }
 
-        if (is_array($response->CategoryArray->Category)) {
-            return collect($response->CategoryArray->Category);
-        } else {
-            return collect($response->CategoryArray);
-        }
+                return collect($response->categorySubtreeNode->childCategoryTreeNodes)
+                    ->map(fn ($node) => [
+                        'name' => $node->category->categoryName,
+                        'id' => $node->category->categoryId,
+                    ])
+                    ->sortBy('name')
+                    ->mapWithKeys(fn($category) => [$category['id'] => $category['name']]);
+            }
+        });
+
+        return $categories;
+
     }
 
-    private function getCategoryTreeVersion()
+    private function getCategoryTreeMeta()
     {
         return Cache::remember(
             'ebay-category-tree-version',
-            1, //Carbon::now()->addHours(24),
+            Carbon::now()->addHours(24),
             function () {
-                return $this->request(
+                $response = $this->request(
                     'get',
                     'commerce/taxonomy/v1/get_default_category_tree_id',
                     null,
                     ['marketplace_id' => 'EBAY_US'],
                 );
+
+                return [$response->categoryTreeId, $response->categoryTreeVersion];
+            }
+        );
+    }
+
+    public function getConditionsPolicyForCategory($categoryId)
+    {
+        return Cache::remember(
+            'ebay-category-conditions' . $categoryId,
+            1, //Carbon::now()->addDays(30),
+            function () use ($categoryId) {
+                $response = $this->request(
+                    'get',
+                    'sell/metadata/v1/marketplace/EBAY_US/get_item_condition_policies',
+                    [],
+                    ['filter' => 'categoryId:{'. $categoryId . '}']
+                );
+
+                foreach ($response->itemConditionPolicies as $policy) {
+                    if ($categoryId == $policy->categoryId) {
+                        return $policy;
+                    }
+                }
+
+                return null;
             }
         );
     }
@@ -107,7 +150,8 @@ class Sdk
 
         $options = [
             'headers' => [
-                'Authorization' => 'Bearer :' . $accessToken
+                'Authorization' => 'Bearer :' . $accessToken,
+                'Content-Language' => 'en-US'
             ]
         ];
 
@@ -119,13 +163,20 @@ class Sdk
             $options['query'] = $query;
         }
 
-        $response = $this->client->request(
-            $method,
-            $url,
-            $options
-        );
+        try {
+            $response = $this->client->request(
+                $method,
+                $url,
+                $options
+            );
+        } catch (\Exception $e) {
+            Log::info(json_encode($options, JSON_PRETTY_PRINT));
+            Log::info($e->getResponse()->getBody()->getContents());
+            throw $e;
+        }
 
         return json_decode($response->getBody()->getContents());
+
     }
 
     private function getCurrentAccessToken()
@@ -143,141 +194,152 @@ class Sdk
         throw new Exception('Ebay Refresh Token has expired');
     }
 
-    public function newListing(Listing $listing): int
+    public function createInventoryItem(Listing $listing): int
+    {
+        $data = [
+            'availability' => [
+                'shipToLocationAvailability' => [
+                    'availabilityDistributions' => [
+                        [
+                            'merchantLocationKey' => $this->config['merchant_location_key'],
+                            'quantity' => $listing->availableItems()->count(),
+                        ],
+                    ],
+                    'quantity' => $listing->availableItems()->count(),
+                ],
+            ],
+            'condition' => $listing->ebay_condition_enum,
+            'product' => [
+                'description' => $listing->description . ' ' . $listing->features,
+                'imageUrls' => $listing->images
+                    ->map(fn ($image) => $image->raw_url)
+                    ->all(),
+                'title' => $listing->title,
+            ],
+        ];
+
+        if ($listing->brand) {
+            $data['product']['brand'] = $listing->brand->name;
+        }
+
+        if ($listing->upc) {
+            $data['product']['upc'] = [$listing->upc];
+        }
+
+        $response = $this->request(
+            'put',
+            'sell/inventory/v1/inventory_item/' . $this->getEbaySku($listing),
+            $data,
+        );
+
+        return true;
+    }
+
+    public function createOffer(Listing $listing)
     {
         $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup/100);
 
-        $request = new AddFixedPriceItem();
-        $request->setConditionId($listing->ebay_condition_id);
-        $request->setConditionDescription($listing->condition);
-        $request->setDescription($listing->description . ' ' . strip_tags($listing->features));
-        $request->setPrimaryCategoryId($listing->ebay_primary_category_id);
-        $request->setPrice($ebayPrice); // increase price
-        $request->setPostalCode($this->config['item_postal_code']);
-        $request->setQuantity($listing->availableItems()->count());
-        $request->setTitle($listing->title);
+        $data = [
+            'categoryId' => $listing->ebay_offer_category_id,
+            'format' => 'FIXED_PRICE',
+            'listingDescription' => $listing->description . ' ' . $listing->features,
+            'listingPolicies' => [
+                'bestOfferTerms' => [
+                    'bestOfferEnabled' => true,
+                ],
+                'fulfillmentPolicyId' => $this->config['fulfillment_policy_id'],
+                'paymentPolicyId' => $this->config['payment_policy_id'],
+                'returnPolicyId' => $this->config['return_policy_id'],
+            ],
+            'marketplaceId' => 'EBAY_US',
+            'merchantLocationKey' => $this->config['merchant_location_key'],
+            'pricingSummary' => [
+                'price' => [
+                    'currency' => 'USD',
+                    'value' => $ebayPrice,
+                ],
+            ],
+            'sku' => $this->getEbaySku($listing),
+        ];
 
-        if (!$this->config['managed_payments']) {
-            $request->setPaymentMethods($this->config['paypal_email']);
-        }
+        $response = $this->request(
+            'post',
+            'sell/inventory/v1/offer',
+            $data
+        );
 
-        if (!$this->config['shipping_profile']) {
-            $request->setShippingDetails(
-                $this->getCustomShippingCost($ebayPrice),
-                $this->getCustomShippingCost($ebayPrice*2),
-            );
-        }
-
-        $response = $this->sendRequest('addFixedPriceItem', $request);
-
-        if ($this->shouldLogResponse($response)) {
-            $this->logRequest($request);
-            $this->logResponse($response);
-        }
-
-        if ($this->responseSomewhatSuccessful($response)) {
-            if ($response->ItemID) {
-                return $response->ItemID;
-            }
-        }
-
-        throw new Exception('Ebay API failure. See logs messages above.');
+        return $response->offerId;
     }
 
-    public function getCustomShippingCost($price)
+    public function getPolicies(string $type)
     {
-        foreach (config('shipping.custom_shipping_tiers') as $orderCost => $shippingCost) {
-            if ($price >= $orderCost) {
-                return $shippingCost;
-            }
-        }
+        return $this->request(
+            'get',
+            'sell/account/v1/' . $type . '_policy',
+            [],
+            ['marketplace_id' => 'EBAY_US']
+        );
     }
 
-    public function getEbayDetails(...$details)
+    public function createFulfillmentPolicy(array $data)
     {
-        $request = new GetEbayDetails();
+        return $this->request(
+            'post',
+            'sell/account/v1/fulfillment_policy',
+            $data
+        );
+    }
 
-        if ($details) {
-            $request->setDetails($details);
-        }
+    public function createReturnPolicy(array $data)
+    {
+        return $this->request(
+            'post',
+            'sell/account/v1/return_policy',
+            $data
+        );
+    }
 
-        $response = $this->sendRequest('geteBayDetails', $request);
+    public function createPaymentPolicy(array $data)
+    {
+        return $this->request(
+            'post',
+            'sell/account/v1/payment_policy',
+            $data
+        );
+    }
+
+    public function publishOffer(string $offerId)
+    {
+        $response = $this->request(
+            'post',
+            "sell/inventory/v1/offer/$offerId/publish/",
+        );
 
         dd($response);
     }
 
-    public function getEbayCategoryFeatures($categoryId, $features = [])
+    public function getPaymentsProgramStatus()
     {
-        $request = new GetCategoryFeatures();
-
-        if ($categoryId) {
-            $request->setCategoryId($categoryId);
-        }
-
-        if (!empty($features)) {
-            $request->setFeatures($features);
-        }
-
-        $response = $this->sendRequest('getCategoryFeatures', $request);
-
-        return $response;
+        return $this->request(
+            'get',
+            'sell/account/v1/payments_program/EBAY_US/EBAY_PAYMENTS'
+        );
     }
 
-//    public function sendRequest($method, $request)
-//    {
-//        $client = new SoapClient(
-//            base_path() . "/resources/ebay/eBaySvc.wsdl",
-//            [
-//                'cache_wsdl' => WSDL_CACHE_MEMORY,
-//                'keep_alive' => false,
-//                'location' => $this->buildRequestUrl($method)
-//            ]
-//        );
-//
-//        $requesterCredentials = new \stdClass();
-//        $requesterCredentials->eBayAuthToken = $this->config['api_token'];
-//
-//        $header = new SoapHeader('urn:ebay:apis:eBLBaseComponents', 'RequesterCredentials', $requesterCredentials);
-//
-//        $request->setVersion($this->config['api_version']);
-//
-//        try {
-//            return $client->__soapCall($method, $request->toArray(), null, $header);
-//        } catch (SoapFault $e) {
-//            throw new Exception('ebay API not available', 0, $e);
-//        }
-//    }
-//
-//    protected function buildRequestUrl(string $method)
-//    {
-//        return $this->server . '?' . http_build_query(
-//            [
-//                'callname' => $method,
-//                'appid' => $this->config['app_id'],
-//                'siteid' => 0,
-//                'version' => $this->config['api_version'],
-//                'routing' => 'new',
-//            ]
-//        );
-//    }
-//
-//    protected function shouldLogResponse($response)
-//    {
-//        return $response->Ack !== "Success";
-//    }
-//
-//    protected function logRequest(AbstractRequest $request)
-//    {
-//        Log::info((string) $request);
-//    }
-//
-//    protected function logResponse($response)
-//    {
-//        Log::info(print_r($response,1));
-//    }
-//
-//    protected function responseSomewhatSuccessful($response)
-//    {
-//        return $response->Ack !== "Failure";
-//    }
+    public function getPaymentsProgramOnboardingStatus()
+    {
+        return $this->request(
+            'get',
+            'sell/account/v1/payments_program/EBAY_US/EBAY_PAYMENTS/onboarding'
+        );
+    }
+
+    private function getEbaySku(Listing $listing)
+    {
+        if (App::environment('production')) {
+            return 'website-' . $listing->id;
+        }
+
+        return App::environment() . '-' . $listing->id;
+    }
 }

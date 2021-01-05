@@ -2,38 +2,34 @@
 
 namespace App\Console\Commands;
 
-use App\Ebay\Sdk;
+use App\Jobs\SendListingToEbay;
+use App\Models\Listing;
 use Illuminate\Console\Command;
 
-class ListEbayCategories extends Command
+class ListingToEbay extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:list-categories {parentId?}';
+    protected $signature = 'ebay:send-listing {listingId}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'List the categories that Ebay has';
-
-    /** @var Sdk */
-    private Sdk $ebay;
+    protected $description = 'Process listings that need to go to ebay';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Sdk $ebay)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->ebay = $ebay;
     }
 
     /**
@@ -43,10 +39,8 @@ class ListEbayCategories extends Command
      */
     public function handle()
     {
-        if ($this->argument('parentId')) {
-            dd($this->ebay->getCategories($this->argument('parentId')));
-        }
+        $listing = Listing::find($this->argument('listingId'));
 
-        dd($this->ebay->getCategories());
+        SendListingToEbay::dispatch($listing);
     }
 }

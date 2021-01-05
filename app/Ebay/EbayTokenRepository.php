@@ -146,7 +146,7 @@ class EbayTokenRepository
                 'form_params' => [
                     'grant_type' => 'refresh_token',
                     'refresh_token' => $token->refresh_token,
-                    'scope' => 'https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope',
+                    'scope' => 'https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.account',
                 ]
             ]
         );

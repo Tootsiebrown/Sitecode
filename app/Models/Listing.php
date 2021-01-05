@@ -438,4 +438,9 @@ class Listing extends Model
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function getEbayOfferCategoryIdAttribute()
+    {
+        return last(explode(',', $this->ebay_categories));
+    }
 }

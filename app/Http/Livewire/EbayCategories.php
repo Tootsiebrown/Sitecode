@@ -70,40 +70,25 @@ class EbayCategories extends Component
             'level5Categories' => $this->ebayCategory4 ? $this->getCategories($this->ebayCategory4, 5) : null,
             'level6Categories' => $this->ebayCategory5 ? $this->getCategories($this->ebayCategory5, 6) : null,
             'level7Categories' => $this->ebayCategory6 ? $this->getCategories($this->ebayCategory6, 7) : null,
-            'conditions' => $this->getConditions(),
+            'condition' => $this->ebayCondition,
+            'conditionsPolicy' => $this->getConditionsPolicy(),
         ]);
     }
 
     protected function getCategories(int $parentId = null, $level = 1)
     {
-        $key = 'ebay-categories:';
-        if ($parentId) {
-            $key .= $parentId;
-        } else {
-            $key .= 'null';
+        $ebayCategories = $this->ebay->getCategories($parentId)
+
+            ->prepend('N/A', '');
+
+        if ($ebayCategories->count() === 1) {
+            return null;
         }
 
-        $key .= ','.$level;
-
-        return Cache::remember(
-            $key,
-            Carbon::now()->addDays(30),
-            function () use ($parentId, $level) {
-                $ebayCategories = $this->ebay->getCategories($parentId, $level)
-                    ->filter(fn($category) => $category->CategoryID != $parentId)
-                    ->mapWithKeys(fn($cat) => [$cat->CategoryID => $cat->CategoryName])
-                    ->prepend('N/A', '');
-
-                if ($ebayCategories->count() === 1) {
-                    return null;
-                }
-
-                return $ebayCategories;
-            }
-        );
+        return $ebayCategories;
     }
 
-    public function getConditions()
+    public function getConditionsPolicy()
     {
         $lowestCategory = $this->ebayCategory7
             ?: $this->ebayCategory6
@@ -114,42 +99,48 @@ class EbayCategories extends Component
             ?: $this->ebayCategory1;
 
         if (! $lowestCategory) {
-            return collect();
+            return null;
         }
 
-        $feature = 'ConditionValues';
+        $policy = $this->ebay->getConditionsPolicyForCategory($lowestCategory);
 
-        $key = 'ebay-category-features:' . $lowestCategory . ',' . $feature;
+        if (! $policy) {
+            return null;
+        }
 
-        return Cache::remember(
-            $key,
-            Carbon::now()->addDays(30),
-            function () use ($lowestCategory, $feature) {
-                $response = $this->ebay->getEbayCategoryFeatures($lowestCategory, [$feature]);
-                if ($response->Ack !== 'Success') {
-                    throw new Exception(
-                        'error getting category features for category '
-                        . $lowestCategory
-                        . ' with features '
-                        . $feature
-                    );
+        // $policy is an ebay response like
+        /*
+        {
+            +"categoryTreeId": "0"
+            +"categoryId": "37935"
+            +"itemConditionRequired": false
+            +"itemConditions": array:11 [
+                0 => {
+                        +"conditionId": "2750"
+                        +"conditionDescription": "Like New"
                 }
+                ...
+            ]
+        }
+        */
 
-                if (!empty($response->Category)) {
-                    if (is_array($response->Category)) {
-                        if (current($response->Category)->CategoryID == $lowestCategory) {
-                            return collect(current($response->Category)->ConditionValues->Condition);
-                        }
-                    } elseif ($response->Category->CategoryID == $lowestCategory) {
-                        return collect($response->Category->ConditionValues->Condition);
-                    }
 
-                    return collect();
-                } else {
-                    return collect();
-                }
-            }
-        )
-        ->mapWithKeys(fn($condition) => [$condition->ID => $condition->DisplayName]);
+
+        $policy = [
+            'required' => $policy->itemConditionRequired,
+            'conditions' => collect($policy->itemConditions)
+                ->mapWithKeys(fn ($condition) => [$condition->conditionId => $condition->conditionDescription])
+                ->filter(function ($conditionDescription, $conditionId) {
+                    return $conditionId != 2000;
+                    // see note at https://developer.ebay.com/api-docs/sell/inventory/resources/inventory_item/methods/createOrReplaceInventoryItem#request.condition
+                    // not just anyone can use this condition.
+                })
+                ->when(
+                    !$policy->itemConditionRequired,
+                    fn($collection) => $collection->prepend('N/A', '')
+                )
+            ];
+
+        return $policy;
     }
 }
