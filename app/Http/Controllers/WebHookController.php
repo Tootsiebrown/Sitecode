@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SyncShipmentShipped;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WebHookController extends Controller
 {
@@ -21,6 +22,13 @@ class WebHookController extends Controller
         }
 
         SyncShipmentShipped::dispatch($vars);
+
+        return 'success';
+    }
+
+    public function ebayOrderPlaced(Request $request)
+    {
+        Log::info($request->getContent());
 
         return 'success';
     }

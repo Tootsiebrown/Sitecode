@@ -72,6 +72,7 @@ class EbayCategories extends Component
             'level7Categories' => $this->ebayCategory6 ? $this->getCategories($this->ebayCategory6, 7) : null,
             'condition' => $this->ebayCondition,
             'conditionsPolicy' => $this->getConditionsPolicy(),
+            'aspects' => $this->getAspects(),
         ]);
     }
 
@@ -90,13 +91,7 @@ class EbayCategories extends Component
 
     public function getConditionsPolicy()
     {
-        $lowestCategory = $this->ebayCategory7
-            ?: $this->ebayCategory6
-            ?: $this->ebayCategory5
-            ?: $this->ebayCategory4
-            ?: $this->ebayCategory3
-            ?: $this->ebayCategory2
-            ?: $this->ebayCategory1;
+        $lowestCategory = $this->getLowestCategory();
 
         if (! $lowestCategory) {
             return null;
@@ -124,8 +119,6 @@ class EbayCategories extends Component
         }
         */
 
-
-
         $policy = [
             'required' => $policy->itemConditionRequired,
             'conditions' => collect($policy->itemConditions)
@@ -142,5 +135,29 @@ class EbayCategories extends Component
             ];
 
         return $policy;
+    }
+
+    protected function getAspects()
+    {
+        $lowestCategory = $this->getLowestCategory();
+
+        if (! $lowestCategory) {
+            return null;
+        }
+
+        $aspects = $this->ebay->getAspectsForCategory($lowestCategory);
+
+        return $aspects;
+    }
+
+    protected function getLowestCategory()
+    {
+        return $this->ebayCategory7
+            ?: $this->ebayCategory6
+            ?: $this->ebayCategory5
+            ?: $this->ebayCategory4
+            ?: $this->ebayCategory3
+            ?: $this->ebayCategory2
+            ?: $this->ebayCategory1;
     }
 }

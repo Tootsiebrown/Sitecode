@@ -2,14 +2,10 @@
 
 namespace App\Ebay;
 
-use App\Ebay\Requests\AbstractRequest;
-use App\Ebay\Requests\AddFixedPriceItem;
-use App\Ebay\Requests\GetCategories;
-use App\Ebay\Requests\GetCategoryFeatures;
-use App\Ebay\Requests\GetEbayDetails;
 use App\Models\Listing;
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -198,6 +194,15 @@ class Sdk
     {
         $data = [
             'availability' => [
+                'pickupAtLocationAvailability' => [
+                    'availabilityType' => 'OUT_OF_STOCK',
+                    'fullfillmentTime' => [
+                        'unit' => 'HOUR',
+                        'value' => 1,
+                    ],
+                    'merchantLocationKey' => $this->config['merchant_location_key'],
+                    'quantity' => 0,
+                ],
                 'shipToLocationAvailability' => [
                     'availabilityDistributions' => [
                         [
@@ -215,17 +220,24 @@ class Sdk
                     ->map(fn ($image) => $image->raw_url)
                     ->all(),
                 'title' => $listing->title,
-                'brand' => $listing->brand->name,
+                'aspects' => [
+                    'Brand' => ['Does not apply'], //['20th Century Fox']//[$listing->brand->name],
+                ],
+                'brand' => 'Does not apply',
+                'upc' => ['Does not apply'],
             ],
         ];
 
         if ($listing->brand) {
-            $data['product']['brand'] = $listing->brand->name;
+//            $data['product']['brand'] = $listing->brand->name;
         }
 
+        $data['product']['mpn'] = 'Does not apply';
+
         if ($listing->upc) {
-            $data['product']['upc'] = [$listing->upc];
+            //$data['product']['upc'] = [$listing->upc];
         }
+
 
         $response = $this->request(
             'put',
@@ -238,11 +250,32 @@ class Sdk
 
     public function createOffer(Listing $listing)
     {
-        $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup/100);
+        $response = $this->request(
+            'post',
+            'sell/inventory/v1/offer',
+            $this->getOfferDataFromListing($listing)
+        );
 
+        return $response->offerId;
+    }
+
+    public function refreshOffer(Listing $listing)
+    {
+        return $this->request(
+            'put',
+            'sell/inventory/v1/offer/' . $listing->ebay_offer_id,
+            $this->getOfferDataFromListing($listing)
+        );
+    }
+
+    private function getOfferDataFromListing(Listing $listing)
+    {
+        $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup/100);
         $data = [
+            'availableQuantity' => $listing->availableItems()->count(),
             'categoryId' => $listing->ebay_offer_category_id,
             'format' => 'FIXED_PRICE',
+            'includeCatalogProductDescription' => false,
             'listingDescription' => $listing->description . ' ' . $listing->features,
             'listingPolicies' => [
                 'bestOfferTerms' => [
@@ -263,13 +296,9 @@ class Sdk
             'sku' => $this->getEbaySku($listing),
         ];
 
-        $response = $this->request(
-            'post',
-            'sell/inventory/v1/offer',
-            $data
-        );
 
-        return $response->offerId;
+
+        return $data;
     }
 
     public function getPolicies(string $type)
@@ -313,7 +342,7 @@ class Sdk
     {
         $response = $this->request(
             'post',
-            "sell/inventory/v1/offer/$offerId/publish/",
+            "sell/inventory/v1/offer/$offerId/publish",
         );
 
         dd($response);
@@ -335,6 +364,40 @@ class Sdk
         );
     }
 
+    public function getAspectsForCategory($categoryId)
+    {
+        [$treeId, $treeVersion] = $this->getCategoryTreeMeta();
+
+        $key = 'ebay|category-aspects|treeId:'
+            . $treeId
+            . '|treeVersion:'
+            . $treeVersion
+            . '|categoryId:'
+            . $categoryId;
+
+        $response = Cache::rememberForever($key, function () use ($treeId, $categoryId) {
+            try {
+                return $this->request(
+                    'get',
+                    'commerce/taxonomy/v1/category_tree/' . $treeId . '/get_item_aspects_for_category',
+                    [],
+                    ['category_id' => $categoryId]
+                );
+            } catch (ClientException $e) {
+                $response = (string)$e->getResponse()->getBody();
+                $data = json_decode($response);
+
+                if (current($data->errors)->message = 'The specified category ID must be a leaf category.') {
+                    return null;
+                }
+
+                throw $e;
+            }
+        });
+
+        return $response;
+    }
+
     private function getEbaySku(Listing $listing)
     {
         if (App::environment('production')) {
@@ -342,5 +405,34 @@ class Sdk
         }
 
         return App::environment() . '-' . $listing->id;
+    }
+
+    public function getInventoryItems()
+    {
+        return $this->request(
+            'get',
+            'sell/inventory/v1/inventory_item'
+        );
+    }
+
+    public function getOffers($sku)
+    {
+        return $this->request(
+            'get',
+            'sell/inventory/v1/offer',
+            [],
+            [
+                'sku' => $sku,
+                'marketplace_id' => 'EBAY_US',
+            ]
+        );
+    }
+
+    public function deleteInventoryItem($sku)
+    {
+        return $this->request(
+            'delete',
+            'sell/inventory/v1/inventory_item/' . $sku,
+        );
     }
 }

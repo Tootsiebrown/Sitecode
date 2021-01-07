@@ -56,7 +56,7 @@ return [
         'merchant_location_key' => env('EBAY_MERCHANT_LOCATION_KEY'),
         'fulfillment_policy_id' => env('EBAY_FULFILLMENT_POLICY_ID'),
         'return_policy_id' => env('EBAY_RETURN_POLICY_ID'),
-        'payment_policy_id' => env('EBAY_PAYMENT_POLICY'),
+        'payment_policy_id' => env('EBAY_PAYMENT_POLICY_ID'),
         'oauth' => [
             'client_id' => env('EBAY_OAUTH_CLIENT_ID'),
             'client_secret' => env('EBAY_OAUTH_CLIENT_SECRET'),

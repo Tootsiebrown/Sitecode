@@ -91,6 +91,10 @@
         ])
     @endif
 
+    @if($aspects)
+        @dump($aspects)
+    @endif
+
     <div wire:loading>
         @include('dashboard.form-elements.form-group', [
             'type' => 'note',
