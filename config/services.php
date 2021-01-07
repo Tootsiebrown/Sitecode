@@ -50,7 +50,6 @@ return [
     ],
 
     'ebay' => [
-        'api_token' => env('EBAY_TOKEN'),
         'test_mode' => env('EBAY_TEST_MODE', false),
         'app_id' => env('EBAY_APP_ID'),
         'merchant_location_key' => env('EBAY_MERCHANT_LOCATION_KEY'),
@@ -62,6 +61,12 @@ return [
             'client_secret' => env('EBAY_OAUTH_CLIENT_SECRET'),
             'redirect' => env('EBAY_OAUTH_REDIRECT_URI'),
             'test_mode' => env('EBAY_OAUTH_TEST_MODE', false),
+        ],
+        'legacy' => [
+            'app_id' => env('EBAY_APP_ID'),
+            'api_token' => env('EBAY_LEGACY_TOKEN'),
+            'test_mode' => env('EBAY_TEST_MODE', false),
+            'api_version' => env('EBAY_LEGACY_API_VERSION')
         ]
     ]
 
