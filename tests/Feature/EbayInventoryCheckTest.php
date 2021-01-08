@@ -6,7 +6,7 @@ use App\Models\Listing;
 use Illuminate\Support\Carbon;
 use Tests\WaxAppTestCase;
 
-class ApiExceptionHandlerJsonTest extends WaxAppTestCase
+class EbayInventoryCheckTest extends WaxAppTestCase
 {
     public function setUp(): void
     {
