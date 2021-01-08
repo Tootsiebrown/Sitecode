@@ -95,7 +95,6 @@ class Sdk
         });
 
         return $categories;
-
     }
 
     private function getCategoryTreeMeta()
@@ -126,7 +125,7 @@ class Sdk
                     'get',
                     'sell/metadata/v1/marketplace/EBAY_US/get_item_condition_policies',
                     [],
-                    ['filter' => 'categoryId:{'. $categoryId . '}']
+                    ['filter' => 'categoryId:{' . $categoryId . '}']
                 );
 
                 foreach ($response->itemConditionPolicies as $policy) {
@@ -172,7 +171,6 @@ class Sdk
         }
 
         return json_decode($response->getBody()->getContents());
-
     }
 
     private function getCurrentAccessToken()
@@ -229,7 +227,7 @@ class Sdk
         ];
 
         if ($listing->brand) {
-//            $data['product']['brand'] = $listing->brand->name;
+            // $data['product']['brand'] = $listing->brand->name;
         }
 
         $data['product']['mpn'] = 'Does not apply';
@@ -270,7 +268,7 @@ class Sdk
 
     private function getOfferDataFromListing(Listing $listing)
     {
-        $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup/100);
+        $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup / 100);
         $data = [
             'availableQuantity' => $listing->availableItems()->count(),
             'categoryId' => $listing->ebay_offer_category_id,
@@ -295,8 +293,6 @@ class Sdk
             ],
             'sku' => $this->getEbaySku($listing),
         ];
-
-
 
         return $data;
     }

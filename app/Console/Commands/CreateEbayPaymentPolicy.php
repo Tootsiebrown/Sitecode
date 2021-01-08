@@ -50,7 +50,7 @@ class CreateEbayPaymentPolicy extends Command
             ],
             'description' => 'test fulfillment policy',
             'marketplaceId' => 'EBAY_US',
-            'name'=> 'TEST 1',
+            'name' => 'TEST 1',
             'paymentMethods' => [
                 [
                     'brands' => ['VISA', 'MASTERCARD'],

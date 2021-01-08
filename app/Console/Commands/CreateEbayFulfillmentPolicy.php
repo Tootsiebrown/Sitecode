@@ -54,7 +54,7 @@ class CreateEbayFulfillmentPolicy extends Command
                 'value' => 1,
             ],
             'marketplaceId' => 'EBAY_US',
-            'name'=> 'TEST 1',
+            'name' => 'TEST 1',
         ];
 
         dd($ebay->createFulfillmentPolicy($data));
