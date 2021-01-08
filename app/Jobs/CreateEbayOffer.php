@@ -13,7 +13,10 @@ use Illuminate\Support\Carbon;
 
 class CreateEbayOffer implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /** @var Listing */
     private Listing $listing;
@@ -37,7 +40,7 @@ class CreateEbayOffer implements ShouldQueue
     {
         $offerId = $ebay->createOffer($this->listing);
 
-        $this->listing->ebay_offer_id= $offerId;
+        $this->listing->ebay_offer_id = $offerId;
         $this->listing->sent_to_ebay_at = Carbon::now()->toDateTimeString();
         $this->listing->save();
 

@@ -47,7 +47,7 @@ class EbayOAuthProvider extends AbstractProvider implements ProviderInterface
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'headers' => [
                 'Accept' => 'application/json',
-                'Authorization' => 'Basic '. base64_encode($this->clientId . ':' . $this->clientSecret),
+                'Authorization' => 'Basic ' . base64_encode($this->clientId . ':' . $this->clientSecret),
             ],
             'form_params' => $this->getTokenFields($code),
         ]);
