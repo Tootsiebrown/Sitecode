@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Ebay\Legacy\LegacySdk;
 use Illuminate\Console\Command;
 
-class GetEbayNotificationPreferences extends Command
+class SetEbayNotificationPreferences extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:get-notification-preferences {preferenceLevel=User}';
+    protected $signature = 'ebay:set-notification-preferences {subscribed=1}';
 
     /**
      * The console command description.
@@ -38,6 +38,6 @@ class GetEbayNotificationPreferences extends Command
      */
     public function handle(LegacySdk $ebay)
     {
-        dd($ebay->getNotificationPreferences($this->argument('preferenceLevel')));
+        dd($ebay->setNotificationPreferences((bool) $this->argument('subscribed')));
     }
 }

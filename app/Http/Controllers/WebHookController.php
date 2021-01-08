@@ -49,4 +49,9 @@ class WebHookController extends Controller
             'totalAvailableQuantity' => $availableCount,
         ];
     }
+
+    public function ebayCheckoutComplete(Request $request)
+    {
+
+    }
 }

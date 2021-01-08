@@ -4,6 +4,7 @@ namespace App\Ebay\Legacy;
 
 use App\Ebay\Legacy\Requests\AbstractRequest;
 use App\Ebay\Legacy\Requests\GetNotificationPreferences;
+use App\Ebay\Legacy\Requests\SetNotificationPreferences;
 use Exception;
 use SoapClient;
 use SoapFault;
@@ -32,11 +33,22 @@ class LegacySdk
         $this->config = $ebayConfig;
     }
 
-    public function getNotificationPreferences()
+    public function getNotificationPreferences(string $preferenceLevel = 'User')
     {
         $request = new GetNotificationPreferences();
 
+        $request->setPreferenceLevel($preferenceLevel);
+
         return $this->sendRequest('getNotificationPreferences', $request);
+    }
+
+    public function setNotificationPreferences(bool $subscribed)
+    {
+        $request = new SetNotificationPreferences();
+
+        $request->setCheckoutSubscription($subscribed);
+
+        return $this->sendRequest('setNotificationPreferences', $request);
     }
 
     public function sendRequest($method, $request)

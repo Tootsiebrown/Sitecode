@@ -780,5 +780,8 @@ Route::name('webhooks.')
         Route::post('ebay-inventory-check')
             ->name('ebayInventoryCheck')
             ->uses('WebHookController@ebayInventoryCheck');
+        Route::post('ebay-checkout-complete')
+            ->name('ebayCheckoutComplete')
+            ->uses('WebHookController@ebayCheckoutComplete');
     });
 
