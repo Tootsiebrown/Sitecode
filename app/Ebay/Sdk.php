@@ -137,11 +137,6 @@ class Sdk
         );
     }
 
-    public function updateOfferInventory(Listing $listing)
-    {
-
-    }
-
     private function request($method, $url, $json = [], $query = [])
     {
         $accessToken = $this->getCurrentAccessToken();
