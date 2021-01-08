@@ -46,8 +46,6 @@ class Sdk
         return $this->request('post', "sell/inventory/v1/location/$id", $data);
     }
 
-
-
     public function getCategories(int $parentId = null)
     {
         [$treeId, $treeVersion] = $this->getCategoryTreeMeta();
@@ -137,6 +135,11 @@ class Sdk
                 return null;
             }
         );
+    }
+
+    public function updateOfferInventory(Listing $listing)
+    {
+
     }
 
     private function request($method, $url, $json = [], $query = [])
