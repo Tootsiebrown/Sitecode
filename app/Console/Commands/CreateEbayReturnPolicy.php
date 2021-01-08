@@ -50,7 +50,7 @@ class CreateEbayReturnPolicy extends Command
             ],
             'description' => 'test fulfillment policy',
             'marketplaceId' => 'EBAY_US',
-            'name'=> 'TEST 1',
+            'name' => 'TEST 1',
             'returnPeriod' => [
                 'unit' => 'DAY',
                 'value' => 30,
