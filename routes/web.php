@@ -777,8 +777,8 @@ Route::name('webhooks.')
         Route::post('order-shipped')
             ->name('order-shipped')
             ->uses('WebHookController@orderShipped');
-        Route::post('ebay-order-placed')
-            ->name('ebayOrderPlaced')
-            ->uses('WebHookController@ebayOrderPlaced');
+        Route::post('ebay-inventory-check')
+            ->name('ebayInventoryCheck')
+            ->uses('WebHookController@ebayInventoryCheck');
     });
 

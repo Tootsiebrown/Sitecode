@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SyncShipmentShipped;
+use App\Models\Listing;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class WebHookController extends Controller
@@ -26,10 +29,24 @@ class WebHookController extends Controller
         return 'success';
     }
 
-    public function ebayOrderPlaced(Request $request)
+    public function ebayInventoryCheck(Request $request)
     {
-        Log::info($request->getContent());
+        $listingId = $request->input('SKU');
+        $quantity = $request->input('requestedQuantity');
 
-        return 'success';
+        $environment = App::environment();
+
+        if ($environment !== 'production') {
+            $listingId = substr($listingId, strlen($environment) + 1);
+        }
+
+        $listing = Listing::findOrFail($listingId);
+        $availableCount = $listing->availableItems()->count();
+
+        return [
+            'isAvailable' => $availableCount >= $quantity,
+            'lastUpdated' => time(),
+            'totalAvailableQuantity' => $availableCount,
+        ];
     }
 }
