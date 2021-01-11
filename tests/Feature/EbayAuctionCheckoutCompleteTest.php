@@ -23,7 +23,6 @@ class EbayAuctionCheckoutCompleteTest extends WaxAppTestCase
 
     public function testEbayAuctionCheckoutComplete()
     {
-
         $response = $this->call(
             'POST',
             route('webhooks.ebayCheckoutComplete', false),
@@ -31,7 +30,7 @@ class EbayAuctionCheckoutCompleteTest extends WaxAppTestCase
             [],
             [],
             [],
-            view('test-stubs.auctionCheckoutComplete')->render(),
+            file_get_contents(__DIR__ . '/stubs/auctionCheckoutComplete.xml'),
         );
 
         $response

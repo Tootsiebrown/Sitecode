@@ -20,10 +20,6 @@ use Wax\Shop\Services\ShopService;
 
 class SyncEbayTransactionTest extends WaxAppTestCase
 {
-    /**
-     * @var \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    protected $shopService;
     private $mockOrderId = 369;
 
     public function setUp(): void
@@ -33,12 +29,6 @@ class SyncEbayTransactionTest extends WaxAppTestCase
         $this->ebay = $this->getMockBuilder(Sdk::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->listing = factory(Listing::class)
-            ->create(['id' => 357]);
-
-        factory(Listing\Item::class, 3)
-            ->create(['listing_id' => $this->listing->id]);
 
         Queue::fake();
     }
