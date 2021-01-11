@@ -10,6 +10,10 @@
 # jobs where they are declared as dependencies. Artifacts such as logs or db dumps
 # can also be retained for debugging
 
+before_script:
+  - docker-php-ext-install soap
+
+
 stages:
   - preparation
 #  - building
