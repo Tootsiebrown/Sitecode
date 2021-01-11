@@ -184,6 +184,12 @@
                 </li>
             @endif
 
+            @if ($lUser->hasPrivilege('Ebay Orders'))
+                <li>
+                    <a href="{{ route('dashboard.ebay.orders') }}">Ebay Orders</a>
+                </li>
+            @endif
+
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
             <li>
                 <a href="{{ route('logout') }}"

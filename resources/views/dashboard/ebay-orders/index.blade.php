@@ -4,14 +4,12 @@
     <table class="dashboard-table">
         <tr>
             <th>Order ID</th>
-            <th>Date Placed</th>
-            <th>Total</th>
+            <th>Date Synced</th>
         </tr>
         @forelse($orders as $order)
             <tr>
-                <td><a href="{{ route('dashboard.orders.details', ['id' => $order->id]) }}">{{ $order->sequence }}</a></td>
-                <td>{{ $order->placed_at->format('F j, Y g:i A') }}</td>
-                <td class="money">{{ Currency::format($order->total) }}</td>
+                <td><a href="{{ route('dashboard.ebay.orders.details', ['id' => $order->id]) }}">{{ $order->ebay_id }}</a></td>
+                <td>{{ $order->created_at->format('F j, Y g:i A') }}</td>
             </tr>
         @empty
             <tr>

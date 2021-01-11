@@ -92,7 +92,7 @@
     @endif
 
     @if($aspects)
-        @dump($aspects)
+{{--        @dump($aspects)--}}
     @endif
 
     <div wire:loading>
