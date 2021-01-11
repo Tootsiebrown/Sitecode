@@ -43,8 +43,9 @@ class MarkEbayItemsSold implements ShouldQueue
         DB::transaction(function () {
             $listingItems = Listing::find($this->listingId)->availableItems()->take($this->quantity);
 
-            DB::table('listing_items')->update(['ebay_order_id' => $this->ebayOrderId])
-                ->whereIn('id', $listingItems->pluck('id'));
+            DB::table('listing_items')
+                ->whereIn('id', $listingItems->pluck('id'))
+                ->update(['ebay_order_id' => $this->ebayOrderId]);
         }, 3);
     }
 }

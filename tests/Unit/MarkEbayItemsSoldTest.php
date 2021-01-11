@@ -38,7 +38,9 @@ class MarkEbayItemsSoldTest extends WaxAppTestCase
 
         $this->assertEquals(3, $this->listing->items()->count());
 
-        $this->assertEquals(1, $this->listing->availableItems()-count());
+        $this->assertEquals(1, $this->listing->availableItems()->count());
+
+        $this->assertEquals(2, $this->listing->items()->where('ebay_order_id', $this->ebayOrder->id)->count());
     }
 }
 
