@@ -19,7 +19,7 @@ class EbayOrdersController extends Controller
     {
         return view(
             'dashboard.ebay-orders.details',
-            ['order' =>EbayOrder::findorFail($id)]
+            ['order' => EbayOrder::findorFail($id)]
         );
     }
 
