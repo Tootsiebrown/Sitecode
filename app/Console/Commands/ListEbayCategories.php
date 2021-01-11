@@ -12,7 +12,7 @@ class ListEbayCategories extends Command
      *
      * @var string
      */
-    protected $signature = 'ebay:list-categories';
+    protected $signature = 'ebay:list-categories {parentId?}';
 
     /**
      * The console command description.
@@ -43,6 +43,10 @@ class ListEbayCategories extends Command
      */
     public function handle()
     {
-        dump($this->ebay->getCategories());
+        if ($this->argument('parentId')) {
+            dd($this->ebay->getCategories($this->argument('parentId')));
+        }
+
+        dd($this->ebay->getCategories());
     }
 }

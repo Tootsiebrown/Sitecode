@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ebay\Requests;
+namespace App\Ebay\Legacy\Requests;
 
 abstract class AbstractRequest
 {

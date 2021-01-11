@@ -4,22 +4,6 @@ namespace App;
 
 trait HasCondition
 {
-    protected static $ebayConditionsMap = [
-        'Sealed' => 2750,
-        'Sealed - Damaged Package' => 3000,
-
-        'Open' => 3000,
-        'Open - Damaged Package' => 4000,
-
-        'With Tags' => 3000,
-        'Without Tags' => 5000,
-
-        'Used' => 5000,
-        'Used Damaged Package / Missing Package' => 6000,
-
-        'Varied' => 6000,
-    ];
-
     protected static $conditions = [
         'Sealed',
         'Sealed - Damaged Package',
@@ -41,8 +25,22 @@ trait HasCondition
         return static::$conditions;
     }
 
-    public function getEbayConditionIdAttribute()
+    public function getEbayConditionEnumAttribute()
     {
-        return $this->condition ? static::$ebayConditionsMap[$this->condition] : null;
+        $map = [
+            1000 => 'NEW',
+            1500 => 'NEW_OTHER',
+            1750 => 'NEW_WITH_DEFECTS',
+            2000 => 'MANUFACTURER_REFURBISHED',
+            2500 => 'SELLER_REFURBISHED',
+            2750 => 'LIKE_NEW',
+            3000 => 'USED_EXCELLENT',
+            4000 => 'USED_VERY_GOOD',
+            5000 => 'USED_GOOD',
+            6000 => 'USED_ACCEPTABLE',
+            7000 => 'FOR_PARTS_OR_NOT_WORKING',
+        ];
+
+        return $map[$this->ebay_condition_id];
     }
 }

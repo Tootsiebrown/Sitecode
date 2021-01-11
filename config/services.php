@@ -50,14 +50,31 @@ return [
     ],
 
     'ebay' => [
-        'api_token' => env('EBAY_TOKEN'),
         'test_mode' => env('EBAY_TEST_MODE', false),
         'app_id' => env('EBAY_APP_ID'),
-        'api_version' => env('EBAY_API_VERSION'),
-        'managed_payments' => env('EBAY_MANAGED_PAYMENTS', false),
-        'shipping_profile' => env('EBAY_SELLER_SHIPPING_PROFILE'),
-        'item_postal_code' => 40701,
-        'paypal_email' => env('EBAY_PAYPAL_EMAIL')
+        'merchant_location_key' => env('EBAY_MERCHANT_LOCATION_KEY'),
+        'fulfillment_policy_id' => env('EBAY_FULFILLMENT_POLICY_ID'),
+        'return_policy_id' => env('EBAY_RETURN_POLICY_ID'),
+        'payment_policy_id' => env('EBAY_PAYMENT_POLICY_ID'),
+        'oauth' => [
+            'client_id' => env('EBAY_OAUTH_CLIENT_ID'),
+            'client_secret' => env('EBAY_OAUTH_CLIENT_SECRET'),
+            'redirect' => env('EBAY_OAUTH_REDIRECT_URI'),
+            'test_mode' => env('EBAY_OAUTH_TEST_MODE', false),
+        ],
+        'legacy' => [
+            'app_id' => env('EBAY_APP_ID'),
+            'api_token' => env('EBAY_LEGACY_TOKEN'),
+            'test_mode' => env('EBAY_TEST_MODE', false),
+            'api_version' => env('EBAY_LEGACY_API_VERSION')
+        ],
+        'scopes' => [
+            'https://api.ebay.com/oauth/api_scope',
+            'https://api.ebay.com/oauth/api_scope/sell.account',
+            'https://api.ebay.com/oauth/api_scope/sell.finances',
+            'https://api.ebay.com/oauth/api_scope/sell.inventory',
+
+        ]
     ]
 
 ];

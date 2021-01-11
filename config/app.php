@@ -206,7 +206,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         //Image Processor
         Intervention\Image\ImageServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
+        //Laravel\Socialite\SocialiteServiceProvider::class,
+        App\Providers\CustomSocialiteProvider::class,
 
 
         /*

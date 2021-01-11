@@ -32,7 +32,7 @@
         "google/recaptcha": "~1.1",
         "intervention/image": "^2.5",
         "laravel/framework": "^6.2",
-        "laravel/socialite": "^4.0",
+        "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/omnipay": "^3.0",
@@ -42,7 +42,8 @@
         "oohology/wax-shop": "dev-cnd",
         "spatie/laravel-backup": "^6.14",
         "stripe/stripe-php": "^7.2",
-        "tightenco/ziggy": "^0.9.4"
+        "tightenco/ziggy": "^0.9.4",
+        "ext-dom": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

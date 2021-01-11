@@ -14,7 +14,7 @@ class ListingsHaveEbayItemId extends Migration
     public function up()
     {
         Schema::table('listings', function (Blueprint $table) {
-            $table->string('ebay_item_id')->nullable();
+            $table->string('ebay_offer_id')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class ListingsHaveEbayItemId extends Migration
     public function down()
     {
         Schema::table('listings', function (Blueprint $table) {
-            $table->dropColumn('ebay_item_id');
+            $table->dropColumn('ebay_offer_id');
         });
     }
 }
