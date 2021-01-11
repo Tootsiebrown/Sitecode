@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Ebay\Sdk;
+use App\Jobs\SyncEbayTransaction;
 use App\Jobs\SyncShipmentShipped;
 use App\Models\Listing;
 use Carbon\Carbon;
+use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +55,11 @@ class WebHookController extends Controller
 
     public function ebayCheckoutComplete(Request $request)
     {
+        $dom = new DOMDocument();
+        $dom->loadXML($request->getContent());
+        $elements = $dom->getElementsByTagName('TransactionID');
+        $transactionId = $elements->item(0)->textContent;
 
+        SyncEbayTransaction::dispatch($transactionId)->onQueue('fast');
     }
 }

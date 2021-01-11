@@ -7,9 +7,12 @@ use Laravel\Socialite\Two\ProviderInterface;
 
 class EbayOAuthProvider extends AbstractProvider implements ProviderInterface
 {
-    protected $scopes = [
-        'https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.account',
-    ];
+    protected $scopeSeparator = ' ';
+
+    public function getScopes()
+    {
+        return config('services.ebay.scopes');
+    }
 
     protected function getAuthUrl($state)
     {

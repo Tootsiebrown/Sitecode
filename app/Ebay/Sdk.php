@@ -10,7 +10,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class Sdk
 {
@@ -428,5 +427,27 @@ class Sdk
             'delete',
             'sell/inventory/v1/inventory_item/' . $sku,
         );
+    }
+
+    public function getTransaction($transactionId)
+    {
+        $transactions = $this->request(
+            'get',
+            'sell/finances/v1/transaction',
+            [],
+            ['filter' => 'transactionId:{' . $transactionId . '}',]
+        );
+
+        return current($transactions->transactions);
+    }
+
+    public function getOrder($orderId)
+    {
+        $order = $this->request(
+            'get',
+            'sell/fulfillment/v1/order/' . $orderId,
+        );
+
+        return $order;
     }
 }

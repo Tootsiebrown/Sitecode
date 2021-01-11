@@ -67,6 +67,13 @@ return [
             'api_token' => env('EBAY_LEGACY_TOKEN'),
             'test_mode' => env('EBAY_TEST_MODE', false),
             'api_version' => env('EBAY_LEGACY_API_VERSION')
+        ],
+        'scopes' => [
+            'https://api.ebay.com/oauth/api_scope',
+            'https://api.ebay.com/oauth/api_scope/sell.account',
+            'https://api.ebay.com/oauth/api_scope/sell.finances',
+            'https://api.ebay.com/oauth/api_scope/sell.inventory',
+
         ]
     ]
 
