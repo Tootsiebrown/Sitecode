@@ -49,7 +49,7 @@ class ProcessListingsToEbay extends Command
         Listing::readyForEbay()
             ->get()
             ->each(function ($listing) {
-                SendListingToEbay::dispatch($listing);
+                SendListingToEbay::dispatch($listing)->onQueue('slow');
             });
     }
 }

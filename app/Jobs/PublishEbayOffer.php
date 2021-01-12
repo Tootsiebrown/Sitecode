@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class PublishEbayOffer implements ShouldQueue
 {
@@ -35,6 +36,12 @@ class PublishEbayOffer implements ShouldQueue
      */
     public function handle(Sdk $ebay)
     {
-        $ebay->publishOffer($this->offerId);
+        try {
+            $ebay->publishOffer($this->offerId);
+        } catch (\Exception $e) {
+            $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
+            $this->listing->save();
+            throw $e;
+        }
     }
 }
