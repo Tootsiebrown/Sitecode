@@ -47,4 +47,9 @@ class SendListingToEbay implements ShouldQueue
 
         CreateEbayOffer::dispatch($this->listing);
     }
+
+    public function maxTries()
+    {
+        return 3;
+    }
 }
