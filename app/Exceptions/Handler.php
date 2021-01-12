@@ -5,7 +5,9 @@ namespace App\Exceptions;
 use App\Wax\Admin\Cms\Cms;
 use Auth;
 use Breadcrumbs;
+use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\MessageBag;
 use InvalidArgumentException;
 use Wax\Db;
+use Wax\Models\SystemNotice;
 use Wax\System;
 
 class Handler extends ExceptionHandler
@@ -56,8 +59,64 @@ class Handler extends ExceptionHandler
         if ($this->shouldReport($e)) {
             parent::report($e);
             if (!config('app.debug', false)) {
-                System::logSystemAlert($e);
+                $this->logSystemAlert($e);
             }
+        }
+    }
+
+    protected function logSystemAlert($exception)
+    {
+        // test that we have a booted DB connection before we do this
+        try {
+            \Illuminate\Support\Facades\DB::connection()->getPdo();
+        } catch (Exception $e) {
+            return;
+        }
+
+        $message = $exception instanceof Exception ? strip_tags($exception->getMessage()) : $exception;
+
+        if ($exception instanceof RequestException) {
+            $message .= ' ' . $exception->getResponse()->getBody()->getContents();
+        }
+
+        $messageHash = md5($message);
+        $messageTitle = 'The system has experienced an error and will attempt to alert a technical contact at Oohology. If this message persists please reach out to your account representative at Oohology so we can address the issue. Technical details: ' . $message;
+
+        $existingNotice = SystemNotice::where('message_id', 'like', "{$messageHash}-%")
+            ->where('archived', 0)
+            ->take(1)
+            ->first();
+
+        // Email alerts will repeat for existing mesages, but are throttled
+        if (!$existingNotice || $existingNotice->timestamp->lt(Carbon::now()->subDay())) {
+            System::emailAlert($exception);
+
+            if ($existingNotice) {
+                $existingNotice->timestamp = Carbon::now();
+                $existingNotice->save();
+            }
+        }
+
+        // Dashboard notices will not repeat until previous messages are archived
+        if (!$existingNotice) {
+            $previousNotice = SystemNotice::where('message_id', 'like', "{$messageHash}-%")
+                ->latest('timestamp')
+                ->first();
+
+            if ($previousNotice) {
+                $splitId = explode('-', $previousNotice->message_id);
+                $i = $splitId[1] + 1;
+            } else {
+                $i = 1;
+            }
+
+            SystemNotice::create([
+                'title' => $exception instanceof Exception ? 'Exception' : 'Message',
+                'message' => $messageTitle,
+                'timestamp' => Carbon::now(),
+                'message_id' => "{$messageHash}-{$i}",
+                'archived' => 0,
+            ]);
         }
     }
 
