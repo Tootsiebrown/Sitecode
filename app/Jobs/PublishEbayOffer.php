@@ -43,6 +43,5 @@ class PublishEbayOffer implements ShouldQueue
             $this->listing->save();
             throw $e;
         }
-
     }
 }
