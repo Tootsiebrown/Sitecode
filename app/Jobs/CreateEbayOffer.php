@@ -52,4 +52,9 @@ class CreateEbayOffer implements ShouldQueue
 
         PublishEbayOffer::dispatch($offerId);
     }
+
+    public function maxTries()
+    {
+        return 3;
+    }
 }

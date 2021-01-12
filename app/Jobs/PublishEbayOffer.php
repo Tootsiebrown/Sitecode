@@ -44,4 +44,9 @@ class PublishEbayOffer implements ShouldQueue
             throw $e;
         }
     }
+
+    public function maxTries()
+    {
+        return 3;
+    }
 }
