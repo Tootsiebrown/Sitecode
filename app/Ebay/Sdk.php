@@ -276,7 +276,7 @@ class Sdk
 
     private function getOfferDataFromListing(Listing $listing)
     {
-        $ebayPrice = $listing->price * (1 + $listing->send_to_ebay_markup / 100);
+        $ebayPrice = $listing->price + ($listing->price * $listing->send_to_ebay_markup / 100);
         $data = [
             'availableQuantity' => $listing->availableItems()->count(),
             'categoryId' => $listing->ebay_offer_category_id,
