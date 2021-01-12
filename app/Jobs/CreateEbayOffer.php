@@ -50,7 +50,7 @@ class CreateEbayOffer implements ShouldQueue
         $this->listing->sent_to_ebay_at = Carbon::now()->toDateTimeString();
         $this->listing->save();
 
-        PublishEbayOffer::dispatch($offerId);
+        PublishEbayOffer::dispatch($this->listing);
     }
 
     public function maxTries()

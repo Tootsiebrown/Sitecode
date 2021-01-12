@@ -349,7 +349,7 @@ class Sdk
             "sell/inventory/v1/offer/$offerId/publish",
         );
 
-        dd($response);
+        return $response->listingId;
     }
 
     public function getPaymentsProgramStatus()

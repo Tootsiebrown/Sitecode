@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Ebay\Sdk;
+use App\Models\Listing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,16 +18,17 @@ class PublishEbayOffer implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private string $offerId;
+    /** @var Listing */
+    private Listing $listing;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $offerId)
+    public function __construct(Listing $listing)
     {
-        $this->offerId = $offerId;
+        $this->listing = $listing;
     }
 
     /**
@@ -37,7 +39,10 @@ class PublishEbayOffer implements ShouldQueue
     public function handle(Sdk $ebay)
     {
         try {
-            $ebay->publishOffer($this->offerId);
+            $listingId = $ebay->publishOffer($this->listing->ebay_offer_id);
+
+            $this->listing->ebay_listing_id = $listingId;
+            $this->listing->save();
         } catch (\Exception $e) {
             $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
             $this->listing->save();
