@@ -5,11 +5,13 @@ namespace App\Ebay;
 use App\Models\Listing;
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class Sdk
 {
@@ -161,9 +163,16 @@ class Sdk
                 $url,
                 $options
             );
-        } catch (\Exception $e) {
+        } catch (BadResponseException $e) {
             Log::info(json_encode($options, JSON_PRETTY_PRINT));
             Log::info($e->getResponse()->getBody()->getContents());
+            send_mail(
+                'davidbaneks@gmail.com',
+                'Ebay SDK request error',
+                $e->getResponse()->getBody()->getContents(),
+                'no-reply@catchndealz.com',
+                false
+            );
             throw $e;
         }
 

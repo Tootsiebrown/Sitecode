@@ -7,7 +7,7 @@ use Auth;
 use Breadcrumbs;
 use Carbon\Carbon;
 use Exception;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
 
         $message = $exception instanceof Exception ? strip_tags($exception->getMessage()) : $exception;
 
-        if ($exception instanceof RequestException) {
+        if ($exception instanceof BadResponseException) {
             $message .= ' ' . $exception->getResponse()->getBody()->getContents();
         }
 
