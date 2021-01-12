@@ -103,67 +103,66 @@
             'value' => 'Requesting additional fields...'
         ])
     </div>
-    @push('scripts')
-        <script>
-            var $categoriesContainer = jQuery('#ebay-categories-container');
-            $categoriesContainer.on('change', '[name=ebay_category_1]',
-                function(e) {
-                console.log(@this);
-                    @this.set('ebayCategory1', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_2]',
-                function(e) {
-                    @this.set('ebayCategory2', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_3]',
-                function(e) {
-                    @this.set('ebayCategory3', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_4]',
-                function(e) {
-                    @this.set('ebayCategory4', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_5]',
-                function(e) {
-                    @this.set('ebayCategory5', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_6]',
-                function(e) {
-                    @this.set('ebayCategory6', $(this).select2('val'));
-                }
-            )
-            $categoriesContainer.on('change', '[name=ebay_category_7]',
-                function(e) {
-                    @this.set('ebayCategory7', $(this).select2('val'));
-                }
-            )
-
-            document.addEventListener("livewire:load", function(event) {
-                window.livewire.hook('afterDomUpdate', () => {
-                    jQuery('' +
-                        '[name=ebay_category_1],' +
-                        '[name=ebay_category_2],' +
-                        '[name=ebay_category_3],' +
-                        '[name=ebay_category_4],' +
-                        '[name=ebay_category_5],' +
-                        '[name=ebay_category_6],' +
-                        '[name=ebay_category_7],' +
-                        '[name=ebay_condition]'
-                    ).select2()
-                });
-            });
-        </script>
-        <style>
-            pre.sf-dump {
-                z-index: 1 !important;
-            }
-        </style>
-    @endpush
 </div>
 
+@push('scripts')
+    <script>
+        var $categoriesContainer = jQuery('#ebay-categories-container');
+        $categoriesContainer.on('change', '[name=ebay_category_1]',
+            function(e) {
+            console.log(@this);
+                @this.set('ebayCategory1', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_2]',
+            function(e) {
+                @this.set('ebayCategory2', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_3]',
+            function(e) {
+                @this.set('ebayCategory3', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_4]',
+            function(e) {
+                @this.set('ebayCategory4', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_5]',
+            function(e) {
+                @this.set('ebayCategory5', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_6]',
+            function(e) {
+                @this.set('ebayCategory6', $(this).select2('val'));
+            }
+        )
+        $categoriesContainer.on('change', '[name=ebay_category_7]',
+            function(e) {
+                @this.set('ebayCategory7', $(this).select2('val'));
+            }
+        )
 
+        document.addEventListener("livewire:load", function(event) {
+            window.livewire.hook('afterDomUpdate', () => {
+                jQuery('' +
+                    '[name=ebay_category_1],' +
+                    '[name=ebay_category_2],' +
+                    '[name=ebay_category_3],' +
+                    '[name=ebay_category_4],' +
+                    '[name=ebay_category_5],' +
+                    '[name=ebay_category_6],' +
+                    '[name=ebay_category_7],' +
+                    '[name=ebay_condition]'
+                ).select2()
+            });
+        });
+    </script>
+    <style>
+        pre.sf-dump {
+            z-index: 1 !important;
+        }
+    </style>
+@endpush

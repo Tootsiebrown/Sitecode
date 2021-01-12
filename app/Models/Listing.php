@@ -134,9 +134,10 @@ class Listing extends Model
     public function scopeReadyForEbay($query)
     {
         return $query->notYetSentToEbay()
+            ->where('send_to_ebay', 1)
             ->withoutGlobalScope('notSecret')
             ->where('type', 'set-price')
-            ->goesToEbayToday();
+            ->timePastForEbay();
     }
 
     public function scopeNotYetSentToEbay($query)
@@ -144,10 +145,9 @@ class Listing extends Model
         return $query->whereNull('sent_to_ebay_at');
     }
 
-    public function scopeGoesToEbayToday($query)
+    public function scopeTimePastForEbay($query)
     {
-        return $query->whereNotNull('send_to_ebay_days')
-            ->createdAtDaysAgoColumn('send_to_ebay_days');
+        return $query->where('send_to_ebay_at', '<', Carbon::now()->toDateTimeString());
     }
 
     public function getFeaturedImageAttribute()

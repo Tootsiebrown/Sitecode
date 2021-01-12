@@ -27,6 +27,7 @@ class ListerController extends Controller
 {
     use GetsDenormalizedProductCategories;
     use CropsProductImages;
+    use HandlesEbayCategories;
 
     protected $datafinitiGateway;
 
@@ -418,25 +419,6 @@ class ListerController extends Controller
         )->with('success', trans('app.product_created'));
     }
 
-    protected function getEbayCategories(Request $request)
-    {
-        $ebayCategories = [];
-        for ($i = 1; $i <= 7; $i++) {
-            $inputName = 'ebay_category_' . $i;
-            if ($request->has($inputName) && !empty($request->input($inputName))) {
-                $ebayCategories[] = $request->input($inputName);
-            }
-        }
-
-        $ebayCategories = implode(',', $ebayCategories);
-
-        if (empty($ebayCategories)) {
-            return null;
-        }
-
-        return $ebayCategories;
-    }
-
     protected function syncProductImages(
         Product $product,
         array $existingImages,
@@ -536,7 +518,7 @@ class ListerController extends Controller
             'offers_enabled' => 'boolean',
             'secret' => 'boolean',
             'send_to_ebay' => 'boolean',
-            'send_to_ebay_days' => 'required_if:send_to_ebay,1|integer',
+            'send_to_ebay_at' => 'required_if:send_to_ebay,1',
             'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
             'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
@@ -583,10 +565,13 @@ class ListerController extends Controller
             }
 
             if ($data['type'] === 'set-price' && $request->input('send_to_ebay')) {
-                $data['send_to_ebay_days'] = $request->input('send_to_ebay_days');
+                $data['send_to_ebay'] = true;
+                $data['send_to_ebay_at'] = $request->input('send_to_ebay_at');
                 $data['send_to_ebay_markup'] = $request->input('send_to_ebay_markup');
                 $data['ebay_categories'] = $this->getEbayCategories($request);
                 $data['ebay_condition_id'] = $request->input('ebay_condition');
+            } else {
+                $data['send_to_ebay'] = false;
             }
 
             $ad = Listing::create($data);

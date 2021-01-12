@@ -7,7 +7,7 @@ export default class ListingToEbay {
         this.$settings = this.$component.find('.send-to-ebay-settings')
         this.$input = this.$component.find('[name=send_to_ebay]')
         this.$input.on('change', this.handleChange)
-
+console.log(this)
         this.$input.trigger('change')
     }
 

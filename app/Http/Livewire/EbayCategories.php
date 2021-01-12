@@ -3,10 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Ebay\Sdk;
-use Exception;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Models\Listing;
 use Livewire\Component;
 
 class EbayCategories extends Component
@@ -30,18 +27,31 @@ class EbayCategories extends Component
         $this->ebay = app()->make(Sdk::class);
     }
 
-    public function mount(Sdk $ebay)
+    public function mount(Sdk $ebay, Listing $listing = null)
     {
         $this->ebay = $ebay;
 
-        $this->ebayCategory1 = old('ebay_category_1');
-        $this->ebayCategory2 = old('ebay_category_2');
-        $this->ebayCategory3 = old('ebay_category_3');
-        $this->ebayCategory4 = old('ebay_category_4');
-        $this->ebayCategory5 = old('ebay_category_5');
-        $this->ebayCategory6 = old('ebay_category_6');
-        $this->ebayCategory7 = old('ebay_category_7');
-        $this->ebayCondition = old('ebay_condition');
+        if ($listing) {
+            $categories = explode(',', $listing->ebay_categories);
+
+            $this->ebayCategory1 = old('ebay_category_1', $categories[0] ?? null);
+            $this->ebayCategory2 = old('ebay_category_2', $categories[1] ?? null);
+            $this->ebayCategory3 = old('ebay_category_3', $categories[2] ?? null);
+            $this->ebayCategory4 = old('ebay_category_4', $categories[3] ?? null);
+            $this->ebayCategory5 = old('ebay_category_5', $categories[4] ?? null);
+            $this->ebayCategory6 = old('ebay_category_6', $categories[5] ?? null);
+            $this->ebayCategory7 = old('ebay_category_7', $categories[6] ?? null);
+            $this->ebayCondition = old('ebay_condition', $listing->ebay_condition_id);
+        } else {
+            $this->ebayCategory1 = old('ebay_category_1');
+            $this->ebayCategory2 = old('ebay_category_2');
+            $this->ebayCategory3 = old('ebay_category_3');
+            $this->ebayCategory4 = old('ebay_category_4');
+            $this->ebayCategory5 = old('ebay_category_5');
+            $this->ebayCategory6 = old('ebay_category_6');
+            $this->ebayCategory7 = old('ebay_category_7');
+            $this->ebayCondition = old('ebay_condition');
+        }
     }
 
     public function updating($name, $value)
