@@ -8,7 +8,7 @@ class City extends Model
 {
     protected $guarded = [];
     public $timestamps = false;
-    
+
     public function state()
     {
         return $this->belongsTo(State::class);

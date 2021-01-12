@@ -131,6 +131,25 @@ class Listing extends Model
             ->orderBy('featured_sort_id');
     }
 
+    public function scopeReadyForEbay($query)
+    {
+        return $query->notYetSentToEbay()
+            ->withoutGlobalScope('notSecret')
+            ->where('type', 'set-price')
+            ->goesToEbayToday();
+    }
+
+    public function scopeNotYetSentToEbay($query)
+    {
+        return $query->whereNull('sent_to_ebay_at');
+    }
+
+    public function scopeGoesToEbayToday($query)
+    {
+        return $query->whereNotNull('send_to_ebay_days')
+            ->createdAtDaysAgoColumn('send_to_ebay_days');
+    }
+
     public function getFeaturedImageAttribute()
     {
         return $this->images->sortByDesc('featured')->first();
@@ -388,6 +407,11 @@ class Listing extends Model
         return ! is_null($this->items->first()->order_item_id);
     }
 
+    public function getEbayPrimaryCategoryIdAttribute()
+    {
+        return last(explode(',', $this->ebay_categories));
+    }
+
     public function getWinnerAttribute()
     {
         if (!$this->is_auction) {
@@ -413,5 +437,10 @@ class Listing extends Model
     public function offers()
     {
         return $this->hasMany(Offer::class);
+    }
+
+    public function getEbayOfferCategoryIdAttribute()
+    {
+        return last(explode(',', $this->ebay_categories));
     }
 }

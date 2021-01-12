@@ -6,20 +6,17 @@
 
     <form class="form-horizontal" action="{{ route('dashboard.categories.save', ['id' => $category->id]) }}" method="POST">
         @csrf
-        <div class="row">
-            <label class="col-sm-3">Name</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" name="name" value="{{ old('name', $category->name) }}">
-            </div>
-        </div>
-        <div class="row">
-            <label class="col-sm-3">&nbsp;</label>
-            <div class="col-sm-9">
-                <button class="btn btn-primary" type="submit" name="submit" value="submit">
-                    Submit
-                </button>
-            </div>
-        </div>
+
+        @include('dashboard.form-elements.form-group', [
+            'name' => 'name',
+            'prettyTitle' => 'Name',
+            'value' => old('name', $category->name),
+            'type' => 'text',
+        ])
+
+        @include('dashboard.form-elements.form-group', [
+            'type' => 'submit'
+        ])
     </form>
 
     <form class="form-horizontal" method="POST" action="{{ route('dashboard.categories.delete', ['id' => $category->id]) }}">

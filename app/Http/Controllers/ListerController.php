@@ -418,6 +418,25 @@ class ListerController extends Controller
         )->with('success', trans('app.product_created'));
     }
 
+    protected function getEbayCategories(Request $request)
+    {
+        $ebayCategories = [];
+        for ($i = 1; $i <= 7; $i++) {
+            $inputName = 'ebay_category_' . $i;
+            if ($request->has($inputName) && !empty($request->input($inputName))) {
+                $ebayCategories[] = $request->input($inputName);
+            }
+        }
+
+        $ebayCategories = implode(',', $ebayCategories);
+
+        if (empty($ebayCategories)) {
+            return null;
+        }
+
+        return $ebayCategories;
+    }
+
     protected function syncProductImages(
         Product $product,
         array $existingImages,
@@ -516,6 +535,10 @@ class ListerController extends Controller
             'price' => 'required|numeric',
             'offers_enabled' => 'boolean',
             'secret' => 'boolean',
+            'send_to_ebay' => 'boolean',
+            'send_to_ebay_days' => 'required_if:send_to_ebay,1|integer',
+            'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
+            'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -527,7 +550,6 @@ class ListerController extends Controller
         $product = Product::find($request->product_id);
 
         $ad = DB::transaction(function () use ($request, $product) {
-
             $data = [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
@@ -552,16 +574,19 @@ class ListerController extends Controller
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
                 'shipping_weight_oz' => $product->shipping_weight_oz,
-                'offers_enabled' => $request->has('offers_enabled')
-                    ? $request->input('offers_enabled')
-                    : false,
-                'secret' => $request->has('secret')
-                    ? $request->input('secret')
-                    : false,
+                'offers_enabled' => $request->input('offers_enabled', false),
+                'secret' => $request->input('secret', false),
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
                 $data[$fieldName] = $request->input($fieldName, '');
+            }
+
+            if ($data['type'] === 'set-price' && $request->input('send_to_ebay')) {
+                $data['send_to_ebay_days'] = $request->input('send_to_ebay_days');
+                $data['send_to_ebay_markup'] = $request->input('send_to_ebay_markup');
+                $data['ebay_categories'] = $this->getEbayCategories($request);
+                $data['ebay_condition_id'] = $request->input('ebay_condition');
             }
 
             $ad = Listing::create($data);

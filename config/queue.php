@@ -62,6 +62,7 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => env('REDIS_QUEUE', 'default'),
+            // note: there are two queues in use: default and fast. fast is prioritized on production
             'retry_after' => 90,
             'block_for' => null,
         ],

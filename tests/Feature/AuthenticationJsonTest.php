@@ -37,6 +37,8 @@ class AuthenticationJsonTest extends WaxAppTestCase
 
     public function testAuthenticatedResponse()
     {
+        $this->markTestSkipped();
+
         $password = 'super secret';
         $user = factory(User::class)->create(['password' => bcrypt($password)]);
 

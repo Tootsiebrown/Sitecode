@@ -5,12 +5,6 @@
 
 
             <li> <a href="{{ route('profile') }}"><i class="fa fa-user"></i> @lang('app.profile')</a>  </li>
-{{--            <li>--}}
-{{--                <a href="{{ route('dashboard') }}">--}}
-{{--                    <i class="fa fa-dashboard fa-fw"></i>--}}
-{{--                    @lang('app.dashboard')--}}
-{{--                </a>--}}
-{{--            </li>--}}
 
             @if($lUser->hasPrivilege('Lister'))
                 <li>
@@ -184,6 +178,17 @@
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
 {{--                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>--}}
+            @if ($lUser->hasPrivilege('Ebay Authenticator'))
+                <li>
+                    <a href="{{ route('dashboard.ebayAuth.status') }}">Ebay Link</a>
+                </li>
+            @endif
+
+            @if ($lUser->hasPrivilege('Ebay Orders'))
+                <li>
+                    <a href="{{ route('dashboard.ebay.orders') }}">Ebay Orders</a>
+                </li>
+            @endif
 
             <li> <a href="{{ route('change_password') }}"><i class="fa fa-lock"></i> @lang('app.change_password')</a>  </li>
             <li>

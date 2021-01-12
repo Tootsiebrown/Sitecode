@@ -22,7 +22,8 @@ class Item extends Model
         return $query
             ->whereNull('order_item_id')
             ->whereNull('reserved_for_offer_id')
-            ->whereNull('reserved_for_order_id');
+            ->whereNull('reserved_for_order_id')
+            ->whereNull('ebay_order_id');
     }
 
     public function scopeAvailableForOrder($query, $order)
