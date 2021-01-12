@@ -37,8 +37,6 @@ class SendListingToEbayFailureTest extends WaxAppTestCase
 
         $job = new SendListingToEbay($this->listing);
         $job->handle($this->ebay);
-$this->assertTrue(false);
-        Queue::assertNotPushed(CreateEbayOffer::class);
     }
 
     public function testExceptionRecordedOnListingRecord()

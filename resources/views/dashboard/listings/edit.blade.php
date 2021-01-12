@@ -163,7 +163,7 @@
                             'type' => 'text',
                             'name' => 'send_to_ebay_markup',
                             'prettyTitle' => 'eBay Markup %',
-                            'value' => old('send_to_ebay_markup', $listing->send_to_ebay_markup),
+                            'value' => old('send_to_ebay_markup', $listing->send_to_ebay_markup ?? 30),
                         ])
 
                         <div id="ebay-categories-container">
