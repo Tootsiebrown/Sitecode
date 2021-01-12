@@ -199,13 +199,15 @@ class Sdk
         $data = [
             'availability' => [
                 'pickupAtLocationAvailability' => [
-                    'availabilityType' => 'OUT_OF_STOCK',
-                    'fullfillmentTime' => [
-                        'unit' => 'HOUR',
-                        'value' => 1,
+                    [
+                        'availabilityType' => 'OUT_OF_STOCK',
+                        'fullfillmentTime' => [
+                            'unit' => 'HOUR',
+                            'value' => 1,
+                        ],
+                        'merchantLocationKey' => $this->config['merchant_location_key'],
+                        'quantity' => 0,
                     ],
-                    'merchantLocationKey' => $this->config['merchant_location_key'],
-                    'quantity' => 0,
                 ],
                 'shipToLocationAvailability' => [
                     'availabilityDistributions' => [
