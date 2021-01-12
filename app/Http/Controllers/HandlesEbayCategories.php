@@ -1,14 +1,11 @@
 <?php
 
-
 namespace App\Http\Controllers;
-
 
 use Illuminate\Http\Request;
 
 trait HandlesEbayCategories
 {
-
     public function getEbayCategories(Request $request)
     {
         $ebayCategories = [];
