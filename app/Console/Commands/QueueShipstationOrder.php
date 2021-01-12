@@ -13,7 +13,7 @@ class QueueShipstationOrder extends Command
      *
      * @var string
      */
-    protected $signature = 'shipping:sync-order';
+    protected $signature = 'shipping:sync-order {orderId}';
 
     /**
      * The console command description.
@@ -39,6 +39,6 @@ class QueueShipstationOrder extends Command
      */
     public function handle()
     {
-        OrderToShipstation::dispatch(Order::find(31595));
+        OrderToShipstation::dispatch(Order::find($this->argument('orderId')));
     }
 }
