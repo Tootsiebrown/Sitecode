@@ -69,4 +69,11 @@ class SyncEbayTransaction implements ShouldQueue
 
         return substr($sku, strlen($env));
     }
+
+
+
+    public function maxTries()
+    {
+        return 3;
+    }
 }

@@ -48,4 +48,14 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
         Artisan::call('ebay:process-ready-listings');
         Queue::assertNotPushed(SendListingToEbay::class);
     }
+
+    public function testListingHasPriorError()
+    {
+        $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
+        $this->listing->save();
+
+        Carbon::setTestNow(Carbon::now()->addDays(4));
+        Artisan::call('ebay:process-ready-listings');
+        Queue::assertNotPushed(SendListingToEbay::class);
+    }
 }

@@ -134,6 +134,7 @@ class Listing extends Model
     public function scopeReadyForEbay($query)
     {
         return $query->notYetSentToEbay()
+            ->freeOfEbayError()
             ->where('send_to_ebay', 1)
             ->withoutGlobalScope('notSecret')
             ->where('type', 'set-price')
@@ -148,6 +149,11 @@ class Listing extends Model
     public function scopeTimePastForEbay($query)
     {
         return $query->where('send_to_ebay_at', '<', Carbon::now()->toDateTimeString());
+    }
+
+    public function scopeFreeOfEbayError($query)
+    {
+        return $query->whereNull('to_ebay_error_at');
     }
 
     public function getFeaturedImageAttribute()

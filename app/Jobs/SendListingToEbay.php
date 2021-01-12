@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class SendListingToEbay implements ShouldQueue
 {
@@ -36,8 +37,19 @@ class SendListingToEbay implements ShouldQueue
      */
     public function handle(Sdk $sdk)
     {
-        $sdk->createInventoryItem($this->listing);
+        try {
+            $sdk->createInventoryItem($this->listing);
+        } catch (\Exception $e) {
+            $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
+            $this->listing->save();
+            throw $e;
+        }
 
         CreateEbayOffer::dispatch($this->listing);
+    }
+
+    public function maxTries()
+    {
+        return 3;
     }
 }

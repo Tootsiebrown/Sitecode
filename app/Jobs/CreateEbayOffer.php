@@ -38,7 +38,13 @@ class CreateEbayOffer implements ShouldQueue
      */
     public function handle(Sdk $ebay)
     {
-        $offerId = $ebay->createOffer($this->listing);
+        try {
+            $offerId = $ebay->createOffer($this->listing);
+        } catch (\Exception $e) {
+            $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
+            $this->listing->save();
+            throw $e;
+        }
 
         $this->listing->ebay_offer_id = $offerId;
         $this->listing->sent_to_ebay_at = Carbon::now()->toDateTimeString();
