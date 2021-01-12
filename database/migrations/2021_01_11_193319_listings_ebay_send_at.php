@@ -15,6 +15,9 @@ class ListingsEbaySendAt extends Migration
     {
         Schema::table('listings', function (Blueprint $table) {
             $table->dropColumn('send_to_ebay_days');
+        });
+
+        Schema::table('listings', function (Blueprint $table) {
             $table->dateTime('send_to_ebay_at')->nullable();
         });
     }
