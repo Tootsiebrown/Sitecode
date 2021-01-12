@@ -19,7 +19,8 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
         Queue::fake();
         $this->listing = factory(Listing::class)->create([
             'type' => 'set-price',
-            'send_to_ebay_days' => 3,
+            'send_to_ebay' => true,
+            'send_to_ebay_at' => Carbon::now()->addDays(3)->toDateTimeString(),
         ]);
 
         $this->listing->items()->saveMany(factory(ListingItem::class, 3)->make());

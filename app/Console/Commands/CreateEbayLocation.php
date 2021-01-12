@@ -48,7 +48,7 @@ class CreateEbayLocation extends Command
                 'location' => [
                     'address' => [
                         'country' => 'US',
-                        'postalCode' => '40701'
+                        'postalCode' => '40741'
                     ],
                 ],
                 'name' => 'Louisville Warehouse',

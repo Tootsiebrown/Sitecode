@@ -15,6 +15,7 @@
             @case ('boolean')
             @case ('select')
             @case ('date')
+            @case ('datetime')
             @case ('text')
             @case ('note')
                 @include('dashboard.form-elements.inputs.' . $type, [

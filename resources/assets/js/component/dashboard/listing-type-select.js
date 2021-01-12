@@ -9,7 +9,7 @@ export default class ListingTypeSelect {
         this.$quantity = this.$component.elements.quantity
         this.$offersEnabled = this.$component.elements.offersEnabled
         this.$bidDeadline = this.$component.elements.bidDeadline
-        this.toEbay = new ListingToEbay(this.$component.find('.send-to-ebay'))
+        this.toEbay = new ListingToEbay(this.$component.find('[data-component=sub-listing-to-ebay]'))
 
         this.$select.on('change', this.handleChange)
         this.$select.trigger('change');

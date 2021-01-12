@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
              ->everyFiveMinutes();
 
         $schedule->command(ProcessListingsToEbay::class)
-            ->dailyAt('20:00');
+            ->everyFiveMinutes();
     }
 
     /**

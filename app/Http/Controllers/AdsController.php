@@ -33,6 +33,7 @@ class AdsController extends Controller
     use GetsDenormalizedProductCategories;
     use CanUseFilters;
     use CropsProductImages;
+    use HandlesEbayCategories;
 
     protected $repo;
 
@@ -261,6 +262,11 @@ class AdsController extends Controller
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
             'shipping_weight_oz' => 'numeric|min:1',
+
+            'send_to_ebay' => 'boolean',
+            'send_to_ebay_at' => 'required_if:send_to_ebay,1',
+            'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
+            'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
 
         $this->validate($request, $rules);
@@ -329,6 +335,16 @@ class AdsController extends Controller
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
             $data[$fieldName] = $request->input($fieldName);
+        }
+
+        if ($listing->type === 'set-price' && $request->input('send_to_ebay')) {
+            $data['send_to_ebay'] = true;
+            $data['send_to_ebay_at'] = $request->input('send_to_ebay_at');
+            $data['send_to_ebay_markup'] = $request->input('send_to_ebay_markup');
+            $data['ebay_categories'] = $this->getEbayCategories($request);
+            $data['ebay_condition_id'] = $request->input('ebay_condition');
+        } else {
+            $data['send_to_ebay'] = false;
         }
 
         $listing->fill($data);

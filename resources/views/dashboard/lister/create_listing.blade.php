@@ -105,21 +105,21 @@
 
                             </div>
 
-                            <div class="send-to-ebay">
+                            <div data-component="sub-listing-to-ebay">
                                 @include('dashboard.form-elements.form-group', [
                                     'type' => 'boolean',
                                     'name' => 'send_to_ebay',
                                     'prettyTitle' => 'Send To eBay',
                                     'checked' => old('send_to_ebay', false),
-                                    'groupClass' => 'send-to-ebay',
+                                    'groupClass' => 'send-to-ebay-check',
                                 ])
 
                                 <div class="send-to-ebay-settings">
                                     @include('dashboard.form-elements.form-group', [
-                                        'type' => 'text',
-                                        'name' => 'send_to_ebay_days',
-                                        'prettyTitle' => 'Days Until eBay',
-                                        'value' => old('send_to_ebay_days', 3),
+                                        'type' => 'datetime',
+                                        'name' => 'send_to_ebay_at',
+                                        'prettyTitle' => 'Send At',
+                                        'value' => old('send_to_ebay_at', Illuminate\Support\Carbon::now()->addDays(3)),
                                     ])
 
                                     @include('dashboard.form-elements.form-group', [
