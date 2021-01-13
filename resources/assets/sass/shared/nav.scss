@@ -84,6 +84,7 @@
 
         & > img {
             max-height: 38px;
+            min-width: 75px;
         }
 
         .a-us-company {
@@ -132,6 +133,7 @@
 
         &.desktop-search {
             margin-right: 0;
+            padding-top: 24px;
 
             .input-group {
                 @media (min-width: $bp-tablet) {
