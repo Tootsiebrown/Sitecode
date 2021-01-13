@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Listing\Item;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -38,5 +39,10 @@ class EbayOrder extends Model
     public function canceledBy()
     {
         return $this->belongsTo(User::class, 'canceled_by_user_id');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'ebay_order_id');
     }
 }

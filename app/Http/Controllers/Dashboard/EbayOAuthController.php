@@ -19,7 +19,7 @@ class EbayOAuthController extends Controller
 
     public function showStatus()
     {
-        return view('dashboard.ebay-auth.index', [
+        return view('dashboard.ebay.auth', [
             'linkStatus' => $this->tokenRepo->linkStatus(),
             'tokenStatus' => $this->tokenRepo->tokenStatus(),
             'refreshTokenStatus' => $this->tokenRepo->refreshTokenStatus(),

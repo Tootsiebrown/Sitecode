@@ -10,7 +10,7 @@ class EbayOrdersController extends Controller
     public function index()
     {
         return view(
-            'dashboard.ebay-orders.index',
+            'dashboard.ebay.orders.index',
             ['orders' => EbayOrder::all()]
         );
     }
@@ -18,7 +18,7 @@ class EbayOrdersController extends Controller
     public function show($id)
     {
         return view(
-            'dashboard.ebay-orders.details',
+            'dashboard.ebay.orders.details',
             ['order' => EbayOrder::findorFail($id)]
         );
     }

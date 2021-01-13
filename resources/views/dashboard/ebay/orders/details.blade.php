@@ -8,6 +8,26 @@
         @endif
     </h1>
 
+    <table class="dashboard-table">
+        <thead>
+            <tr>
+                <th>Item SKU</th>
+                <th>Bin</th>
+                <th>Name</th>
+                <th>Listing SKU</th>
+            </tr>
+        </thead>
+
+        @foreach ($order->items as $item)
+            <tr>
+                <td>{{ $item->id }}</td>
+                <td>{{ $item->bin }}</td>
+                <td>{{ $item->listing->title }}</td>
+                <td>{{ $item->listing->id }}</td>
+            </tr>
+        @endforeach
+    </table>
+
     @if ($order->canceled)
         <h3 class="alert alert-danger">ORDER CANCELED</h3>
         <p>By: {{ $order->canceledBy->email }}</p>
