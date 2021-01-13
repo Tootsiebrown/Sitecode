@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Ebay\Sdk;
-use App\Jobs\SyncEbayTransaction;
+use App\Jobs\SyncEbayOrder;
 use App\Models\Listing;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
@@ -36,8 +36,8 @@ class EbayAuctionCheckoutCompleteTest extends WaxAppTestCase
         $response
             ->assertStatus(200);
 
-        Queue::assertPushed(SyncEbayTransaction::class, function ($job) {
-            return $job->transactionId == 4950;
+        Queue::assertPushed(SyncEbayOrder::class, function ($job) {
+            return $job->ebayOrderId == '08-06401-35793';
         });
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ebay\Sdk;
-use App\Jobs\SyncEbayTransaction;
+use App\Jobs\SyncEbayOrder;
 use App\Jobs\SyncShipmentShipped;
 use App\Models\Listing;
 use Carbon\Carbon;
@@ -56,13 +56,15 @@ class WebHookController extends Controller
     public function ebayCheckoutComplete(Request $request)
     {
         $dom = new DOMDocument();
-        \Log::info($request->getContent());
+        if (config('services.ebay.log.auctionCompleteWebhook')) {
+            \Log::channel('single')->info($request->getContent());
+        }
         $dom->loadXML($request->getContent());
-        $elements = $dom->getElementsByTagName('TransactionID');
-        $transactionId = $elements->item(0)->textContent;
+        $elements = $dom->getElementsByTagName('OrderID');
+        $orderId = $elements->item(0)->textContent;
 
-        if ($transactionId) {
-            SyncEbayTransaction::dispatch($transactionId)->onQueue('fast');
+        if ($orderId) {
+            SyncEbayOrder::dispatch($orderId)->onQueue('fast');
         }
     }
 }

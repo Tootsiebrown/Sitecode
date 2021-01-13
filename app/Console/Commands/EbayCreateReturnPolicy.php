@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Exception;
 use Illuminate\Support\Facades\App;
 
-class CreateEbayPaymentPolicy extends Command
+class EbayCreateReturnPolicy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:create-payment-policy';
+    protected $signature = 'ebay:create-return-policy';
 
     /**
      * The console command description.
@@ -51,14 +51,14 @@ class CreateEbayPaymentPolicy extends Command
             'description' => 'test fulfillment policy',
             'marketplaceId' => 'EBAY_US',
             'name' => 'TEST 1',
-            'paymentMethods' => [
-                [
-                    'brands' => ['VISA', 'MASTERCARD'],
-                    'paymentMethodType' => 'CREDIT_CARD',
-                ]
-            ]
+            'returnPeriod' => [
+                'unit' => 'DAY',
+                'value' => 30,
+            ],
+            'returnsAccepted' => true,
+            'returnShippingCostPayer' => 'BUYER',
         ];
 
-        dd($ebay->createPaymentPolicy($data));
+        dd($ebay->createReturnPolicy($data));
     }
 }

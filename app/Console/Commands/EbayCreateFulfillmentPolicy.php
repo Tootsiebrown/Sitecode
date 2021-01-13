@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Exception;
 use Illuminate\Support\Facades\App;
 
-class CreateEbayReturnPolicy extends Command
+class EbayCreateFulfillmentPolicy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:create-return-policy';
+    protected $signature = 'ebay:create-fulfillment-policy';
 
     /**
      * The console command description.
@@ -49,16 +49,14 @@ class CreateEbayReturnPolicy extends Command
                 ['name' => 'ALL_EXCLUDING_MOTORS_VEHICLES']
             ],
             'description' => 'test fulfillment policy',
+            'handlingTime' => [
+                'unit' => 'DAY',
+                'value' => 1,
+            ],
             'marketplaceId' => 'EBAY_US',
             'name' => 'TEST 1',
-            'returnPeriod' => [
-                'unit' => 'DAY',
-                'value' => 30,
-            ],
-            'returnsAccepted' => true,
-            'returnShippingCostPayer' => 'BUYER',
         ];
 
-        dd($ebay->createReturnPolicy($data));
+        dd($ebay->createFulfillmentPolicy($data));
     }
 }

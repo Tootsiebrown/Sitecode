@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Exception;
 use Illuminate\Support\Facades\App;
 
-class CreateEbayFulfillmentPolicy extends Command
+class EbayCreatePaymentPolicy extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:create-fulfillment-policy';
+    protected $signature = 'ebay:create-payment-policy';
 
     /**
      * The console command description.
@@ -49,14 +49,16 @@ class CreateEbayFulfillmentPolicy extends Command
                 ['name' => 'ALL_EXCLUDING_MOTORS_VEHICLES']
             ],
             'description' => 'test fulfillment policy',
-            'handlingTime' => [
-                'unit' => 'DAY',
-                'value' => 1,
-            ],
             'marketplaceId' => 'EBAY_US',
             'name' => 'TEST 1',
+            'paymentMethods' => [
+                [
+                    'brands' => ['VISA', 'MASTERCARD'],
+                    'paymentMethodType' => 'CREDIT_CARD',
+                ]
+            ]
         ];
 
-        dd($ebay->createFulfillmentPolicy($data));
+        dd($ebay->createPaymentPolicy($data));
     }
 }

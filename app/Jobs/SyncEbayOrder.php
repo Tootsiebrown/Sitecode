@@ -14,23 +14,23 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
-class SyncEbayTransaction implements ShouldQueue
+class SyncEbayOrder implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
-    public $transactionId;
+    public string $ebayOrderId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($transactionId)
+    public function __construct(string $ebayOrderId)
     {
-        $this->transactionId = $transactionId;
+        $this->ebayOrderId = $ebayOrderId;
     }
 
     /**
@@ -40,24 +40,43 @@ class SyncEbayTransaction implements ShouldQueue
      */
     public function handle(Sdk $ebay)
     {
-        $transaction = $ebay->getTransaction($this->transactionId);
-        $orderId = $transaction->orderId;
-        $order = $ebay->getOrder($orderId);
+        $order = $ebay->getOrder($this->ebayOrderId);
 
         $ebayOrder = new EbayOrder([
-            'ebay_id' => $orderId,
+            'ebay_id' => $this->ebayOrderId,
         ]);
-        $ebayOrderId = $ebayOrder->save();
+        $localOrderId = $ebayOrder->save();
 
         foreach ($order->lineItems as $orderItem) {
+            if (! $this->itemIsFromWebsite($orderItem->sku)) {
+                continue;
+            }
+
             $quantity = $orderItem->quantity;
             $listingId = $this->getListingId($orderItem->sku);
 
-            MarkEbayItemsSold::dispatch($ebayOrderId, $listingId, $quantity)->onQueue('fast');
+            MarkEbayItemsSold::dispatch($localOrderId, $listingId, $quantity)->onQueue('fast');
         }
     }
 
     private function getListingId($sku)
+    {
+        $env = $this->getEnvPrefix();
+
+        return substr($sku, strlen($env));
+    }
+
+    private function itemIsFromWebsite($sku)
+    {
+        $index = strpos(
+            $sku,
+            $this->getEnvPrefix()
+        );
+
+        return $index === 0;
+    }
+
+    private function getEnvPrefix()
     {
         if (App::environment('production')) {
             $env = 'website';
@@ -67,10 +86,8 @@ class SyncEbayTransaction implements ShouldQueue
 
         $env .= '-';
 
-        return substr($sku, strlen($env));
+        return $env;
     }
-
-
 
     public function maxTries()
     {
