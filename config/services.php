@@ -73,11 +73,11 @@ return [
             'https://api.ebay.com/oauth/api_scope/sell.account',
             'https://api.ebay.com/oauth/api_scope/sell.finances',
             'https://api.ebay.com/oauth/api_scope/sell.inventory',
-
+            'https://api.ebay.com/oauth/api_scope/sell.fulfillment',
         ],
         'log' => [
             'auctionCompleteWebhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false),
-            'getOrderResponse' => env('EBAY_LOG_GET_ORDER_RESPONSE')
+            'getOrderResponse' => env('EBAY_LOG_GET_ORDER_RESPONSE', false)
         ]
     ]
 
