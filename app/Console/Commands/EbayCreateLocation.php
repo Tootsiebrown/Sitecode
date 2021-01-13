@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Ebay\Sdk;
 use Illuminate\Console\Command;
 
-class CreateEbayLocation extends Command
+class EbayCreateLocation extends Command
 {
     /**
      * The name and signature of the console command.

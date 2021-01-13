@@ -6,7 +6,7 @@ use App\Bid;
 use App\Ebay\Sdk;
 use App\Jobs\MarkEbayItemsSold;
 use App\Jobs\NotifyWinner;
-use App\Jobs\SyncEbayTransaction;
+use App\Jobs\SyncEbayOrder;
 use App\Mail\NotifyNoWinner as NotifyNoWinnerEmail;
 use App\Mail\NotifyWinner as NotifyWinnerEmail;
 use App\Models\EbayOrder;
@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Services\ShopService;
 
-class SyncEbayTransactionTest extends WaxAppTestCase
+class SyncEbayOrderTest extends WaxAppTestCase
 {
-    private $mockOrderId = 369;
+    private $mockOrderId = '369-543';
 
     public function setUp(): void
     {
@@ -38,25 +38,21 @@ class SyncEbayTransactionTest extends WaxAppTestCase
         $this->assertEquals(0, EbayOrder::all()->count());
 
         $this->ebay
-            ->method('getTransaction')
-            ->willReturn($this->getMockTransaction());
-
-        $this->ebay
             ->method('getOrder')
             ->willReturn($this->getMockOrder());
 
 
-        $job = new SyncEbayTransaction(4950);
+        $job = new SyncEbayOrder($this->mockOrderId);
         $job->handle($this->ebay);
 
         $ebayOrders = EbayOrder::all();
 
         $this->assertEquals(1, $ebayOrders->count());
-        $ebayOrder = $ebayOrders->first();
-        $this->assertEquals($this->mockOrderId, (int)$ebayOrder->ebay_id);
+        $localEbayOrder = $ebayOrders->first();
+        $this->assertEquals($this->mockOrderId, $localEbayOrder->ebay_id);
 
-        Queue::assertPushed(MarkEbayItemsSold::class, function ($job) use ($ebayOrder) {
-            return $ebayOrder->id == $job->ebayOrderId
+        Queue::assertPushed(MarkEbayItemsSold::class, function ($job) use ($localEbayOrder) {
+            return $localEbayOrder->id == $job->ebayOrderId
                 && $job->quantity == 2
                 && $job->listingId = 357;
         });
@@ -71,13 +67,6 @@ class SyncEbayTransactionTest extends WaxAppTestCase
                     'sku' => 'testing-357'
                 ]
             ]
-        ]));
-    }
-
-    private function getMockTransaction()
-    {
-        return json_decode(json_encode([
-            'orderId' => $this->mockOrderId
         ]));
     }
 }
