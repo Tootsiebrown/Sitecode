@@ -440,18 +440,6 @@ class Sdk
         );
     }
 
-    public function getTransaction($transactionId)
-    {
-        $transactions = $this->request(
-            'get',
-            'sell/finances/v1/transaction',
-            [],
-            ['filter' => 'transactionId:{' . $transactionId . '}',]
-        );
-
-        return current($transactions->transactions);
-    }
-
     public function getOrder($orderId)
     {
         $order = $this->request(

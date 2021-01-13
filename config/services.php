@@ -76,7 +76,8 @@ return [
 
         ],
         'log' => [
-            'auctionCompleteWebhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false)
+            'auctionCompleteWebhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false),
+            'getOrderResponse' => env('EBAY_LOG_GET_ORDER_RESPONSE')
         ]
     ]
 

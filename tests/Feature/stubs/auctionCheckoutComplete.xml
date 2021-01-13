@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <soapenv:Header>
-        <ebl:RequesterCredentials soapenv:mustUnderstand="0"
-                                  xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
-            <ebl:NotificationSignature
-                xmlns:ebl="urn:ebay:apis:eBLBaseComponents">AKurONibBT6zkNCsQ27rtg==
-            </ebl:NotificationSignature>
+        <ebl:RequesterCredentials soapenv:mustUnderstand="0" xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ebl="urn:ebay:apis:eBLBaseComponents">
+            <ebl:NotificationSignature xmlns:ebl="urn:ebay:apis:eBLBaseComponents">ytPTZf+JSYXviwkw6qEa7w==</ebl:NotificationSignature>
         </ebl:RequesterCredentials>
     </soapenv:Header>
     <soapenv:Body>
         <GetItemTransactionsResponse xmlns="urn:ebay:apis:eBLBaseComponents">
-            <Timestamp>2005-04-27T17:48:03.545Z</Timestamp>
+            <Timestamp>2021-01-13T18:36:49.771Z</Timestamp>
             <Ack>Success</Ack>
-            <CorrelationID>00000000-00000000-00000000-00000000-00000000-00000000-0000000000
-            </CorrelationID>
-            <Version>407</Version>
-            <Build>20050426141851</Build>
+            <CorrelationID>2232360073662</CorrelationID>
+            <Version>1175</Version>
+            <Build>E1175_CORE_APIXO_19220561_R1</Build>
             <NotificationEventName>AuctionCheckoutComplete</NotificationEventName>
+            <RecipientUserID>kaysthi67</RecipientUserID>
+            <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANlYqkC5WGoQ+dj6x9nY+seQ==</EIASToken>
             <PaginationResult>
                 <TotalNumberOfPages>1</TotalNumberOfPages>
                 <TotalNumberOfEntries>1</TotalNumberOfEntries>
@@ -27,123 +25,236 @@
             <ReturnedTransactionCountActual>1</ReturnedTransactionCountActual>
             <Item>
                 <AutoPay>false</AutoPay>
-                <BuyerProtection>ItemIneligible</BuyerProtection>
+                <BuyItNowPrice currencyID="USD">0.0</BuyItNowPrice>
                 <Currency>USD</Currency>
-                <ItemID>2211777403</ItemID>
-                <ListingType>Chinese</ListingType>
-                <PaymentMethods>PaymentSeeDescription</PaymentMethods>
-                <PrivateListing>true</PrivateListing>
+                <ItemID>293824388115</ItemID>
+                <ListingDetails>
+                    <StartTime>2020-11-10T20:33:39.000Z</StartTime>
+                    <EndTime>2021-02-10T20:33:39.000Z</EndTime>
+                    <ViewItemURL>http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;Item=293824388115</ViewItemURL>
+                    <ViewItemURLForNaturalSearch>http://cgi.ebay.com/KESU-Expansion-Hard-Drive-120GB-NEW-SEALED-READ?item=293824388115&amp;category=0&amp;cmd=ViewItem</ViewItemURLForNaturalSearch>
+                </ListingDetails>
+                <ListingType>StoresFixedPrice</ListingType>
+                <PrimaryCategory>
+                    <CategoryID>131553</CategoryID>
+                </PrimaryCategory>
+                <PrivateListing>false</PrivateListing>
                 <Quantity>1</Quantity>
+                <SecondaryCategory>
+                    <CategoryID>0</CategoryID>
+                </SecondaryCategory>
                 <Seller>
-                    <AboutMePage>true</AboutMePage>
-                    <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wJnY+gD5iFoA+dj6x9nY+seQ==</EIASToken>
-                    <Email>sampleseller@sampleseller.com</Email>
-                    <FeedbackScore>4119</FeedbackScore>
-                    <FeedbackRatingStar>Red</FeedbackRatingStar>
-                    <IDVerified>true</IDVerified>
+                    <AboutMePage>false</AboutMePage>
+                    <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6ANlYqkC5WGoQ+dj6x9nY+seQ==</EIASToken>
+                    <Email>kaysthisandthat@yahoo.com</Email>
+                    <FeedbackScore>10258</FeedbackScore>
+                    <PositiveFeedbackPercent>99.8</PositiveFeedbackPercent>
+                    <FeedbackPrivate>false</FeedbackPrivate>
+                    <IDVerified>false</IDVerified>
+                    <eBayGoodStanding>true</eBayGoodStanding>
                     <NewUser>false</NewUser>
-                    <RegistrationDate>2004-10-03T18:28:52.000Z</RegistrationDate>
+                    <RegistrationDate>2019-04-22T17:11:46.000Z</RegistrationDate>
                     <Site>US</Site>
                     <Status>Confirmed</Status>
-                    <UserID>sampleseller</UserID>
+                    <UserID>kaysthi67</UserID>
                     <UserIDChanged>false</UserIDChanged>
-                    <UserIDLastChanged>2001-01-19T17:21:01.000Z</UserIDLastChanged>
+                    <VATStatus>NoVATTax</VATStatus>
                     <SellerInfo>
                         <AllowPaymentEdit>true</AllowPaymentEdit>
                         <CheckoutEnabled>true</CheckoutEnabled>
                         <CIPBankAccountStored>false</CIPBankAccountStored>
                         <GoodStanding>true</GoodStanding>
+                        <LiveAuctionAuthorized>false</LiveAuctionAuthorized>
                         <MerchandizingPref>OptIn</MerchandizingPref>
                         <QualifiesForB2BVAT>false</QualifiesForB2BVAT>
-                        <SellerLevel>None</SellerLevel>
                         <StoreOwner>true</StoreOwner>
-                        <StoreURL>http://www.ebaystores.ebay.com/id=178713</StoreURL>
+                        <StoreURL>http://stores.ebay.com/kaythisandthat</StoreURL>
+                        <SafePaymentExempt>false</SafePaymentExempt>
+                        <TopRatedSeller>true</TopRatedSeller>
                     </SellerInfo>
                 </Seller>
                 <SellingStatus>
-                    <ConvertedCurrentPrice currencyID="USD">100.0</ConvertedCurrentPrice>
-                    <CurrentPrice currencyID="USD">100.0</CurrentPrice>
+                    <ConvertedCurrentPrice currencyID="USD">21.99</ConvertedCurrentPrice>
+                    <CurrentPrice currencyID="USD">21.99</CurrentPrice>
                     <QuantitySold>1</QuantitySold>
+                    <ListingStatus>Active</ListingStatus>
                 </SellingStatus>
                 <Site>US</Site>
-                <Title>GetItem Test</Title>
+                <StartPrice currencyID="USD">21.99</StartPrice>
+                <Title>KESU Expansion Hard Drive 120GB - NEW SEALED (READ)</Title>
+                <GetItFast>false</GetItFast>
+                <SKU>RC11/10 C1413</SKU>
+                <IntegratedMerchantCreditCardEnabled>false</IntegratedMerchantCreditCardEnabled>
+                <ConditionID>1000</ConditionID>
+                <ConditionDisplayName>New</ConditionDisplayName>
             </Item>
             <TransactionArray>
                 <Transaction>
-                    <AmountPaid currencyID="USD">100.0</AmountPaid>
+                    <AmountPaid currencyID="USD">21.99</AmountPaid>
                     <AdjustmentAmount currencyID="USD">0.0</AdjustmentAmount>
                     <ConvertedAdjustmentAmount currencyID="USD">0.0</ConvertedAdjustmentAmount>
                     <Buyer>
                         <AboutMePage>false</AboutMePage>
-                        <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wJnY+gD5iFogidj6x9nY+seQ==</EIASToken>
-                        <Email>samplebuyer@samplebuyer.com</Email>
-                        <FeedbackScore>58</FeedbackScore>
-                        <FeedbackRatingStar>Blue</FeedbackRatingStar>
-                        <IDVerified>true</IDVerified>
-                        <NewUser>false</NewUser>
-                        <RegistrationDate>1999-01-19T08:00:00.000Z</RegistrationDate>
+                        <EIASToken>nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6MGlIOmDJCLoAqdj6x9nY+seQ==</EIASToken>
+                        <Email>cjj944098@gmail.com</Email>
+                        <FeedbackScore>0</FeedbackScore>
+                        <PositiveFeedbackPercent>0.0</PositiveFeedbackPercent>
+                        <FeedbackPrivate>false</FeedbackPrivate>
+                        <IDVerified>false</IDVerified>
+                        <eBayGoodStanding>true</eBayGoodStanding>
+                        <NewUser>true</NewUser>
+                        <RegistrationDate>2020-12-29T02:15:41.000Z</RegistrationDate>
                         <Site>US</Site>
                         <Status>Confirmed</Status>
-                        <UserID>samplebuyer</UserID>
+                        <UserID>cjj910</UserID>
                         <UserIDChanged>false</UserIDChanged>
-                        <UserIDLastChanged>2001-01-19T18:42:14.000Z</UserIDLastChanged>
+                        <VATStatus>NoVATTax</VATStatus>
                         <BuyerInfo>
                             <ShippingAddress>
-                                <Name>new_Name</Name>
-                                <Street1>a new street1</Street1>
-                                <Street2>new street 2</Street2>
-                                <CityName>my new town</CityName>
+                                <Name>Charlie Albright</Name>
+                                <Street1>171 Main St</Street1>
+                                <Street2># 165</Street2>
+                                <CityName>Los Altos</CityName>
                                 <StateOrProvince>CA</StateOrProvince>
                                 <Country>US</Country>
                                 <CountryName>United States</CountryName>
-                                <Phone>(111) 111-1</Phone>
-                                <PostalCode>95555</PostalCode>
-                                <AddressID>191925</AddressID>
+                                <Phone>(949) 433-9644</Phone>
+                                <PostalCode>94022-2912</PostalCode>
+                                <AddressID>10001239037596</AddressID>
                                 <AddressOwner>eBay</AddressOwner>
+                                <AddressUsage>DefaultShipping</AddressUsage>
                             </ShippingAddress>
                         </BuyerInfo>
+                        <UserAnonymized>false</UserAnonymized>
+                        <UserFirstName>Chuck</UserFirstName>
+                        <UserLastName>A.</UserLastName>
                     </Buyer>
                     <ShippingDetails>
                         <ChangePaymentInstructions>true</ChangePaymentInstructions>
-                        <InsuranceFee currencyID="USD">0.0</InsuranceFee>
-                        <InsuranceOption>NotOffered</InsuranceOption>
-                        <InsuranceWanted>false</InsuranceWanted>
-                        <PaymentEdited>false</PaymentEdited>
-                        <SalesTax>
-                            <SalesTaxPercent>0.0</SalesTaxPercent>
-                            <ShippingIncludedInTax>false</ShippingIncludedInTax>
-                        </SalesTax>
+                        <PaymentEdited>true</PaymentEdited>
                         <ShippingServiceOptions>
-                            <ShippingService>ShippingMethodStandard</ShippingService>
+                            <ShippingService>FedExHomeDelivery</ShippingService>
                             <ShippingServiceCost currencyID="USD">0.0</ShippingServiceCost>
-                            <ShippingServiceAdditionalCost currencyID="USD">0.0
-                            </ShippingServiceAdditionalCost>
                             <ShippingServicePriority>1</ShippingServicePriority>
+                            <ExpeditedService>false</ExpeditedService>
+                            <ShippingTimeMin>1</ShippingTimeMin>
+                            <ShippingTimeMax>5</ShippingTimeMax>
                         </ShippingServiceOptions>
+                        <ShippingType>Flat</ShippingType>
+                        <SellingManagerSalesRecordNumber>32125</SellingManagerSalesRecordNumber>
+                        <ThirdPartyCheckout>false</ThirdPartyCheckout>
+                        <TaxTable>
+                            <TaxJurisdiction>
+                                <JurisdictionID>CA</JurisdictionID>
+                                <SalesTaxPercent>9.0</SalesTaxPercent>
+                                <ShippingIncludedInTax>false</ShippingIncludedInTax>
+                            </TaxJurisdiction>
+                        </TaxTable>
+                        <GetItFast>false</GetItFast>
+                        <ExcludeShipToLocation>Alaska/Hawaii</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>APO/FPO</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>US Protectorates</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Africa</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Asia</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Central America and Caribbean</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Europe</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Middle East</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>North America</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Oceania</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>Southeast Asia</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>South America</ExcludeShipToLocation>
+                        <ExcludeShipToLocation>PO Box</ExcludeShipToLocation>
                     </ShippingDetails>
-                    <ConvertedAmountPaid currencyID="USD">100.0</ConvertedAmountPaid>
-                    <ConvertedTransactionPrice currencyID="USD">100.0</ConvertedTransactionPrice>
-                    <CreatedDate>2005-04-09T01:27:52.000Z</CreatedDate>
+                    <ConvertedAmountPaid currencyID="USD">21.99</ConvertedAmountPaid>
+                    <ConvertedTransactionPrice currencyID="USD">21.99</ConvertedTransactionPrice>
+                    <CreatedDate>2021-01-13T18:36:47.000Z</CreatedDate>
                     <DepositType>None</DepositType>
                     <QuantityPurchased>1</QuantityPurchased>
                     <Status>
                         <eBayPaymentStatus>NoPaymentFailure</eBayPaymentStatus>
                         <CheckoutStatus>CheckoutComplete</CheckoutStatus>
-                        <LastTimeModified>2005-04-27T17:46:04.000Z</LastTimeModified>
-                        <PaymentMethodUsed>PaymentSeeDescription</PaymentMethodUsed>
+                        <LastTimeModified>2021-01-13T18:36:48.000Z</LastTimeModified>
+                        <PaymentMethodUsed>CreditCard</PaymentMethodUsed>
                         <CompleteStatus>Complete</CompleteStatus>
+                        <BuyerSelectedShipping>true</BuyerSelectedShipping>
+                        <PaymentHoldStatus>None</PaymentHoldStatus>
+                        <IntegratedMerchantCreditCardEnabled>true</IntegratedMerchantCreditCardEnabled>
+                        <InquiryStatus>NotApplicable</InquiryStatus>
+                        <ReturnStatus>NotApplicable</ReturnStatus>
+                        <PaymentInstrument>CreditCard</PaymentInstrument>
                     </Status>
-                    <TransactionID>4950</TransactionID>
-                    <TransactionPrice currencyID="USD">100.0</TransactionPrice>
+                    <TransactionID>1879995910019</TransactionID>
+                    <TransactionPrice currencyID="USD">21.99</TransactionPrice>
                     <BestOfferSale>false</BestOfferSale>
+                    <eBayCollectAndRemitTax>true</eBayCollectAndRemitTax>
+                    <ExternalTransaction>
+                        <ExternalTransactionID>5796658576</ExternalTransactionID>
+                        <ExternalTransactionTime>2021-01-13T18:36:47.000Z</ExternalTransactionTime>
+                        <FeeOrCreditAmount currencyID="USD">0.0</FeeOrCreditAmount>
+                        <PaymentOrRefundAmount currencyID="USD">21.99</PaymentOrRefundAmount>
+                        <ExternalTransactionStatus>Succeeded</ExternalTransactionStatus>
+                    </ExternalTransaction>
                     <ShippingServiceSelected>
-                        <ShippingInsuranceCost currencyID="USD">0.0</ShippingInsuranceCost>
-                        <ShippingService>ShippingMethodStandard</ShippingService>
+                        <ShippingService>FedExHomeDelivery</ShippingService>
                         <ShippingServiceCost currencyID="USD">0.0</ShippingServiceCost>
+                        <ShippingPackageInfo>
+                            <EstimatedDeliveryTimeMin>2021-01-19T08:00:00.000Z</EstimatedDeliveryTimeMin>
+                            <EstimatedDeliveryTimeMax>2021-01-22T08:00:00.000Z</EstimatedDeliveryTimeMax>
+                        </ShippingPackageInfo>
                     </ShippingServiceSelected>
+                    <BuyerMessage>kaysthisandthat@yahoo.com</BuyerMessage>
+                    <PaidTime>2021-01-13T18:36:48.000Z</PaidTime>
+                    <ContainingOrder>
+                        <OrderID>08-06401-35793</OrderID>
+                        <OrderStatus>Completed</OrderStatus>
+                        <CancelStatus>NotApplicable</CancelStatus>
+                        <ExtendedOrderID>08-06401-35793</ExtendedOrderID>
+                        <ContainseBayPlusTransaction>false</ContainseBayPlusTransaction>
+                        <OrderLineItemCount>1</OrderLineItemCount>
+                    </ContainingOrder>
+                    <FinalValueFee currencyID="USD">1.52</FinalValueFee>
+                    <TransactionSiteID>US</TransactionSiteID>
+                    <Platform>eBay</Platform>
+                    <PayPalEmailAddress>Invalid Request</PayPalEmailAddress>
+                    <BuyerGuaranteePrice currencyID="USD">20000.0</BuyerGuaranteePrice>
+                    <Taxes/>
+                    <eBayCollectAndRemitTaxes>
+                        <TotalTaxAmount currencyID="USD">1.98</TotalTaxAmount>
+                        <TaxDetails>
+                            <Imposition>SalesTax</Imposition>
+                            <TaxDescription>SalesTax</TaxDescription>
+                            <TaxAmount currencyID="USD">1.98</TaxAmount>
+                            <TaxOnSubtotalAmount currencyID="USD">1.98</TaxOnSubtotalAmount>
+                            <TaxOnShippingAmount currencyID="USD">0.0</TaxOnShippingAmount>
+                            <TaxOnHandlingAmount currencyID="USD">0.0</TaxOnHandlingAmount>
+                            <CollectionMethod>NET</CollectionMethod>
+                        </TaxDetails>
+                    </eBayCollectAndRemitTaxes>
+                    <ActualShippingCost currencyID="USD">0.0</ActualShippingCost>
+                    <ActualHandlingCost currencyID="USD">0.0</ActualHandlingCost>
+                    <OrderLineItemID>293824388115-1879995910019</OrderLineItemID>
+                    <IsMultiLegShipping>false</IsMultiLegShipping>
+                    <IntangibleItem>false</IntangibleItem>
+                    <MonetaryDetails>
+                        <Payments>
+                            <Payment>
+                                <PaymentStatus>Succeeded</PaymentStatus>
+                                <Payer type="eBayUser">cjj910</Payer>
+                                <Payee type="eBayUser">kaysthi67</Payee>
+                                <PaymentTime>2021-01-13T18:36:47.000Z</PaymentTime>
+                                <PaymentAmount currencyID="USD">21.99</PaymentAmount>
+                                <ReferenceID type="ExternalTransactionID">5796658576</ReferenceID>
+                                <FeeOrCreditAmount currencyID="USD">0.0</FeeOrCreditAmount>
+                            </Payment>
+                        </Payments>
+                    </MonetaryDetails>
+                    <ExtendedOrderID>08-06401-35793</ExtendedOrderID>
+                    <eBayPlusTransaction>false</eBayPlusTransaction>
+                    <GuaranteedShipping>false</GuaranteedShipping>
+                    <GuaranteedDelivery>false</GuaranteedDelivery>
                 </Transaction>
             </TransactionArray>
-            <PayPalPreferred>true</PayPalPreferred>
+            <PayPalPreferred>false</PayPalPreferred>
         </GetItemTransactionsResponse>
     </soapenv:Body>
 </soapenv:Envelope>
