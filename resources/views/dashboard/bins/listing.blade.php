@@ -142,7 +142,10 @@
                                     Bin
                                 </th>
                                 <th>
-                                    Sold
+                                    Sold-website
+                                </th>
+                                <th>
+                                    Sold-eBay
                                 </th>
                                 <th>
                                     Delete
@@ -169,6 +172,11 @@
                                     </td>
                                     <td class="centered-column">
                                         @if ($item->order_item_id)
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                        @endif
+                                    </td>
+                                    <td class="centered-column">
+                                        @if ($item->ebay_order_id)
                                             <i class="fa fa-check" aria-hidden="true"></i>
                                         @endif
                                     </td>

@@ -40,6 +40,6 @@ class EbaySyncOrder extends Command
     {
         SyncEbayOrder::dispatch($this->argument('orderId'));
 
-        $this->output('dispatched');
+        $this->info('dispatched');
     }
 }
