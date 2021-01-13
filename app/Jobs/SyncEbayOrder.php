@@ -45,6 +45,11 @@ class SyncEbayOrder implements ShouldQueue
         $ebayOrder = new EbayOrder([
             'ebay_id' => $this->ebayOrderId,
         ]);
+
+        if (config('services.ebay.log.getOrderResponse')) {
+            \Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
+        }
+
         $localOrderId = $ebayOrder->save();
 
         foreach ($order->lineItems as $orderItem) {
