@@ -56,10 +56,13 @@ class WebHookController extends Controller
     public function ebayCheckoutComplete(Request $request)
     {
         $dom = new DOMDocument();
+        \Log::info($request->getContent());
         $dom->loadXML($request->getContent());
         $elements = $dom->getElementsByTagName('TransactionID');
         $transactionId = $elements->item(0)->textContent;
 
-        SyncEbayTransaction::dispatch($transactionId)->onQueue('fast');
+        if ($transactionId) {
+            SyncEbayTransaction::dispatch($transactionId)->onQueue('fast');
+        }
     }
 }
