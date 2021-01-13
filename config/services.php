@@ -74,6 +74,9 @@ return [
             'https://api.ebay.com/oauth/api_scope/sell.finances',
             'https://api.ebay.com/oauth/api_scope/sell.inventory',
 
+        ],
+        'log' => [
+            'auctionCompleteWebhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false)
         ]
     ]
 
