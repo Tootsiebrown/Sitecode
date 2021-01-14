@@ -115,6 +115,7 @@ class RegisterController extends Controller
             'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'newsletter_subscription' => ['boolean']
         ]);
     }
 
@@ -131,6 +132,7 @@ class RegisterController extends Controller
             'lastname' => $data['lastName'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'newsletter_subscription' => isset($data['newsletter_subscription']) && $data['newsletter_subscription'],
         ]);
 
         $group = $this->authRepo->getGroup('Member');

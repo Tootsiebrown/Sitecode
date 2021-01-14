@@ -504,7 +504,6 @@ Route::group(
                     ['prefix' => 'posts'],
                     function () {
                         Route::get('favorite-lists', ['as' => 'favorite_ads', 'uses' => 'AdsController@favoriteAds']);
-
                         Route::get('profile', ['as' => 'profile', 'uses' => 'UserController@profile']);
                         Route::get('profile/edit', ['as' => 'profile_edit', 'uses' => 'UserController@profileEdit']);
                         Route::post('profile/edit', ['uses' => 'UserController@profileEditPost']);

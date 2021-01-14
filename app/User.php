@@ -14,6 +14,14 @@ class User extends UserBase
 {
     use ShopUser;
 
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'email',
+        'password',
+        'newsletter_subscription',
+    ];
+
     public function country()
     {
         return $this->belongsTo(Country::class);

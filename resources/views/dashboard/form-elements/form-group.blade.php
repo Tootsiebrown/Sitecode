@@ -17,6 +17,7 @@
             @case ('date')
             @case ('datetime')
             @case ('text')
+            @case ('email')
             @case ('note')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'name' => $name,

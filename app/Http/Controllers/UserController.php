@@ -57,112 +57,6 @@ class UserController extends Controller
         return view('dashboard.user_info', compact('title', 'user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-//    public function create()
-//    {
-//        $countries = Country::all();
-//        return view('theme.user_create', compact('countries'));
-//    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-//    public function store(Request $request)
-//    {
-//
-//        $rules = [
-//            'first_name'    => 'required',
-//            'email'    => 'required|email',
-//            'gender'    => 'required',
-//            'country'    => 'required',
-//            'password'    => 'required|confirmed',
-//            'password_confirmation'    => 'required',
-//            'phone'    => 'required',
-//            'agree'    => 'required',
-//        ];
-//        $this->validate($request, $rules);
-//
-//        $active_status = get_option('verification_email_after_registration');
-//
-//        $data = [
-//            'first_name'        => $request->first_name,
-//            'last_name'         => $request->last_name,
-//            'name'              => $request->first_name . ' ' . $request->last_name,
-//            'email'             => $request->email,
-//            'password'          => bcrypt($request->password),
-//            'phone'             => $request->phone,
-//            'gender'             => $request->gender,
-//            'country_id'             => $request->country,
-//
-//            'user_type'         => 'user',
-//            'active_status'     => ($active_status == '1') ? '0' : '1',
-//            'activation_code'   => str_random(30)
-//        ];
-//
-//        $user_create = User::create($data);
-//
-//        if ($user_create) {
-//            $registration_success_activating_msg = "";
-//            if ($active_status == '1') {
-//                try {
-//                    $registration_success_activating_msg = ", we've sent you an activation email, please follow email instruction";
-//
-//                    Mail::send('emails.activation_email', ['user' => $data], function ($m) use ($data) {
-//                        $m->from(get_option('email_address'), get_option('site_name'));
-//                        $m->to($data['email'], $data['name'])->subject(trans('app.activate_email_subject'));
-//                    });
-//                } catch (\Exception $e) {
-//                    $registration_success_activating_msg = ", we can't sending you activation email during an email error, please contact with your admin";
-//                    //
-//                }
-//            }
-//            return redirect(route('login'))->with('registration_success', trans('app.registration_success') . $registration_success_activating_msg);
-//        } else {
-//            return back()->withInput()->with('error', trans('app.error_msg'));
-//        }
-//    }
-//
-//    public function activatingAccount($activation_code)
-//    {
-//        $get_user = User::whereActivationCode($activation_code)->first();
-//        if (! $get_user) {
-//            $error = trans('app.invalid_activation_code');
-//            return view('theme.invalid', compact('error'));
-//        }
-//        $get_user->active_status = '1';
-//        $get_user->activation_code = '';
-//        $get_user->save();
-//
-//        return redirect(route('login'))->with('registration_success', trans('app.account_activated'));
-//    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     */
-//    public function edit($id)
-//    {
-//        //
-//    }
 
     /**
      * Update the specified resource in storage.
@@ -215,22 +109,11 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function profile()
     {
         $title = trans('app.profile');
         $user = Auth::user();
-        return view('dashboard.profile', compact('title', 'user'));
+        return view('dashboard.profile.profile', compact('title', 'user'));
     }
 
     public function profileEdit()
@@ -239,7 +122,7 @@ class UserController extends Controller
         $user = Auth::user();
         $countries = Country::all();
 
-        return view('dashboard.profile_edit', compact('title', 'user', 'countries'));
+        return view('dashboard.profile.profile_edit', compact('title', 'user', 'countries'));
     }
 
     public function profileEditPost(Request $request)
@@ -248,109 +131,25 @@ class UserController extends Controller
         $user = User::find($user_id);
 
         //Validating
-        $rules = [
-            'email'    => 'required|email|unique:users,email,' . $user_id,
-        ];
-        $this->validate($request, $rules);
+        $this->validate(
+            $request,
+            [
+                'email' => 'required|email|unique:users,email,' . $user_id,
+                'newsletter_subscribed' => 'boolean',
+            ]
+        );
 
-        $inputs = array_only($request->input(), ['firstname', 'lastname', 'email']);
+        $input = $request->only(['firstname', 'lastname', 'email', 'newsletter_subscription']);
+        if (!isset($input['newsletter_subscription'])) {
+            $input['newsletter_subscription'] = false;
+        }
 
-        $user_update = $user->whereId($user_id)->update($inputs);
-
-//        if ($request->hasFile('photo')) {
-//            $rules = ['photo' => 'mimes:jpeg,jpg,png'];
-//            $this->validate($request, $rules);
-//
-//            $image = $request->file('photo');
-//            $file_base_name = str_replace('.' . $image->getClientOriginalExtension(), '', $image->getClientOriginalName());
-//            $resized_thumb = Image::make($image)->resize(300, 300)->stream();
-//
-//            $image_name = strtolower(time() . str_random(5) . '-' . str_slug($file_base_name)) . '.' . $image->getClientOriginalExtension();
-//
-//            $imageFileName = 'uploads/avatar/' . $image_name;
-//
-//            //Upload original image
-//            $is_uploaded = current_disk()->put($imageFileName, $resized_thumb->__toString(), 'public');
-//
-//            if ($is_uploaded) {
-//                $previous_photo = $user->photo;
-//                $previous_photo_storage = $user->photo_storage;
-//
-//                $user->photo = $image_name;
-//                $user->photo_storage = get_option('default_storage');
-//                $user->save();
-//
-//                if ($previous_photo) {
-//                    $previous_photo_path = 'uploads/avatar/' . $previous_photo;
-//                    $storage = Storage::disk($previous_photo_storage);
-//                    if ($storage->has($previous_photo_path)) {
-//                        $storage->delete($previous_photo_path);
-//                    }
-//                }
-//            }
-//        }
+        $user
+            ->whereId($user_id)
+            ->update($input);
 
         return redirect(route('profile'))->with('success', trans('app.profile_edit_success_msg'));
     }
-
-//    public function administrators()
-//    {
-//        $title = trans('app.administrators');
-//        //$users = User::whereUserType('admin')->get();
-//        $users = User::get();
-//
-//        return view('dashboard.administrators', compact('title', 'users'));
-//    }
-//
-//    public function addAdministrator()
-//    {
-//        $title = trans('app.add_administrator');
-//        $countries = Country::all();
-//
-//        return view('dashboard.add_administrator', compact('title', 'countries'));
-//    }
-//
-//
-//    public function storeAdministrator(Request $request)
-//    {
-//        $rules = [
-//            'name'                  => 'required',
-//            'email'                 => 'required|email',
-//            'phone'                 => 'required',
-//            'gender'                => 'required',
-//            'country'               => 'required',
-//            'password'              => 'required|confirmed',
-//            'password_confirmation' => 'required',
-//        ];
-//        $this->validate($request, $rules);
-//
-//        $data = [
-//            'name'              => $request->name,
-//            'email'             => $request->email,
-//            'password'          => bcrypt($request->password),
-//            'phone'             => $request->phone,
-//            'gender'            => $request->gender,
-//            'country_id'        => $request->country,
-//            'user_type'         => 'admin',
-//            'active_status'     => '1',
-//            'activation_code'   => str_random(30)
-//        ];
-//
-//        $user_create = User::create($data);
-//        return redirect(route('administrators'))->with('success', trans('app.registration_success'));
-//    }
-//
-//    public function administratorBlockUnblock(Request $request)
-//    {
-//        $status = $request->status == 'unblock' ? '1' : '2';
-//        $user_id = $request->user_id;
-//        User::whereId($user_id)->update(['active_status' => $status]);
-//
-//        if ($status == 1) {
-//            return ['success' => 1, 'msg' => trans('app.administrator_unblocked')];
-//        }
-//        return ['success' => 1, 'msg' => trans('app.administrator_blocked')];
-//    }
 
     public function changePassword()
     {
