@@ -164,15 +164,18 @@ class Sdk
                 $options
             );
         } catch (BadResponseException $e) {
-            Log::info(json_encode($options, JSON_PRETTY_PRINT));
-            Log::info($e->getResponse()->getBody()->getContents());
-            send_mail(
-                'davidbaneks@gmail.com',
-                'Ebay SDK request error',
-                $e->getResponse()->getBody()->getContents(),
-                'no-reply@catchndealz.com',
-                false
-            );
+            if ($this->config['log']['general_calls']) {
+                Log::info(json_encode($options, JSON_PRETTY_PRINT));
+                Log::info($e->getResponse()->getBody()->getContents());
+                send_mail(
+                    'davidbankes@gmail.com',
+                    'Ebay SDK request error',
+                    $e->getResponse()->getBody()->getContents(),
+                    'no-reply@catchndealz.com',
+                    false
+                );
+            }
+
             throw $e;
         }
 

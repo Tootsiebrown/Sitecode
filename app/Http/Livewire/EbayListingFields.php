@@ -6,7 +6,7 @@ use App\Ebay\Sdk;
 use App\Models\Listing;
 use Livewire\Component;
 
-class EbayCategories extends Component
+class EbayListingFields extends Component
 {
     /** @var Sdk */
     private $ebay;
@@ -72,7 +72,7 @@ class EbayCategories extends Component
 
     public function render()
     {
-        return view('livewire.ebay-categories', [
+        return view('livewire.ebay-listing-fields', [
             'level1Categories' => $this->getCategories(),
             'level2Categories' => $this->ebayCategory1 ? $this->getCategories($this->ebayCategory1, 2) : null,
             'level3Categories' => $this->ebayCategory2 ? $this->getCategories($this->ebayCategory2, 3) : null,

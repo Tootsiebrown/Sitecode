@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-8">
 
-                    @if( ! \Auth::check())
+                    @if (! Auth::check())
                         <div class="alert alert-info no-login-info">
                             <p> <i class="fa fa-info-circle"></i> @lang('app.no_login_info')</p>
                         </div>
@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <label for="product_sku" class="col-sm-4 control-label">Product SKU</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" value="{{ $product->id }}" readonly disabled>
+                                <input type="text" id="product_sku" class="form-control" value="{{ $product->id }}" readonly disabled>
                                 <p class="text-info">(Listing will have a different unique SKU, too.</p>
                             </div>
                         </div>
@@ -63,9 +63,9 @@
 
                         <div class="listing-type-select" data-component="listing-type-select">
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <label for="type" class="col-sm-4 control-label">Listing Type</label>
+                                <label for="select-listing-type" class="col-sm-4 control-label">Listing Type</label>
                                 <div class="col-sm-8">
-                                    <select name="type" data-element="select" class="select2">
+                                    <select name="type" id="select-listing-type" data-element="select" class="select2">
                                         <option value="">Select Listing Type...</option>
                                         <option value="auction" @if (old('type') === 'auction') selected @endif>Auction</option>
                                         <option value="set-price" @if (old('type') === 'set-price') selected @endif>Set Price</option>
@@ -78,9 +78,9 @@
                               class="form-group {{ $errors->has('quantity') ? 'has-error' : '' }} listing-type-select__quantity"
                               data-element="quantity"
                             >
-                                <label for="quantity" class="col-sm-4 control-label">Quantity</label>
+                                <label for="listing-quantity" class="col-sm-4 control-label">Quantity</label>
                                 <div class="col-sm-8">
-                                    <input name="quantity" type="text" class="form-control">
+                                    <input name="quantity" id="listing-quantity" type="text" class="form-control">
                                     {!! $errors->has('quantity')? '<p class="help-block">'.$errors->first('quantity').'</p>':'' !!}
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                         'value' => old('send_to_ebay_markup', 30)
                                     ])
                                     <div id="ebay-categories-container">
-                                        @livewire('ebay-categories', ['listing' => null])
+                                        @livewire('ebay-listing-fields', ['listing' => null])
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
     </script>
 
     @if(get_option('enable_recaptcha_post_ad') == 1)
-        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script src='//www.google.com/recaptcha/api.js'></script>
     @endif
 
 @endsection
