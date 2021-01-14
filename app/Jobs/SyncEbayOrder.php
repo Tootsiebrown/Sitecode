@@ -36,11 +36,16 @@ class SyncEbayOrder implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param Sdk $ebay
      * @return void
      */
-    public function handle(Sdk $ebay)
+    public function handle(Sdk $ebay): void
     {
         $order = $ebay->getOrder($this->ebayOrderId);
+
+        if (! $this->orderHasWebsiteItems($order)) {
+            return;
+        }
 
         $ebayOrder = new EbayOrder([
             'ebay_id' => $this->ebayOrderId,
@@ -64,14 +69,14 @@ class SyncEbayOrder implements ShouldQueue
         }
     }
 
-    private function getListingId($sku)
+    private function getListingId($sku): string
     {
         $env = $this->getEnvPrefix();
 
         return substr($sku, strlen($env));
     }
 
-    private function itemIsFromWebsite($sku)
+    private function itemIsFromWebsite($sku): bool
     {
         $index = strpos(
             $sku,
@@ -81,7 +86,7 @@ class SyncEbayOrder implements ShouldQueue
         return $index === 0;
     }
 
-    private function getEnvPrefix()
+    private function getEnvPrefix(): string
     {
         if (App::environment('production')) {
             $env = 'website';
@@ -92,6 +97,17 @@ class SyncEbayOrder implements ShouldQueue
         $env .= '-';
 
         return $env;
+    }
+
+    private function orderHasWebsiteItems($order): bool
+    {
+        foreach ($order->lineItems as $orderItem) {
+            if ($this->itemIsFromWebsite($orderItem->sku)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function maxTries()

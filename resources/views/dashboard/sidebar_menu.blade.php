@@ -186,7 +186,7 @@
 
             @if ($lUser->hasPrivilege('Ebay Orders'))
                 <li>
-                    <a href="{{ route('dashboard.ebay.orders') }}">Ebay Orders</a>
+                    <a href="{{ route('dashboard.ebay.orders') }}"> <i class="fa fa-cubes"></i> Ebay Orders</a>
                 </li>
             @endif
 
