@@ -1,4 +1,11 @@
-<div class="form-group @if (isset($name)) {{$errors->has($name)? 'has-error':'' }} @endif">
+<div
+    class="
+        form-group
+        @if (isset($name)) {{$errors->has($name)? 'has-error':'' }} @endif
+        @if (isset($groupClass)) {{ $groupClass }} @endif
+    "
+    @if (isset($groupAttributes)) {!! $groupAttributes !!} @endif
+>
     <label class="col-sm-4 control-label" @if (isset($name)) for="{{ $name }}" @endif>{{ $prettyTitle ?? ' ' }}</label>
     <div class="col-sm-8">
         @switch($type)
@@ -8,8 +15,10 @@
             @case ('boolean')
             @case ('select')
             @case ('date')
+            @case ('datetime')
             @case ('text')
             @case ('email')
+            @case ('note')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'name' => $name,
                     'value' => $value ?? '',

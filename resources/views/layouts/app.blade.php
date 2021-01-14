@@ -44,7 +44,6 @@
     <!-- load page specific css -->
     @yield('page-css')
 
-    <script src="{{ asset('assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js') }}"></script>
     <script type="text/javascript">
         window.jsonData = {!! frontendLocalisedJson() !!};
     </script>
@@ -76,6 +75,10 @@
 <script>
     var toastr_options = {closeButton : true};
 </script>
+@stack('scripts')
+
+
+<script src="{{ asset('assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js') }}"></script>
 
 @if(App::environment('production'))
     <!-- Global site tag (gtag.js) - Google Analytics -->

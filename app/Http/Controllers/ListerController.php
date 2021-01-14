@@ -27,6 +27,7 @@ class ListerController extends Controller
 {
     use GetsDenormalizedProductCategories;
     use CropsProductImages;
+    use HandlesEbayCategories;
 
     protected $datafinitiGateway;
 
@@ -516,6 +517,10 @@ class ListerController extends Controller
             'price' => 'required|numeric',
             'offers_enabled' => 'boolean',
             'secret' => 'boolean',
+            'send_to_ebay' => 'boolean',
+            'send_to_ebay_at' => 'required_if:send_to_ebay,1',
+            'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
+            'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
 
         foreach ($this->optionalFields as $fieldName => $fieldLabel) {
@@ -527,7 +532,6 @@ class ListerController extends Controller
         $product = Product::find($request->product_id);
 
         $ad = DB::transaction(function () use ($request, $product) {
-
             $data = [
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
@@ -552,16 +556,22 @@ class ListerController extends Controller
                 'original_price' => $product->original_price,
                 'condition' => $product->condition,
                 'shipping_weight_oz' => $product->shipping_weight_oz,
-                'offers_enabled' => $request->has('offers_enabled')
-                    ? $request->input('offers_enabled')
-                    : false,
-                'secret' => $request->has('secret')
-                    ? $request->input('secret')
-                    : false,
+                'offers_enabled' => $request->input('offers_enabled', false),
+                'secret' => $request->input('secret', false),
             ];
 
             foreach ($this->optionalFields as $fieldName => $fieldLabel) {
                 $data[$fieldName] = $request->input($fieldName, '');
+            }
+
+            if ($data['type'] === 'set-price' && $request->input('send_to_ebay')) {
+                $data['send_to_ebay'] = true;
+                $data['send_to_ebay_at'] = $request->input('send_to_ebay_at');
+                $data['send_to_ebay_markup'] = $request->input('send_to_ebay_markup');
+                $data['ebay_categories'] = $this->getEbayCategories($request);
+                $data['ebay_condition_id'] = $request->input('ebay_condition');
+            } else {
+                $data['send_to_ebay'] = false;
             }
 
             $ad = Listing::create($data);

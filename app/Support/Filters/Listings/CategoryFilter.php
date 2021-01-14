@@ -64,11 +64,7 @@ class CategoryFilter extends Filter
             }
         }
 
-        return ProductCategory::with([
-                'listings',
-                'children.listings',
-                'children.children.listings'
-            ])
+        return ProductCategory::with($this->getOptimizedWith($level))
             ->top()
             ->when($level > 0, function ($query) use ($level1Category) {
                 return $query->where('id', $level1Category->id);
@@ -132,5 +128,28 @@ class CategoryFilter extends Filter
         if (!empty($this->value)) {
             $paginator->appends('category', $this->value);
         }
+    }
+
+    protected function getOptimizedWith($level)
+    {
+        $with = [];
+
+        if ($level === 0) {
+            $with[] = 'listings';
+        }
+
+        if ($level === 1) {
+            $with[] = 'children.listings';
+        }
+
+        if ($level === 2) {
+            $with[] = 'children.children.listings';
+        }
+
+        if ($level === 3) {
+            $with[] = 'children.children.listings';
+        }
+
+        return $with;
     }
 }

@@ -40,6 +40,7 @@ return [
             \App\Listeners\NotifyOfferorsSomeoneElseBoughtIt::class,
             \App\Listeners\UpdateStripeOrderId::class,
             \App\Listeners\AuctionPurchasedListener::class,
+            \App\Listeners\OrderPlacedEbayInventoryListener::class,
         ],
     ],
 

@@ -1,5 +1,10 @@
 @extends('layouts.dashboard')
 
+@section('page-css')
+    <link href="{{asset('assets/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet">
+    @livewireStyles
+@endsection
+
 @section('dashboard-content')
     <script type="text/javascript">
         var categoryHierarchy = {!! json_encode($categoryHierarchy) !!};
@@ -124,6 +129,50 @@
                     {!! $errors->has('offers_enabled')? '<p class="help-block">'.$errors->first('offers_enabled').'</p>':'' !!}
                 </div>
             </div>
+
+            @if ($listing->sent_to_ebay_at)
+                @include('dashboard.form-elements.form-group', [
+                    'type' => 'note',
+                    'prettyTitle' => 'Send To Ebay',
+                    'name' => 'na',
+                    'note' => 'Listing has already been sent to eBay.',
+                ])
+            @else
+                <div class="send-to-ebay" data-component="listing-to-ebay">
+
+                    @include('dashboard.form-elements.form-group', [
+                        'type' => 'boolean',
+                        'name' => 'send_to_ebay',
+                        'prettyTitle' => 'Send To eBay',
+                        'checked' => old('send_to_ebay', $listing->send_to_ebay),
+                        'groupClass' => 'send-to-ebay',
+                    ])
+
+                    <div class="send-to-ebay-settings">
+                        @include('dashboard.form-elements.form-group', [
+                            'type' => 'datetime',
+                            'name' => 'send_to_ebay_at',
+                            'prettyTitle' => 'Send To eBay At',
+                            'value' => old('send_to_ebay_at', $listing->send_to_ebay_at),
+                            'options' => [
+                                'time' => true,
+                            ]
+                        ])
+
+                        @include('dashboard.form-elements.form-group', [
+                            'type' => 'text',
+                            'name' => 'send_to_ebay_markup',
+                            'prettyTitle' => 'eBay Markup %',
+                            'value' => old('send_to_ebay_markup', $listing->send_to_ebay_markup ?? 30),
+                        ])
+
+                        <div id="ebay-categories-container">
+                            @livewire('ebay-categories', ['listing' => $listing])
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         @endif
 
         @include('dashboard.form-elements.form-group', [
@@ -409,6 +458,7 @@
 @endsection
 
 @section('page-js')
+    @livewireScripts
 
     <script src="{{ asset('assets/plugins/ckeditor/ckeditor.js') }}"></script>
     <script>
@@ -416,15 +466,6 @@
         // instance, using default configuration.
         //CKEDITOR.replace( 'description_editor' );
         CKEDITOR.replace( 'features_editor' );
-    </script>
-    <script src="{{asset('assets/plugins/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.js')}}"></script>
-    <script type="text/javascript">
-        $('#application_deadline, #bid_deadline').datepicker({
-            format: "yyyy-mm-dd",
-            todayHighlight: true,
-            startDate: new Date(),
-            autoclose: true
-        });
     </script>
 
     <script>

@@ -3,6 +3,7 @@
 
 @section('page-css')
     <link href="{{asset('assets/css/bootstrap-datetimepicker-standalone.css')}}" rel="stylesheet">
+    @livewireStyles
 @endsection
 
 @section('dashboard-content')
@@ -104,6 +105,35 @@
 
                             </div>
 
+                            <div data-component="sub-listing-to-ebay">
+                                @include('dashboard.form-elements.form-group', [
+                                    'type' => 'boolean',
+                                    'name' => 'send_to_ebay',
+                                    'prettyTitle' => 'Send To eBay',
+                                    'checked' => old('send_to_ebay', false),
+                                    'groupClass' => 'send-to-ebay-check',
+                                ])
+
+                                <div class="send-to-ebay-settings">
+                                    @include('dashboard.form-elements.form-group', [
+                                        'type' => 'datetime',
+                                        'name' => 'send_to_ebay_at',
+                                        'prettyTitle' => 'Send At',
+                                        'value' => old('send_to_ebay_at', Illuminate\Support\Carbon::now()->addDays(3)),
+                                    ])
+
+                                    @include('dashboard.form-elements.form-group', [
+                                        'type' => 'text',
+                                        'name' => 'send_to_ebay_markup',
+                                        'prettyTitle' => 'eBay Markup %',
+                                        'value' => old('send_to_ebay_markup', 30)
+                                    ])
+                                    <div id="ebay-categories-container">
+                                        @livewire('ebay-categories', ['listing' => null])
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group {{ $errors->has('offers_enabled')? 'has-error':'' }} listing-type-select__offers-enabled" data-element="offersEnabled">
                                 <label for="offers_enabled" class="col-sm-4 control-label">
                                     Accepts Offers
@@ -164,6 +194,7 @@
 @endsection
 
 @section('page-js')
+    @livewireScripts
     <script>
         @if(session('success'))
         toastr.success('{{ session('success') }}', '<?php echo trans('app.success') ?>', toastr_options);
@@ -173,4 +204,5 @@
     @if(get_option('enable_recaptcha_post_ad') == 1)
         <script src='https://www.google.com/recaptcha/api.js'></script>
     @endif
+
 @endsection

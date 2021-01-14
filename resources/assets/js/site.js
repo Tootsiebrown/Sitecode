@@ -5,7 +5,7 @@ import ProductSuggestion from "./component/product-suggestion";
 import SelectOrNew from "./component/select-or-new";
 import NewProductImage from "./component/new-product-image";
 import ProductImage from "./component/product-image";
-import ListingTypeSelect from "./component/listing-type-select";
+import ListingTypeSelect from "./component/dashboard/listing-type-select";
 import ProductCategoriesHierarchy from "./component/product-categories-hierarchy";
 import FocusableInputGroup from "./component/focusable-input-group";
 import TaxonomyNav from "./component/taxonomy-nav";
@@ -34,6 +34,8 @@ import ImageField from "./component/dashboard/image-field";
 import UsageRestrictions from "./component/dashboard/coupons/usage-restrictions";
 import MultiImageSort from "./component/dashboard/multi-image-sort";
 import ApplicabilityRestrictions from "./component/dashboard/coupons/applicability-restrictions";
+import FormControlDatetime from "./component/form-control-datetime";
+import ListingToEbay from "./component/dashboard/listing-to-ebay";
 
 export default function Site() {
 
@@ -70,11 +72,13 @@ export default function Site() {
         selectComponent('dashboard-coupon-type').each((index, element) => new Type(element))
         selectComponent('dashboard-coupon-usage-restrictions').each((index, element) => new UsageRestrictions(element))
         selectComponent('form-control-date').each((index, element) => new FormControlDate(element))
+        selectComponent('form-control-datetime').each((index, element) => new FormControlDatetime(element))
         selectComponent('checkout-sidebar-cart').each((index, element) => new CheckoutSidebarCart(element))
         selectComponent('payment-method-picker').each((index, element) => new PaymentMethodPicker(element))
         selectComponent('confirm-link').each((index, element) => new ConfirmLink(element))
         selectComponent('image-field').each((index, element) => new ImageField(element))
         selectComponent('multi-image-sort').each((index, element) => new MultiImageSort(element))
+        selectComponent('listing-to-ebay').each((index, element) => new ListingToEbay(element))
         selectComponent('dashboard-coupon-applicability-restrictions').each((index, element) => new ApplicabilityRestrictions(element))
 
         let taxonomyNavs = selectComponent('taxonomy-nav').map((index, element) => new TaxonomyNav(element))

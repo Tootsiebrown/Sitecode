@@ -2,14 +2,20 @@
 
 namespace App\Providers;
 
+use App\Ebay\EbayTokenRepository;
+use App\Ebay\Sdk;
 use App\Models\Listing;
 use App\Option;
 use App\Repositories\ListingsRepository;
 use App\Support\Filters\FilterAggregatorContract;
 use App\Support\Filters\Listings\ListingsFilterAggreggator;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -50,8 +56,48 @@ class AppServiceProvider extends ServiceProvider
             'App\Repositories\SiteSearchRepository'
         );
 
+        $this->app->when(Sdk::class)
+            ->needs(ClientInterface::class)
+            ->give(function () {
+                return new Client([
+                    'base_uri' => config('services.ebay.test_mode')
+                        ? 'https://api.sandbox.ebay.com/'
+                        : 'https://api.ebay.com/'
+                ]);
+            });
+
+        $this->app->when(EbayTokenRepository::class)
+            ->needs(ClientInterface::class)
+            ->give(function () {
+                return new Client([
+                    'base_uri' => config('services.ebay.oauth.test_mode')
+                        ? 'https://api.sandbox.ebay.com/'
+                        : 'https://api.ebay.com/'
+                ]);
+            });
+
         Carbon::macro('wasOver24HoursAgo', function () {
             return Carbon::now()->subHours(24)->greaterThan($this);
+        });
+
+        Builder::macro('createdAtDaysAgoColumn', function ($column) {
+            // using Carbon::now() for testability
+
+            switch ($this->connection->getDriverName()) {
+                case 'sqlite':
+                    $this->whereRaw('(cast(julianday("' . Carbon::now()->toDateString() . '", "localtime") as int) - cast(julianday("created_at") as int)) = "' . $column . '"');
+                    break;
+
+                case 'mysql':
+                    $this->whereRaw('DATEDIFF(' . Carbon::now()->toDateString() . ', created_at) = send_to_ebay_days');
+                    break;
+
+                default:
+                    throw new Exception('This macro does not support the database driver you\'re using.');
+                    break;
+            }
+
+            return $this;
         });
     }
 
@@ -68,6 +114,7 @@ class AppServiceProvider extends ServiceProvider
                 $request->headers->set('X_FORWARDED_HOST', $request->server->get('HTTP_X_ORIGINAL_HOST'));
             }
         }
+
         load_options();
 
         view()->composer('*', function ($view) {

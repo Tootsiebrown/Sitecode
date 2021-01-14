@@ -33,5 +33,6 @@
         <server name="FORCE_WWW" value="false" force="true"/>
         <server name="FORCE_PRIMARY_DOMAIN" value="false" force="true"/>
         <server name="SSL_ENABLED" value="false" force="true"/>
+        <server name="EBAY_APP_ID" value="test-1" force="true"/>
     </php>
 </phpunit>
