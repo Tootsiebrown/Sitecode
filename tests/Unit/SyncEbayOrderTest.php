@@ -41,7 +41,6 @@ class SyncEbayOrderTest extends WaxAppTestCase
             ->method('getOrder')
             ->willReturn($this->getMockOrder());
 
-
         $job = new SyncEbayOrder($this->mockOrderId);
         $job->handle($this->ebay);
 
@@ -58,6 +57,18 @@ class SyncEbayOrderTest extends WaxAppTestCase
         });
     }
 
+    public function testOrderHasNoWebsiteItems()
+    {
+        $this->ebay
+            ->method('getOrder')
+            ->willReturn($this->getMockOrderWithNoRelevantItems());
+
+        $job = new SyncEbayOrder($this->mockOrderId);
+        $job->handle($this->ebay);
+
+        $this->assertEquals(0, EbayOrder::all()->count());
+    }
+
     private function getMockOrder()
     {
         return json_decode(json_encode([
@@ -65,6 +76,18 @@ class SyncEbayOrderTest extends WaxAppTestCase
                 [
                     'quantity' => 2,
                     'sku' => 'testing-357'
+                ]
+            ]
+        ]));
+    }
+
+    private function getMockOrderWithNoRelevantItems()
+    {
+        return json_decode(json_encode([
+            'lineItems' => [
+                [
+                    'quantity' => 2,
+                    'sku' => '357'
                 ]
             ]
         ]));
