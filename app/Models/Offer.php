@@ -11,6 +11,54 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * App\Models\Offer
+ *
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $user_id
+ * @property int $listing_id
+ * @property int $quantity
+ * @property string $price
+ * @property Carbon|null $responded_at
+ * @property string|null $response
+ * @property int|null $counter_quantity
+ * @property string|null $counter_price
+ * @property string|null $response_message
+ * @property string|null $counter_responded_at
+ * @property int|null $counter_accepted
+ * @property string|null $purchased_at
+ * @property int $expired_event_fired
+ * @property-read mixed $pretty_status
+ * @property-read mixed $status
+ * @property-read \App\Models\Listing $listing
+ * @property-read User $user
+ * @method static Builder|Offer expirationEventNotFired()
+ * @method static Builder|Offer forListing(\App\Models\Listing $listing)
+ * @method static Builder|Offer mine()
+ * @method static Builder|Offer newModelQuery()
+ * @method static Builder|Offer newQuery()
+ * @method static Builder|Offer query()
+ * @method static Builder|Offer status($status)
+ * @method static Builder|Offer whereCounterAccepted($value)
+ * @method static Builder|Offer whereCounterPrice($value)
+ * @method static Builder|Offer whereCounterQuantity($value)
+ * @method static Builder|Offer whereCounterRespondedAt($value)
+ * @method static Builder|Offer whereCreatedAt($value)
+ * @method static Builder|Offer whereExpiredEventFired($value)
+ * @method static Builder|Offer whereId($value)
+ * @method static Builder|Offer whereListingId($value)
+ * @method static Builder|Offer wherePrice($value)
+ * @method static Builder|Offer wherePurchasedAt($value)
+ * @method static Builder|Offer whereQuantity($value)
+ * @method static Builder|Offer whereRespondedAt($value)
+ * @method static Builder|Offer whereResponse($value)
+ * @method static Builder|Offer whereResponseMessage($value)
+ * @method static Builder|Offer whereUpdatedAt($value)
+ * @method static Builder|Offer whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Offer extends Model
 {
     protected $guarded = [];

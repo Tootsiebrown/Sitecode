@@ -7,7 +7,7 @@ use App\Http\Controllers\Dashboard\ValidatesEbayAspects;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Brand;
-use App\ProductCategory;
+use App\Models\ProductCategory;
 use App\Repositories\ListingsRepository;
 use Exception;
 use Illuminate\Http\Request;

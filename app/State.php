@@ -4,6 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\State
+ *
+ * @property int $id
+ * @property string $state_name
+ * @property int $country_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\City[] $cities
+ * @property-read int|null $cities_count
+ * @property-read \App\Country $country
+ * @method static \Illuminate\Database\Eloquent\Builder|State newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|State newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|State query()
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereStateName($value)
+ * @mixin \Eloquent
+ */
 class State extends Model
 {
     protected $guarded = [];

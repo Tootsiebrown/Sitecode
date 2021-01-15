@@ -9,6 +9,30 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * App\Models\EbayOrder
+ *
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $ebay_id
+ * @property int|null $canceled_by_user_id
+ * @property string|null $canceled_at
+ * @property-read User|null $canceledBy
+ * @property-read mixed $canceled
+ * @property-read \Illuminate\Database\Eloquent\Collection|Item[] $items
+ * @property-read int|null $items_count
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCanceledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCanceledByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereEbayId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class EbayOrder extends Model
 {
     protected $guarded = [];

@@ -6,6 +6,52 @@ use App\Models\Listing;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Payment
+ *
+ * @property int $id
+ * @property int|null $ad_id
+ * @property int|null $user_id
+ * @property string|null $amount
+ * @property string|null $payment_method
+ * @property string|null $status
+ * @property string|null $currency
+ * @property string|null $token_id
+ * @property string|null $card_last4
+ * @property string|null $card_id
+ * @property string|null $client_ip
+ * @property string|null $charge_id_or_token
+ * @property string|null $payer_email
+ * @property string|null $description
+ * @property string|null $local_transaction_id
+ * @property int|null $payment_created
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Listing|null $ad
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAdId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCardId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCardLast4($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereChargeIdOrToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereClientIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereLocalTransactionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePayerEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaymentCreated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTokenId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Payment extends Model
 {
     protected $guarded = [];
