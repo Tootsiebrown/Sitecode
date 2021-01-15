@@ -12,6 +12,11 @@ use App\Models\Listing\Image;
 use App\Models\Listing\Item;
 use App\State;
 use App\User;
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -60,10 +65,10 @@ use Illuminate\Support\Facades\Auth;
  * @property string|null $send_to_ebay_at
  * @property string|null $to_ebay_error_at
  * @property string|null $ebay_listing_id
- * @property-read \Illuminate\Database\Eloquent\Collection|Bid[] $bids
+ * @property-read Collection|Bid[] $bids
  * @property-read int|null $bids_count
- * @property-read \App\Models\Brand|null $brand
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductCategory[] $categories
+ * @property-read Brand|null $brand
+ * @property-read Collection|ProductCategory[] $categories
  * @property-read int|null $categories_count
  * @property-read City $city
  * @property-read Country $country
@@ -86,15 +91,15 @@ use Illuminate\Support\Facades\Auth;
  * @property-read mixed $url
  * @property-read mixed $winner
  * @property-read mixed $winning_bid
- * @property-read \Illuminate\Database\Eloquent\Collection|Image[] $images
+ * @property-read Collection|Image[] $images
  * @property-read int|null $images_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Item[] $items
+ * @property-read Collection|Item[] $items
  * @property-read int|null $items_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Offer[] $offers
+ * @property-read Collection|Offer[] $offers
  * @property-read int|null $offers_count
  * @property-read State $state
  * @property-read User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $watchers
+ * @property-read Collection|User[] $watchers
  * @property-read int|null $watchers_count
  * @method static Builder|Listing active()
  * @method static Builder|Listing endEventNotFired()
@@ -111,7 +116,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Listing thatIBidFor()
  * @method static Builder|Listing timePastForEbay()
  * @method static Builder|Listing typeIsAuction()
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Listing extends Model
 {
@@ -150,7 +155,7 @@ class Listing extends Model
         });
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -186,6 +191,8 @@ class Listing extends Model
                 $query->whereIn('product_categories.id', $categoryId);
             });
         }
+
+        return $query;
     }
 
     public function scopeExpired($query)
@@ -339,6 +346,9 @@ class Listing extends Model
         }
     }
 
+    /**
+     * @return HasMany|Bid
+     */
     public function bids()
     {
         return $this->hasMany(Bid::class)->orderBy('id', 'desc');
@@ -404,25 +414,27 @@ class Listing extends Model
         return false;
     }
 
-    public function premium_icon()
+    public function premium_icon(): string
     {
         if ($this->price_plan == 'premium') {
             $html = '<img src="' . asset('assets/img/premium-icon.png') . '" alt="" />';
             return $html;
         }
+
+        return '';
     }
 
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(ProductCategory::class, 'ad_category_links', 'ad_id', 'category_id');
     }
 
-    public static function getOptionalFieldsForDisplay()
+    public static function getOptionalFieldsForDisplay(): array
     {
         return [
             'gender' => 'Gender',
@@ -434,7 +446,7 @@ class Listing extends Model
         ];
     }
 
-    public function hasOptionalFieldsForDisplay()
+    public function hasOptionalFieldsForDisplay(): bool
     {
         foreach (static::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel) {
             if (!is_null($this->$fieldName)) {
@@ -445,7 +457,7 @@ class Listing extends Model
         return false;
     }
 
-    public function getUrlAttribute()
+    public function getUrlAttribute(): string
     {
         return route('single_ad', [
             'id' => $this->id,
@@ -453,6 +465,9 @@ class Listing extends Model
         ]);
     }
 
+    /**
+     * @return HasMany|Item
+     */
     public function items()
     {
         return $this->hasMany(Item::class, 'listing_id');
@@ -525,6 +540,8 @@ class Listing extends Model
         if (!$this->bids->isEmpty() && $this->winning_bid->bid_amount > $this->price) {
             return $this->winning_bid->user;
         }
+
+        return null;
     }
 
     public function watchers()
