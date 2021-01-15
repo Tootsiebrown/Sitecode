@@ -27,15 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereFeatured($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereMediaName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereMetadata($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereSortId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductImage whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class ProductImage extends Model

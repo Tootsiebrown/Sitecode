@@ -28,15 +28,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Image newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Image newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Image query()
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereFeatured($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereListingId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereMediaName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereMetadata($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereSortId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Image whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Image extends Model

@@ -19,21 +19,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|Listing[] $ads
  * @property-read int|null $ads_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Brand[] $brands
+ * @property-read \Illuminate\Database\Eloquent\Collection|Brand[] $brands
  * @property-read int|null $brands_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Sub_Category[] $sub_categories
  * @property-read int|null $sub_categories_count
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategoryName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategorySlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCategoryType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Category extends Model

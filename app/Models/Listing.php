@@ -18,9 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class Listing
+ * App\Models\Listing
  *
- * @mixin Builder
  * @property int $id
  * @property string|null $title
  * @property string|null $slug
@@ -63,8 +62,8 @@ use Illuminate\Support\Facades\Auth;
  * @property string|null $ebay_listing_id
  * @property-read \Illuminate\Database\Eloquent\Collection|Bid[] $bids
  * @property-read int|null $bids_count
- * @property-read Brand|null $brand
- * @property-read \Illuminate\Database\Eloquent\Collection|ProductCategory[] $categories
+ * @property-read \App\Models\Brand|null $brand
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductCategory[] $categories
  * @property-read int|null $categories_count
  * @property-read City $city
  * @property-read Country $country
@@ -112,46 +111,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Listing thatIBidFor()
  * @method static Builder|Listing timePastForEbay()
  * @method static Builder|Listing typeIsAuction()
- * @method static Builder|Listing whereBrandId($value)
- * @method static Builder|Listing whereColor($value)
- * @method static Builder|Listing whereCondition($value)
- * @method static Builder|Listing whereCreatedAt($value)
- * @method static Builder|Listing whereDescription($value)
- * @method static Builder|Listing whereDimensions($value)
- * @method static Builder|Listing whereEbayCategories($value)
- * @method static Builder|Listing whereEbayConditionId($value)
- * @method static Builder|Listing whereEbayListingId($value)
- * @method static Builder|Listing whereEbayOfferId($value)
- * @method static Builder|Listing whereEndEventFired($value)
- * @method static Builder|Listing whereExpirationDate($value)
- * @method static Builder|Listing whereExpiredAt($value)
- * @method static Builder|Listing whereFeatured($value)
- * @method static Builder|Listing whereFeaturedSortId($value)
- * @method static Builder|Listing whereFeatures($value)
- * @method static Builder|Listing whereGender($value)
- * @method static Builder|Listing whereId($value)
- * @method static Builder|Listing whereMetaDescription($value)
- * @method static Builder|Listing whereMetaKeywords($value)
- * @method static Builder|Listing whereModelNumber($value)
- * @method static Builder|Listing whereOffersEnabled($value)
- * @method static Builder|Listing whereOriginalPrice($value)
- * @method static Builder|Listing wherePrice($value)
- * @method static Builder|Listing whereProductId($value)
- * @method static Builder|Listing whereSecret($value)
- * @method static Builder|Listing whereSendToEbay($value)
- * @method static Builder|Listing whereSendToEbayAt($value)
- * @method static Builder|Listing whereSendToEbayMarkup($value)
- * @method static Builder|Listing whereSentToEbayAt($value)
- * @method static Builder|Listing whereShippingWeightOz($value)
- * @method static Builder|Listing whereSize($value)
- * @method static Builder|Listing whereSlug($value)
- * @method static Builder|Listing whereStatus($value)
- * @method static Builder|Listing whereTitle($value)
- * @method static Builder|Listing whereToEbayErrorAt($value)
- * @method static Builder|Listing whereType($value)
- * @method static Builder|Listing whereUpc($value)
- * @method static Builder|Listing whereUpdatedAt($value)
- * @method static Builder|Listing whereView($value)
+ * @mixin \Eloquent
  */
 class Listing extends Model
 {

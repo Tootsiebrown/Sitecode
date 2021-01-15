@@ -16,9 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|State newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|State newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|State query()
- * @method static \Illuminate\Database\Eloquent\Builder|State whereCountryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|State whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|State whereStateName($value)
  * @mixin \Eloquent
  */
 class State extends Model

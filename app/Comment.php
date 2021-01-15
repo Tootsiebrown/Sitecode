@@ -28,17 +28,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment parent()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereAdId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereApproved($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereAuthorEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereAuthorIp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereAuthorName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUserId($value)
  * @mixin \Eloquent
  */
 class Comment extends Model

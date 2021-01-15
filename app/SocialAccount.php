@@ -17,12 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount query()
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereProvider($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereProviderUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount whereUserId($value)
  * @mixin \Eloquent
  */
 class SocialAccount extends Model

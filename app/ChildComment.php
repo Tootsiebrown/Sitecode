@@ -22,17 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ChildComment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChildComment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChildComment query()
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereAdId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereApproved($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereAuthorEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereAuthorIp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereAuthorName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereComment($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereCommentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ChildComment whereUserId($value)
  * @mixin \Eloquent
  */
 class ChildComment extends Model

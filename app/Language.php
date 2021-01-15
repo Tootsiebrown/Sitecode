@@ -14,10 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Language newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Language newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Language query()
- * @method static \Illuminate\Database\Eloquent\Builder|Language whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Language whereIsRtl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Language whereLanguageCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Language whereLanguageName($value)
  * @mixin \Eloquent
  */
 class Language extends Model

@@ -15,11 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|EbayToken newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EbayToken newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EbayToken query()
- * @method static \Illuminate\Database\Eloquent\Builder|EbayToken whereAccessToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayToken whereAccessTokenExpiresAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayToken whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayToken whereRefreshToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayToken whereRefreshTokenExpiresAt($value)
  * @mixin \Eloquent
  */
 class EbayToken extends Model

@@ -82,23 +82,6 @@ use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
  * @method static Builder|Order processed()
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
  * @method static Builder|Order shipped()
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereArchivedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereCanceledAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereCanceledByUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereIpAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order wherePlacedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereProcessedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereSearchIndex($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereSequence($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereSessionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereShipstationKey($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereTotal($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
  * @mixin \Eloquent
  */
 class Order extends WaxOrder

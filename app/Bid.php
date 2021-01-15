@@ -23,13 +23,6 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|Bid newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bid newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bid query()
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereBidAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereIsAccepted($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereListingId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Bid whereUserId($value)
  * @mixin \Eloquent
  */
 class Bid extends Model

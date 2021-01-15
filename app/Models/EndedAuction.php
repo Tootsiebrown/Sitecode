@@ -24,12 +24,6 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder|EndedAuction newModelQuery()
  * @method static Builder|EndedAuction newQuery()
  * @method static Builder|EndedAuction query()
- * @method static Builder|EndedAuction whereCreatedAt($value)
- * @method static Builder|EndedAuction whereId($value)
- * @method static Builder|EndedAuction whereListingId($value)
- * @method static Builder|EndedAuction wherePurchasedAt($value)
- * @method static Builder|EndedAuction whereReminderSentAt($value)
- * @method static Builder|EndedAuction whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class EndedAuction extends Model

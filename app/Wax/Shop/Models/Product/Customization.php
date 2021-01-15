@@ -22,16 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Customization newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customization newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customization query()
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereCmsSortId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereMax($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereMin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereProductId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereRequired($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Customization whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Customization extends Model

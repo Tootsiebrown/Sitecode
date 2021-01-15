@@ -9,10 +9,8 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Product
+ * App\Models\Product
  *
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -36,45 +34,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $redone_at
  * @property int|null $redone_by_user_id
  * @property int $offers_enabled
- * @property-read \Illuminate\Database\Eloquent\Collection|Listing[] $ads
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Listing[] $ads
  * @property-read int|null $ads_count
- * @property-read \App\Brand|null $brand
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductCategory[] $categories
+ * @property-read \App\Models\Brand|null $brand
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductCategory[] $categories
  * @property-read int|null $categories_count
  * @property-read mixed $category
  * @property-read mixed $child_category
  * @property-read mixed $ebay_condition_enum
  * @property-read mixed $featured_image
  * @property-read mixed $grandchild_category
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ProductImage[] $images
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductImage[] $images
  * @property-read int|null $images_count
- * @property-read \App\User|null $redoneBy
+ * @property-read User|null $redoneBy
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereBrandId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereColor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCondition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereDimensions($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereExpirationDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereFeatures($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereMetaDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereMetaKeywords($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereModelNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereOffersEnabled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereOriginalPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereRedoneAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereRedoneByUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereShippingWeightOz($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereSize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpc($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Product extends Model
 {

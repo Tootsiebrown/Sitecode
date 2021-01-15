@@ -23,18 +23,6 @@ use Wax\Shop\Models\Order\ShippingRate as WaxShippingRate;
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate query()
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereActualAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereBoxCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereBusinessTransitDays($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereCarrier($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate wherePackaging($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereServiceCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereServiceName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereShipmentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ShippingRate whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class ShippingRate extends WaxShippingRate

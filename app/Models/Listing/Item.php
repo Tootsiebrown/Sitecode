@@ -30,14 +30,6 @@ use Wax\Shop\Models\Order\Item as OrderItem;
  * @method static \Illuminate\Database\Eloquent\Builder|Item reserved()
  * @method static \Illuminate\Database\Eloquent\Builder|Item reservedForOffer($offerId)
  * @method static \Illuminate\Database\Eloquent\Builder|Item sold()
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereBin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereEbayOrderId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereListingId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereOrderItemId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereRemovedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereReservedForOfferId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Item whereReservedForOrderId($value)
  * @mixin \Eloquent
  */
 class Item extends Model

@@ -41,22 +41,6 @@ use Illuminate\Validation\ValidationException;
  * @method static Builder|Offer newQuery()
  * @method static Builder|Offer query()
  * @method static Builder|Offer status($status)
- * @method static Builder|Offer whereCounterAccepted($value)
- * @method static Builder|Offer whereCounterPrice($value)
- * @method static Builder|Offer whereCounterQuantity($value)
- * @method static Builder|Offer whereCounterRespondedAt($value)
- * @method static Builder|Offer whereCreatedAt($value)
- * @method static Builder|Offer whereExpiredEventFired($value)
- * @method static Builder|Offer whereId($value)
- * @method static Builder|Offer whereListingId($value)
- * @method static Builder|Offer wherePrice($value)
- * @method static Builder|Offer wherePurchasedAt($value)
- * @method static Builder|Offer whereQuantity($value)
- * @method static Builder|Offer whereRespondedAt($value)
- * @method static Builder|Offer whereResponse($value)
- * @method static Builder|Offer whereResponseMessage($value)
- * @method static Builder|Offer whereUpdatedAt($value)
- * @method static Builder|Offer whereUserId($value)
  * @mixin \Eloquent
  */
 class Offer extends Model

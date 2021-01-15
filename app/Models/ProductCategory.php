@@ -7,10 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ProductCategory
+ * App\Models\ProductCategory
  *
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Model
  * @property int $id
  * @property int $parent_id
  * @property string $name
@@ -33,28 +31,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|Listing[] $listings
  * @property-read int|null $listings_count
  * @property-read ProductCategory $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
  * @property-read int|null $products_count
  * @method static Builder|ProductCategory hasListings()
  * @method static Builder|ProductCategory newModelQuery()
  * @method static Builder|ProductCategory newQuery()
  * @method static Builder|ProductCategory query()
  * @method static Builder|ProductCategory top()
- * @method static Builder|ProductCategory whereBreadcrumb($value)
- * @method static Builder|ProductCategory whereCmsSortId($value)
- * @method static Builder|ProductCategory whereCreatedAt($value)
- * @method static Builder|ProductCategory whereDeletedAt($value)
- * @method static Builder|ProductCategory whereDescription($value)
- * @method static Builder|ProductCategory whereHandler($value)
- * @method static Builder|ProductCategory whereId($value)
- * @method static Builder|ProductCategory whereImage($value)
- * @method static Builder|ProductCategory whereImageMetadata($value)
- * @method static Builder|ProductCategory whereName($value)
- * @method static Builder|ProductCategory whereParentId($value)
- * @method static Builder|ProductCategory whereShortDescription($value)
- * @method static Builder|ProductCategory whereUpdatedAt($value)
- * @method static Builder|ProductCategory whereUrlLock($value)
- * @method static Builder|ProductCategory whereUrlSlug($value)
+ * @mixin \Eloquent
  */
 class ProductCategory extends Model
 {

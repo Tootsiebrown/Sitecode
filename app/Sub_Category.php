@@ -20,14 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereCategoryName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereCategorySlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereCategoryType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Sub_Category whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class Sub_Category extends Model

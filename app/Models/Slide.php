@@ -23,18 +23,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Slide newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Slide newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Slide query()
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereBackgroundImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereBackgroundImageMetadata($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCaption($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCmsSortId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereCta($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereImageMetadata($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Slide whereUrl($value)
  * @mixin \Eloquent
  */
 class Slide extends Model

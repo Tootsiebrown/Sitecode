@@ -25,12 +25,6 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder query()
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCanceledAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCanceledByUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereEbayId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class EbayOrder extends Model
