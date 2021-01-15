@@ -3,29 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Dashboard\CropsProductImages;
+use App\Http\Controllers\Dashboard\ValidatesEbayAspects;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Brand;
-use App\Category;
-use App\City;
-use App\Comment;
-use App\Country;
-use App\Media;
-use App\Payment;
 use App\ProductCategory;
 use App\Repositories\ListingsRepository;
-use App\State;
-use App\Sub_Category;
-use App\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Intervention\Image\Facades\Image;
 use Wax\Core\Traits\CanUseFilters;
 
 class AdsController extends Controller
@@ -34,6 +22,7 @@ class AdsController extends Controller
     use CanUseFilters;
     use CropsProductImages;
     use HandlesEbayCategories;
+    use ValidatesEbayAspects;
 
     protected $repo;
 
@@ -268,6 +257,8 @@ class AdsController extends Controller
             'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
             'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
+
+        $rules = $this->addEbayAspectRequirements($request, $rules);
 
         $this->validate($request, $rules);
 

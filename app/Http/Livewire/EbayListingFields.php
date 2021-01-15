@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Ebay\EbayItemAspect;
 use App\Ebay\Sdk;
 use App\Models\Listing;
 use Livewire\Component;
@@ -18,7 +19,10 @@ class EbayListingFields extends Component
     public $ebayCategory5 = null;
     public $ebayCategory6 = null;
     public $ebayCategory7 = null;
+
     public $ebayCondition = null;
+
+    public $aspects = null;
 
     public function __construct($id)
     {
@@ -82,7 +86,7 @@ class EbayListingFields extends Component
             'level7Categories' => $this->ebayCategory6 ? $this->getCategories($this->ebayCategory6, 7) : null,
             'condition' => $this->ebayCondition,
             'conditionsPolicy' => $this->getConditionsPolicy(),
-            'aspects' => $this->getAspects(),
+            'allAspects' => $this->getAllAspects(),
         ]);
     }
 
@@ -147,7 +151,7 @@ class EbayListingFields extends Component
         return $policy;
     }
 
-    protected function getAspects()
+    protected function getAllAspects()
     {
         $lowestCategory = $this->getLowestCategory();
 
@@ -157,7 +161,13 @@ class EbayListingFields extends Component
 
         $aspects = $this->ebay->getAspectsForCategory($lowestCategory);
 
-        return $aspects;
+        if (! $aspects) {
+            return null;
+        }
+
+        return collect($aspects->aspects)
+            ->map(fn ($aspect) => new EbayItemAspect($aspect))
+            ->filter(fn ($aspect) => $aspect->isRequired());
     }
 
     protected function getLowestCategory()

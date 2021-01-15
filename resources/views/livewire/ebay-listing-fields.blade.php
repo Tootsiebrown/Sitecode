@@ -91,11 +91,43 @@
         ])
     @endif
 
-    @if($aspects)
-{{--        @dump($aspects)--}}
+    @if($allAspects)
+        @foreach($allAspects as $aspect)
+            @if (! $aspect->isRequired())
+                @continue
+            @endif
+
+            <input type="hidden" name="required_aspects[]" value="{{ $aspect->getName() }}">
+
+            @switch($aspect->getType())
+                @case('select')
+                    @include('dashboard.form-elements.form-group', [
+                        'type' => 'select',
+                        'name' => 'ebay_aspect[' . $aspect->getName() . ']',
+                        'prettyTitle' => $aspect->getName(),
+                        'options' => $aspect->getOptions(),
+                        'inputAttributes' => 'id="ebay_aspect-' .  Str::kebab($aspect->getName()) . '"',
+                        'value' => old('ebay_aspect.' . $aspect->getName()),
+                    ])
+                    @break
+                @case('checkboxes')
+                    @include('dashboard.form-elements.form-group', [
+                        'type' => 'checkboxes',
+                        'name' => 'ebay_aspect[' . $aspect->getName() . '][]',
+                        'prettyTitle' => $aspect->getName(),
+                        'options' => $aspect->getOptions(),
+                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
+                        'columns' => true,
+                    ])
+                    @break
+                @default
+                    @php throw new Exception('aspect type ' . $aspect->getType() . ' is not implemented yet') @endphp
+                    @break
+            @endswitch
+        @endforeach
     @endif
 
-    <div wire:loading>
+    <div wire:loading.class="wire-loading-block" class="wire-loader">
         @include('dashboard.form-elements.form-group', [
             'type' => 'note',
             'name' => '',
@@ -155,7 +187,8 @@
                     '[name=ebay_category_5],' +
                     '[name=ebay_category_6],' +
                     '[name=ebay_category_7],' +
-                    '[name=ebay_condition]'
+                    '[name=ebay_condition],' +
+                    'select[name^=ebay_aspect]'
                 ).select2()
             });
         });

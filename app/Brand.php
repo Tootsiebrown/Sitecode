@@ -6,6 +6,10 @@ use App\Models\Listing;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Brand
+ * @mixin Builder
+ */
 class Brand extends Model
 {
     protected $guarded = [];

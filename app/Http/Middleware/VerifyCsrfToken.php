@@ -21,5 +21,8 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'checkout/*/paypal-notify',
         'webhooks/*',
+        '/livewire/message/ebay-listing-fields',
+        // ^^ acceptable because it isn't really pesisting to the DB
+        // but not having it causes the page to die weirdly when session expires.
     ];
 }

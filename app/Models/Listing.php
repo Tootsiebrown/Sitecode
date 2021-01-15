@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class Listing
+ * @mixin Builder
+ */
 class Listing extends Model
 {
     use HasCondition;
