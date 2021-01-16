@@ -46,6 +46,7 @@ class EbayListingFields extends Component
             $this->ebayCategory6 = old('ebay_category_6', $categories[5] ?? null);
             $this->ebayCategory7 = old('ebay_category_7', $categories[6] ?? null);
             $this->ebayCondition = old('ebay_condition', $listing->ebay_condition_id);
+            $this->aspects = old('ebay_aspects', $this->getListingAspects($listing));
         } else {
             $this->ebayCategory1 = old('ebay_category_1');
             $this->ebayCategory2 = old('ebay_category_2');
@@ -166,8 +167,27 @@ class EbayListingFields extends Component
         }
 
         return collect($aspects->aspects)
-            ->map(fn ($aspect) => new EbayItemAspect($aspect))
+            ->mapWithKeys(fn ($aspect) => [$aspect->localizedAspectName => new EbayItemAspect($aspect)])
             ->filter(fn ($aspect) => $aspect->isRequired());
+    }
+
+    protected function getListingAspects(Listing $listing)
+    {
+        $allAspects = $this->getAllAspects();
+
+        return $listing
+            ->ebayAspects
+            ->map(fn ($aspect) => ['name' => $aspect->name, 'value' => $aspect->value])
+            ->groupBy('name')
+            ->mapWithKeys(fn ($values, $key) => [$key => $values->pluck('value')->all()])
+            ->map(function ($aspect, $key) use ($allAspects) {
+                if ($allAspects->get($key)->getCardinality() === 'single') {
+                    return current($aspect);
+                }
+
+                return $aspect;
+            })
+            ->all();
     }
 
     protected function getLowestCategory()

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Dashboard\CropsProductImages;
-use App\Http\Controllers\Dashboard\ValidatesEbayAspects;
+use App\Http\Controllers\Dashboard\HandlesEbayAspects;
 use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
@@ -22,7 +22,7 @@ class AdsController extends Controller
     use CanUseFilters;
     use CropsProductImages;
     use HandlesEbayCategories;
-    use ValidatesEbayAspects;
+    use HandlesEbayAspects;
 
     protected $repo;
 
@@ -376,6 +376,8 @@ class AdsController extends Controller
                 $request->input('new_images_metadata'),
                 $imageSortOrder
             );
+
+            $this->updateEbayAspects($listing, $request->input('ebay_aspect', []));
         }
 
         return redirect(

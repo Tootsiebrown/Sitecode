@@ -62,4 +62,9 @@ class EbayItemAspect
     {
         return $this->options;
     }
+
+    public function getCardinality()
+    {
+        return $this->cardinality;
+    }
 }

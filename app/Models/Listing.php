@@ -8,6 +8,7 @@ use App\Country;
 use App\Favorite;
 use App\HasCondition;
 use App\HasProductCategories;
+use App\Models\Listing\EbayAspect;
 use App\Models\Listing\Image;
 use App\Models\Listing\Item;
 use App\State;
@@ -559,5 +560,10 @@ class Listing extends Model
     public function getEbayOfferCategoryIdAttribute()
     {
         return last(explode(',', $this->ebay_categories));
+    }
+
+    public function ebayAspects()
+    {
+        return $this->hasMany(EbayAspect::class);
     }
 }

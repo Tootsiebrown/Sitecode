@@ -107,7 +107,7 @@
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
                         'inputAttributes' => 'id="ebay_aspect-' .  Str::kebab($aspect->getName()) . '"',
-                        'value' => old('ebay_aspect.' . $aspect->getName()),
+                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? null),
                     ])
                     @break
                 @case('checkboxes')
@@ -116,7 +116,7 @@
                         'name' => 'ebay_aspect[' . $aspect->getName() . '][]',
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
-                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
+                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? null),
                         'columns' => true,
                     ])
                     @break
