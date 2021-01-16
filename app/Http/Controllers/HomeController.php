@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Listing;
 use App\Category;
 use App\Models\Slide;
-use App\ProductCategory;
+use App\Models\ProductCategory;
 
 class HomeController extends Controller
 {

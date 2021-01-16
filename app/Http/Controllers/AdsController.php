@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Http\Controllers\Dashboard\ValidatesEbayAspects;
+use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
-use App\Brand;
 use App\Models\ProductCategory;
 use App\Repositories\ListingsRepository;
 use Exception;

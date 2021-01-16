@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductCategory;
+use App\Models\ProductCategory;
 
 trait GetsDenormalizedProductCategories
 {

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\ProductCategory;
+use App\Models\ProductCategory;
 
 class CategoriesRepository
 {
