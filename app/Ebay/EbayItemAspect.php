@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Ebay;
-
 
 use Illuminate\Support\Collection;
 
