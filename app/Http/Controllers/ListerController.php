@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Gateways\DatafinitiGateway;
 use App\Http\Controllers\Dashboard\CropsProductImages;
+use App\Http\Controllers\Dashboard\HandlesEbayAspects;
 use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
@@ -28,6 +29,7 @@ class ListerController extends Controller
     use GetsDenormalizedProductCategories;
     use CropsProductImages;
     use HandlesEbayCategories;
+    use HandlesEbayAspects;
 
     protected $datafinitiGateway;
 
@@ -248,7 +250,7 @@ class ListerController extends Controller
     public function getCategoryChildren(Request $request)
     {
         $category_id = $request->category_id;
-        $children = ProductCategory::whereParentId($category_id)->select('id', 'name')->get();
+        $children = ProductCategory::where('parent_id', $category_id)->select(['id', 'name'])->get();
         return $children;
     }
 
@@ -527,6 +529,8 @@ class ListerController extends Controller
             $rules[$fieldName] = 'max:255';
         }
 
+        $rules = $this->addEbayAspectRequirements($request, $rules);
+
         $this->validate($request, $rules);
 
         $product = Product::find($request->product_id);
@@ -623,6 +627,13 @@ class ListerController extends Controller
                     ->pluck('id')
             );
 
+            $this->updateEbayAspects(
+                $ad,
+                $request->input('ebay_aspect', []),
+                $request->input('ebay_aspect_cardinality', []),
+            );
+
+
             return $ad;
         }, 3);
 
@@ -694,14 +705,14 @@ class ListerController extends Controller
                     $imageThumbName = ProductImage::getDiskPath() . 'thumbs/' . $imageName;
                     break;
                 default:
-                    throw new \Exception('"' . request('type') . '" is not a supported upload type.');
+                    throw new Exception('"' . request('type') . '" is not a supported upload type.');
             }
 
 
             try {
                 current_disk()->put($imageFileName, $resized->__toString(), 'public');
                 current_disk()->put($imageThumbName, $resized_thumb->__toString(), 'public');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::info($e);
                 return response()
                     ->json(
