@@ -15,6 +15,75 @@ use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order\Shipment;
 use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
 
+/**
+ * App\Wax\Shop\Models\Order
+ *
+ * @property int $id
+ * @property int|null $sequence
+ * @property int|null $user_id
+ * @property string|null $session_id
+ * @property Carbon $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $placed_at
+ * @property Carbon|null $processed_at
+ * @property Carbon|null $shipped_at
+ * @property Carbon|null $archived_at
+ * @property string|null $total
+ * @property string|null $email
+ * @property string|null $ip_address
+ * @property string|null $searchIndex
+ * @property string|null $canceled_at
+ * @property int|null $canceled_by_user_id
+ * @property string|null $shipstation_key
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Shop\Models\Order\Bundle[] $bundles
+ * @property-read int|null $bundles_count
+ * @property-read User|null $canceledBy
+ * @property-read \Wax\Shop\Models\Order\Coupon|null $coupon
+ * @property-read \Illuminate\Database\Eloquent\Collection|OrderCoupon[] $coupons
+ * @property-read int|null $coupons_count
+ * @property-read mixed $balance_due
+ * @property-read mixed $bundle_value
+ * @property-read mixed $canceled
+ * @property-read mixed $coupon_value
+ * @property-read mixed $default_shipment
+ * @property-read mixed $discount_amount
+ * @property-read mixed $discountable_total
+ * @property-read mixed $flat_shipping_subtotal
+ * @property-read mixed $gross_total
+ * @property-read mixed $item_count
+ * @property-read mixed $item_discount_amount
+ * @property-read mixed $item_gross_subtotal
+ * @property-read mixed $item_subtotal
+ * @property-read mixed $items
+ * @property-read mixed $payment_total
+ * @property-read mixed $shipped
+ * @property-read mixed $shipping_discount_amount
+ * @property-read mixed $shipping_gross_subtotal
+ * @property-read mixed $shipping_service_subtotal
+ * @property-read mixed $shipping_subtotal
+ * @property-read mixed $tax_subtotal
+ * @property-read mixed $total_quantity
+ * @property-read mixed $weight
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Shop\Models\Order\Payment[] $paymentErrors
+ * @property-read int|null $payment_errors_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Shop\Models\Order\Payment[] $payments
+ * @property-read int|null $payments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Shipment[] $shipments
+ * @property-read int|null $shipments_count
+ * @method static Builder|Order active()
+ * @method static Builder|Order archived()
+ * @method static Builder|Order mine()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order notShipped()
+ * @method static Builder|Order placed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order placedMonth($year, $month)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order placedYear($year)
+ * @method static Builder|Order processed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static Builder|Order shipped()
+ * @mixin \Eloquent
+ */
 class Order extends WaxOrder
 {
     protected $with = ['shipments', 'payments', 'coupons', 'bundles'];

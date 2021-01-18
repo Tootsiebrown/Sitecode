@@ -6,6 +6,25 @@ use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * App\Bid
+ *
+ * @property int $id
+ * @property int|null $listing_id
+ * @property int|null $user_id
+ * @property string|null $bid_amount
+ * @property int|null $is_accepted
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $is_mine
+ * @property-read Listing|null $listing
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid mine()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid query()
+ * @mixin \Eloquent
+ */
 class Bid extends Model
 {
     protected $guarded = [];

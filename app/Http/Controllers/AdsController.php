@@ -3,29 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Dashboard\CropsProductImages;
+use App\Http\Controllers\Dashboard\HandlesEbayAspects;
+use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
-use App\Brand;
-use App\Category;
-use App\City;
-use App\Comment;
-use App\Country;
-use App\Media;
-use App\Payment;
-use App\ProductCategory;
+use App\Models\ProductCategory;
 use App\Repositories\ListingsRepository;
-use App\State;
-use App\Sub_Category;
-use App\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Intervention\Image\Facades\Image;
 use Wax\Core\Traits\CanUseFilters;
 
 class AdsController extends Controller
@@ -34,6 +22,7 @@ class AdsController extends Controller
     use CanUseFilters;
     use CropsProductImages;
     use HandlesEbayCategories;
+    use HandlesEbayAspects;
 
     protected $repo;
 
@@ -269,6 +258,8 @@ class AdsController extends Controller
             'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
 
+        $rules = $this->addEbayAspectRequirements($request, $rules);
+
         $this->validate($request, $rules);
 
         if ($request->input('category_id') && $request->input('category_id') !== 'new') {
@@ -384,6 +375,12 @@ class AdsController extends Controller
                 $request->input('new_images', []),
                 $request->input('new_images_metadata'),
                 $imageSortOrder
+            );
+
+            $this->updateEbayAspects(
+                $listing,
+                $request->input('ebay_aspect', []),
+                $request->input('ebay_aspect_cardinality', []),
             );
         }
 

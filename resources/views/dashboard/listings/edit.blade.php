@@ -167,7 +167,7 @@
                         ])
 
                         <div id="ebay-categories-container">
-                            @livewire('ebay-categories', ['listing' => $listing])
+                            @livewire('ebay-listing-fields', ['listing' => $listing])
                         </div>
                     </div>
                 </div>

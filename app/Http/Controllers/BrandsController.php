@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Brand;
+use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Item;
 use Illuminate\Http\Request;

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Brand;
 use App\Gateways\DatafinitiGateway;
 use App\Http\Controllers\Dashboard\CropsProductImages;
+use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
 use App\Models\Listing\Item;
-use App\Product;
-use App\ProductCategory;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\ProductImage;
 use Exception;
 use Illuminate\Filesystem\Filesystem;

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Brand;
+use App\Models\Brand;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Jobs\Ebay\PostListing;
 use App\Jobs\SendListingToEbay;
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
@@ -36,7 +37,7 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
     {
         Carbon::setTestNow(Carbon::now()->addDays(4)->setHour(23));
         Artisan::call('ebay:process-ready-listings');
-        Queue::assertPushed(SendListingToEbay::class);
+        Queue::assertPushed(PostListing::class);
     }
 
     public function testListingAlreadySent()
@@ -46,7 +47,7 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
 
         Carbon::setTestNow(Carbon::now()->addDays(4));
         Artisan::call('ebay:process-ready-listings');
-        Queue::assertNotPushed(SendListingToEbay::class);
+        Queue::assertNotPushed(PostListing::class);
     }
 
     public function testListingHasPriorError()
@@ -56,6 +57,6 @@ class ProcessListingsToEbayTest extends WaxAppTestCase
 
         Carbon::setTestNow(Carbon::now()->addDays(4));
         Artisan::call('ebay:process-ready-listings');
-        Queue::assertNotPushed(SendListingToEbay::class);
+        Queue::assertNotPushed(PostListing::class);
     }
 }

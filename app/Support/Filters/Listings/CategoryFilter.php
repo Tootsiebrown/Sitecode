@@ -4,7 +4,7 @@ namespace App\Support\Filters\Listings;
 
 use App\Http\Controllers\GetsDenormalizedProductCategories;
 use App\Models\Listing;
-use App\ProductCategory;
+use App\Models\ProductCategory;
 use App\Support\Filters\Filter;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;

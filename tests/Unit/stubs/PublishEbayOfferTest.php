@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Ebay\Sdk;
-use App\Jobs\CreateEbayOffer;
-use App\Jobs\PublishEbayOffer;
+use App\Jobs\CreateOrUpdateOffer;
+use App\Jobs\Ebay\PublishOffer;
 use App\Jobs\SendListingToEbay;
 use App\Models\EbayOrder;
 use App\Models\Listing;
@@ -34,7 +34,7 @@ class PublishEbayOfferTest extends WaxAppTestCase
 
     public function testNormalSuccess()
     {
-        $job = new PublishEbayOffer($this->listing);
+        $job = new PublishOffer($this->listing);
         $job->handle($this->ebay);
 
         $this->listing->refresh();

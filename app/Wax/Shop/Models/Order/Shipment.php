@@ -13,6 +13,68 @@ use Wax\Shop\Tax\Support\Request;
 use Wax\Shop\Tax\Support\Shipping;
 use Wax\Shop\Validators\OrderItemValidator;
 
+/**
+ * App\Wax\Shop\Models\Order\Shipment
+ *
+ * @property int $id
+ * @property int|null $sequence
+ * @property int $order_id
+ * @property int|null $shipped_at
+ * @property int|null $desired_delivery_date
+ * @property string|null $tax_desc
+ * @property bool|null $tax_shipping
+ * @property string|null $tax_rate
+ * @property string|null $tax_amount
+ * @property string|null $shipping_carrier
+ * @property string|null $shipping_service_code
+ * @property string|null $shipping_service_name
+ * @property string|null $shipping_service_amount
+ * @property string|null $shipping_discount_amount
+ * @property int|null $business_transit_days
+ * @property int|null $box_count
+ * @property string|null $packaging
+ * @property string|null $tracking_number
+ * @property string|null $firstname
+ * @property string|null $lastname
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $company
+ * @property string|null $address1
+ * @property string|null $address2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $country
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $in_store_pickup
+ * @property float|null $shipping_service_actual_amount
+ * @property-read mixed $carrier_name
+ * @property-read float $discountable_total
+ * @property-read bool $enable_tracking_number
+ * @property-read float $flat_shipping_subtotal
+ * @property-read float $gross_total
+ * @property-read int $item_count
+ * @property-read float $item_discount_amount
+ * @property-read float $item_gross_subtotal
+ * @property-read float $item_subtotal
+ * @property-read mixed $listing_ids
+ * @property-read bool $require_carrier
+ * @property-read float $shipping_gross_subtotal
+ * @property-read float $shipping_subtotal
+ * @property-read float $total
+ * @property-read int $total_quantity
+ * @property-read mixed $tracking_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Wax\Shop\Models\Order\Item[] $items
+ * @property-read int|null $items_count
+ * @property-read \App\Wax\Shop\Models\Order $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|ShippingRate[] $rates
+ * @property-read int|null $rates_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Shipment query()
+ * @mixin \Eloquent
+ */
 class Shipment extends WaxShipment
 {
     protected $appends = [

@@ -3,22 +3,122 @@
 namespace App\Models;
 
 use App\Bid;
-use App\Brand;
 use App\City;
 use App\Country;
 use App\Favorite;
 use App\HasCondition;
 use App\HasProductCategories;
+use App\Models\Listing\EbayAspect;
 use App\Models\Listing\Image;
 use App\Models\Listing\Item;
-use App\ProductCategory;
 use App\State;
 use App\User;
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * App\Models\Listing
+ *
+ * @property int $id
+ * @property string|null $title
+ * @property string|null $slug
+ * @property string|null $meta_description
+ * @property string|null $meta_keywords
+ * @property string|null $features
+ * @property string|null $description
+ * @property string|null $upc
+ * @property int|null $product_id
+ * @property float|null $price
+ * @property string $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $type
+ * @property int|null $brand_id
+ * @property string|null $original_price
+ * @property string $condition
+ * @property string|null $gender
+ * @property string|null $model_number
+ * @property string|null $color
+ * @property int $view
+ * @property string|null $size
+ * @property string|null $expiration_date
+ * @property string|null $dimensions
+ * @property Carbon|null $expired_at
+ * @property int $end_event_fired
+ * @property float|null $shipping_weight_oz
+ * @property bool $featured
+ * @property int|null $featured_sort_id
+ * @property bool $offers_enabled
+ * @property int $secret
+ * @property int|null $send_to_ebay_markup
+ * @property string|null $sent_to_ebay_at
+ * @property string|null $ebay_categories
+ * @property string|null $ebay_offer_id
+ * @property int|null $ebay_condition_id
+ * @property int $send_to_ebay
+ * @property string|null $send_to_ebay_at
+ * @property string|null $to_ebay_error_at
+ * @property string|null $ebay_listing_id
+ * @property-read Collection|Bid[] $bids
+ * @property-read int|null $bids_count
+ * @property-read Brand|null $brand
+ * @property-read Collection|ProductCategory[] $categories
+ * @property-read int|null $categories_count
+ * @property-read City $city
+ * @property-read Country $country
+ * @property-read mixed $category
+ * @property-read mixed $child_category
+ * @property-read mixed $ebay_condition_enum
+ * @property-read mixed $ebay_offer_category_id
+ * @property-read mixed $ebay_primary_category_id
+ * @property-read bool $ended
+ * @property-read mixed $featured_image
+ * @property-read mixed $grandchild_category
+ * @property-read mixed $has_available_items
+ * @property-read mixed $i_won
+ * @property-read bool $is_auction
+ * @property-read mixed $is_bidding_active
+ * @property-read mixed $is_paid_for
+ * @property-read bool $is_set_price
+ * @property-read mixed $my_most_recent_bid
+ * @property-read int $quantity
+ * @property-read mixed $url
+ * @property-read mixed $winner
+ * @property-read mixed $winning_bid
+ * @property-read Collection|Image[] $images
+ * @property-read int|null $images_count
+ * @property-read Collection|Item[] $items
+ * @property-read int|null $items_count
+ * @property-read Collection|Offer[] $offers
+ * @property-read int|null $offers_count
+ * @property-read State $state
+ * @property-read User $user
+ * @property-read Collection|User[] $watchers
+ * @property-read int|null $watchers_count
+ * @method static Builder|Listing active()
+ * @method static Builder|Listing endEventNotFired()
+ * @method static Builder|Listing expired()
+ * @method static Builder|Listing featured()
+ * @method static Builder|Listing freeOfEbayError()
+ * @method static Builder|Listing inCategory($categoryId)
+ * @method static Builder|Listing newModelQuery()
+ * @method static Builder|Listing newQuery()
+ * @method static Builder|Listing notYetSentToEbay()
+ * @method static Builder|Listing ofBrand($brandId)
+ * @method static Builder|Listing query()
+ * @method static Builder|Listing readyForEbay()
+ * @method static Builder|Listing thatIBidFor()
+ * @method static Builder|Listing timePastForEbay()
+ * @method static Builder|Listing typeIsAuction()
+ * @mixin Eloquent
+ */
 class Listing extends Model
 {
     use HasCondition;
@@ -56,7 +156,7 @@ class Listing extends Model
         });
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -92,6 +192,8 @@ class Listing extends Model
                 $query->whereIn('product_categories.id', $categoryId);
             });
         }
+
+        return $query;
     }
 
     public function scopeExpired($query)
@@ -245,6 +347,9 @@ class Listing extends Model
         }
     }
 
+    /**
+     * @return HasMany|Bid
+     */
     public function bids()
     {
         return $this->hasMany(Bid::class)->orderBy('id', 'desc');
@@ -310,25 +415,27 @@ class Listing extends Model
         return false;
     }
 
-    public function premium_icon()
+    public function premium_icon(): string
     {
         if ($this->price_plan == 'premium') {
             $html = '<img src="' . asset('assets/img/premium-icon.png') . '" alt="" />';
             return $html;
         }
+
+        return '';
     }
 
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(ProductCategory::class, 'ad_category_links', 'ad_id', 'category_id');
     }
 
-    public static function getOptionalFieldsForDisplay()
+    public static function getOptionalFieldsForDisplay(): array
     {
         return [
             'gender' => 'Gender',
@@ -340,7 +447,7 @@ class Listing extends Model
         ];
     }
 
-    public function hasOptionalFieldsForDisplay()
+    public function hasOptionalFieldsForDisplay(): bool
     {
         foreach (static::getOptionalFieldsForDisplay() as $fieldName => $fieldLabel) {
             if (!is_null($this->$fieldName)) {
@@ -351,7 +458,7 @@ class Listing extends Model
         return false;
     }
 
-    public function getUrlAttribute()
+    public function getUrlAttribute(): string
     {
         return route('single_ad', [
             'id' => $this->id,
@@ -359,6 +466,9 @@ class Listing extends Model
         ]);
     }
 
+    /**
+     * @return HasMany|Item
+     */
     public function items()
     {
         return $this->hasMany(Item::class, 'listing_id');
@@ -431,6 +541,8 @@ class Listing extends Model
         if (!$this->bids->isEmpty() && $this->winning_bid->bid_amount > $this->price) {
             return $this->winning_bid->user;
         }
+
+        return null;
     }
 
     public function watchers()
@@ -448,5 +560,10 @@ class Listing extends Model
     public function getEbayOfferCategoryIdAttribute()
     {
         return last(explode(',', $this->ebay_categories));
+    }
+
+    public function ebayAspects()
+    {
+        return $this->hasMany(EbayAspect::class);
     }
 }

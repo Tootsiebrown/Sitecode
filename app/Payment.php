@@ -6,6 +6,34 @@ use App\Models\Listing;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Payment
+ *
+ * @property int $id
+ * @property int|null $ad_id
+ * @property int|null $user_id
+ * @property string|null $amount
+ * @property string|null $payment_method
+ * @property string|null $status
+ * @property string|null $currency
+ * @property string|null $token_id
+ * @property string|null $card_last4
+ * @property string|null $card_id
+ * @property string|null $client_ip
+ * @property string|null $charge_id_or_token
+ * @property string|null $payer_email
+ * @property string|null $description
+ * @property string|null $local_transaction_id
+ * @property int|null $payment_created
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Listing|null $ad
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment query()
+ * @mixin \Eloquent
+ */
 class Payment extends Model
 {
     protected $guarded = [];

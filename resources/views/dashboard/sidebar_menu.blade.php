@@ -178,15 +178,16 @@
 {{--                    <!-- /.nav-second-level -->--}}
 {{--                </li>--}}
 {{--                <li> <a href="{{ route('administrators') }}"><i class="fa fa-users"></i> @lang('app.administrators') <span class="label label-default pull-right"><i class="fa fa-user"></i> </span> </a>  </li>--}}
+
             @if ($lUser->hasPrivilege('Ebay Authenticator'))
                 <li>
-                    <a href="{{ route('dashboard.ebayAuth.status') }}">Ebay Link</a>
+                    <a href="{{ route('dashboard.ebayAuth.status') }}"><i class="fa fa-chain"></i> Ebay Link</a>
                 </li>
             @endif
 
             @if ($lUser->hasPrivilege('Ebay Orders'))
                 <li>
-                    <a href="{{ route('dashboard.ebay.orders') }}"> <i class="fa fa-cubes"></i> Ebay Orders</a>
+                    <a href="{{ route('dashboard.ebay.orders') }}"><i class="fa fa-cubes"></i> Ebay Orders</a>
                 </li>
             @endif
 

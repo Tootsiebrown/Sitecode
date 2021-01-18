@@ -2,7 +2,7 @@
 
 namespace App\Wax\Shop\Models\Order;
 
-use App\ProductCategory;
+use App\Models\ProductCategory;
 use App\Support\CouponInterface;
 use App\Wax\Shop\Models\Coupon as RawCoupon;
 use App\Wax\Shop\Validators\OrderCouponValidator;
@@ -10,6 +10,31 @@ use Illuminate\Database\Eloquent\Model;
 use Wax\Shop\Models\Order;
 use Wax\Shop\Models\Order\Coupon as WaxCoupon;
 
+/**
+ * App\Wax\Shop\Models\Order\Coupon
+ *
+ * @property int $id
+ * @property int $order_id
+ * @property string $code
+ * @property string|null $title
+ * @property \Illuminate\Support\Carbon|null $expired_at
+ * @property string|null $dollars
+ * @property int|null $percent
+ * @property string|null $minimum_order
+ * @property int $one_time
+ * @property int $include_shipping
+ * @property string|null $calculated_value
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $category_id
+ * @property int|null $listing_id
+ * @property-read ProductCategory|null $category
+ * @property-read \App\Wax\Shop\Models\Order $order
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon query()
+ * @mixin \Eloquent
+ */
 class Coupon extends WaxCoupon implements CouponInterface
 {
     protected $fillable = [

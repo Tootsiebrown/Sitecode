@@ -7,7 +7,7 @@
     @if (isset($groupAttributes)) {!! $groupAttributes !!} @endif
 >
     <label class="col-sm-4 control-label" @if (isset($name)) for="{{ $name }}" @endif>{{ $prettyTitle ?? ' ' }}</label>
-    <div class="col-sm-8">
+    <div class="col-sm-8 form-group__input-container @if (isset($columns) && $columns) columns @endif">
         @switch($type)
             @case ('submit')
                 <button type="submit" class="btn btn-primary" name="submit" value="submit">{{ $prettyTitle ?? 'Submit' }}</button>
@@ -30,6 +30,14 @@
                     'value' => $value ?? '',
                     'imageMata' => $imageMeta,
                     'path' => $path
+                ])
+                @break
+            @case ('checkboxes')
+                @include('dashboard.form-elements.inputs.' . $type, [
+                    'oldDotLocation' => $oldDotLocation ?? $name,
+                    'name' => $name,
+                    'options' => $options,
+                    'value' => $value
                 ])
                 @break
         @endswitch

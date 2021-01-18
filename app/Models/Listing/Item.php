@@ -7,6 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Wax\Shop\Models\Order\Item as OrderItem;
 
+/**
+ * App\Models\Listing\Item
+ *
+ * @property int $id
+ * @property int $listing_id
+ * @property int|null $order_item_id
+ * @property string|null $bin
+ * @property int|null $reserved_for_order_id
+ * @property string|null $removed_at
+ * @property int|null $reserved_for_offer_id
+ * @property int|null $ebay_order_id
+ * @property-read mixed $removed
+ * @property-read Listing $listing
+ * @property-read OrderItem|null $orderItem
+ * @method static \Illuminate\Database\Eloquent\Builder|Item available()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item availableForOrder($order)
+ * @method static \Illuminate\Database\Eloquent\Builder|Item newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item notReserved()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item reserved()
+ * @method static \Illuminate\Database\Eloquent\Builder|Item reservedForOffer($offerId)
+ * @method static \Illuminate\Database\Eloquent\Builder|Item sold()
+ * @mixin \Eloquent
+ */
 class Item extends Model
 {
     public $timestamps = false;

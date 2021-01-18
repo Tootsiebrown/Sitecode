@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\Ebay\Sdk;
+use App\Jobs\Ebay\PostListing;
 use App\Models\Listing;
 use Illuminate\Console\Command;
 
-class RefreshEbayOffer extends Command
+class EbayPostListing extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:refresh-offer {listingId}';
+    protected $signature = 'ebay:post-listing {listingId}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Process listings that need to go to ebay';
 
     /**
      * Create a new command instance.
@@ -37,8 +37,10 @@ class RefreshEbayOffer extends Command
      *
      * @return mixed
      */
-    public function handle(Sdk $ebay)
+    public function handle()
     {
-        dd($ebay->refreshOffer(Listing::find($this->argument('listingId'))));
+        $listing = Listing::find($this->argument('listingId'));
+
+        PostListing::dispatch($listing);
     }
 }

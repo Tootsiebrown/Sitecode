@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Brand;
+use App\Models\Brand;
 use App\Category;
-use App\ProductCategory;
+use App\Models\ProductCategory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

@@ -2,12 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use App\Ebay\EbayItemAspect;
 use App\Ebay\Sdk;
 use App\Models\Listing;
+use App\Support\TranslatesListingAspects;
 use Livewire\Component;
 
-class EbayCategories extends Component
+class EbayListingFields extends Component
 {
+    use TranslatesListingAspects;
+
     /** @var Sdk */
     private $ebay;
 
@@ -18,7 +22,10 @@ class EbayCategories extends Component
     public $ebayCategory5 = null;
     public $ebayCategory6 = null;
     public $ebayCategory7 = null;
+
     public $ebayCondition = null;
+
+    public $aspects = null;
 
     public function __construct($id)
     {
@@ -42,6 +49,7 @@ class EbayCategories extends Component
             $this->ebayCategory6 = old('ebay_category_6', $categories[5] ?? null);
             $this->ebayCategory7 = old('ebay_category_7', $categories[6] ?? null);
             $this->ebayCondition = old('ebay_condition', $listing->ebay_condition_id);
+            $this->aspects = old('ebay_aspects', $this->getListingAspects($listing));
         } else {
             $this->ebayCategory1 = old('ebay_category_1');
             $this->ebayCategory2 = old('ebay_category_2');
@@ -72,7 +80,7 @@ class EbayCategories extends Component
 
     public function render()
     {
-        return view('livewire.ebay-categories', [
+        return view('livewire.ebay-listing-fields', [
             'level1Categories' => $this->getCategories(),
             'level2Categories' => $this->ebayCategory1 ? $this->getCategories($this->ebayCategory1, 2) : null,
             'level3Categories' => $this->ebayCategory2 ? $this->getCategories($this->ebayCategory2, 3) : null,
@@ -82,7 +90,7 @@ class EbayCategories extends Component
             'level7Categories' => $this->ebayCategory6 ? $this->getCategories($this->ebayCategory6, 7) : null,
             'condition' => $this->ebayCondition,
             'conditionsPolicy' => $this->getConditionsPolicy(),
-            'aspects' => $this->getAspects(),
+            'allAspects' => $this->getAllAspects(),
         ]);
     }
 
@@ -147,7 +155,7 @@ class EbayCategories extends Component
         return $policy;
     }
 
-    protected function getAspects()
+    protected function getAllAspects()
     {
         $lowestCategory = $this->getLowestCategory();
 
@@ -157,7 +165,13 @@ class EbayCategories extends Component
 
         $aspects = $this->ebay->getAspectsForCategory($lowestCategory);
 
-        return $aspects;
+        if (! $aspects) {
+            return null;
+        }
+
+        return collect($aspects->aspects)
+            ->mapWithKeys(fn ($aspect) => [$aspect->localizedAspectName => new EbayItemAspect($aspect)])
+            ->filter(fn ($aspect) => $aspect->isRequired());
     }
 
     protected function getLowestCategory()

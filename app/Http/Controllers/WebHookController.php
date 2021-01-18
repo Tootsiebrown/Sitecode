@@ -56,7 +56,7 @@ class WebHookController extends Controller
     public function ebayCheckoutComplete(Request $request)
     {
         $dom = new DOMDocument();
-        if (config('services.ebay.log.auctionCompleteWebhook')) {
+        if (config('services.ebay.log.auction_complete_webhook')) {
             \Log::channel('single')->info($request->getContent());
         }
         $dom->loadXML($request->getContent());

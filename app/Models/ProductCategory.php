@@ -1,15 +1,44 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Models\Listing;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ProductCategory
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Model
+ * App\Models\ProductCategory
+ *
+ * @property int $id
+ * @property int $parent_id
+ * @property string $name
+ * @property string|null $handler
+ * @property string|null $breadcrumb
+ * @property string|null $description
+ * @property string|null $short_description
+ * @property string|null $image
+ * @property string|null $image_metadata
+ * @property int $cms_sort_id
+ * @property string|null $url_slug
+ * @property int $url_lock
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|ProductCategory[] $children
+ * @property-read int|null $children_count
+ * @property-read mixed $all_descendants
+ * @property-read mixed $url
+ * @property-read \Illuminate\Database\Eloquent\Collection|Listing[] $listings
+ * @property-read int|null $listings_count
+ * @property-read ProductCategory $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
+ * @property-read int|null $products_count
+ * @method static Builder|ProductCategory hasListings()
+ * @method static Builder|ProductCategory newModelQuery()
+ * @method static Builder|ProductCategory newQuery()
+ * @method static Builder|ProductCategory query()
+ * @method static Builder|ProductCategory top()
+ * @mixin \Eloquent
  */
 class ProductCategory extends Model
 {

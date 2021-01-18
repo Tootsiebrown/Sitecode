@@ -51,7 +51,7 @@ class SyncEbayOrder implements ShouldQueue
             'ebay_id' => $this->ebayOrderId,
         ]);
 
-        if (config('services.ebay.log.getOrderResponse')) {
+        if (config('services.ebay.log.get_order_response')) {
             \Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
         }
 

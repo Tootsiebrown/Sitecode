@@ -60,3 +60,11 @@ form.form-horizontal {
         margin-bottom: 48px;
     }
 }
+
+.form-group {
+    &__input-container {
+        &.columns {
+            columns: 240px auto;
+        }
+    }
+}

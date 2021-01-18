@@ -5,6 +5,31 @@ namespace App;
 use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Comment
+ *
+ * @property int $id
+ * @property int|null $user_id
+ * @property int|null $ad_id
+ * @property int|null $comment_id
+ * @property string|null $author_name
+ * @property string|null $author_email
+ * @property string|null $author_ip
+ * @property string|null $comment
+ * @property string|null $approved
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Listing|null $ad
+ * @property-read \App\User|null $author
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\ChildComment[] $childs_approved
+ * @property-read int|null $childs_approved_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment approved()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment parent()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
+ * @mixin \Eloquent
+ */
 class Comment extends Model
 {
     protected $guarded = [];

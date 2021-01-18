@@ -10,6 +10,49 @@ use Illuminate\Notifications\Notifiable;
 use Wax\Core\Eloquent\Models\User as UserBase;
 use Wax\Shop\Traits\ShopUser;
 
+/**
+ * App\User
+ *
+ * @property int $id
+ * @property string $firstname
+ * @property string $lastname
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $email_verified
+ * @property string|null $email_verification_code
+ * @property bool $force_password_change
+ * @property string|null $payment_profile_id
+ * @property string|null $accepted_terms_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Core\Eloquent\Models\User\Address[] $addresses
+ * @property-read int|null $addresses_count
+ * @property-read \App\Country $country
+ * @property-read \Illuminate\Database\Eloquent\Collection|Listing[] $favourite_ads
+ * @property-read int|null $favourite_ads_count
+ * @property-read mixed $descendant_groups
+ * @property-read mixed $name
+ * @property-read mixed $not_groups
+ * @property-read mixed $not_privileges
+ * @property-read mixed $privileges
+ * @property-read mixed $superuser
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Core\Eloquent\Models\User\Group[] $groups
+ * @property-read int|null $groups_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Offer[] $offers
+ * @property-read int|null $offers_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Wax\Shop\Models\Order[] $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Shop\Models\User\PaymentMethod[] $paymentMethods
+ * @property-read int|null $payment_methods_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @mixin \Eloquent
+ */
 class User extends UserBase
 {
     use ShopUser;

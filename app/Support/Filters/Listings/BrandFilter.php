@@ -2,7 +2,7 @@
 
 namespace App\Support\Filters\Listings;
 
-use App\Brand;
+use App\Models\Brand;
 use App\Models\Listing;
 use App\Support\Filters\Filter;
 use Illuminate\Contracts\Pagination\Paginator;

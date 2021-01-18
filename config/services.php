@@ -76,8 +76,9 @@ return [
             'https://api.ebay.com/oauth/api_scope/sell.fulfillment',
         ],
         'log' => [
-            'auctionCompleteWebhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false),
-            'getOrderResponse' => env('EBAY_LOG_GET_ORDER_RESPONSE', false)
+            'general_calls' => env('EBAY_LOG_GENERAL'),
+            'auction_complete_webhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false),
+            'get_order_response' => env('EBAY_LOG_GET_ORDER_RESPONSE', false)
         ]
     ]
 
