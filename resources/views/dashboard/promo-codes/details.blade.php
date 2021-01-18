@@ -99,7 +99,7 @@
 
            <div data-element="categoryWrapper">
                 @php
-                    $categoryOptions = \App\ProductCategory::orderBy('breadcrumb')
+                    $categoryOptions = \App\Models\ProductCategory::orderBy('breadcrumb')
                             ->get()
                             ->mapWithKeys(function ($category) {
                                 return [$category->id => $category->breadcrumb];
