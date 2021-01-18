@@ -4,15 +4,10 @@ namespace Tests\Unit;
 
 use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
-use App\ProductCategory;
-use App\User;
+use App\Models\ProductCategory;
 use App\Wax\Shop\Models\Coupon;
-use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Services\ShippingService;
-use App\Wax\Shop\Validators\OrderCouponValidator;
-use Illuminate\Support\Carbon;
 use Tests\WaxAppTestCase;
-use Wax\Shop\Models\Product;
 use Wax\Shop\Services\ShopService;
 
 class CouponDiscountDistributionTest extends WaxAppTestCase

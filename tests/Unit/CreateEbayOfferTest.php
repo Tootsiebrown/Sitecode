@@ -3,10 +3,8 @@
 namespace Tests\Unit;
 
 use App\Ebay\Sdk;
-use App\Jobs\CreateOrUpdateOffer;
+use App\Jobs\Ebay\CreateOrUpdateOffer;
 use App\Jobs\Ebay\PublishOffer;
-use App\Jobs\SendListingToEbay;
-use App\Models\EbayOrder;
 use App\Models\Listing;
 use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;

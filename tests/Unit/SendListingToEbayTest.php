@@ -3,9 +3,8 @@
 namespace Tests\Unit;
 
 use App\Ebay\Sdk;
-use App\Jobs\CreateOrUpdateOffer;
-use App\Jobs\SendListingToEbay;
-use App\Models\EbayOrder;
+use App\Jobs\Ebay\CreateOrUpdateOffer;
+use App\Jobs\Ebay\PostListing;
 use App\Models\Listing;
 use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
@@ -35,14 +34,14 @@ class SendListingToEbayFailureTest extends WaxAppTestCase
     {
         $this->expectException(\Exception::class);
 
-        $job = new SendListingToEbay($this->listing);
+        $job = new PostListing($this->listing);
         $job->handle($this->ebay);
     }
 
     public function testExceptionRecordedOnListingRecord()
     {
         try {
-            $job = new SendListingToEbay($this->listing);
+            $job = new PostListing($this->listing);
             $job->handle($this->ebay);
         } catch (\Exception $e) {
             // just suppress it.
