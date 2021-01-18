@@ -29,7 +29,7 @@ trait HandlesEbayAspects
 
         $listing->ebayAspects()->delete();
 
-        foreach($aspects as $name => $values) {
+        foreach ($aspects as $name => $values) {
             $ebayAspect = $listing->ebayAspects()->save(
                 new EbayAspect([
                     'name' => $name,
