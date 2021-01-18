@@ -98,6 +98,7 @@
             @endif
 
             <input type="hidden" name="required_aspects[]" value="{{ $aspect->getName() }}">
+            <input type="hidden" name="ebay_aspect_cardinality[{{ $aspect->getName() }}]" value="{{ $aspect->getCardinality() }}">
 
             @switch($aspect->getType())
                 @case('select')
@@ -116,7 +117,7 @@
                         'name' => 'ebay_aspect[' . $aspect->getName() . '][]',
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
-                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? null),
+                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
                         'columns' => true,
                     ])
                     @break

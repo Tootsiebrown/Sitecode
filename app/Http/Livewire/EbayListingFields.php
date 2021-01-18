@@ -5,10 +5,13 @@ namespace App\Http\Livewire;
 use App\Ebay\EbayItemAspect;
 use App\Ebay\Sdk;
 use App\Models\Listing;
+use App\Support\TranslatesListingAspects;
 use Livewire\Component;
 
 class EbayListingFields extends Component
 {
+    use TranslatesListingAspects;
+
     /** @var Sdk */
     private $ebay;
 
@@ -169,25 +172,6 @@ class EbayListingFields extends Component
         return collect($aspects->aspects)
             ->mapWithKeys(fn ($aspect) => [$aspect->localizedAspectName => new EbayItemAspect($aspect)])
             ->filter(fn ($aspect) => $aspect->isRequired());
-    }
-
-    protected function getListingAspects(Listing $listing)
-    {
-        $allAspects = $this->getAllAspects();
-
-        return $listing
-            ->ebayAspects
-            ->map(fn ($aspect) => ['name' => $aspect->name, 'value' => $aspect->value])
-            ->groupBy('name')
-            ->mapWithKeys(fn ($values, $key) => [$key => $values->pluck('value')->all()])
-            ->map(function ($aspect, $key) use ($allAspects) {
-                if ($allAspects->get($key)->getCardinality() === 'single') {
-                    return current($aspect);
-                }
-
-                return $aspect;
-            })
-            ->all();
     }
 
     protected function getLowestCategory()

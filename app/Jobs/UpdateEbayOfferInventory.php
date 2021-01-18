@@ -37,7 +37,7 @@ class UpdateEbayOfferInventory implements ShouldQueue
      */
     public function handle(Sdk $ebay)
     {
-        $ebay->refreshOffer(
+        $ebay->updateOffer(
             $this->listing
         );
     }

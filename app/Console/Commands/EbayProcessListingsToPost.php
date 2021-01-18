@@ -2,18 +2,18 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SendListingToEbay;
+use App\Jobs\Ebay\PostListing;
 use App\Models\Listing;
 use Illuminate\Console\Command;
 
-class ListingToEbay extends Command
+class EbayProcessListingsToPost extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:send-listing {listingId}';
+    protected $signature = 'ebay:process-ready-listings';
 
     /**
      * The console command description.
@@ -39,8 +39,10 @@ class ListingToEbay extends Command
      */
     public function handle()
     {
-        $listing = Listing::find($this->argument('listingId'));
-
-        SendListingToEbay::dispatch($listing);
+        Listing::readyForEbay()
+            ->get()
+            ->each(function ($listing) {
+                PostListing::dispatch($listing)->onQueue('slow');
+            });
     }
 }

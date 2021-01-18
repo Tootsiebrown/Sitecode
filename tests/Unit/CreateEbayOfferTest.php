@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Ebay\Sdk;
-use App\Jobs\CreateEbayOffer;
-use App\Jobs\PublishEbayOffer;
+use App\Jobs\CreateOrUpdateOffer;
+use App\Jobs\Ebay\PublishOffer;
 use App\Jobs\SendListingToEbay;
 use App\Models\EbayOrder;
 use App\Models\Listing;
@@ -32,13 +32,13 @@ class CreateEbayOfferTest extends WaxAppTestCase
 
     public function testNormalSuccess()
     {
-        $job = new CreateEbayOffer($this->listing);
+        $job = new CreateOrUpdateOffer($this->listing);
         $job->handle($this->ebay);
 
         $this->listing->refresh();
 
         $this->assertEquals('1234', $this->listing->ebay_offer_id);
-        Queue::assertPushed(PublishEbayOffer::class);
+        Queue::assertPushed(PublishOffer::class);
     }
 }
 

@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Ebay\Sdk;
-use App\Jobs\CreateEbayOffer;
+use App\Jobs\CreateOrUpdateOffer;
 use App\Jobs\SendListingToEbay;
 use App\Models\EbayOrder;
 use App\Models\Listing;
@@ -51,7 +51,7 @@ class SendListingToEbayFailureTest extends WaxAppTestCase
         $this->listing->refresh();
 
         $this->assertNotNull($this->listing->to_ebay_error_at);
-        Queue::assertNotPushed(CreateEbayOffer::class);
+        Queue::assertNotPushed(CreateOrUpdateOffer::class);
     }
 }
 

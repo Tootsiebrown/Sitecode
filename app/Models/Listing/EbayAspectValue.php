@@ -4,9 +4,9 @@ namespace App\Models\Listing;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EbayAspect extends Model
+class EbayAspectValue extends Model
 {
-    protected $table = 'listing_ebay_aspects';
+    protected $table = 'listing_ebay_aspect_values';
     public $timestamps = false;
     public $guarded = [];
 

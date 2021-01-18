@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Ebay;
 
 use App\Ebay\Sdk;
 use App\Models\Listing;
@@ -11,15 +11,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
-class PublishEbayOffer implements ShouldQueue
+class PostListing implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
-    /** @var Listing */
-    private Listing $listing;
+    private $listing;
 
     /**
      * Create a new job instance.
@@ -36,18 +35,17 @@ class PublishEbayOffer implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Sdk $ebay)
+    public function handle(Sdk $sdk)
     {
         try {
-            $listingId = $ebay->publishOffer($this->listing->ebay_offer_id);
-
-            $this->listing->ebay_listing_id = $listingId;
-            $this->listing->save();
+            $sdk->createInventoryItem($this->listing);
         } catch (\Exception $e) {
             $this->listing->to_ebay_error_at = Carbon::now()->toDateTimeString();
             $this->listing->save();
             throw $e;
         }
+
+        CreateOrUpdateOffer::dispatch($this->listing);
     }
 
     public function maxTries()

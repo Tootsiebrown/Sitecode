@@ -3,6 +3,7 @@
 namespace App\Ebay;
 
 use App\Models\Listing;
+use App\Support\TranslatesListingAspects;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 
 class Sdk
 {
+    use TranslatesListingAspects;
+
     private array $config;
     /** @var EbayTokenRepository */
     private EbayTokenRepository $tokenRepo;
@@ -167,13 +170,7 @@ class Sdk
             if ($this->config['log']['general_calls']) {
                 Log::info(json_encode($options, JSON_PRETTY_PRINT));
                 Log::info($e->getResponse()->getBody()->getContents());
-                send_mail(
-                    'davidbankes@gmail.com',
-                    'Ebay SDK request error',
-                    $e->getResponse()->getBody()->getContents(),
-                    'no-reply@catchndealz.com',
-                    false
-                );
+                $e->getResponse()->getBody()->seek(0);
             }
 
             throw $e;
@@ -228,23 +225,18 @@ class Sdk
                 'imageUrls' => $listing->images
                     ->map(fn ($image) => $image->raw_url)
                     ->all(),
-                'title' => $listing->title,
-                'aspects' => [
-                    'Brand' => ['Does not apply'], //['20th Century Fox']//[$listing->brand->name],
-                ],
-                'brand' => 'Does not apply',
-                'upc' => ['Does not apply'],
+                'title' => substr($listing->title, 0, 80),
             ],
         ];
 
-        if ($listing->brand) {
-            // $data['product']['brand'] = $listing->brand->name;
+        $aspects = $this->getListingAspects($listing, false);
+
+        if ($aspects) {
+            $data['product']['aspects'] = $aspects;
         }
 
-        $data['product']['mpn'] = 'Does not apply';
-
         if ($listing->upc) {
-            //$data['product']['upc'] = [$listing->upc];
+            $data['product']['upc'] = [$listing->upc];
         }
 
 
@@ -268,7 +260,7 @@ class Sdk
         return $response->offerId;
     }
 
-    public function refreshOffer(Listing $listing)
+    public function updateOffer(Listing $listing)
     {
         return $this->request(
             'put',
@@ -285,7 +277,9 @@ class Sdk
             'categoryId' => $listing->ebay_offer_category_id,
             'format' => 'FIXED_PRICE',
             'includeCatalogProductDescription' => false,
-            'listingDescription' => $listing->description . ' ' . $listing->features,
+            'listingDescription' => $listing->description
+                . ' ' . $listing->features
+                . ' ' . $this->getListingDescriptionExtra(),
             'listingPolicies' => [
                 'bestOfferTerms' => [
                     'bestOfferEnabled' => true,
@@ -451,5 +445,24 @@ class Sdk
         );
 
         return $order;
+    }
+
+    private function getListingDescriptionExtra()
+    {
+        return 'Thanks for shopping at our store! If you are happy with your purchase- we would appreciate a 5-star rating and positive feedback!
+
+        We answer messages daily - “please allow at least 24 hours for a reply- sometimes it takes us awhile to catch up on our after work hour messages”
+
+        Sorry we DO NOT take offers on our auction listings- We do accept reasonable offers on our buy it now listings
+
+        We list our items fedex, but we ship free and reserve the right to ship USPS or FEDEX, whichever is cheapest according to your location
+
+        If you have a shipping related question/request, please put it in the message box at checkout
+
+        If you need your address changed- please do that during Checkout- once you have purchased, we will not be able to change your address
+
+        You have 4 days to pay after you purchase your item, if payment has not been received an unpaid case will be opened against you. After that we will not be able to cancel on our end
+
+        Visit our store and ❤️this Seller- we list items every weekday';
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEbayAspectsTable extends Migration
+class CreateEbayAspectsTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,16 @@ class CreateEbayAspectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ebay_aspects', function (Blueprint $table) {
+        Schema::create('listing_ebay_aspects', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('listing_id')->unsigned();
             $table->string('name');
+            $table->string('cardinality');
+        });
+
+        Schema::create('listing_ebay_aspect_values', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('aspect_id')->unsigned();
             $table->string('value');
         });
     }
@@ -28,6 +34,7 @@ class CreateEbayAspectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ebay_aspects');
+        Schema::dropIfExists('listing_ebay_aspects');
+        Schema::dropIfExists('listing_ebay_aspect_values');
     }
 }

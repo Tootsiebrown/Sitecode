@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Ebay;
 
 use App\Ebay\Sdk;
 use App\Models\Listing;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
-class CreateEbayOffer implements ShouldQueue
+class CreateOrUpdateOffer implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -42,6 +42,7 @@ class CreateEbayOffer implements ShouldQueue
         try {
             $offerId = $ebay->createOffer($this->listing);
         } catch (BadResponseException $e) {
+            $e->getResponse()->getBody()->seek(0);
             $response = json_decode($e->getResponse()->getBody()->getContents());
             //{"errors":[{"errorId":25002,"domain":"API_INVENTORY","subdomain":"Selling","category":"REQUEST","message":"A user error has occurred. Offer entity already exists.","parameters":[{"name":"offerId","value":"104682640013"}]}]}
             $firstError = current($response->errors);
@@ -57,6 +58,8 @@ class CreateEbayOffer implements ShouldQueue
                     $this->listing->ebay_offer_id = $offerId;
                     $this->listing->save();
                 }
+
+                $ebay->updateOffer($this->listing);
             } else {
                 throw $e;
             }
@@ -70,7 +73,7 @@ class CreateEbayOffer implements ShouldQueue
         $this->listing->sent_to_ebay_at = Carbon::now()->toDateTimeString();
         $this->listing->save();
 
-        PublishEbayOffer::dispatch($this->listing);
+        PublishOffer::dispatch($this->listing);
     }
 
     public function maxTries()

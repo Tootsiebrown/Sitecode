@@ -377,7 +377,11 @@ class AdsController extends Controller
                 $imageSortOrder
             );
 
-            $this->updateEbayAspects($listing, $request->input('ebay_aspect', []));
+            $this->updateEbayAspects(
+                $listing,
+                $request->input('ebay_aspect', []),
+                $request->input('ebay_aspect_cardinality', []),
+            );
         }
 
         return redirect(
