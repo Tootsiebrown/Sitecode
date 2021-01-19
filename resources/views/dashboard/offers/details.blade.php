@@ -11,7 +11,7 @@
         <tr>
             <td>Listing</td>
             <td>
-                <a href="{{ route('single_ad', ['id' => $offer->listing->id, 'slug' => $offer->listing->slug]) }}">
+                <a href="{{ route('singleListing', ['id' => $offer->listing->id, 'slug' => $offer->listing->slug]) }}">
                     {{ $offer->listing->title }}
                 </a>
             </td>

@@ -8,7 +8,7 @@
             <td>
                 <h1 class="email__headline">You've won!</h1>
                 <h2 class="email__subhead">
-                    <a href="{{ route('single_ad', ['id' => $listing->id, 'slug' => $listing->slug]) }}">
+                    <a href="{{ route('singleListing', ['id' => $listing->id, 'slug' => $listing->slug]) }}">
                         {{ $listing->title }}
                     </a>
                 </h2>

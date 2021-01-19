@@ -460,7 +460,7 @@ class Listing extends Model
 
     public function getUrlAttribute(): string
     {
-        return route('single_ad', [
+        return route('singleListing', [
             'id' => $this->id,
             'slug' => $this->slug,
         ]);

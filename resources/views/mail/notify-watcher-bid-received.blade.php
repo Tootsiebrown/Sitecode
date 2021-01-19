@@ -8,7 +8,7 @@
             <td>
                 <h1 class="email__headline">New Bid on an Auction You're Watching</h1>
                 <h2 class="email__subhead">
-                    <a href="{{ route('single_ad', ['id' => $bid->listing->id, 'slug' => $bid->listing->slug]) }}">
+                    <a href="{{ route('singleListing', ['id' => $bid->listing->id, 'slug' => $bid->listing->slug]) }}">
                         {{ $bid->listing->title }}
                     </a>
                 </h2>
