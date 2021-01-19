@@ -55,7 +55,7 @@ class SyncEbayOrder implements ShouldQueue
             \Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
         }
 
-        $localOrderId = $ebayOrder->save();
+        $ebayOrder->save();
 
         foreach ($order->lineItems as $orderItem) {
             if (! $this->itemIsFromWebsite($orderItem->sku)) {
@@ -65,7 +65,7 @@ class SyncEbayOrder implements ShouldQueue
             $quantity = $orderItem->quantity;
             $listingId = $this->getListingId($orderItem->sku);
 
-            MarkEbayItemsSold::dispatch($localOrderId, $listingId, $quantity)->onQueue('fast');
+            MarkEbayItemsSold::dispatch($ebayOrder->id, $listingId, $quantity)->onQueue('fast');
         }
     }
 
