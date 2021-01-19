@@ -48,7 +48,8 @@ Route::get('search')
     ->uses('AdsController@search')
     ->name('search');
 
-Route::get('auction/{id}/{slug?}', ['as' => 'single_ad', 'uses' => 'AdsController@singleAuction']);
+Route::get('auction/{id}', ['as' => 'singleAdRedirect', 'uses' => 'AdsController@singleAuctionRedirect']);
+Route::get('auction/{id}/{slug}', ['as' => 'singleListing', 'uses' => 'AdsController@singleAuction']);
 Route::get('embedded/{slug}', ['as' => 'embedded_ad', 'uses' => 'AdsController@embeddedAd']);
 
 Route::middleware('auth')
