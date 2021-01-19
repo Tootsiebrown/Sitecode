@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Ebay\Sdk;
 use App\Jobs\SyncEbayOrder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 
 class EbaySyncOrder extends Command
 {
@@ -38,8 +40,10 @@ class EbaySyncOrder extends Command
      */
     public function handle()
     {
-        SyncEbayOrder::dispatch($this->argument('orderId'));
+        $job = new SyncEbayOrder($this->argument('orderId'), true);
 
-        $this->info('dispatched');
+        $job->handle(App::make(Sdk::class));
+
+        return;
     }
 }
