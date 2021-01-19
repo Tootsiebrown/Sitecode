@@ -48,4 +48,9 @@ class MarkEbayItemsSold implements ShouldQueue
                 ->update(['ebay_order_id' => $this->ebayOrderId]);
         }, 3);
     }
+
+    public function maxTries()
+    {
+        return 3;
+    }
 }

@@ -44,6 +44,8 @@ class EbaySyncOrder extends Command
 
         $job->handle(App::make(Sdk::class));
 
-        return;
+        $this->info('synced');
+
+        return true;
     }
 }

@@ -6,6 +6,7 @@ use App\Ebay\Sdk;
 use App\Models\EbayOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -57,7 +58,15 @@ class SyncEbayOrder implements ShouldQueue
             'ebay_id' => $this->ebayOrderId,
         ]);
 
-        $ebayOrder->save();
+        try {
+            $ebayOrder->save();
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                // duplicate order for some reason. just go ahead and quite here
+                // no need to fail which will just result in this being repeated a lot
+                return;
+            }
+        }
 
         foreach ($order->lineItems as $orderItem) {
             if (! $this->itemIsFromWebsite($orderItem->sku)) {
