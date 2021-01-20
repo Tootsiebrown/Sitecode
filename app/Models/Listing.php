@@ -117,6 +117,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Listing thatIBidFor()
  * @method static Builder|Listing timePastForEbay()
  * @method static Builder|Listing typeIsAuction()
+ * @method static findOrFail($listingId)
  * @mixin Eloquent
  */
 class Listing extends Model

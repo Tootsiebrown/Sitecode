@@ -64,8 +64,11 @@ class SyncEbayOrder implements ShouldQueue
             if ($e->getCode() === '23000') {
                 // duplicate order for some reason. just go ahead and quite here
                 // no need to fail which will just result in this being repeated a lot
+                Log::info('duplicate order '. $this->ebayOrderId);
                 return;
             }
+
+            throw $e;
         }
 
         foreach ($order->lineItems as $orderItem) {

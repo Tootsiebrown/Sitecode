@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Ebay\Sdk;
 use App\Jobs\SyncEbayOrder;
 use App\Jobs\SyncShipmentShipped;
 use App\Models\Listing;
-use Carbon\Carbon;
 use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -24,7 +22,7 @@ class WebHookController extends Controller
             $vars['storeID'] != config('services.ship_station.store_id')
             || $request->input('resource_type') !== 'SHIP_NOTIFY'
         ) {
-            return;
+            return true;
         }
 
         SyncShipmentShipped::dispatch($vars);
@@ -41,6 +39,8 @@ class WebHookController extends Controller
 
         if ($environment !== 'production') {
             $listingId = substr($listingId, strlen($environment) + 1);
+        } else {
+            $listingId = substr($listingId, strlen('website') + 1);
         }
 
         $listing = Listing::findOrFail($listingId);
@@ -57,7 +57,7 @@ class WebHookController extends Controller
     {
         $dom = new DOMDocument();
         if (config('services.ebay.log.auction_complete_webhook')) {
-            \Log::channel('single')->info($request->getContent());
+            Log::channel('single')->info($request->getContent());
         }
         $dom->loadXML($request->getContent());
         $elements = $dom->getElementsByTagName('OrderID');
