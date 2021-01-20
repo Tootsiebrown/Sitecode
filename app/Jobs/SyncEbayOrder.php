@@ -4,15 +4,14 @@ namespace App\Jobs;
 
 use App\Ebay\Sdk;
 use App\Models\EbayOrder;
-use App\Models\Listing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SyncEbayOrder implements ShouldQueue
 {
@@ -22,15 +21,19 @@ class SyncEbayOrder implements ShouldQueue
     use SerializesModels;
 
     public string $ebayOrderId;
+    /** @var false */
+    private bool $sync;
 
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param string $ebayOrderId
+     * @param bool $sync
      */
-    public function __construct(string $ebayOrderId)
+    public function __construct(string $ebayOrderId, bool $sync = false)
     {
         $this->ebayOrderId = $ebayOrderId;
+        $this->sync = $sync;
     }
 
     /**
@@ -43,6 +46,10 @@ class SyncEbayOrder implements ShouldQueue
     {
         $order = $ebay->getOrder($this->ebayOrderId);
 
+        if (config('services.ebay.log.get_order_response')) {
+            Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
+        }
+
         if (! $this->orderHasWebsiteItems($order)) {
             return;
         }
@@ -51,11 +58,18 @@ class SyncEbayOrder implements ShouldQueue
             'ebay_id' => $this->ebayOrderId,
         ]);
 
-        if (config('services.ebay.log.get_order_response')) {
-            \Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
-        }
+        try {
+            $ebayOrder->save();
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                // duplicate order for some reason. just go ahead and quite here
+                // no need to fail which will just result in this being repeated a lot
+                Log::info('duplicate order ' . $this->ebayOrderId);
+                return;
+            }
 
-        $ebayOrder->save();
+            throw $e;
+        }
 
         foreach ($order->lineItems as $orderItem) {
             if (! $this->itemIsFromWebsite($orderItem->sku)) {
@@ -65,7 +79,12 @@ class SyncEbayOrder implements ShouldQueue
             $quantity = $orderItem->quantity;
             $listingId = $this->getListingId($orderItem->sku);
 
-            MarkEbayItemsSold::dispatch($ebayOrder->id, $listingId, $quantity)->onQueue('fast');
+            if ($this->sync) {
+                $job = new MarkEbayItemsSold($ebayOrder->id, $listingId, $quantity);
+                $job->handle();
+            } else {
+                MarkEbayItemsSold::dispatch($ebayOrder->id, $listingId, $quantity)->onQueue('fast');
+            }
         }
     }
 

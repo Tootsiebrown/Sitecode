@@ -37,7 +37,7 @@
                                 @foreach($payments as $payment)
                                     <tr>
                                         <td>
-                                            <a href="{{route('single_ad', [$payment->ad->id, $payment->ad->slug])}}" target="_blank">{{$payment->ad->title}}</a>
+                                            <a href="{{route('singleListing', [$payment->ad->id, $payment->ad->slug])}}" target="_blank">{{$payment->ad->title}}</a>
                                         </td>
                                         <td><a href="{{route('user_info', $payment->user->id)}}"  target="_blank"> {{$payment->user->name}}</a></td>
                                         <td>{!! $payment->amount !!}</td>

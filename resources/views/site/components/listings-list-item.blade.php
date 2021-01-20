@@ -1,14 +1,14 @@
 <div class="listing-boxes__listing">
     @if ($listing->featured_image)
         <div class="listing-boxes__image">
-            <a href="{{ route('single_ad', [$listing->id, $listing->slug]) }}">
+            <a href="{{ route('singleListing', [$listing->id, $listing->slug]) }}">
                 <img itemprop="image"  src="{{ $listing->featured_image->thumb_url }}" class="img-responsive" alt="{{ $listing->title }}">
             </a>
         </div>
     @endif
 
     <div class="listing-boxes__listing-title">
-        <a class="" href="{{ route('single_ad', [$listing->id, $listing->slug]) }}" title="{{ $listing->title }}">
+        <a class="" href="{{ route('singleListing', [$listing->id, $listing->slug]) }}" title="{{ $listing->title }}">
             {{ $listing->title }}
 
             <br><br>
@@ -39,7 +39,7 @@
 
     {{-- <div class="countdown" data-expire-date="{{$listing->expired_at}}" ></div>--}}
     {{--<div class="place-bid-btn">
-        <a href="{{ route('single_ad', [$listing->id, $listing->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
+        <a href="{{ route('singleListing', [$listing->id, $listing->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
     </div> --}}
 
     @if ($listing->is_auction)

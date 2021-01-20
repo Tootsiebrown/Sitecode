@@ -28,7 +28,7 @@
                                             <img src="{{ $ad->featured_image->url }}" class="thumb-listing-table" alt="">
                                         </td>
                                         <td>
-                                            <h5><a href="{{  route('single_ad', [$ad->id, $ad->slug]) }}" target="_blank">{{ $ad->title }}</a> </h5>
+                                            <h5><a href="{{  route('singleListing', [$ad->id, $ad->slug]) }}" target="_blank">{{ $ad->title }}</a> </h5>
                                             <p class="text-muted">
                                                 <i class="fa fa-clock-o"></i> {{ $ad->posting_datetime()  }}
                                             </p>

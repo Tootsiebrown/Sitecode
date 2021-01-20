@@ -9,7 +9,7 @@
         <meta property="og:image:width" content="{{ $listing->featured_image->width }}">
         <meta property="og:image:height" content="{{ $listing->featured_image->height }}">
     @endif
-    <meta property="og:url" content="{{  route('single_ad', [$listing->id, $listing->slug]) }}">
+    <meta property="og:url" content="{{  route('singleListing', [$listing->id, $listing->slug]) }}">
     <meta name="twitter:card" content="summary_large_image">
     <!--  Non-Essential, But Recommended -->
     <meta property="og:site_name" content="{{ get_option('site_name') }}">
@@ -398,7 +398,7 @@
 
                                 <div class="ad-box">
                                     <div class="ads-thumbnail">
-                                        <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}">
+                                        <a href="{{ route('singleListing', [$rad->id, $rad->slug]) }}">
                                             <img itemprop="image"  src="{{ media_url($rad->feature_img) }}" class="img-responsive" alt="{{ $rad->title }}">
                                             <span class="modern-img-indicator">
                                                 @if(! empty($rad->video_url))
@@ -411,7 +411,7 @@
                                     </div>
                                     <div class="caption">
                                         <div class="ad-box-caption-title">
-                                            <a class="ad-box-title" href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
+                                            <a class="ad-box-title" href="{{ route('singleListing', [$rad->id, $rad->slug]) }}" title="{{ $rad->title }}">
                                                 {{ str_limit($rad->title, 40) }}
                                             </a>
                                         </div>
@@ -440,7 +440,7 @@
 
                                     <div class="countdown" data-expire-date="{{$rad->expired_at}}" ></div>
                                     <div class="place-bid-btn">
-                                        <a href="{{ route('single_ad', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
+                                        <a href="{{ route('singleListing', [$rad->id, $rad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
                                     </div>
 
                                 </div>
@@ -523,7 +523,7 @@
 {{--            @else--}}
 {{--            image: '{{ asset('uploads/placeholder.png') }}', // optional image for share message (not for all networks)--}}
 {{--            @endif--}}
-{{--            url: '{{  route('single_ad', [$listing->id, $listing->slug]) }}', // link on shared page--}}
+{{--            url: '{{  route('singleListing', [$listing->id, $listing->slug]) }}', // link on shared page--}}
 {{--            class_prefix: 's_', // optional class prefix for share elements (buttons or links or everything), default: 's_'--}}
 {{--            width: 640, // optional popup initial width--}}
 {{--            height: 480 // optional popup initial height--}}

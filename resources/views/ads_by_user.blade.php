@@ -54,7 +54,7 @@
 
                             <div class="ad-box">
                                 <div class="ads-thumbnail">
-                                    <a href="{{ route('single_ad', [$ad->id, $ad->slug]) }}">
+                                    <a href="{{ route('singleListing', [$ad->id, $ad->slug]) }}">
                                         <img itemprop="image"  src="{{ media_url($ad->feature_img) }}" class="img-responsive" alt="{{ $ad->title }}">
                                         <span class="modern-img-indicator">
                                         @if(! empty($ad->video_url))
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="caption">
                                     <div class="ad-box-caption-title">
-                                        <a class="ad-box-title" href="{{ route('single_ad', [$ad->id, $ad->slug]) }}" title="{{ $ad->title }}">
+                                        <a class="ad-box-title" href="{{ route('singleListing', [$ad->id, $ad->slug]) }}" title="{{ $ad->title }}">
                                             {{ str_limit($ad->title, 40) }}
                                         </a>
                                     </div>
@@ -96,7 +96,7 @@
 
                                 <div class="countdown" data-expire-date="{{$ad->expired_at}}" ></div>
                                 <div class="place-bid-btn">
-                                    <a href="{{ route('single_ad', [$ad->id, $ad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
+                                    <a href="{{ route('singleListing', [$ad->id, $ad->slug]) }}" class="btn btn-primary">@lang('app.place_bid')</a>
                                 </div>
 
                             </div>

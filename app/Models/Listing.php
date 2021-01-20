@@ -117,6 +117,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Listing thatIBidFor()
  * @method static Builder|Listing timePastForEbay()
  * @method static Builder|Listing typeIsAuction()
+ * @method static findOrFail($listingId)
  * @mixin Eloquent
  */
 class Listing extends Model
@@ -460,7 +461,7 @@ class Listing extends Model
 
     public function getUrlAttribute(): string
     {
-        return route('single_ad', [
+        return route('singleListing', [
             'id' => $this->id,
             'slug' => $this->slug,
         ]);

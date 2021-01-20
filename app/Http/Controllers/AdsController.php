@@ -549,6 +549,23 @@ class AdsController extends Controller
         ]);
     }
 
+    public function singleAuctionRedirect($id)
+    {
+        $listing = Listing::withoutGlobalScope('activeIfAuction')
+            ->withoutGlobalScope('withInventory')
+            ->withoutGlobalScope('notSecret')
+            ->find($id);
+
+        if (! $listing) {
+            return view('error_404');
+        }
+
+        return redirect()->route(
+            'singleListing',
+            ['id' => $listing->id, 'slug' => $listing->slug]
+        );
+    }
+
     protected function alreadyHasOfferOn(Listing $listing)
     {
         if (! Auth::check()) {
@@ -568,11 +585,6 @@ class AdsController extends Controller
 
         return false;
     }
-
-//    public function switchGridListView(Request $request)
-//    {
-//        session(['grid_list_view' => $request->grid_list_view]);
-//    }
 
     public function showSortFeatured()
     {
