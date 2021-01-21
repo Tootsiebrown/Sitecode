@@ -12,7 +12,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class Sdk
 {
@@ -439,12 +438,23 @@ class Sdk
 
     public function getOrder($orderId)
     {
-        $order = $this->request(
+        return $this->request(
             'get',
             'sell/fulfillment/v1/order/' . $orderId,
         );
+    }
 
-        return $order;
+    public function getOrders($limit = 10, $offset = 0)
+    {
+        return $this->request(
+            'get',
+            'sell/fulfillment/v1/order',
+            [],
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+            ]
+        );
     }
 
     private function getListingDescriptionExtra()
