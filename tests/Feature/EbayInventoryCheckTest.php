@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Listing;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Carbon;
 use Tests\WaxAppTestCase;
 
 class EbayInventoryCheckTest extends WaxAppTestCase
 {
+    use WithoutMiddleware;
+
     public function setUp(): void
     {
         parent::setUp();
