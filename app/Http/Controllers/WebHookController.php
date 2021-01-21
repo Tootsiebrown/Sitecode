@@ -9,6 +9,7 @@ use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Wax\System;
 
 class WebHookController extends Controller
 {
@@ -65,6 +66,9 @@ class WebHookController extends Controller
 
         if ($orderId) {
             SyncEbayOrder::dispatch($orderId)->onQueue('fast');
+        } else {
+            Log::channel('single')->info('order-less auction-complete call');
+            System::logSystemAlert('order-less auction-complete call at about this timestamp');
         }
     }
 }
