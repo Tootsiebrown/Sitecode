@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Ebay\Sdk;
-use App\Jobs\SyncEbayOrder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
 
 class EbayGetOrder extends Command
 {
