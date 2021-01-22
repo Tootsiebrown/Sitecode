@@ -9,9 +9,12 @@ class EbayOrdersController extends Controller
 {
     public function index()
     {
+        $orders = EbayOrder::orderBy('updated_at', 'desc')
+            ->paginate();
+
         return view(
             'dashboard.ebay.orders.index',
-            ['orders' => EbayOrder::all()]
+            ['orders' => $orders]
         );
     }
 

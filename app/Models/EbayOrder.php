@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Models\Listing\Item;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +22,11 @@ use Illuminate\Support\Facades\DB;
  * @property string|null $canceled_at
  * @property-read User|null $canceledBy
  * @property-read mixed $canceled
- * @property-read \Illuminate\Database\Eloquent\Collection|Item[] $items
+ * @property-read Collection|Item[] $items
  * @property-read int|null $items_count
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EbayOrder query()
+ * @method static Builder|EbayOrder newModelQuery()
+ * @method static Builder|EbayOrder newQuery()
+ * @method static Builder|EbayOrder query()
  * @mixin \Eloquent
  */
 class EbayOrder extends Model
@@ -62,5 +64,10 @@ class EbayOrder extends Model
     public function items()
     {
         return $this->hasMany(Item::class, 'ebay_order_id');
+    }
+
+    public function isPending()
+    {
+        return is_null($this->ebay_id);
     }
 }

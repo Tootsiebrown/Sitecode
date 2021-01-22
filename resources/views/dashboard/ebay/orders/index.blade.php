@@ -8,7 +8,7 @@
         </tr>
         @forelse($orders as $order)
             <tr>
-                <td><a href="{{ route('dashboard.ebay.orders.details', ['id' => $order->id]) }}">{{ $order->ebay_id }}</a></td>
+                <td><a href="{{ route('dashboard.ebay.orders.details', ['id' => $order->id]) }}">{{ $order->isPending() ? 'PENDING' : $order->ebay_id }}</a></td>
                 <td>{{ $order->created_at->format('F j, Y g:i A') }}</td>
             </tr>
         @empty
@@ -19,4 +19,6 @@
             </tr>
         @endforelse
     </table>
+
+    {!! $orders->links() !!}
 @endsection
