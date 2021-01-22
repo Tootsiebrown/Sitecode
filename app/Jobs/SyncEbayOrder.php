@@ -131,9 +131,4 @@ class SyncEbayOrder implements ShouldQueue
 
         return false;
     }
-
-    public function maxTries(): int
-    {
-        return 3;
-    }
 }
