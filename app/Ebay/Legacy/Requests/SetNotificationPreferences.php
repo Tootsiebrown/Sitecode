@@ -10,12 +10,6 @@ class SetNotificationPreferences extends AbstractRequest
                 'ApplicationEnable' => 'Enable',
                 'ApplicationURL' => null,
             ],
-            'UserDeliveryPreferenceArray' => [
-                'NotificationEnable' => [
-                    'EventEnable' => null,
-                    'EventType' => 'AuctionCheckoutComplete'
-                ]
-            ]
         ],
     ];
 
@@ -23,19 +17,35 @@ class SetNotificationPreferences extends AbstractRequest
     {
         $this->data['SetNotificationPreferencesRequest']
             ['ApplicationDeliveryPreferences']
-            ['ApplicationURL'] = route('webhooks.ebayCheckoutComplete');
+            ['ApplicationURL'] = route('webhooks.ebayNotification');
     }
+
     public function setVersion(int $version): void
     {
         $this->data['SetNotificationPreferencesRequest']['Version'] = $version;
     }
+
     public function setCheckoutSubscription(bool $subscribed)
     {
         $this->data['SetNotificationPreferencesRequest']
             ['UserDeliveryPreferenceArray']
-            ['NotificationEnable']
-            ['EventEnable'] = $subscribed
-                ? 'Enable'
-                : 'Disable';
+            ['NotificationEnable'][] = [
+                'EventEnable' => $subscribed
+                    ? 'Enable'
+                    : 'Disable',
+                'EventType' => 'AuctionCheckoutComplete',
+            ];
+    }
+
+    public function setTransactionSubscription(bool $subscribed)
+    {
+        $this->data['SetNotificationPreferencesRequest']
+            ['UserDeliveryPreferenceArray']
+            ['NotificationEnable'][] = [
+                'EventEnable' => $subscribed
+                    ? 'Enable'
+                    : 'Disable',
+                'EventType' => 'FixedPriceTransaction',
+            ];
     }
 }

@@ -42,11 +42,20 @@ class LegacySdk
         return $this->sendRequest('getNotificationPreferences', $request);
     }
 
-    public function setNotificationPreferences(bool $subscribed)
+    public function setNotificationPreferences(string $type, bool $subscribed)
     {
         $request = new SetNotificationPreferences();
 
-        $request->setCheckoutSubscription($subscribed);
+        switch ($type) {
+            case 'checkout':
+                $request->setCheckoutSubscription($subscribed);
+                break;
+            case 'transaction':
+                $request->setTransactionSubscription($subscribed);
+                break;
+            default:
+                throw new Exception('Subscription of type ' . $type . ' is not implemented.');
+        }
 
         return $this->sendRequest('setNotificationPreferences', $request);
     }

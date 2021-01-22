@@ -619,5 +619,8 @@ Route::name('webhooks.')
         Route::post('ebay-checkout-complete')
             ->name('ebayCheckoutComplete')
             ->uses('WebHookController@ebayCheckoutComplete');
+        Route::post('ebay-notification')
+            ->name('ebayNotification')
+            ->uses('WebHookController@ebayNotification');
     });
 
