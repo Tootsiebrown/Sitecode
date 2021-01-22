@@ -59,7 +59,8 @@ class WebHookController extends Controller
         return $this->ebayNotification($request);
     }
 
-    public function ebayNotification(Request $request){
+    public function ebayNotification(Request $request)
+    {
         $dom = new DOMDocument();
         if (config('services.ebay.log.auction_complete_webhook')) {
             Log::channel('single')->info($request->getContent());
@@ -74,5 +75,7 @@ class WebHookController extends Controller
             Log::channel('single')->info('order-less auction-complete call');
             System::logSystemAlert('order-less auction-complete call at about this timestamp');
         }
+
+        return response();
     }
 }
