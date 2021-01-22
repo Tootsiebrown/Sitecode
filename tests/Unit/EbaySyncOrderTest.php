@@ -13,6 +13,7 @@ use Tests\WaxAppTestCase;
 class EbaySyncOrderTest extends WaxAppTestCase
 {
     private string $mockOrderId = '369-543';
+    private string $mockTransactionId = '5432654645635';
     /** @var Sdk|MockObject */
     private $ebay;
 
@@ -35,7 +36,7 @@ class EbaySyncOrderTest extends WaxAppTestCase
             ->method('getOrder')
             ->willReturn($this->getMockOrder());
 
-        $job = new SyncOrder($this->mockOrderId);
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
         $job->handle($this->ebay);
 
         $ebayOrders = EbayOrder::all();
@@ -43,6 +44,7 @@ class EbaySyncOrderTest extends WaxAppTestCase
         $this->assertEquals(1, $ebayOrders->count());
         $localEbayOrder = $ebayOrders->first();
         $this->assertEquals($this->mockOrderId, $localEbayOrder->ebay_id);
+        $this->assertEquals($this->mockTransactionId, $localEbayOrder->transaction_id);
 
         Queue::assertPushed(MarkEbayItemsSold::class, function ($job) use ($localEbayOrder) {
             return $localEbayOrder->id == $job->ebayOrderId
@@ -57,10 +59,24 @@ class EbaySyncOrderTest extends WaxAppTestCase
             ->method('getOrder')
             ->willReturn($this->getMockOrderWithNoRelevantItems());
 
-        $job = new SyncOrder($this->mockOrderId);
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
         $job->handle($this->ebay);
 
         $this->assertEquals(0, EbayOrder::all()->count());
+    }
+
+    public function testSyncOrderWithPriorPendingTransaction()
+    {
+        $ebayOrder = factory(EbayOrder::class)->create(
+            ['transaction_id' => $this->mockTransactionId]
+        );
+
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
+        $job->handle($this->ebay);
+
+        $ebay->
+
+        Queue::assertNothingPushed();
     }
 
     private function getMockOrder()

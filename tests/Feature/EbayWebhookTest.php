@@ -35,7 +35,8 @@ class EbayWebhookTest extends WaxAppTestCase
             ->assertStatus(200);
 
         Queue::assertPushed(SyncOrder::class, function ($job) {
-            return $job->ebayOrderId == '08-06401-35793';
+            return $job->ebayOrderId == '08-06401-35793'
+                && $job->transactionId = '1879995910019';
         });
     }
 

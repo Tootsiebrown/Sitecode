@@ -22,7 +22,7 @@ class EbaySyncPendingTransactionTest extends WaxAppTestCase
         factory(Listing\Item::class, 3)->create(['listing_id' => $this->mockListingId]);
     }
 
-    public function testSaveOrder()
+    public function testSaveTransaction()
     {
         $this->assertEquals(0, EbayOrder::all()->count());
 
@@ -42,42 +42,6 @@ class EbaySyncPendingTransactionTest extends WaxAppTestCase
         $this->assertEquals($this->mockTransactionId, $localEbayOrder->transaction_id);
 
         $this->assertEquals($this->mockQuantity, $localEbayOrder->items()->count());
-    }
-
-    public function testOrderHasNoWebsiteItems()
-    {
-        $this->ebay
-            ->method('getOrder')
-            ->willReturn($this->getMockOrderWithNoRelevantItems());
-
-        $job = new SyncOrder($this->mockOrderId);
-        $job->handle($this->ebay);
-
-        $this->assertEquals(0, EbayOrder::all()->count());
-    }
-
-    private function getMockOrder()
-    {
-        return json_decode(json_encode([
-            'lineItems' => [
-                [
-                    'quantity' => 2,
-                    'sku' => 'testing-357'
-                ]
-            ]
-        ]));
-    }
-
-    private function getMockOrderWithNoRelevantItems()
-    {
-        return json_decode(json_encode([
-            'lineItems' => [
-                [
-                    'quantity' => 2,
-                    'sku' => '357'
-                ]
-            ]
-        ]));
     }
 }
 

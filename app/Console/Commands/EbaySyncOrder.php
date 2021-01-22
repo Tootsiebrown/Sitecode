@@ -14,7 +14,7 @@ class EbaySyncOrder extends Command
      *
      * @var string
      */
-    protected $signature = 'ebay:sync-order {orderId}';
+    protected $signature = 'ebay:sync-order {orderId} {transactionId}';
 
     /**
      * The console command description.
@@ -36,16 +36,13 @@ class EbaySyncOrder extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      */
     public function handle()
     {
-        $job = new SyncOrder($this->argument('orderId'), true);
+        $job = new SyncOrder($this->argument('orderId'), $this->argument('transactionId'));
 
         $job->handle(App::make(Sdk::class));
 
         $this->info('synced');
-
-        return true;
     }
 }
