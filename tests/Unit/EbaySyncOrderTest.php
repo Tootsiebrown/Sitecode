@@ -6,6 +6,7 @@ use App\Ebay\Sdk;
 use App\Jobs\MarkEbayItemsSold;
 use App\Jobs\Ebay\SyncOrder;
 use App\Models\EbayOrder;
+use App\Models\Listing;
 use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\WaxAppTestCase;
@@ -71,10 +72,18 @@ class EbaySyncOrderTest extends WaxAppTestCase
             ['transaction_id' => $this->mockTransactionId]
         );
 
+        $listing = factory(Listing::class)->create(['id' => 34]);
+        factory(Listing\Item::class, 4)->create(['listing_id' => 34]);
+
+        $firstItem = $listing->items->first();
+        $firstItem->ebay_order_id = $ebayOrder->id;
+        $firstItem->save();
+
         $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
         $job->handle($this->ebay);
 
-        $ebay->
+        $this->assertEquals(1, EbayOrder::all()->count());
+        $this->assertEquals(3, $listing->items()->available()->count());
 
         Queue::assertNothingPushed();
     }
