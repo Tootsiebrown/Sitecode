@@ -78,6 +78,6 @@ class WebHookController extends Controller
             System::logSystemAlert('order-less auction-complete call at about this timestamp');
         }
 
-        return response();
+        return 'success';
     }
 }
