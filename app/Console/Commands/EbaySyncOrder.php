@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Ebay\Sdk;
-use App\Jobs\SyncEbayOrder;
+use App\Jobs\Ebay\SyncOrder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
@@ -14,7 +14,7 @@ class EbaySyncOrder extends Command
      *
      * @var string
      */
-    protected $signature = 'ebay:sync-order {orderId}';
+    protected $signature = 'ebay:sync-order {orderId} {transactionId}';
 
     /**
      * The console command description.
@@ -36,16 +36,13 @@ class EbaySyncOrder extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      */
     public function handle()
     {
-        $job = new SyncEbayOrder($this->argument('orderId'), true);
+        $job = new SyncOrder($this->argument('orderId'), $this->argument('transactionId'));
 
         $job->handle(App::make(Sdk::class));
 
         $this->info('synced');
-
-        return true;
     }
 }

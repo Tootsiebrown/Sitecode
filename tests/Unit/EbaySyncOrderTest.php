@@ -2,25 +2,21 @@
 
 namespace Tests\Unit;
 
-use App\Bid;
 use App\Ebay\Sdk;
 use App\Jobs\MarkEbayItemsSold;
-use App\Jobs\NotifyWinner;
-use App\Jobs\SyncEbayOrder;
-use App\Mail\NotifyNoWinner as NotifyNoWinnerEmail;
-use App\Mail\NotifyWinner as NotifyWinnerEmail;
+use App\Jobs\Ebay\SyncOrder;
 use App\Models\EbayOrder;
 use App\Models\Listing;
-use App\User;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\WaxAppTestCase;
-use Wax\Shop\Services\ShopService;
 
-class SyncEbayOrderTest extends WaxAppTestCase
+class EbaySyncOrderTest extends WaxAppTestCase
 {
-    private $mockOrderId = '369-543';
+    private string $mockOrderId = '369-543';
+    private string $mockTransactionId = '5432654645635';
+    /** @var Sdk|MockObject */
+    private $ebay;
 
     public function setUp(): void
     {
@@ -41,7 +37,7 @@ class SyncEbayOrderTest extends WaxAppTestCase
             ->method('getOrder')
             ->willReturn($this->getMockOrder());
 
-        $job = new SyncEbayOrder($this->mockOrderId);
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
         $job->handle($this->ebay);
 
         $ebayOrders = EbayOrder::all();
@@ -49,6 +45,7 @@ class SyncEbayOrderTest extends WaxAppTestCase
         $this->assertEquals(1, $ebayOrders->count());
         $localEbayOrder = $ebayOrders->first();
         $this->assertEquals($this->mockOrderId, $localEbayOrder->ebay_id);
+        $this->assertEquals($this->mockTransactionId, $localEbayOrder->transaction_id);
 
         Queue::assertPushed(MarkEbayItemsSold::class, function ($job) use ($localEbayOrder) {
             return $localEbayOrder->id == $job->ebayOrderId
@@ -63,10 +60,32 @@ class SyncEbayOrderTest extends WaxAppTestCase
             ->method('getOrder')
             ->willReturn($this->getMockOrderWithNoRelevantItems());
 
-        $job = new SyncEbayOrder($this->mockOrderId);
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
         $job->handle($this->ebay);
 
         $this->assertEquals(0, EbayOrder::all()->count());
+    }
+
+    public function testSyncOrderWithPriorPendingTransaction()
+    {
+        $ebayOrder = factory(EbayOrder::class)->create(
+            ['transaction_id' => $this->mockTransactionId]
+        );
+
+        $listing = factory(Listing::class)->create(['id' => 34]);
+        factory(Listing\Item::class, 4)->create(['listing_id' => 34]);
+
+        $firstItem = $listing->items->first();
+        $firstItem->ebay_order_id = $ebayOrder->id;
+        $firstItem->save();
+
+        $job = new SyncOrder($this->mockOrderId, $this->mockTransactionId);
+        $job->handle($this->ebay);
+
+        $this->assertEquals(1, EbayOrder::all()->count());
+        $this->assertEquals(3, $listing->items()->available()->count());
+
+        Queue::assertNothingPushed();
     }
 
     private function getMockOrder()

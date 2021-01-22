@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Ebay;
 
 use App\Ebay\Sdk;
+use App\Jobs\MarkEbayItemsSold;
 use App\Models\EbayOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,30 +14,28 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-class SyncEbayOrder implements ShouldQueue
+class SyncOrder implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
-    public string $ebayOrderId;
-    /** @var false */
-    private bool $sync;
+    public int $tries = 5;
 
-    /** @var int  */
-    public $tries = 5;
+    public string $ebayOrderId;
+    public string $transactionId;
 
     /**
      * Create a new job instance.
      *
      * @param string $ebayOrderId
-     * @param bool $sync
+     * @param string $transactionId
      */
-    public function __construct(string $ebayOrderId, bool $sync = false)
+    public function __construct(string $ebayOrderId, string $transactionId)
     {
         $this->ebayOrderId = $ebayOrderId;
-        $this->sync = $sync;
+        $this->transactionId = $transactionId;
     }
 
     /**
@@ -47,6 +46,17 @@ class SyncEbayOrder implements ShouldQueue
      */
     public function handle(Sdk $ebay): void
     {
+        $ebayOrder = EbayOrder::firstOrNew(
+            ['transaction_id' => $this->transactionId]
+        );
+
+        $ebayOrder->ebay_id = $this->ebayOrderId;
+
+        if ($ebayOrder->exists) {
+            $ebayOrder->save();
+            return;
+        }
+
         $order = $ebay->getOrder($this->ebayOrderId);
 
         if (config('services.ebay.log.get_order_response')) {
@@ -57,18 +67,20 @@ class SyncEbayOrder implements ShouldQueue
             return;
         }
 
-        $ebayOrder = new EbayOrder([
-            'ebay_id' => $this->ebayOrderId,
-        ]);
-
         try {
             $ebayOrder->save();
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') {
-                // duplicate order for some reason. just go ahead and quite here
+                // duplicate order for some reason. just go ahead and quit here
                 // no need to fail which will just result in this being repeated a lot
-                Log::info('duplicate order ' . $this->ebayOrderId);
-                return;
+                Log::info(
+                    'duplicate order '
+                    . $this->ebayOrderId
+                    . ' for transaction '
+                    . $this->transactionId
+                );
+
+                $this->fail($e);
             }
 
             throw $e;
@@ -82,12 +94,7 @@ class SyncEbayOrder implements ShouldQueue
             $quantity = $orderItem->quantity;
             $listingId = $this->getListingId($orderItem->sku);
 
-            if ($this->sync) {
-                $job = new MarkEbayItemsSold($ebayOrder->id, $listingId, $quantity);
-                $job->handle();
-            } else {
-                MarkEbayItemsSold::dispatch($ebayOrder->id, $listingId, $quantity)->onQueue('fast');
-            }
+            MarkEbayItemsSold::dispatch($ebayOrder->id, $listingId, $quantity)->onQueue('fast');
         }
     }
 
