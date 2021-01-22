@@ -44,7 +44,9 @@ class WebHookController extends Controller
             $listingId = substr($listingId, strlen('website') + 1);
         }
 
-        $listing = Listing::findOrFail($listingId);
+        $listing = Listing::withoutGlobalScopes()
+            ->findOrFail($listingId);
+
         $availableCount = $listing->availableItems()->count();
 
         return [
