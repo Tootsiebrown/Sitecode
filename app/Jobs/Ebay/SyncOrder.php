@@ -46,16 +46,6 @@ class SyncOrder implements ShouldQueue
      */
     public function handle(Sdk $ebay): void
     {
-        $order = $ebay->getOrder($this->ebayOrderId);
-
-        if (config('services.ebay.log.get_order_response')) {
-            Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
-        }
-
-        if (! $this->orderHasWebsiteItems($order)) {
-            return;
-        }
-
         $ebayOrder = EbayOrder::firstOrNew(
             ['transaction_id' => $this->transactionId]
         );
@@ -64,6 +54,16 @@ class SyncOrder implements ShouldQueue
 
         if ($ebayOrder->exists) {
             $ebayOrder->save();
+            return;
+        }
+
+        $order = $ebay->getOrder($this->ebayOrderId);
+
+        if (config('services.ebay.log.get_order_response')) {
+            Log::channel('single')->info(json_encode($order, JSON_PRETTY_PRINT));
+        }
+
+        if (! $this->orderHasWebsiteItems($order)) {
             return;
         }
 
