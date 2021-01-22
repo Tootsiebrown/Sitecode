@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Ebay\Sdk;
-use App\Jobs\SyncEbayOrder;
+use App\Jobs\Ebay\SyncOrder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
@@ -40,7 +40,7 @@ class EbaySyncOrder extends Command
      */
     public function handle()
     {
-        $job = new SyncEbayOrder($this->argument('orderId'), true);
+        $job = new SyncOrder($this->argument('orderId'), true);
 
         $job->handle(App::make(Sdk::class));
 

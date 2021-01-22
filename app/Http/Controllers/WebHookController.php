@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SyncEbayOrder;
+use App\Jobs\Ebay\SyncPendingTransaction;
+use App\Jobs\Ebay\SyncOrder;
 use App\Jobs\SyncShipmentShipped;
 use App\Models\Listing;
 use DOMDocument;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -63,21 +65,71 @@ class WebHookController extends Controller
 
     public function ebayNotification(Request $request)
     {
-        $dom = new DOMDocument();
-        if (config('services.ebay.log.auction_complete_webhook')) {
-            Log::channel('single')->info($request->getContent());
-        }
-        $dom->loadXML($request->getContent());
-        $elements = $dom->getElementsByTagName('OrderID');
-        $orderId = $elements->item(0)->textContent;
+        [
+            $orderId,
+            $transactionId,
+            $paid,
+            $sku,
+            $quantity
+        ] = $this->parseEbayNotification($request);
 
-        if ($orderId) {
-            SyncEbayOrder::dispatch($orderId)->onQueue('fast');
-        } else {
-            Log::channel('single')->info('order-less auction-complete call');
-            System::logSystemAlert('order-less auction-complete call at about this timestamp');
+        // order hasn't been paid for yet
+        if (! $paid) {
+            if (!$sku) {
+                throw new Exception('No sku for this pending transaction');
+            }
+
+            SyncPendingTransaction::dispatch(
+                $transactionId,
+                $sku,
+                (int) $quantity,
+            );
+
+            return 'early exit';
         }
+
+        if (! $orderId) {
+            $this->log('order-less auction-complete call');
+            System::logSystemAlert('order-less auction-complete call at about this timestamp');
+
+            return 'early exit';
+        }
+
+        SyncOrder::dispatch($orderId, $transactionId)->onQueue('fast');
 
         return 'success';
+    }
+
+    protected function parseEbayNotification(Request $request)
+    {
+        $dom = new DOMDocument();
+        if (config('services.ebay.log.auction_complete_webhook')) {
+            $this->log($request->getContent());
+        }
+        $dom->loadXML($request->getContent());
+        $orderIdNodes = $dom->getElementsByTagName('OrderID');
+        $orderId = $orderIdNodes->item(0)->textContent;
+
+        $transactionIdNodes = $dom->getElementsByTagName('TransactionID');
+        $transactionId = $transactionIdNodes->item(0)->textContent;
+
+        $paidTimeElements = $dom->getElementsByTagName('PaidTime');
+        $paidTime = $paidTimeElements->item(0);
+
+        $skuNodes = $dom->getElementsByTagName('SKU');
+        $quantityNodes = $dom->getElementsByTagName('QuantityPurchased');
+
+        return [
+            $orderId,
+            $transactionId,
+            $paidTime ? true : false,
+            $skuNodes->length === 0 ? null : $skuNodes->item(0)->textContent,
+            $quantityNodes->length === 0 ? null : $quantityNodes->item(0)->textContent,
+        ];
+    }
+
+    public function log($message)
+    {
+        Log::channel('single')->info($message);
     }
 }

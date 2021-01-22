@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Ebay;
 
 use App\Ebay\Sdk;
+use App\Jobs\MarkEbayItemsSold;
 use App\Models\EbayOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-class SyncEbayOrder implements ShouldQueue
+class SyncOrder implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

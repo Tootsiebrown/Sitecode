@@ -616,9 +616,6 @@ Route::name('webhooks.')
             ->name('ebayInventoryCheck')
             ->middleware(['auth.basic', 'privilege:Ebay Inventory'])
             ->uses('WebHookController@ebayInventoryCheck');
-        Route::post('ebay-checkout-complete')
-            ->name('ebayCheckoutComplete')
-            ->uses('WebHookController@ebayCheckoutComplete');
         Route::post('ebay-notification')
             ->name('ebayNotification')
             ->uses('WebHookController@ebayNotification');
