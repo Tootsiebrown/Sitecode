@@ -24,6 +24,9 @@ class SyncEbayOrder implements ShouldQueue
     /** @var false */
     private bool $sync;
 
+    /** @var int  */
+    public $tries = 5;
+
     /**
      * Create a new job instance.
      *
@@ -129,7 +132,7 @@ class SyncEbayOrder implements ShouldQueue
         return false;
     }
 
-    public function maxTries()
+    public function maxTries(): int
     {
         return 3;
     }

@@ -21,6 +21,9 @@ class MarkEbayItemsSold implements ShouldQueue
     public $quantity;
     public $ebayOrderId;
 
+    /** @var int  */
+    public $tries = 5;
+
     /**
      * Create a new job instance.
      *
@@ -47,10 +50,5 @@ class MarkEbayItemsSold implements ShouldQueue
                 ->whereIn('id', $listingItems->pluck('id'))
                 ->update(['ebay_order_id' => $this->ebayOrderId]);
         }, 3);
-    }
-
-    public function maxTries()
-    {
-        return 3;
     }
 }
