@@ -81,4 +81,21 @@ class EbayOrder extends Model
     {
         return is_null($this->ebay_id);
     }
+
+    public function getStatusAttribute()
+    {
+        if ($this->canceled_at) {
+            return 'CANCELED';
+        }
+
+        if ($this->isPending()) {
+            return 'PENDING';
+        }
+
+        if (!is_null($this->shipped_at)) {
+            return 'SHIPPED';
+        }
+
+        return 'PAID';
+    }
 }

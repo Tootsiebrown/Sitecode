@@ -9,7 +9,7 @@ class EbayOrdersController extends Controller
 {
     public function index()
     {
-        $orders = EbayOrder::orderBy('updated_at', 'desc')
+        $orders = EbayOrder::orderBy('created_at', 'desc')
             ->paginate();
 
         return view(
