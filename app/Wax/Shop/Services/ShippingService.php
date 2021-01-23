@@ -292,4 +292,27 @@ class ShippingService
             'subscribe'
         );
     }
+
+    public function getShipstationOrder($sequence)
+    {
+        return $this
+            ->shipStation
+            ->orders
+            ->get([
+                'sortBy' => 'OrderDate',
+                'sortDir' => 'DESC',
+                'pageSize' => 1,
+                'orderNumber' => $sequence
+            ])
+            ->orders[0];
+    }
+
+    public function getAllShipstationOrders()
+    {
+        return $this->shipStation->orders->get([
+            'sortBy' => 'OrderDate',
+            'sortDir' => 'DESC',
+            'pageSize' => 20,
+        ]);
+    }
 }
