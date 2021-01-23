@@ -118,7 +118,7 @@ class Item extends Model
         $this->save();
     }
 
-    public function ebayOrder ()
+    public function ebayOrder()
     {
         return $this->belongsTo(EbayOrder::class, 'ebay_order_id');
     }

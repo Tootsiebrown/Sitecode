@@ -12,7 +12,10 @@ use Illuminate\Support\Carbon;
 
 class EbayMarkOrderShipped implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private string $ebayOrderEbayId;
 
