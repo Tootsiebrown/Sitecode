@@ -119,6 +119,8 @@ use Illuminate\Support\Facades\Auth;
  * @method static Builder|Listing typeIsAuction()
  * @method static findOrFail($listingId)
  * @mixin Eloquent
+ * @property-read Collection|EbayAspect[] $ebayAspects
+ * @property-read int|null $ebay_aspects_count
  */
 class Listing extends Model
 {

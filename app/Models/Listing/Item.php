@@ -4,6 +4,7 @@ namespace App\Models\Listing;
 
 use App\Models\EbayOrder;
 use App\Models\Listing;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Wax\Shop\Models\Order\Item as OrderItem;
@@ -22,16 +23,17 @@ use Wax\Shop\Models\Order\Item as OrderItem;
  * @property-read mixed $removed
  * @property-read Listing $listing
  * @property-read OrderItem|null $orderItem
- * @method static \Illuminate\Database\Eloquent\Builder|Item available()
- * @method static \Illuminate\Database\Eloquent\Builder|Item availableForOrder($order)
- * @method static \Illuminate\Database\Eloquent\Builder|Item newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Item newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Item notReserved()
- * @method static \Illuminate\Database\Eloquent\Builder|Item query()
- * @method static \Illuminate\Database\Eloquent\Builder|Item reserved()
- * @method static \Illuminate\Database\Eloquent\Builder|Item reservedForOffer($offerId)
- * @method static \Illuminate\Database\Eloquent\Builder|Item sold()
+ * @method static Builder|Item available()
+ * @method static Builder|Item availableForOrder($order)
+ * @method static Builder|Item newModelQuery()
+ * @method static Builder|Item newQuery()
+ * @method static Builder|Item notReserved()
+ * @method static Builder|Item query()
+ * @method static Builder|Item reserved()
+ * @method static Builder|Item reservedForOffer($offerId)
+ * @method static Builder|Item sold()
  * @mixin \Eloquent
+ * @property-read EbayOrder|null $ebayOrder
  */
 class Item extends Model
 {

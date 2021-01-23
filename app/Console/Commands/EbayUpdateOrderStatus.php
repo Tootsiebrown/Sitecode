@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Ebay\Sdk;
+use App\Jobs\EbayMarkOrderShipped;
 use App\Models\EbayOrder;
 use Illuminate\Console\Command;
 
@@ -50,12 +51,22 @@ class EbayUpdateOrderStatus extends Command
         $ordersToCheck = EbayOrder::whereNull('shipped_at')
             ->whereNull('canceled_at')
             ->whereNotNull('ebay_id')
-            ->take(50)
+            ->orderBy('updated_at', 'desc')
+            ->take(100)
             ->get()
-            ->pluck('ebay_id');
+            ->pluck('ebay_id')
+            ->chunk(50);
 
-        $orders = $this->ebay->getOrders(50, 0, $ordersToCheck);
-
-        dd($orders);
+        $ordersToCheck
+            ->each(function ($orderChunk) {
+                $this
+                    ->ebay
+                    ->getOrders(50, 0, $orderChunk)
+                    ->each(function ($order) {
+                        if ($order->orderFulfillmentStatus === 'FULFILLED') {
+                            EbayMarkOrderShipped::dispatch($order->orderId);
+                        }
+                    });
+            });
     }
 }

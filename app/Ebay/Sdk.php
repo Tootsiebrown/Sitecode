@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class Sdk
 {
@@ -141,6 +142,14 @@ class Sdk
         );
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $json
+     * @param array $query
+     * @return stdClass
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function request($method, $url, $json = [], $query = [])
     {
         $accessToken = $this->getCurrentAccessToken();
@@ -240,7 +249,7 @@ class Sdk
         }
 
 
-        $response = $this->request(
+        $this->request(
             'put',
             'sell/inventory/v1/inventory_item/' . $this->getEbaySku($listing),
             $data,
@@ -453,15 +462,17 @@ class Sdk
         ];
 
         if ($orderIds) {
-            $query['filter'] = 'orderIds:{' . $orderIds->implode(',') . '}';
+            $query['orderIds'] = $orderIds->implode(',');
         }
 
-        return $this->request(
+        $orders = $this->request(
             'get',
             'sell/fulfillment/v1/order',
             [],
             $query
         );
+
+        return collect($orders->orders);
     }
 
     private function getListingDescriptionExtra()

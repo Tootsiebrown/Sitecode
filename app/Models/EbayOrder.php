@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder|EbayOrder newQuery()
  * @method static Builder|EbayOrder query()
  * @mixin \Eloquent
+ * @property string|null $transaction_id
+ * @property string|null $shipped_at
+ * @method static Builder|EbayOrder forOrderProcessingReport()
  */
 class EbayOrder extends Model
 {
