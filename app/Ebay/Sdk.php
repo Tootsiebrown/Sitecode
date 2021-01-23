@@ -9,9 +9,11 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class Sdk
 {
@@ -140,6 +142,14 @@ class Sdk
         );
     }
 
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $json
+     * @param array $query
+     * @return stdClass
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function request($method, $url, $json = [], $query = [])
     {
         $accessToken = $this->getCurrentAccessToken();
@@ -239,7 +249,7 @@ class Sdk
         }
 
 
-        $response = $this->request(
+        $this->request(
             'put',
             'sell/inventory/v1/inventory_item/' . $this->getEbaySku($listing),
             $data,
@@ -444,17 +454,25 @@ class Sdk
         );
     }
 
-    public function getOrders($limit = 10, $offset = 0)
+    public function getOrders($limit = 10, $offset = 0, Collection $orderIds = null)
     {
-        return $this->request(
+        $query = [
+            'limit' => $limit,
+            'offset' => $offset,
+        ];
+
+        if ($orderIds) {
+            $query['orderIds'] = $orderIds->implode(',');
+        }
+
+        $orders = $this->request(
             'get',
             'sell/fulfillment/v1/order',
             [],
-            [
-                'limit' => $limit,
-                'offset' => $offset,
-            ]
+            $query
         );
+
+        return collect($orders->orders);
     }
 
     private function getListingDescriptionExtra()

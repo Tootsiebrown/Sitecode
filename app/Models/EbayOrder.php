@@ -28,11 +28,22 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder|EbayOrder newQuery()
  * @method static Builder|EbayOrder query()
  * @mixin \Eloquent
+ * @property string|null $transaction_id
+ * @property string|null $shipped_at
+ * @method static Builder|EbayOrder forOrderProcessingReport()
  */
 class EbayOrder extends Model
 {
     protected $guarded = [];
     public $timestamps = true;
+
+    public function scopeForOrderProcessingReport($query)
+    {
+        return $query->whereNotNull('transaction_id')
+            ->whereNotNull('ebay_id')
+            ->whereNull('canceled_at')
+            ->whereNotNull('shipped_at');
+    }
 
     public function getCanceledAttribute()
     {

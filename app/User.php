@@ -4,10 +4,13 @@ namespace App;
 
 use App\Models\Listing;
 use App\Models\Offer;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Wax\Core\Eloquent\Models\User as UserBase;
+use Wax\Core\Eloquent\Models\User\Group;
 use Wax\Shop\Traits\ShopUser;
 
 /**
@@ -38,20 +41,21 @@ use Wax\Shop\Traits\ShopUser;
  * @property-read mixed $not_privileges
  * @property-read mixed $privileges
  * @property-read mixed $superuser
- * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Core\Eloquent\Models\User\Group[] $groups
+ * @property-read Collection|Group[] $groups
  * @property-read int|null $groups_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Offer[] $offers
+ * @property-read Collection|Offer[] $offers
  * @property-read int|null $offers_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Wax\Shop\Models\Order[] $orders
+ * @property-read Collection|\App\Wax\Shop\Models\Order[] $orders
  * @property-read int|null $orders_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Wax\Shop\Models\User\PaymentMethod[] $paymentMethods
+ * @property-read Collection|\Wax\Shop\Models\User\PaymentMethod[] $paymentMethods
  * @property-read int|null $payment_methods_count
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User query()
  * @mixin \Eloquent
+ * @property int $newsletter_subscription
  */
 class User extends UserBase
 {
@@ -81,7 +85,6 @@ class User extends UserBase
     public function get_gravatar($s = 40, $d = 'mm', $r = 'g', $img = false, $atts = [])
     {
         $parse_url = parse_url($this->photo);
-        $url = '';
         $email = $this->email;
 
         if (!empty($parse_url['scheme'])) {
@@ -103,6 +106,7 @@ class User extends UserBase
                 $url .= ' />';
             }
         }
+
         return $url;
     }
 
@@ -179,6 +183,12 @@ class User extends UserBase
         return $this->offers()->where('listing_id', $listing->id)->get();
     }
 
+    /*
+     * @return HasMany
+     */
+    /**
+     * @return HasMany|Builder|Collection|Offer
+     */
     public function offers()
     {
         return $this->hasMany(Offer::class);
