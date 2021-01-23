@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\EbayUpdateOrderShippedStatus;
 use App\Console\Commands\ProcessAuctionsEndingInOneHour;
 use App\Console\Commands\ProcessAuctionsNeedingPayment;
 use App\Console\Commands\ProcessEndedAuctions;
@@ -50,6 +51,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(EbayProcessListingsToPost::class)
             ->everyFiveMinutes();
+
+        $schedule->command(EbayUpdateOrderShippedStatus::class)
+            ->everyTenMinutes();
     }
 
     /**

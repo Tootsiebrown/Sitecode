@@ -7,24 +7,21 @@ use App\Jobs\EbayMarkOrderShipped;
 use App\Models\EbayOrder;
 use Illuminate\Console\Command;
 
-class EbayUpdateOrderStatus extends Command
+class EbayUpdateOrderShippedStatus extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ebay:update-order-status';
+    protected $signature = 'ebay:update-order-shipped-status';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'update orders to show canceled and shipped';
-
-    /** @var Sdk */
-    private Sdk $ebay;
+    protected $description = 'update orders that shipped';
 
     /**
      * Create a new command instance.
@@ -42,12 +39,6 @@ class EbayUpdateOrderStatus extends Command
      */
     public function handle(Sdk $ebay)
     {
-        $this->ebay = $ebay;
-        $this->updateShippedStatus();
-    }
-
-    private function updateShippedStatus()
-    {
         $ordersToCheck = EbayOrder::whereNull('shipped_at')
             ->whereNull('canceled_at')
             ->whereNotNull('ebay_id')
@@ -58,9 +49,8 @@ class EbayUpdateOrderStatus extends Command
             ->chunk(50);
 
         $ordersToCheck
-            ->each(function ($orderChunk) {
-                $this
-                    ->ebay
+            ->each(function ($orderChunk) use ($ebay) {
+                $ebay
                     ->getOrders(50, 0, $orderChunk)
                     ->each(function ($order) {
                         if ($order->orderFulfillmentStatus === 'FULFILLED') {
