@@ -50,7 +50,7 @@ class EbayOrder extends Model
         return !is_null($this->canceled_at);
     }
 
-    public function cancel()
+    public function cancel(int $userId = null)
     {
         DB::table('listing_items')
             ->where('ebay_order_id', $this->id)
@@ -62,7 +62,7 @@ class EbayOrder extends Model
                 'ebay_order_id' => null,
             ]);
 
-        $this->canceled_by_user_id = Auth::user()->id;
+        $this->canceled_by_user_id = $userId ?: Auth::user()->id;
         $this->canceled_at = Carbon::now()->toDateTimeString();
         $this->save();
     }
