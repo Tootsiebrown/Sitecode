@@ -2,6 +2,7 @@
 
 namespace App\Models\Listing;
 
+use App\Models\EbayOrder;
 use App\Models\Listing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -113,5 +114,10 @@ class Item extends Model
         }
 
         $this->save();
+    }
+
+    public function ebayOrder ()
+    {
+        return $this->belongsTo(EbayOrder::class, 'ebay_order_id');
     }
 }

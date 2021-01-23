@@ -9,6 +9,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -444,16 +445,22 @@ class Sdk
         );
     }
 
-    public function getOrders($limit = 10, $offset = 0)
+    public function getOrders($limit = 10, $offset = 0, Collection $orderIds = null)
     {
+        $query = [
+            'limit' => $limit,
+            'offset' => $offset,
+        ];
+
+        if ($orderIds) {
+            $query['filter'] = 'orderIds:{' . $orderIds->implode(',') . '}';
+        }
+
         return $this->request(
             'get',
             'sell/fulfillment/v1/order',
             [],
-            [
-                'limit' => $limit,
-                'offset' => $offset,
-            ]
+            $query
         );
     }
 

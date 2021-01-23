@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Models\EbayOrder;
 use App\Models\Listing\Item as ListingItem;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Models\Order\Item as OrderItem;
@@ -143,9 +144,10 @@ class ShopOrdersController extends Controller
         $columns = [
             'Listing Title',
             'Order Number',
+            'eBay',
             'Listing SKU',
             'Item SKU',
-            'Bin'
+            'Bin',
         ];
 
         $lineItems = Order::placed()
@@ -156,7 +158,12 @@ class ShopOrdersController extends Controller
             ->map(fn($item) => $item->listingItems)
             ->flatten();
 
-        $callback = function () use ($lineItems, $columns) {
+        $ebayLineItems = EbayOrder::forOrderProcessingReport()
+            ->get()
+            ->map(fn ($order) => $order->items)
+            ->flatten();
+
+        $callback = function () use ($lineItems, $columns, $ebayLineItems) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
@@ -164,6 +171,18 @@ class ShopOrdersController extends Controller
                 fputcsv($file, [
                     $lineItem->listing->title,
                     $lineItem->orderItem->shipment->order->sequence,
+                    'no',
+                    $lineItem->listing_id,
+                    $lineItem->id,
+                    $lineItem->bin,
+                ]);
+            }
+
+            foreach ($ebayLineItems as $lineItem) {
+                fputcsv($file, [
+                    $lineItem->listing->title,
+                    $lineItem->ebayOrder->ebay_id,
+                    'yes',
                     $lineItem->listing_id,
                     $lineItem->id,
                     $lineItem->bin,

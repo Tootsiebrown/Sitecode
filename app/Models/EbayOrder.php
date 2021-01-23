@@ -34,6 +34,14 @@ class EbayOrder extends Model
     protected $guarded = [];
     public $timestamps = true;
 
+    public function scopeForOrderProcessingReport($query)
+    {
+        return $query->whereNotNull('transaction_id')
+            ->whereNotNull('ebay_id')
+            ->whereNull('canceled_at')
+            ->whereNotNull('shipped_at');
+    }
+
     public function getCanceledAttribute()
     {
         return !is_null($this->canceled_at);
