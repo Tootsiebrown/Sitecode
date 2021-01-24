@@ -74,6 +74,7 @@ return [
             'https://api.ebay.com/oauth/api_scope/sell.finances',
             'https://api.ebay.com/oauth/api_scope/sell.inventory',
             'https://api.ebay.com/oauth/api_scope/sell.fulfillment',
+            'https://api.ebay.com/oauth/api_scope/sell.payment.dispute',
         ],
         'log' => [
             'general_calls' => env('EBAY_LOG_GENERAL'),
