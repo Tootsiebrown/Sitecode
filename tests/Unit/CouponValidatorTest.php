@@ -255,6 +255,35 @@ class CouponValidatorTest extends WaxAppTestCase
         $this->assertFalse($this->shopService->applyCoupon($coupon->code));
     }
 
+
+
+    public function testUserCanUseReuablCouponAgain()
+    {
+        $coupon = factory(Coupon::class)
+            ->create([
+                'percent' => 10,
+                'one_time' => false,
+                'uses' => 5,
+                'reusable' => true,
+            ]);
+
+        $oldOrder = new Order();
+        $oldOrder->user_id = $this->user->id;
+        $oldOrder->placed_at = Carbon::now()->toDateTimeString();
+        $oldOrder->save();
+
+        $oldOrder->coupon()->save(new Order\Coupon(['code' => $coupon->code]));
+
+        $this->be($this->user);
+
+        $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
+        $order = $this->shopService->getActiveOrder();
+
+        $couponValidator = new OrderCouponValidator($order, $coupon);
+        $this->assertTrue($couponValidator->passes());
+        $this->assertTrue($this->shopService->applyCoupon($coupon->code));
+    }
+
     public function testValidationFailsWithoutCorrectCategoryForCoupon()
     {
         $category = factory(ProductCategory::class)

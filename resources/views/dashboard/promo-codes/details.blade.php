@@ -67,14 +67,13 @@
                 'name' => 'usage_restrictions',
                 'prettyTitle' => 'Usage Restriction',
                 'type' => 'select',
-                'value' => $coupon->exists
-                    ? $coupon->one_time
-                        ? 'one_time'
-                        : 'once_per_user'
-                    : 'one_time',
+                'value' => !$coupon->exists
+                    ? 'one_time'
+                    : $coupon->usability,
                 'options' => [
                     'one_time' => 'One time',
                     'once_per_user' => 'Once Per User',
+                    'reusable' => 'Reusable',
                 ]
             ])
 

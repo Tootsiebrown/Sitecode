@@ -34,7 +34,7 @@ class OrderCouponValidator extends AbstractValidator
         $this->validateNotExpired();
         $this->validateOrderMinimum();
         $this->validateNumberOfUses();
-        $this->validateUserHasNotUsedBefore();
+        $this->validateUserHasNotUsedBeforeUnlessReusable();
         $this->validateCategoryMatches();
         $this->validateNotDuplicate();
         $this->validateCategoryNotOverlapping();
@@ -111,9 +111,13 @@ class OrderCouponValidator extends AbstractValidator
         }
     }
 
-    public function validateUserHasNotUsedBefore()
+    public function validateUserHasNotUsedBeforeUnlessReusable()
     {
         if ($this->coupon->one_time) {
+            return;
+        }
+
+        if ($this->coupon->reusable) {
             return;
         }
 
