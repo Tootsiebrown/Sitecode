@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Listing;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -75,6 +74,23 @@ class ProductCategory extends Model
         return $children->merge($grandchildren);
     }
 
+    public function getDescendentOfSecretAttribute()
+    {
+        if ($this->parent_id === 0) {
+            return false;
+        }
+
+        if ($this->parent->secret) {
+            return true;
+        }
+
+        if ($this->parent->parent && $this->parent->parent->secret) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function parent()
     {
         return $this->belongsTo(static::class, 'parent_id');
@@ -95,6 +111,13 @@ class ProductCategory extends Model
     public function listings()
     {
         return $this->belongsToMany(Listing::class, 'ad_category_links', 'category_id', 'ad_id');
+    }
+
+    public function listingsWithSecret()
+    {
+        return $this
+            ->belongsToMany(Listing::class, 'ad_category_links', 'category_id', 'ad_id')
+            ->withoutGlobalScope('notSecret');
     }
 
     public function products()
