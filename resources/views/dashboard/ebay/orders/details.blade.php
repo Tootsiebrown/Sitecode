@@ -2,11 +2,13 @@
 
 @section('dashboard-content')
     <h1>
-        Order {{ $order->ebay_id }}
+        Order {{ $order->ebay_id ?: 'PENDING (' . $order->transaction_id . ')' }}
         @if ($order->canceled)
             <span class="alert alert-danger">CANCELED</span>
         @endif
     </h1>
+
+    <h2>Status: {{ $order->status }}</h2>
 
     <table class="dashboard-table">
         <thead>

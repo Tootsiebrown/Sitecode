@@ -475,6 +475,23 @@ class Sdk
         return collect($orders->orders);
     }
 
+    /*
+     * There's a scope issue here... I don't have permission from the API
+     * to do this.
+     */
+    public function getRecentCancellations()
+    {
+        return $this->request(
+            'get',
+            'post-order/v2/cancellation/search',
+            [],
+            [
+                'sort' => '-CANCEL_ID', // descending order
+                'limit' => 25,
+            ]
+        );
+    }
+
     private function getListingDescriptionExtra()
     {
         return 'Thanks for shopping at our store! If you are happy with your purchase- we would appreciate a 5-star rating and positive feedback!

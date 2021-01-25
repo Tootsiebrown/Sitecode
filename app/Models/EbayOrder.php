@@ -42,7 +42,7 @@ class EbayOrder extends Model
         return $query->whereNotNull('transaction_id')
             ->whereNotNull('ebay_id')
             ->whereNull('canceled_at')
-            ->whereNotNull('shipped_at');
+            ->whereNull('shipped_at');
     }
 
     public function getCanceledAttribute()
@@ -50,7 +50,7 @@ class EbayOrder extends Model
         return !is_null($this->canceled_at);
     }
 
-    public function cancel()
+    public function cancel(int $userId = null)
     {
         DB::table('listing_items')
             ->where('ebay_order_id', $this->id)
@@ -62,7 +62,7 @@ class EbayOrder extends Model
                 'ebay_order_id' => null,
             ]);
 
-        $this->canceled_by_user_id = Auth::user()->id;
+        $this->canceled_by_user_id = $userId ?: Auth::user()->id;
         $this->canceled_at = Carbon::now()->toDateTimeString();
         $this->save();
     }
@@ -80,5 +80,22 @@ class EbayOrder extends Model
     public function isPending()
     {
         return is_null($this->ebay_id);
+    }
+
+    public function getStatusAttribute()
+    {
+        if ($this->canceled_at) {
+            return 'CANCELED';
+        }
+
+        if ($this->isPending()) {
+            return 'PENDING';
+        }
+
+        if (!is_null($this->shipped_at)) {
+            return 'SHIPPED';
+        }
+
+        return 'PAID';
     }
 }
