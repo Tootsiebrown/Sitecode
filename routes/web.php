@@ -211,16 +211,16 @@ Route::group(
             ->group(function () {
                 Route::get('/')
                     ->name('index')
-                    ->uses('CategoriesController@index');
+                    ->uses('Dashboard\CategoriesController@index');
                 Route::get('{id}')
                     ->name('show')
-                    ->uses('CategoriesController@show');
+                    ->uses('Dashboard\CategoriesController@show');
                 Route::post('{id}')
                     ->name('save')
-                    ->uses('CategoriesController@update');
+                    ->uses('Dashboard\CategoriesController@update');
                 Route::delete('{id}')
                     ->name('delete')
-                    ->uses('CategoriesController@destroy');
+                    ->uses('Dashboard\CategoriesController@destroy');
             });
 
         Route::prefix('brands')

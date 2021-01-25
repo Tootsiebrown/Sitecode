@@ -76,6 +76,9 @@
         </p>
         <ul>
             @foreach(collect($filterOptions['category'])->sortBy('label') as $category)
+                @if ($category->extras['secret'] && !$category->isSelected && !$category->extras['childSelected'])
+                    @continue;
+                @endif
                 <li>
                     @if ($category->isSelected)
                         <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>

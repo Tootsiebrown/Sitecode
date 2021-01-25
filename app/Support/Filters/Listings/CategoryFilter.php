@@ -8,7 +8,6 @@ use App\Models\ProductCategory;
 use App\Support\Filters\Filter;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Wax\Core\Filters\FilterOption;
 
 class CategoryFilter extends Filter
@@ -74,6 +73,8 @@ class CategoryFilter extends Filter
                 $possibilitiesCount = $category->listings->pluck('id')->intersect($possibilities)->count();
                 $extras = [
                     'count' => $possibilitiesCount,
+                    'secret' => $category->secret,
+                    'childSelected' => false,
                 ];
                 if ($level > 0) {
                     $extras['children'] = $category
@@ -85,6 +86,7 @@ class CategoryFilter extends Filter
                             $possibilitiesCount = $category->listings->pluck('id')->intersect($possibilities)->count();
                             $extras = [
                                 'count' => $possibilitiesCount,
+                                'childSelected' => false,
                             ];
                             if ($level > 1) {
                                 $extras['children'] = $category
@@ -101,6 +103,9 @@ class CategoryFilter extends Filter
                                             $category->id === $this->value
                                         );
                                     });
+                                if ($extras['children']->filter->isSelected->isNotEmpty()) {
+                                    $extras['childSelected'] = true;
+                                }
                             }
                             return new FilterOption(
                                 $category->name,
@@ -110,6 +115,17 @@ class CategoryFilter extends Filter
                                 $category->id === $this->value
                             );
                         });
+
+                    $childSelected = $extras['children']
+                        ->filter(function ($option) {
+                            return $option->extras['childSelected']
+                                || $option->isSelected;
+                        })
+                        ->isNotEmpty();
+
+                    if ($childSelected) {
+                        $extras['childSelected'] = true;
+                    }
                 }
                 $option = new FilterOption(
                     $category->name,

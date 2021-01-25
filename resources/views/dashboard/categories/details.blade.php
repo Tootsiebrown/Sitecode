@@ -14,6 +14,15 @@
             'type' => 'text',
         ])
 
+        @if ($category->parent_id === 0)
+            @include('dashboard.form-elements.form-group', [
+                'name' => 'secret',
+                'prettyTitle' => 'Secret',
+                'checked' => old('secret', $category->secret),
+                'type' => 'boolean',
+            ])
+        @endif
+
         @include('dashboard.form-elements.form-group', [
             'type' => 'submit'
         ])
@@ -50,5 +59,8 @@
         </p>
     </form>
 
-    @include ('dashboard.categories.list', ['categories' => $children])
+    @include ('dashboard.categories.list', [
+        'categories' => $children,
+        'top' => false,
+    ])
 @endsection
