@@ -116,14 +116,14 @@ class CategoryFilter extends Filter
                             );
                         });
 
-                    if (
-                        $extras['children']->filter(
-                            fn ($option) =>
-                                $option->extras['childSelected']
-                                || $option->isSelected
-                        )
-                        ->isNotEmpty()
-                    ) {
+                    $childSelected = $extras['children']
+                        ->filter(function ($option) {
+                            return $option->extras['childSelected']
+                                || $option->isSelected;
+                        })
+                        ->isNotEmpty();
+
+                    if ($childSelected) {
                         $extras['childSelected'] = true;
                     }
                 }
