@@ -494,6 +494,13 @@ class AdsController extends Controller
 
         $title = null;
 
+        $categoryId = $request->input('category');
+        if ($categoryId) {
+            $category = ProductCategory::find($categoryId);
+            if ($category && ($category->secret || $category->descendent_of_secret)) {
+                $this->repo->allowSecret();
+            }
+        }
         $paginatedListings = $this->repo->getPaginated($perPage);
 
         $filterOptions = $this->repo->getFilterOptions();

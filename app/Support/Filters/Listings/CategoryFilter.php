@@ -70,20 +70,30 @@ class CategoryFilter extends Filter
             })
             ->get()
             ->map(function ($category) use ($possibilities, $level, $level2Category) {
-                $possibilitiesCount = $category->listings->pluck('id')->intersect($possibilities)->count();
+                $possibilitiesQuery = $category->secret
+                    ? $category->listingsWithSecret
+                    : $category->listings;
+
+                $possibilitiesCount = $possibilitiesQuery->pluck('id')->intersect($possibilities)->count();
                 $extras = [
                     'count' => $possibilitiesCount,
                     'secret' => $category->secret,
                     'childSelected' => false,
                 ];
+
+                $inSecret = $category->secret;
                 if ($level > 0) {
                     $extras['children'] = $category
                         ->children
                         ->when($level > 1, function ($query) use ($level2Category) {
                             return $query->where('id', $level2Category->id);
                         })
-                        ->map(function ($category) use ($possibilities, $level) {
-                            $possibilitiesCount = $category->listings->pluck('id')->intersect($possibilities)->count();
+                        ->map(function ($category) use ($possibilities, $level, $inSecret) {
+                            $possibilitiesQuery = $inSecret
+                                ? $category->listingsWithSecret
+                                : $category->listings;
+
+                            $possibilitiesCount = $possibilitiesQuery->pluck('id')->intersect($possibilities)->count();
                             $extras = [
                                 'count' => $possibilitiesCount,
                                 'childSelected' => false,
@@ -91,8 +101,12 @@ class CategoryFilter extends Filter
                             if ($level > 1) {
                                 $extras['children'] = $category
                                     ->children
-                                    ->map(function ($category) use ($possibilities) {
-                                        $possibilitiesCount = $category->listings->pluck('id')->intersect($possibilities)->count();
+                                    ->map(function ($category) use ($possibilities, $inSecret) {
+                                        $possibilitiesQuery = $inSecret
+                                            ? $category->listingsWithSecret
+                                            : $category->listings;
+
+                                        $possibilitiesCount = $possibilitiesQuery->pluck('id')->intersect($possibilities)->count();
                                         return new FilterOption(
                                             $category->name,
                                             $category->id,

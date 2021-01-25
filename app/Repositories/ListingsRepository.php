@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Builder;
 class ListingsRepository extends BaseFilterableRepository
 {
     protected $with = ['images'];
+    protected bool $allowSecret = false;
+
+    public function allowSecret()
+    {
+        $this->allowSecret = true;
+    }
 
     public function getQuery($unfiltered = false): Builder
     {
@@ -18,8 +24,12 @@ class ListingsRepository extends BaseFilterableRepository
             ? $query->withAnyStatus()
             : $query->active();
 
-        return $unfiltered
+        $query = $unfiltered
             ? $query
             : $this->filters->filterQuery($query);
+
+        return $this->allowSecret
+            ? $query->withoutGlobalScope('notSecret')
+            : $query;
     }
 }
