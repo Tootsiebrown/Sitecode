@@ -5,6 +5,9 @@
         <th>Listings</th>
         <th>Products</th>
         <th>Children</th>
+        @if ($top)
+            <th>Secret</th>
+        @endif
     </tr>
     @foreach ($categories as $category)
         <tr>
@@ -25,6 +28,11 @@
             <td>
                 {{ $category->children->count() }}
             </td>
+            @if ($top)
+                <td>
+                    {{ $category->secret ? 'yes' : 'no' }}
+                </td>
+            @endif
         </tr>
     @endforeach
 </table>

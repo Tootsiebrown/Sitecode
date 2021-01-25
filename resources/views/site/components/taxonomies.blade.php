@@ -4,6 +4,9 @@
         <div class="scroll-container">
             <ul>
                 @foreach($categories as $category)
+                    @if ($category->secret)
+                        @continue
+                    @endif
                     <li class="top-cat">
                         <a href="{{ $category->url }}">{{ $category->name }}</h2></a>
                         @if ($category->hasChildren())
