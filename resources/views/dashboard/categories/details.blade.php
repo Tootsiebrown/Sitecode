@@ -3,6 +3,7 @@
 @section('dashboard-content')
     <h1>Category: {{ $category->name }}</h1>
     <p>{{ $breadcrumb }}</p>
+    <p><a href="{{ route('search', ['category' => $category->id]) }}">View Category Results</a></p>
 
     <form class="form-horizontal" action="{{ route('dashboard.categories.save', ['id' => $category->id]) }}" method="POST">
         @csrf
@@ -13,6 +14,15 @@
             'value' => old('name', $category->name),
             'type' => 'text',
         ])
+
+        @if ($category->parent_id === 0)
+            @include('dashboard.form-elements.form-group', [
+                'name' => 'secret',
+                'prettyTitle' => 'Secret',
+                'checked' => old('secret', $category->secret),
+                'type' => 'boolean',
+            ])
+        @endif
 
         @include('dashboard.form-elements.form-group', [
             'type' => 'submit'
@@ -50,5 +60,8 @@
         </p>
     </form>
 
-    @include ('dashboard.categories.list', ['categories' => $children])
+    @include ('dashboard.categories.list', [
+        'categories' => $children,
+        'top' => false,
+    ])
 @endsection

@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
-use App\Category;
-use App\Ebay\Sdk;
+use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -83,6 +81,10 @@ class CategoriesController extends Controller
             'name' => $request->input('name'),
             'url_slug' => Str::slug($request->input('name')),
         ];
+
+        if ($category->parent_id === 0) {
+            $data['secret'] = (bool)$request->input('secret');
+        }
 
         ProductCategory::where('id', $id)->update($data);
 
