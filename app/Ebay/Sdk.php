@@ -475,6 +475,10 @@ class Sdk
         return collect($orders->orders);
     }
 
+    /*
+     * There's a scope issue here... I don't have permission from the API
+     * to do this.
+     */
     public function getRecentCancellations()
     {
         return $this->request(

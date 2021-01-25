@@ -42,7 +42,7 @@ class EbayOrder extends Model
         return $query->whereNotNull('transaction_id')
             ->whereNotNull('ebay_id')
             ->whereNull('canceled_at')
-            ->whereNotNull('shipped_at');
+            ->whereNull('shipped_at');
     }
 
     public function getCanceledAttribute()
