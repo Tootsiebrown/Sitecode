@@ -36,7 +36,7 @@ class PromoCodesController extends Controller
                 'percent' => 'required_if:type,percent|numeric|max:100',
                 'minimum_order' => 'numeric|min:1',
                 'include_shipping' => 'boolean',
-                'usage_restrictions' => 'required|in:one_time,once_per_user',
+                'usage_restrictions' => 'required|in:one_time,once_per_user,reusable',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
                 'category_id' => 'exists:product_categories,id',
@@ -48,6 +48,7 @@ class PromoCodesController extends Controller
             'title' => $request->input('title'),
             'code' => $request->input('code'),
             'one_time' => $request->input('usage_restrictions') === 'one_time',
+            'reusable' => $request->input('usage_restrictions') === 'reusable',
             'expired_at' => !empty($request->input('expired_at'))
                 ? $request->input('expired_at') . ' 23:59:59'
                 : null,
@@ -107,7 +108,7 @@ class PromoCodesController extends Controller
                 'percent' => 'required_if:type,percent|numeric|max:100',
                 'minimum_order' => 'numeric|min:1',
                 'include_shipping' => 'boolean',
-                'usage_restrictions' => 'required|in:one_time,once_per_user',
+                'usage_restrictions' => 'required|in:one_time,once_per_user,reusable',
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
                 'category_id' => 'exists:product_categories,id',
@@ -124,18 +125,11 @@ class PromoCodesController extends Controller
             $data['dollars'] = null;
         }
 
-        if ($request->input('usage_restrictions') === 'one_time') {
-            $data['one_time'] = true;
-        } else {
-            $data['one_time'] = false;
-        }
+        $data['one_time'] = $request->input('usage_restrictions') === 'one_time';
+        $data['reusable'] = $request->input('usage_restrictions') === 'reusable';
 
         if (!isset($data['include_shipping'])) {
             $data['include_shipping'] = false;
-        }
-
-        if (!isset($data['one_time'])) {
-            $data['one_time'] = false;
         }
 
         if (empty($data['expired_at'])) {

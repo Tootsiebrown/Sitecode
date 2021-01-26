@@ -48,6 +48,7 @@ class Coupon extends WaxCoupon implements CouponInterface
         'permitted_uses',
         'category_id',
         'listing_id',
+        'reusable',
     ];
 
     protected $casts = [
@@ -77,5 +78,18 @@ class Coupon extends WaxCoupon implements CouponInterface
     public function validate(Order $order)
     {
         return (new OrderCouponValidator($order, $this))->passes();
+    }
+
+    public function getUsabilityAttribute()
+    {
+        if ($this->one_time) {
+            return 'one_time';
+        }
+
+        if ($this->reusable) {
+            return 'reusable';
+        }
+
+        return 'once_per_user';
     }
 }

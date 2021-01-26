@@ -11,7 +11,7 @@ export default class UsageRestrictions {
     }
 
     handleChange = (event) => {
-        if (this.$select.val() === 'one_time') {
+        if (this.$select.val() !== 'once_per_user') {
             this.$permittedUses.addClass('hidden');
         } else {
             this.$permittedUses.removeClass('hidden');
