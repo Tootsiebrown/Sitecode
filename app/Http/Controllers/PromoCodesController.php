@@ -170,7 +170,7 @@ class PromoCodesController extends Controller
 
     public function destroy($id)
     {
-        $coupon = Coupon::findOrFail($id);
+        $coupon = Coupon::withoutGlobalScopes()->findOrFail($id);
 
         $success = $coupon->delete();
 
