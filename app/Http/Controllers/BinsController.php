@@ -119,7 +119,8 @@ class BinsController extends Controller
             ]
         );
 
-        $listing = Listing::with(['items'])
+        $listing = Listing::withoutGlobalScopes()
+            ->with(['items'])
             ->findOrFail($request->input('listing_id'));
 
         Item::where('listing_id', $listing->id)
