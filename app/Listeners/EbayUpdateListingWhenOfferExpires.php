@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\OfferExpiredEvent;
 use App\Jobs\UpdateEbayOfferInventory;
-use App\Mail\OfferExpired;
-use Illuminate\Support\Facades\Mail;
 
 class EbayUpdateListingWhenOfferExpires
 {
