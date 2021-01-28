@@ -7,6 +7,7 @@ use App\Models\Listing\Item as ListingItem;
 use App\Models\Offer;
 use App\User;
 use App\Wax\Shop\Support\CheckoutInventoryManager;
+use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 use Wax\Shop\Services\ShopService;
 
@@ -42,6 +43,8 @@ class CheckoutInventoryManagerTest extends WaxAppTestCase
             'quantity' => 1,
             'price' => 5
         ]);
+
+        Queue::fake();
     }
 
     public function testReserveItems()
@@ -83,12 +86,10 @@ class CheckoutInventoryManagerTest extends WaxAppTestCase
         $this->assertEquals(1, $this->listing->items()->sold()->count());
     }
 
-    public function testReserveItemsWwhenSomeoneElseHasOffer()
+    public function testReserveItemsWhenSomeoneElseHasOffer()
     {
         $this->offer->accept();
         $this->shopService->addOrderItem(1, 1, [], [1 => $this->listing->id]);
-
-        $order = $this->shopService->getActiveOrder();
 
         $this->assertTrue($this->listing->items->count() > 0);
         $this->listing->items->each(function($item) {
