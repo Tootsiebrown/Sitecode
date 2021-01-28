@@ -43,7 +43,8 @@ class CategoriesController extends Controller
     protected function getPeerCategories(ProductCategory $category)
     {
         if ($category->parent_id === 0) {
-            return ProductCategory::where('parent_id', 0)
+            return ProductCategory::with('parent.parent')
+                ->where('parent_id', 0)
                 ->where('id', '!=', $category->id)
                 ->orderBy('name')
                 ->get();
@@ -84,6 +85,10 @@ class CategoriesController extends Controller
 
         if ($category->parent_id === 0) {
             $data['secret'] = (bool)$request->input('secret');
+        }
+
+        if (! $category->secret_key) {
+            $data['secret_key'] = Str::random(40);
         }
 
         ProductCategory::where('id', $id)->update($data);

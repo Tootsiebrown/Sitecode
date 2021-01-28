@@ -19,7 +19,9 @@ class CategoriesRepository
                 'children.children' => function ($query) {
                     $query->hasListings()
                         ->orderBy('name');
-                }
+                },
+                'children.parent',
+                'children.children.parent.parent',
             ])
             ->orderBy('name')
             ->get();
