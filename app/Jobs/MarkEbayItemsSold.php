@@ -44,7 +44,10 @@ class MarkEbayItemsSold implements ShouldQueue
     public function handle()
     {
         DB::transaction(function () {
-            $listingItems = Listing::withoutGlobalScopes()->find((int)$this->listingId)->availableItems()->take($this->quantity);
+            $listingItems = Listing::withoutGlobalScopes()
+                ->find((int)$this->listingId)
+                ->availableItems()
+                ->take($this->quantity);
 
             DB::table('listing_items')
                 ->whereIn('id', $listingItems->pluck('id'))
