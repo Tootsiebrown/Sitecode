@@ -18,15 +18,17 @@ stages:
   - preparation
 #  - building
   - testing
-  - test # Code-Quality include requires a stage named test
+#  - test # Code-Quality include requires a stage named test
 
 # Note: using a default before_script messes with this include
-include:
-  - template: Code-Quality.gitlab-ci.yml
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
+#
+#code_quality:
+#  artifacts:
+#    paths:
+#      - gl-code-quality-report.json
 
-code_quality:
-  artifacts:
-    paths: [ gl-code-quality-report.json ]
 
 cache:
   key: "$CI_PROJECT_PATH_SLUG-$CI_COMMIT_SHA"
