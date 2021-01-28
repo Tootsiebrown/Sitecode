@@ -7,6 +7,7 @@ use App\Events\AuctionEndingInOneHourEvent;
 use App\Events\BidReceivedEvent;
 use App\Events\OfferCounterExpiredEvent;
 use App\Events\OfferExpiredEvent;
+use App\Jobs\UpdateEbayOfferInventory;
 use App\Listeners\RestoreOfferInventory;
 use App\Listeners\SendAuctionEndedNotification;
 use App\Listeners\SendAuctionEndingSoonNotification;
@@ -40,10 +41,12 @@ class EventServiceProvider extends ServiceProvider
         OfferExpiredEvent::class => [
             SendOfferExpiredNotification::class,
             RestoreOfferInventory::class,
+            UpdateEbayOfferInventory::class,
         ],
         OfferCounterExpiredEvent::class => [
             SendCounterOfferExpiredNotification::class,
             RestoreOfferInventory::class,
+            UpdateEbayOfferInventory::class,
         ],
         AuctionEndingInOneHourEvent::class => [
             SendAuctionEndingSoonNotification::class,
