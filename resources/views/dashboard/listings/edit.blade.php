@@ -135,11 +135,17 @@
                     'type' => 'note',
                     'prettyTitle' => 'Send To Ebay',
                     'name' => 'na',
-                    'note' => 'Listing has already been sent to eBay.',
+                    'note' => 'Listing has already been sent to eBay. Upon saving, any changes made to this listing will propagate out to eBay.',
                 ])
-            @else
-                <div class="send-to-ebay" data-component="listing-to-ebay">
+            @endif
+            <div class="send-to-ebay" data-component="listing-to-ebay">
 
+                @if ($listing->sent_to_ebay_at)
+                    @include('dashboard.form-elements.inputs.hidden', [
+                        'name' => 'send_to_ebay',
+                        'value' => 1,
+                    ])
+                @else
                     @include('dashboard.form-elements.form-group', [
                         'type' => 'boolean',
                         'name' => 'send_to_ebay',
@@ -147,8 +153,17 @@
                         'checked' => old('send_to_ebay', $listing->send_to_ebay),
                         'groupClass' => 'send-to-ebay',
                     ])
+                @endif
 
-                    <div class="send-to-ebay-settings">
+                <div class="send-to-ebay-settings">
+                    @if ($listing->sent_to_ebay_at)
+                        @include('dashboard.form-elements.form-group', [
+                            'type' => 'note',
+                            'name' => 'send_to_ebay_at',
+                            'prettyTitle' => 'Send To eBay At',
+                            'value' => $listing->send_to_ebay_at,
+                        ])
+                    @else
                         @include('dashboard.form-elements.form-group', [
                             'type' => 'datetime',
                             'name' => 'send_to_ebay_at',
@@ -158,20 +173,20 @@
                                 'time' => true,
                             ]
                         ])
+                    @endif
 
-                        @include('dashboard.form-elements.form-group', [
-                            'type' => 'text',
-                            'name' => 'send_to_ebay_markup',
-                            'prettyTitle' => 'eBay Markup %',
-                            'value' => old('send_to_ebay_markup', $listing->send_to_ebay_markup ?? 30),
-                        ])
+                    @include('dashboard.form-elements.form-group', [
+                        'type' => 'text',
+                        'name' => 'send_to_ebay_markup',
+                        'prettyTitle' => 'eBay Markup %',
+                        'value' => old('send_to_ebay_markup', $listing->send_to_ebay_markup ?? 30),
+                    ])
 
-                        <div id="ebay-categories-container">
-                            @livewire('ebay-listing-fields', ['listing' => $listing])
-                        </div>
+                    <div id="ebay-categories-container">
+                        @livewire('ebay-listing-fields', ['listing' => $listing])
                     </div>
                 </div>
-            @endif
+            </div>
 
         @endif
 

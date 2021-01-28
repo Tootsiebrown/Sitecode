@@ -12,6 +12,7 @@
             @case ('submit')
                 <button type="submit" class="btn btn-primary" name="submit" value="submit">{{ $prettyTitle ?? 'Submit' }}</button>
                 @break
+
             @case ('boolean')
             @case ('select')
             @case ('date')
@@ -24,6 +25,7 @@
                     'value' => $value ?? '',
                 ])
                 @break
+
             @case ('image')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'name' => $name,
@@ -32,6 +34,7 @@
                     'path' => $path
                 ])
                 @break
+
             @case ('checkboxes')
                 @include('dashboard.form-elements.inputs.' . $type, [
                     'oldDotLocation' => $oldDotLocation ?? $name,
@@ -39,6 +42,10 @@
                     'options' => $options,
                     'value' => $value
                 ])
+                @break
+
+            @default
+                @php throw new Exception($type . ' is not an implemented') @endphp
                 @break
         @endswitch
 
