@@ -1,1 +1,3 @@
-<div class="control-label">{{ $value }}</div>
+<div class="control-label">
+    <p>{{ $value }}</p>
+</div>
