@@ -34,7 +34,7 @@
         <h3 class="alert alert-danger">ORDER CANCELED</h3>
         <p>By: {{ $order->canceledBy->email }}</p>
         <p>At: {{ $order->canceled_at }}</p>
-    @elseif (! $order->isPending())
+    @else
         <section>
             <h3>Cancel Order</h3>
             <p>
