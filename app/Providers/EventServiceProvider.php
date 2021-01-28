@@ -7,6 +7,7 @@ use App\Events\AuctionEndingInOneHourEvent;
 use App\Events\BidReceivedEvent;
 use App\Events\OfferCounterExpiredEvent;
 use App\Events\OfferExpiredEvent;
+use App\Listeners\EbayUpdateListingWhenOfferExpires;
 use App\Listeners\RestoreOfferInventory;
 use App\Listeners\SendAuctionEndedNotification;
 use App\Listeners\SendAuctionEndingSoonNotification;
@@ -17,7 +18,6 @@ use App\Listeners\StartAuctionEndedChain;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -40,10 +40,12 @@ class EventServiceProvider extends ServiceProvider
         OfferExpiredEvent::class => [
             SendOfferExpiredNotification::class,
             RestoreOfferInventory::class,
+            EbayUpdateListingWhenOfferExpires::class,
         ],
         OfferCounterExpiredEvent::class => [
             SendCounterOfferExpiredNotification::class,
             RestoreOfferInventory::class,
+            EbayUpdateListingWhenOfferExpires::class,
         ],
         AuctionEndingInOneHourEvent::class => [
             SendAuctionEndingSoonNotification::class,

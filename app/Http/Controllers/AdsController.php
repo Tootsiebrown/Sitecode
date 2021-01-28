@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Http\Controllers\Dashboard\HandlesEbayAspects;
+use App\Jobs\UpdateEbayOfferInventory;
 use App\Models\Brand;
 use App\Models\Listing;
 use App\Models\Listing\Image as ListingImage;
@@ -258,6 +259,11 @@ class AdsController extends Controller
             'ebay_category_1' => 'required_if:send_to_ebay,1',
         ];
 
+        if ($listing->sent_to_ebay_at) {
+            unset($rules['send_to_ebay_at']);
+        }
+
+
         $rules = $this->addEbayAspectRequirements($request, $rules);
 
         $this->validate($request, $rules);
@@ -338,50 +344,58 @@ class AdsController extends Controller
             $data['send_to_ebay'] = false;
         }
 
+        if ($listing->sent_to_ebay_at) {
+            unset($data['send_to_ebay']);
+            unset($data['sent_to_ebay_at']);
+        }
+
         $listing->fill($data);
         $listing->save();
 
         $listing->categories()->detach();
 
-        if ($listing) {
-            $listing->categories()->attach($category->id);
-            if (!empty($child)) {
-                $listing->categories()->attach($child->id);
-            }
-            if (!empty($grandchild)) {
-                $listing->categories()->attach($grandchild->id);
-            }
 
-            //fresh query
-            $oldImages = $listing->images()->get();
+        $listing->categories()->attach($category->id);
+        if (!empty($child)) {
+            $listing->categories()->attach($child->id);
+        }
+        if (!empty($grandchild)) {
+            $listing->categories()->attach($grandchild->id);
+        }
 
-            $imageSortOrder = json_decode($request->input('imageSortOrder'));
+        //fresh query
+        $oldImages = $listing->images()->get();
 
-            $this->syncListingImages(
-                $listing,
-                $request->input('existing_images', []),
-                $request->input('deletable_images', []),
-                $imageSortOrder
-            );
+        $imageSortOrder = json_decode($request->input('imageSortOrder'));
 
-            $this->cropImages(
-                $oldImages,
-                $request->input('existing_images', []),
-                $request->input('existing_image_metadata', [])
-            );
+        $this->syncListingImages(
+            $listing,
+            $request->input('existing_images', []),
+            $request->input('deletable_images', []),
+            $imageSortOrder
+        );
 
-            $this->addProductImages(
-                $listing,
-                $request->input('new_images', []),
-                $request->input('new_images_metadata'),
-                $imageSortOrder
-            );
+        $this->cropImages(
+            $oldImages,
+            $request->input('existing_images', []),
+            $request->input('existing_image_metadata', [])
+        );
 
-            $this->updateEbayAspects(
-                $listing,
-                $request->input('ebay_aspect', []),
-                $request->input('ebay_aspect_cardinality', []),
-            );
+        $this->addProductImages(
+            $listing,
+            $request->input('new_images', []),
+            $request->input('new_images_metadata'),
+            $imageSortOrder
+        );
+
+        $this->updateEbayAspects(
+            $listing,
+            $request->input('ebay_aspect', []),
+            $request->input('ebay_aspect_cardinality', []),
+        );
+
+        if ($listing->sent_to_ebay_at) {
+            UpdateEbayOfferInventory::dispatch($listing->fresh());
         }
 
         return redirect(

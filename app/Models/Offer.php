@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdateEbayOfferInventory;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -177,6 +178,8 @@ class Offer extends Model
             $this->response = 'accepted';
             $this->save();
         }, 3);
+
+        UpdateEbayOfferInventory::dispatch($this->listing);
     }
 
     public function reject()
@@ -222,6 +225,8 @@ class Offer extends Model
             $this->counter_accepted = 1;
             $this->save();
         }, 3);
+
+        UpdateEbayOfferInventory::dispatch($this->listing);
     }
 
     public function customerReject()
