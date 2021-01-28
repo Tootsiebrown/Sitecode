@@ -135,7 +135,7 @@
                     'type' => 'note',
                     'prettyTitle' => 'Send To Ebay',
                     'name' => 'na',
-                    'note' => 'Listing has already been sent to eBay. Upon saving, any changes made to this listing will propagate out to eBay.',
+                    'value' => 'Listing has already been sent to eBay. Upon saving, any changes made to this listing will propagate out to eBay.',
                 ])
             @endif
             <div class="send-to-ebay" data-component="listing-to-ebay">
@@ -161,7 +161,7 @@
                             'type' => 'note',
                             'name' => 'send_to_ebay_at',
                             'prettyTitle' => 'Send To eBay At',
-                            'value' => $listing->send_to_ebay_at,
+                            'value' => $listing->sent_to_ebay_at,
                         ])
                     @else
                         @include('dashboard.form-elements.form-group', [
