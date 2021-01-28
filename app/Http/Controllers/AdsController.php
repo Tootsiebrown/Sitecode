@@ -495,12 +495,14 @@ class AdsController extends Controller
         $title = null;
 
         $categoryId = $request->input('category');
+
         if ($categoryId) {
-            $category = ProductCategory::find($categoryId);
+            $category = ProductCategory::where('secret_key', $categoryId)->first();
             if ($category && ($category->secret || $category->descendent_of_secret)) {
                 $this->repo->allowSecret();
             }
         }
+
         $paginatedListings = $this->repo->getPaginated($perPage);
 
         $filterOptions = $this->repo->getFilterOptions();
@@ -511,6 +513,7 @@ class AdsController extends Controller
             'filterValues' => $this->getFilterValuesFromRequest($request),
             'title' => 'Search Results'
         ]);
+
     }
 
 

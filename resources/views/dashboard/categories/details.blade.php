@@ -3,7 +3,7 @@
 @section('dashboard-content')
     <h1>Category: {{ $category->name }}</h1>
     <p>{{ $breadcrumb }}</p>
-    <p><a href="{{ route('search', ['category' => $category->id]) }}">View Category Results</a></p>
+    <p><a href="{{ $category->url }}">View Category Results</a></p>
 
     <form class="form-horizontal" action="{{ route('dashboard.categories.save', ['id' => $category->id]) }}" method="POST">
         @csrf

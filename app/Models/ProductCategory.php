@@ -84,7 +84,8 @@ class ProductCategory extends Model
             return true;
         }
 
-        if ($this->parent->parent && $this->parent->parent->secret) {
+        // `$this->parent->parent_id !== 0` is to reduce the number of junk queries
+        if ($this->parent->parent_id !== 0 && $this->parent->parent && $this->parent->parent->secret) {
             return true;
         }
 
@@ -104,7 +105,9 @@ class ProductCategory extends Model
     public function getUrlAttribute()
     {
         return route('search', [
-            'category' => $this->id
+            'category' => $this->secret || $this->descendent_of_secret
+                ? $this->secret_key
+                : $this->id
         ]);
     }
 
