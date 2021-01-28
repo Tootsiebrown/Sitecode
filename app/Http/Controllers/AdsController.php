@@ -513,9 +513,7 @@ class AdsController extends Controller
             'filterValues' => $this->getFilterValuesFromRequest($request),
             'title' => 'Search Results'
         ]);
-
     }
-
 
     /**
      * @param $slug
