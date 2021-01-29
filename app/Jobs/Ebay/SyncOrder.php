@@ -52,11 +52,6 @@ class SyncOrder implements ShouldQueue
 
         $ebayOrder->ebay_id = $this->ebayOrderId;
 
-        if ($ebayOrder->exists) {
-            $ebayOrder->save();
-            return;
-        }
-
         $order = $ebay->getOrder($this->ebayOrderId);
 
         if (config('services.ebay.log.get_order_response')) {

@@ -68,6 +68,10 @@ class EbaySyncOrderTest extends WaxAppTestCase
 
     public function testSyncOrderWithPriorPendingTransaction()
     {
+        $this->ebay
+            ->method('getOrder')
+            ->willReturn($this->getMockOrderWithNoRelevantItems());
+
         $ebayOrder = factory(EbayOrder::class)->create(
             ['transaction_id' => $this->mockTransactionId]
         );

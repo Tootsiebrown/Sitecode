@@ -497,6 +497,11 @@ class Listing extends Model
         return $this->items()->available();
     }
 
+    public function itemsForEbayOrder($ebayOrderId)
+    {
+        return $this->items()->forEbayOrder($ebayOrderId);
+    }
+
     public function getHasAvailableItemsAttribute()
     {
         return $this->availableItems->count() > 0;

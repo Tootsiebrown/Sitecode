@@ -97,6 +97,11 @@ class Item extends Model
             ->whereNull('reserved_for_offer_id');
     }
 
+    public function scopeForEbayOrder($query, $ebayOrderId)
+    {
+        return $query->where('ebay_order_id', $ebayOrderId);
+    }
+
     public function orderItem()
     {
         return $this->belongsTo(OrderItem::class);
