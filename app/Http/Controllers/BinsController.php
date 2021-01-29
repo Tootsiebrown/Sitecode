@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateEbayOfferInventory;
 use App\Models\Listing;
 use App\Models\Listing\Item;
 use Illuminate\Http\Request;
@@ -150,6 +151,8 @@ class BinsController extends Controller
         }
 
         $listing->items()->createMany($records);
+
+        UpdateEbayOfferInventory::dispatch($listing->fresh());
 
         return redirect()
             ->route('dashboard.bins.showListingBins', ['id' => $listing->id])
