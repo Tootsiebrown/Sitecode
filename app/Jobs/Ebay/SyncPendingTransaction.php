@@ -51,7 +51,8 @@ class SyncPendingTransaction implements ShouldQueue
         $ebayOrder = EbayOrder::firstOrCreate(['transaction_id' => $this->transactionId]);
 
         DB::transaction(function () use ($ebayOrder) {
-            $listingItems = Listing::find($this->getListingId($this->sku))
+            $listingItems = Listing::withoutGlobalScopes()
+                ->find($this->getListingId($this->sku))
                 ->availableItems()
                 ->take($this->quantity);
 
