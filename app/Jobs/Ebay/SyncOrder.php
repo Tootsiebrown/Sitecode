@@ -126,6 +126,10 @@ class SyncOrder implements ShouldQueue
     private function orderHasWebsiteItems($order): bool
     {
         foreach ($order->lineItems as $orderItem) {
+            if (!isset($orderItem->sku)) {
+                continue;
+            }
+            
             if ($this->itemIsFromWebsite($orderItem->sku)) {
                 return true;
             }

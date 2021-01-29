@@ -58,11 +58,6 @@ class WebHookController extends Controller
         ];
     }
 
-    public function ebayCheckoutComplete(Request $request)
-    {
-        return $this->ebayNotification($request);
-    }
-
     public function ebayNotification(Request $request)
     {
         [
