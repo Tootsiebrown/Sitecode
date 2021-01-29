@@ -129,7 +129,7 @@ class SyncOrder implements ShouldQueue
             if (!isset($orderItem->sku)) {
                 continue;
             }
-            
+
             if ($this->itemIsFromWebsite($orderItem->sku)) {
                 return true;
             }
