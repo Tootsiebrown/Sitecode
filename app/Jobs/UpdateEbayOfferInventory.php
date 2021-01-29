@@ -20,6 +20,8 @@ class UpdateEbayOfferInventory implements ShouldQueue
     /** @var Listing */
     public Listing $listing;
 
+    public int $maxTries = 3;
+
     /**
      * Create a new job instance.
      *
