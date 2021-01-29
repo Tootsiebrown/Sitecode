@@ -39,8 +39,21 @@ class UpdateEbayOfferInventory implements ShouldQueue
      */
     public function handle(Sdk $ebay)
     {
-        $ebay->updateOffer(
+        $ebay->updateInventoryItem(
             $this->listing
         );
+
+        if ($this->listing->ebay_offer_id) {
+            $ebay->updateOffer(
+                $this->listing
+            );
+        } else {
+            $id = $ebay->createOffer(
+                $this->listing
+            );
+
+            $this->listing->ebay_offer_id = $id;
+            $this->listing->save();
+        }
     }
 }

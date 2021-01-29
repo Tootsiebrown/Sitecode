@@ -203,7 +203,7 @@ class Sdk
         throw new Exception('Ebay Refresh Token has expired');
     }
 
-    public function createInventoryItem(Listing $listing): int
+    public function createInventoryItem(Listing $listing): bool
     {
         $data = [
             'availability' => [
@@ -256,6 +256,11 @@ class Sdk
         );
 
         return true;
+    }
+
+    public function updateInventoryItem(Listing $listing): int
+    {
+        return $this->createInventoryItem($listing);
     }
 
     public function createOffer(Listing $listing)
