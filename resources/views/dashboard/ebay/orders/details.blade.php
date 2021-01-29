@@ -10,6 +10,10 @@
 
     <h2>Status: {{ $order->status }}</h2>
 
+    @if (!$order->canceled)
+        <p>eBay Transaction ID: {{ $order->transaction_id }}</p>
+    @endif
+
     <table class="dashboard-table">
         <thead>
             <tr>
