@@ -15,7 +15,7 @@ trait HandlesEbayAspects
             $rules['ebay_aspects.' . $requiredAspect] = 'required';
         }
 
-        foreach($request->input('ebay_aspects', []) as $maybeManualEntryAspect => $value) {
+        foreach ($request->input('ebay_aspects', []) as $maybeManualEntryAspect => $value) {
             if ($value === 'manual_entry') {
                 $rules['ebay_manual_aspects.' . $maybeManualEntryAspect] = 'required';
             }
