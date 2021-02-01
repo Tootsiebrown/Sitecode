@@ -12,7 +12,7 @@ trait HandlesEbayAspects
     private function addEbayAspectRequirements(Request $request, array $rules): array
     {
         foreach ($request->input('required_aspects', []) as $requiredAspect) {
-            $rules['ebay_aspect.' . $requiredAspect] = 'required';
+            $rules['ebay_aspects.' . $requiredAspect] = 'required';
         }
 
         return $rules;
@@ -21,6 +21,7 @@ trait HandlesEbayAspects
     private function updateEbayAspects(
         Listing $listing,
         array $aspects,
+        array $manualAspects,
         array $aspectCardinality
     ) {
         $listing
@@ -42,11 +43,20 @@ trait HandlesEbayAspects
             }
 
             foreach ($values as $value) {
-                $ebayAspect->values()->save(
-                    new EbayAspectValue([
-                        'value' => $value
-                    ])
-                );
+                if ($value == 'manual_entry') {
+                    $ebayAspect->values()->save(
+                        new EbayAspectValue([
+                            'value' => $manualAspects[$name],
+                            'manual' => true,
+                        ])
+                    );
+                } else {
+                    $ebayAspect->values()->save(
+                        new EbayAspectValue([
+                            'value' => $value
+                        ])
+                    );
+                }
             }
         }
     }
