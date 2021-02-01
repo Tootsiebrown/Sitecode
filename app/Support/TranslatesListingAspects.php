@@ -42,7 +42,7 @@ trait TranslatesListingAspects
         return $listing
             ->ebayAspects
             ->mapWithKeys(function ($aspect) {
-                if ($aspect->cardinality !== 'single'){
+                if ($aspect->cardinality !== 'single') {
                     return ['' => null];
                 }
 
@@ -56,5 +56,4 @@ trait TranslatesListingAspects
             ->filter()
             ->all();
     }
-
 }
