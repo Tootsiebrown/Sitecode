@@ -629,7 +629,8 @@ class ListerController extends Controller
 
             $this->updateEbayAspects(
                 $ad,
-                $request->input('ebay_aspect', []),
+                $request->input('ebay_aspects', []),
+                $request->input('ebay_manual_aspects', []),
                 $request->input('ebay_aspect_cardinality', []),
             );
 

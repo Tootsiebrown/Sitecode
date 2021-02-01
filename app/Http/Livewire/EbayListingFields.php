@@ -26,6 +26,7 @@ class EbayListingFields extends Component
     public $ebayCondition = null;
 
     public $aspects = null;
+    public $manualAspects = null;
 
     public function __construct($id)
     {
@@ -50,6 +51,7 @@ class EbayListingFields extends Component
             $this->ebayCategory7 = old('ebay_category_7', $categories[6] ?? null);
             $this->ebayCondition = old('ebay_condition', $listing->ebay_condition_id);
             $this->aspects = old('ebay_aspects', $this->getListingAspects($listing));
+            $this->manualAspects = old('ebay_manual_aspects', $this->getListingManualAspectsForEditing($listing));
         } else {
             $this->ebayCategory1 = old('ebay_category_1');
             $this->ebayCategory2 = old('ebay_category_2');

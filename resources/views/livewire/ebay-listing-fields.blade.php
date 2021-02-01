@@ -1,4 +1,4 @@
-<div id="ebay-category-root">
+<div id="ebay-listing-fields-root">
     @if (!empty($level1Categories))
         @include('dashboard.form-elements.form-group', [
             'type' => 'select',
@@ -104,12 +104,23 @@
                 @case('select')
                     @include('dashboard.form-elements.form-group', [
                         'type' => 'select',
-                        'name' => 'ebay_aspect[' . $aspect->getName() . ']',
+                        'name' => 'ebay_aspects[' . $aspect->getName() . ']',
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
-                        'inputAttributes' => 'id="ebay_aspect-' .  Str::kebab($aspect->getName()) . '"',
-                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? null),
+                        'inputAttributes' => 'id="ebay_aspect-' .  Str::kebab($aspect->getName()) . '"'
+                            . ' data-manual-id="ebay_manual_aspect-' .  Str::kebab($aspect->getName()) . '"',
+                        'value' => old('ebay_aspects.' . $aspect->getName(), $aspects[$aspect->getName()] ?? null),
                     ])
+
+                    @if($aspect->allowsManualEntry())
+                        @include('dashboard.form-elements.form-group', [
+                            'type' => 'text',
+                            'name' => 'ebay_manual_aspects[' . $aspect->getName() . ']',
+                            'prettyTitle' => 'Manual ' . $aspect->getName(),
+                            'groupAttributes' => 'id="ebay_manual_aspect-' .  Str::kebab($aspect->getName()) . '"',
+                            'value' => old('ebay_manual_aspects.' . $aspect->getName(), $manualAspects[$aspect->getName()] ?? null),
+                        ])
+                    @endif
                     @break
                 @case('checkboxes')
                     @include('dashboard.form-elements.form-group', [
@@ -117,7 +128,7 @@
                         'name' => 'ebay_aspect[' . $aspect->getName() . '][]',
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
-                        'value' => old('ebay_aspect.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
+                        'value' => old('ebay_aspects.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
                         'columns' => true,
                     ])
                     @break
@@ -178,7 +189,27 @@
             }
         )
 
+
+
         document.addEventListener("livewire:load", function(event) {
+            console.log('load fired')
+
+            const handleAspectChanges = (e) => {
+                $target = $(e.target)
+                console.log($target)
+                $manualInput = $('#' + $target.attr('data-manual-id'))
+                console.log($manualInput);
+                if ($target.val() === 'manual_entry') {
+                    $manualInput.show()
+                } else {
+                    $manualInput.hide()
+                }
+            };
+
+            $aspects = jQuery('select[name^=ebay_aspects]')
+            $aspects.on('change', handleAspectChanges)
+            $aspects.trigger('change')
+
             window.livewire.hook('afterDomUpdate', () => {
                 jQuery('' +
                     '[name=ebay_category_1],' +
@@ -189,8 +220,12 @@
                     '[name=ebay_category_6],' +
                     '[name=ebay_category_7],' +
                     '[name=ebay_condition],' +
-                    'select[name^=ebay_aspect]'
+                    'select[name^=ebay_aspects]'
                 ).select2()
+
+                $aspects.off('change');
+                $aspects = jQuery('select[name^=ebay_aspects]')
+                $aspects.on('change', handleAspectChanges());
             });
         });
     </script>

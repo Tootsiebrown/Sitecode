@@ -238,7 +238,7 @@ class Sdk
             ],
         ];
 
-        $aspects = $this->getListingAspects($listing, false);
+        $aspects = $this->getListingAspects($listing, false, true);
 
         if ($aspects) {
             $data['product']['aspects'] = $aspects;

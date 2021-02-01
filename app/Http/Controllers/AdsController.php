@@ -257,7 +257,14 @@ class AdsController extends Controller
             'send_to_ebay_at' => 'required_if:send_to_ebay,1',
             'send_to_ebay_markup' => 'required_if:send_to_ebay,1|integer|min:1',
             'ebay_category_1' => 'required_if:send_to_ebay,1',
+            'ebay_condition' => 'required_if:send_to_ebay,1',
         ];
+
+        for ($i = 1; $i <= 7; $i++) {
+            if ($request->has('ebay_category_' . $i)) {
+                $rules['ebay_category_' . $i] = 'required';
+            }
+        }
 
         if ($listing->sent_to_ebay_at) {
             unset($rules['send_to_ebay_at']);
@@ -390,7 +397,8 @@ class AdsController extends Controller
 
         $this->updateEbayAspects(
             $listing,
-            $request->input('ebay_aspect', []),
+            $request->input('ebay_aspects', []),
+            $request->input('ebay_manual_aspects', []),
             $request->input('ebay_aspect_cardinality', []),
         );
 

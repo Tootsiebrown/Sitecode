@@ -6,11 +6,14 @@ use Illuminate\Support\Collection;
 
 class EbayItemAspect
 {
+    const DOES_NOT_APPLY = 'Does not apply';
+
     private bool $required;
     private Collection $options;
     private string $cardinality;
     private string $type;
     private string $name;
+    private bool $allowsManualEntry = false;
 
     /**
      * EbayItemAspect constructor.
@@ -19,6 +22,10 @@ class EbayItemAspect
     public function __construct($aspect)
     {
         $this->required = $aspect->aspectConstraint->aspectRequired;
+
+        if ($aspect->aspectConstraint->aspectMode === 'FREE_TEXT') {
+            $this->allowsManualEntry = true;
+        }
 
         if (isset($aspect->aspectValues)) {
             $this->options = collect($aspect->aspectValues)
@@ -36,6 +43,16 @@ class EbayItemAspect
         } else {
             \Log::info(print_r($this, 1));
             throw new \Exception('need to implement a new type...');
+        }
+
+        if ($this->type === 'select' && $this->options->isNotEmpty()) {
+            $this->options->prepend(static::DOES_NOT_APPLY, static::DOES_NOT_APPLY);
+
+            if ($this->allowsManualEntry) {
+                $this->options->prepend('Manual Entry', 'manual_entry');
+            }
+
+            $this->options->prepend('Select One', '');
         }
 
         $this->name = $aspect->localizedAspectName;
@@ -64,5 +81,10 @@ class EbayItemAspect
     public function getCardinality()
     {
         return $this->cardinality;
+    }
+
+    public function allowsManualEntry()
+    {
+        return $this->allowsManualEntry;
     }
 }
