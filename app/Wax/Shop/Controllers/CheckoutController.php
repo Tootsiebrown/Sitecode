@@ -3,6 +3,7 @@
 namespace App\Wax\Shop\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Listing;
 use App\User;
 use App\Wax\Shop\Models\Order;
 use App\Wax\Shop\Payment\Types\TokenPaymentType;
@@ -216,8 +217,54 @@ class CheckoutController extends Controller
         }
 
         return view('shop.checkout.confirmation', [
+            'googleAnalyticsDataLayer' => $this->getGoogleAnalyticsDataLayerForOrder($order),
             'order' => $order,
         ]);
+    }
+
+    protected function getGoogleAnalyticsDataLayerForOrder(Order $order): array
+    {
+        $data = [
+            'actionField' => [
+                'id' => $order->sequence,
+                'affiliation' => 'catchndealz.com',
+                'revenue' => $order->total,
+                'shipping' => $order->shipping_subtotal,
+                'tax' => $order->tax_subtotal,
+            ],
+            'products' => []
+        ];
+
+        if ($order->coupon) {
+            $data['actionField']['coupon'] = $order->coupon->code;
+        }
+
+        foreach ($order->items as $item) {
+            $data['products'][] = [
+                'name' => $item->name,
+                'id' => $item->listing_id,
+                'category' => $this->getGoogleAnalyticsCategoryForListing($item->listing),
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        return $data;
+    }
+
+    private function getGoogleAnalyticsCategoryForListing(Listing $listing): string
+    {
+        $category = $listing->category->name;
+
+        if ($listing->child_category) {
+            $category .= '/' . $listing->child_category->name;
+        }
+
+        if ($listing->grandchild_category) {
+            $category .= '/' . $listing->grandchild_category->name;
+        }
+
+        return $category;
     }
 
     protected function createPaymentProfile(User $user)

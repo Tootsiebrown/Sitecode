@@ -11,7 +11,6 @@ use Wax\Core\Support\Localization\Currency;
 use Wax\Shop\Events\OrderChanged\CouponChangedEvent;
 use Wax\Shop\Models\Bundle;
 use Wax\Shop\Models\Order as WaxOrder;
-use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order\Shipment;
 use App\Wax\Shop\Models\Order\Coupon as OrderCoupon;
 
