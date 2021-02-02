@@ -81,6 +81,10 @@ return [
             'auction_complete_webhook' => env('EBAY_LOG_WEBHOOK_CHECKOUT_COMPLETE', false),
             'get_order_response' => env('EBAY_LOG_GET_ORDER_RESPONSE', false)
         ]
+    ],
+
+    'google' => [
+        'gtm_code' => env('GOOGLE_TAG_MANAGER_CODE')
     ]
 
 ];
