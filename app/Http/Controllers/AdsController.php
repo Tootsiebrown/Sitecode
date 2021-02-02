@@ -262,7 +262,7 @@ class AdsController extends Controller
 
         for ($i = 1; $i <= 7; $i++) {
             if ($request->has('ebay_category_' . $i)) {
-                $rules['ebay_category_' . $i] = 'required';
+                $rules['ebay_category_' . $i] = 'required_if:send_to_ebay,1';
             }
         }
 
