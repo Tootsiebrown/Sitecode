@@ -8,6 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @yield('google-analytics-datalayer')
+
     @if(App::environment('production'))
         <!-- Google Tag Manager -->
             <script>
