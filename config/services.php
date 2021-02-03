@@ -83,7 +83,7 @@ return [
         ]
     ],
 
-    'google' => [
+    'google_analytics' => [
         'gtm_code' => env('GOOGLE_TAG_MANAGER_CODE')
     ]
 

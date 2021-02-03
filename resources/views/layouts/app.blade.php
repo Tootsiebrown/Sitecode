@@ -10,7 +10,7 @@
 
     @yield('google-analytics-datalayer')
 
-    @if(config('services.google.gtm_code'))
+    @if(config('services.google_analytics.gtm_code'))
         <!-- Google Tag Manager -->
             <script>
                 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({
