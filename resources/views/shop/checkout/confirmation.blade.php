@@ -5,9 +5,7 @@
         dataLayer =[
             {
                 'ecommerce': {
-                    'purchase': {
-                        {!! json_encode($googleAnalyticsDataLayer) !!}
-                    }
+                    'purchase': {!! json_encode($googleAnalyticsDataLayer) !!}
                 }
             }
         ];
