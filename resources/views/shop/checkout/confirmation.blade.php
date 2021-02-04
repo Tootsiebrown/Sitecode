@@ -1,16 +1,14 @@
 @extends ('layouts.app')
 
+
 @section('google-analytics-datalayer')
     <script>
-        dataLayer =[
-            {
-                'ecommerce': {
-                    'purchase': {
-                        {!! json_encode($googleAnalyticsDataLayer) !!}
-                    }
-                }
+        dataLayer.push({
+            'event' : 'eec.purchase',
+            'ecommerce': {
+                'purchase': {!! json_encode($googleAnalyticsDataLayer) !!}
             }
-        ];
+        });
     </script>
 @endsection
 
