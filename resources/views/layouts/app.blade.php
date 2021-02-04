@@ -7,7 +7,9 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <script>
+        dataLayer = [];
+    </script>
     @yield('google-analytics-datalayer')
 
     @if(config('services.google_analytics.gtm_code'))
@@ -68,9 +70,9 @@
 </head>
 <body class="@if(is_rtl()) rtl @endif @if(isset($bodyClass)) {{ $bodyClass }} @endif">
 
-@if(config('services.google.gtm_code'))
+@if(config('services.google_analytics.gtm_code'))
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('services.google.gtm_code') }}"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('services.google_analytics.gtm_code') }}"
                       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 @endif

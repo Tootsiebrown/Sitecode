@@ -229,8 +229,9 @@ class CheckoutController extends Controller
                 'id' => $order->sequence,
                 'affiliation' => 'catchndealz.com',
                 'revenue' => $order->total,
-                'shipping' => $order->shipping_subtotal,
                 'tax' => $order->tax_subtotal,
+                'tax' => $order->tax_subtotal,
+                'shipping' => $order->shipping_subtotal,
             ],
             'products' => []
         ];
