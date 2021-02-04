@@ -1,6 +1,16 @@
 @extends('layouts.app')
 @section('title') @if( ! empty($title)) {{ strip_tags($title) }} | @endif @parent @endsection
 
+@section('google-analytics-datalayer')
+    <script>
+        dataLayer.push({
+            'ecommerce': {
+                'detail': {!! json_encode($googleAnalyticsProductView) !!}
+            }
+        })
+    </script>
+@endsection
+
 @section('social-meta')
     <meta property="og:title" content="{{ safe_output($listing->title) }}">
     <meta property="og:description" content="{{ substr(trim(preg_replace('/\s\s+/', ' ',strip_tags($listing->description) )),0,160) }}">

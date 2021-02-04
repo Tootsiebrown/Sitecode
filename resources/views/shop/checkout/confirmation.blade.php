@@ -4,7 +4,7 @@
 @section('google-analytics-datalayer')
     <script>
         dataLayer.push({
-            'event' : 'eec.purchase',
+            // 'event' : 'eec.purchase',
             'ecommerce': {
                 'purchase': {!! json_encode($googleAnalyticsDataLayer) !!}
             }

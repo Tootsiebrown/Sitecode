@@ -230,7 +230,6 @@ class CheckoutController extends Controller
                 'affiliation' => 'catchndealz.com',
                 'revenue' => $order->total,
                 'tax' => $order->tax_subtotal,
-                'tax' => $order->tax_subtotal,
                 'shipping' => $order->shipping_subtotal,
             ],
             'products' => []
@@ -244,28 +243,13 @@ class CheckoutController extends Controller
             $data['products'][] = [
                 'name' => $item->name,
                 'id' => $item->listing_id,
-                'category' => $this->getGoogleAnalyticsCategoryForListing($item->listing),
+                'category' => $item->listing->google_analytic_attribute,
                 'price' => $item->price,
                 'quantity' => $item->quantity,
             ];
         }
 
         return $data;
-    }
-
-    private function getGoogleAnalyticsCategoryForListing(Listing $listing): string
-    {
-        $category = $listing->category->name;
-
-        if ($listing->child_category) {
-            $category .= '/' . $listing->child_category->name;
-        }
-
-        if ($listing->grandchild_category) {
-            $category .= '/' . $listing->grandchild_category->name;
-        }
-
-        return $category;
     }
 
     protected function createPaymentProfile(User $user)

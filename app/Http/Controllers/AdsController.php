@@ -530,11 +530,26 @@ class AdsController extends Controller
         $filterOptions = $this->repo->getFilterOptions();
 
         return view('pages.search', [
+            'productImpressions' => $this->getGoogleAnalyticsProductImpressions($paginatedListings),
             'listings' => $paginatedListings,
             'filterOptions' => $filterOptions,
             'filterValues' => $this->getFilterValuesFromRequest($request),
             'title' => 'Search Results'
         ]);
+    }
+
+    private function getGoogleAnalyticsProductImpressions($paginatedListings): array
+    {
+        return collect($paginatedListings->items())
+            ->map(fn ($item, $index) => [
+                'name' => $item->title,
+                'id' => $item->id,
+                'price' => $item->price,
+                'category' => $item->google_analytics_category,
+                'list' => 'Search Results',
+                'position' => $index + 1,
+            ])
+            ->all();
     }
 
     /**
@@ -572,11 +587,25 @@ class AdsController extends Controller
         $relatedListings = collect(); //Ad::active()->whereCategoryId($listing->category_id)->where('id', '!=', $listing->id)->with('category', 'city', 'state', 'country', 'sub_category')->limit($limit_regular_ads)->orderByRaw('RAND()')->get();
 
         return view('single-listing', [
+            'googleAnalyticsProductView' => $this->getGoogleAnalyticsProductView($listing),
             'listing' => $listing,
             'title' => $title,
             'relatedListings' => $relatedListings,
             'alreadyHasOffer' => $this->alreadyHasOfferOn($listing),
         ]);
+    }
+
+    private function getGoogleAnalyticsProductView($listing): array{
+        return [
+            'products' => [
+                [
+                    'name' => $listing->title,
+                    'id' => $listing->id,
+                    'price' => $listing->price,
+                    'category' => $listing->google_analytics_category,
+                ]
+            ]
+        ];
     }
 
     public function singleAuctionRedirect($id)
