@@ -574,4 +574,19 @@ class Listing extends Model
     {
         return $this->hasMany(EbayAspect::class);
     }
+
+    public function getGoogleAnalyticsCategoryAttribute(): string
+    {
+        $category = $this->category->name;
+
+        if ($this->child_category) {
+            $category .= '/' . $this->child_category->name;
+        }
+
+        if ($this->grandchild_category) {
+            $category .= '/' . $this->grandchild_category->name;
+        }
+
+        return $category;
+    }
 }
