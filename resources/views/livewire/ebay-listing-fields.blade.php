@@ -125,7 +125,7 @@
                 @case('checkboxes')
                     @include('dashboard.form-elements.form-group', [
                         'type' => 'checkboxes',
-                        'name' => 'ebay_aspect[' . $aspect->getName() . '][]',
+                        'name' => 'ebay_aspects[' . $aspect->getName() . '][]',
                         'prettyTitle' => $aspect->getName(),
                         'options' => $aspect->getOptions(),
                         'value' => old('ebay_aspects.' . $aspect->getName(), $aspects[$aspect->getName()] ?? []),
@@ -192,13 +192,9 @@
 
 
         document.addEventListener("livewire:load", function(event) {
-            console.log('load fired')
-
             const handleAspectChanges = (e) => {
                 $target = $(e.target)
-                console.log($target)
                 $manualInput = $('#' + $target.attr('data-manual-id'))
-                console.log($manualInput);
                 if ($target.val() === 'manual_entry') {
                     $manualInput.show()
                 } else {
@@ -225,7 +221,8 @@
 
                 $aspects.off('change');
                 $aspects = jQuery('select[name^=ebay_aspects]')
-                $aspects.on('change', handleAspectChanges());
+                $aspects.on('change', handleAspectChanges)
+                $aspects.trigger('change')
             });
         });
     </script>
