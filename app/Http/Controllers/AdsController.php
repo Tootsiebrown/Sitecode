@@ -595,7 +595,8 @@ class AdsController extends Controller
         ]);
     }
 
-    private function getGoogleAnalyticsProductView($listing): array{
+    private function getGoogleAnalyticsProductView($listing): array
+    {
         return [
             'products' => [
                 [
