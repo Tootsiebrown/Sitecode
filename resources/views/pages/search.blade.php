@@ -1,17 +1,6 @@
 @extends('layouts.app')
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
-@section('google-analytics-datalayer')
-    <script>
-        dataLayer.push({
-            // 'event' : 'eec.purchase',
-            'ecommerce': {
-                'impressions': {!! json_encode($productImpressions) !!}
-            }
-        });
-    </script>
-@endsection
-
 @section('content')
     <div class="page-header search-page-header">
         <div class="container">
