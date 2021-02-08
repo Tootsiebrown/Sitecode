@@ -7,6 +7,7 @@ use App\Models\Listing;
 use App\Models\Listing\Item as ListingItem;
 use App\Models\Offer;
 use App\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
 use Tests\WaxAppTestCase;
 
@@ -19,7 +20,10 @@ class OfferModelTest extends WaxAppTestCase
         Queue::fake();
 
         $this->user = factory(User::class)->create();
-        $this->listing = factory(Listing::class)->create(['id' => 9034]);
+        $this->listing = factory(Listing::class)->create([
+            'id' => 9034,
+            'sent_to_ebay_at' => Carbon::now()
+        ]);
         $this->listing->items()->saveMany(
             factory(ListingItem::class, 2)->make()
         );

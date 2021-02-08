@@ -152,7 +152,9 @@ class BinsController extends Controller
 
         $listing->items()->createMany($records);
 
-        UpdateEbayOfferInventory::dispatch($listing->fresh());
+        if ($listing->sent_to_ebay_at) {
+            UpdateEbayOfferInventory::dispatch($listing->fresh());
+        }
 
         return redirect()
             ->route('dashboard.bins.showListingBins', ['id' => $listing->id])

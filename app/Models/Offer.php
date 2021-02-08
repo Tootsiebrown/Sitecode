@@ -179,7 +179,9 @@ class Offer extends Model
             $this->save();
         }, 3);
 
-        UpdateEbayOfferInventory::dispatch($this->listing);
+        if ($this->listing->sent_to_ebay_at) {
+            UpdateEbayOfferInventory::dispatch($this->listing->fresh());
+        }
     }
 
     public function reject()
@@ -226,7 +228,9 @@ class Offer extends Model
             $this->save();
         }, 3);
 
-        UpdateEbayOfferInventory::dispatch($this->listing);
+        if ($this->listing->sent_to_ebay_at) {
+            UpdateEbayOfferInventory::dispatch($this->listing->fresh());
+        }
     }
 
     public function customerReject()

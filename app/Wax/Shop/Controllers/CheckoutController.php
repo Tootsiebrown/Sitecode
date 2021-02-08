@@ -243,7 +243,7 @@ class CheckoutController extends Controller
             $data['products'][] = [
                 'name' => $item->name,
                 'id' => $item->listing_id,
-                'category' => $item->listing->google_analytic_attribute,
+                'category' => $item->listing->google_analytics_category,
                 'price' => $item->price,
                 'quantity' => $item->quantity,
             ];

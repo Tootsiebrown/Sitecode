@@ -25,6 +25,8 @@ class EbayUpdateListingWhenOfferExpires
      */
     public function handle(OfferExpiredEvent $event)
     {
-        UpdateEbayOfferInventory::dispatch($event->offer->listing);
+        if ($event->offer->listing->sent_to_ebay_at) {
+            UpdateEbayOfferInventory::dispatch($event->offer->listing);
+        }
     }
 }
