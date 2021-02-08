@@ -1,17 +1,5 @@
 @extends ('layouts.app')
 
-
-@section('google-analytics-datalayer')
-    <script>
-        dataLayer.push({
-            // 'event' : 'eec.purchase',
-            'ecommerce': {
-                'purchase': {!! json_encode($googleAnalyticsDataLayer) !!}
-            }
-        });
-    </script>
-@endsection
-
 @section('content')
     @php
         /** @var $order \App\Wax\Shop\Models\Order  */

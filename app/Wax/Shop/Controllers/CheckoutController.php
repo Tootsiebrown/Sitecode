@@ -249,7 +249,11 @@ class CheckoutController extends Controller
             ];
         }
 
-        return $data;
+        return [
+            'ecommerce' => [
+                'purchase' => $data
+            ]
+        ];
     }
 
     protected function createPaymentProfile(User $user)
