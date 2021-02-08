@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\AuctionEndedEvent;
 use App\Events\AuctionEndingInOneHourEvent;
 use App\Events\BidReceivedEvent;
+use App\Events\InventoryChangedEvent;
 use App\Events\OfferCounterExpiredEvent;
 use App\Events\OfferExpiredEvent;
 use App\Listeners\EbayUpdateListingWhenOfferExpires;
@@ -15,6 +16,7 @@ use App\Listeners\SendBidReceivedNotification;
 use App\Listeners\SendCounterOfferExpiredNotification;
 use App\Listeners\SendOfferExpiredNotification;
 use App\Listeners\StartAuctionEndedChain;
+use App\Listeners\UpdateEbayInventory;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -50,6 +52,9 @@ class EventServiceProvider extends ServiceProvider
         AuctionEndingInOneHourEvent::class => [
             SendAuctionEndingSoonNotification::class,
         ],
+        InventoryChangedEvent::class => [
+            UpdateEbayInventory::class,
+        ]
     ];
 
     /**

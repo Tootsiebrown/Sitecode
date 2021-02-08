@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\Models\Listing\Item;
+use App\Models\Traits\HandlesCancelingOrders;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\EbayOrder
@@ -34,6 +33,8 @@ use Illuminate\Support\Facades\DB;
  */
 class EbayOrder extends Model
 {
+    use HandlesCancelingOrders;
+
     protected $guarded = [];
     public $timestamps = true;
 
@@ -43,33 +44,6 @@ class EbayOrder extends Model
             ->whereNotNull('ebay_id')
             ->whereNull('canceled_at')
             ->whereNull('shipped_at');
-    }
-
-    public function getCanceledAttribute()
-    {
-        return !is_null($this->canceled_at);
-    }
-
-    public function cancel(int $userId = null)
-    {
-        DB::table('listing_items')
-            ->where('ebay_order_id', $this->id)
-            ->update([
-                'reserved_for_order_id' => null,
-                'order_item_id' => null,
-                'removed_at' => null,
-                'reserved_for_offer_id' => null,
-                'ebay_order_id' => null,
-            ]);
-
-        $this->canceled_by_user_id = $userId ?: Auth::user()->id;
-        $this->canceled_at = Carbon::now()->toDateTimeString();
-        $this->save();
-    }
-
-    public function canceledBy()
-    {
-        return $this->belongsTo(User::class, 'canceled_by_user_id');
     }
 
     public function items()
