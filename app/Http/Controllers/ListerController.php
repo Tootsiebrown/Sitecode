@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Gateways\DatafinitiGateway;
 use App\Http\Controllers\Dashboard\CropsProductImages;
 use App\Http\Controllers\Dashboard\HandlesEbayAspects;
 use App\Models\Brand;
@@ -31,7 +30,6 @@ class ListerController extends Controller
     use HandlesEbayCategories;
     use HandlesEbayAspects;
 
-    protected $datafinitiGateway;
 
     protected $optionalFields = [
         'gender' => 'Gender',
@@ -42,9 +40,9 @@ class ListerController extends Controller
         'size' => 'Size',
     ];
 
-    public function __construct(DatafinitiGateway $datafinitiGateway)
+    public function __construct()
     {
-        $this->datafinitiGateway = $datafinitiGateway;
+        //
     }
 
     public function index(Request $request)
@@ -53,7 +51,6 @@ class ListerController extends Controller
         $name = $request->input('name');
         $sku = $request->input('sku');
         $searchBy = $request->input('search_by');
-        $datafinitiUpc = $request->input('datafiniti_upc');
 
         switch ($searchBy) {
             case 'name':
@@ -83,8 +80,6 @@ class ListerController extends Controller
                     $name,
                     $sku,
                 ),
-                'datafinitiUpc' => $datafinitiUpc,
-                'datafinitiProfiles' => $this->datafinitiSearch($datafinitiUpc),
             ]
         );
     }
@@ -121,15 +116,6 @@ class ListerController extends Controller
         return $productsQuery
             ->orderBy('name', 'asc')
             ->paginate(20);
-    }
-
-    protected function datafinitiSearch($upc)
-    {
-        if (! $upc) {
-            return collect();
-        }
-
-        return $this->datafinitiGateway->barCodeSearch($upc);
     }
 
     public function productForm(Request $request)
