@@ -512,7 +512,7 @@ class AdsController extends Controller
     public function search(Request $request)
     {
         $this->syncFilters($request);
-        $perPage = 12;
+        $perPage = 48;
 
         $title = null;
 
