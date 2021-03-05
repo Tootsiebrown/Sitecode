@@ -65,7 +65,7 @@ class CartController extends Controller
 
     private function itemAddedToCartAnalyticsData($quantity, array $customizations)
     {
-        $listing = Listing::find($customizations[1]);
+        $listing = Listing::withoutGlobalScopes()->find($customizations[1]);
 
         return [
             'event' => 'addToCart',
