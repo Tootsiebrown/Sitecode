@@ -9,7 +9,7 @@
                     @if( ! empty($title)) <h2>{{ $title }} </h2> @endif
                     <div class="breadcrumbs">
                         <a href="{{route('home')}}" >Home</a>
-                        {!! $listings->links() !!}
+                        {!! $listings->appends(request()->input())->links() !!}
 {{--                        @if ($category)--}}
 {{--                            @if ($category->parent)--}}
 {{--                                @if ($category->parent->parent)--}}
@@ -52,6 +52,11 @@
 {{--            </div>--}}
 {{--        </div>--}}
 {{--    </div>--}}
+@php
+    $OrderBy = Request::get('OrderBy');
+    $params = request()->all();
+
+@endphp
 
     @if($listings->count())
         <div id="regular-ads-container">
@@ -59,6 +64,35 @@
                 <div class="row">
                     @include('pages.search.sidebar')
                     <div class="search-body col-xs-9">
+                        <div class="alert alert-secondary" role="alert" >
+                            <div class="btn-group">
+                                <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @switch($OrderBy)
+                                        @case('price-asc')
+                                            Price: Low to High
+                                            @break
+                                        @case('price-desc')
+                                            Price: High to Low
+                                            @break
+                                        @case('created_at-desc')
+                                            Listed: Latest First
+                                            @break
+                                        @case('created_at-asc')
+                                            Listed: Oldest First
+                                            @break
+                                        @default
+                                            Listed: Latest First
+                                    @endswitch
+                                <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'price-asc']))}}">Price: Low to High</a></li>
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'price-desc']))}}">Price: High to Low</a></li>
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-desc']))}}">Listed: Latest First</a></li>
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-asc']))}}">Listed: Oldest First</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         @include('site.components.listings-list', ['listings' => $listings, 'container' => false])
                     </div>
                 </div>
@@ -81,7 +115,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                {!! $listings->links() !!}
+                {!! $listings->appends(request()->input())->links() !!}
             </div>
         </div>
     </div>

@@ -39,10 +39,10 @@
                                 <td>{{ $user->signed_up_datetime() }}</td>
                             </tr>
 
-                            <tr>
+                            <!-- <tr>
                                 <th>Newsletter</th>
                                 <td>{{ $user->newsletter_subscription ? 'Subscribed' : 'Not Subscribed'  }}</td>
-                            </tr>
+                            </tr> -->
                         </table>
 
                         @if($user->id == auth()->user()->id)

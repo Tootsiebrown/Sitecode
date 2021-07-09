@@ -1,8 +1,9 @@
 .search-sidebar {
     width: 100%;
-    background-color: $color-tan-med;
+    background-color: rgb(33, 190, 196);
     padding: 16px;
-
+    border-radius: 25px;
+    font: navy;
     &__toggle-container {
         display: flex;
         align-items: center;
@@ -22,20 +23,24 @@
     &.open > div {
         max-height: 800px;
         margin-bottom: 24px;
+        font: navy;
     }
 
     & > div {
         max-height: 0;
         overflow: hidden;
+        font: navy;
 
 
         & > ul {
             list-style: none;
             padding-left: 0;
+            font: navy;
 
              ul {
                 list-style: none;
                 padding-left: 24px;
+                font: navy;
             }
         }
 
@@ -64,6 +69,8 @@
     }
     form {
         padding: 0;
+        font: navy;
+        
 
         .input-group .btn  {
             padding: 4px 8px 0;

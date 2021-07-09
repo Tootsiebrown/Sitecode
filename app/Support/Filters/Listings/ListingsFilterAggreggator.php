@@ -14,10 +14,16 @@ class ListingsFilterAggreggator extends FilterAggregator
     public function __construct(
         TypeFilter $typeFilter,
         CategoryFilter $categoryFilter,
-        SearchFilter $searchFilter
+        SearchFilter $searchFilter,
+        SizeFilter $sizeFilter,
+        ColorFilter $colorFilter,
+        GenderFilter $genderFilter
     ) {
         $this->filters[$typeFilter->getName()] = $typeFilter;
         $this->filters[$categoryFilter->getName()] = $categoryFilter;
         $this->filters[$searchFilter->getName()] = $searchFilter;
+        $this->filters[$sizeFilter->getName()] = $sizeFilter;
+        $this->filters[$colorFilter->getName()] = $colorFilter;
+        $this->filters[$genderFilter->getName()] = $genderFilter;
     }
 }

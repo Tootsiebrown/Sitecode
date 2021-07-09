@@ -26,13 +26,13 @@
             'value' => old('email', $user->email),
         ])
 
-        @include('dashboard.form-elements.form-group', [
+        <!-- @include('dashboard.form-elements.form-group', [
             'type' => 'boolean',
             'name' => 'newsletter_subscription',
             'prettyTitle' => 'Newsletter',
             'secondaryLabel' => 'Subscribed',
             'checked' => old('newsletter_subscription', $user->newsletter_subscription),
-        ])
+        ]) -->
 
         @include('dashboard.form-elements.form-group', [
             'type' => 'submit',

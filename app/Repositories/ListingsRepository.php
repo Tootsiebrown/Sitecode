@@ -24,6 +24,7 @@ class ListingsRepository extends BaseFilterableRepository
             ? $query->withAnyStatus()
             : $query->active();
 
+        $query = $this->sortListing($query);
         $query = $unfiltered
             ? $query
             : $this->filters->filterQuery($query);
@@ -31,5 +32,21 @@ class ListingsRepository extends BaseFilterableRepository
         return $this->allowSecret
             ? $query->withoutGlobalScope('notSecret')
             : $query;
+    }
+    public function sortListing($query)
+    {
+        $params = request()->input('OrderBy');
+        if (isset($params) && !empty($params)) {
+            $data = explode('-', $params);
+            $OrderBy = $data[0];
+            $order = $data[1];
+            if ($OrderBy == 'price') {
+                return  $query->orderBy($OrderBy, $order);
+            }
+            if ($OrderBy == 'created_at') {
+                return  $query->orderBy($OrderBy, $order);
+            }
+        }
+        return $query->orderBy('created_at', 'desc');
     }
 }

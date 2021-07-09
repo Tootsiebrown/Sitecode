@@ -19,7 +19,7 @@ class BidController extends Controller
 
         $title = trans('app.bids_for') . ' ' . $ad->title;
 
-        if (! $user->isAdmin()) {
+        if (!$user->isAdmin()) {
             if ($ad->user_id != $user_id) {
                 return view('dashboard.error.error_404');
             }
@@ -29,14 +29,14 @@ class BidController extends Controller
 
     public function postBid(Request $request, $listingId)
     {
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return redirect(route('login'))->with('error', trans('app.login_first_to_post_bid'));
         }
 
         $bid_amount = $request->bid_amount;
 
         $listing = Listing::find($listingId);
-        if (! $listing) {
+        if (!$listing) {
             abort(404);
         }
 
@@ -68,7 +68,7 @@ class BidController extends Controller
         $user_id = $user->id;
         $ad = Listing::find($ad_id);
 
-        if (! $user->isAdmin()) {
+        if (!$user->isAdmin()) {
             if ($ad->user_id != $user_id) {
                 return ['success' => 0];
             }
@@ -96,7 +96,7 @@ class BidController extends Controller
         $user_id = $auth_user->id;
         $ad = Listing::find($bid->ad_id);
 
-        if (! $auth_user->isAdmin()) {
+        if (!$auth_user->isAdmin()) {
             if ($ad->user_id != $user_id) {
                 return view('dashboard.error.error_404');
             }
@@ -105,5 +105,16 @@ class BidController extends Controller
         $user = User::find($bid->user_id);
 
         return view('dashboard.profile', compact('title', 'user'));
+    }
+    public function destroy($bid_id)
+    {
+        request()->validate([
+            'remove' => 'required',
+        ]);
+        if (request()->remove == "on") {
+            $bid = Bid::findOrFail($bid_id);
+            $bid->delete();
+            return back()->with('success', trans('app.bid_deleted'));
+        }
     }
 }

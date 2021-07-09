@@ -15,7 +15,7 @@
                             id="search"
                             value="{{ request('search') }}"
                             name="search"
-                            placeholder=""
+                            placeholder="You@catchndealz.com"
                         >
                         {!! $errors->has('search')? '<p class="help-block">'.$errors->first('search').'</p>':'' !!}
 

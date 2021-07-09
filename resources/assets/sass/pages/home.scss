@@ -1,20 +1,38 @@
+// featured section
 .home-featured {
-    background-color: $color-turquoise;
+    background: url('/assets/img/defaultBackground.jpeg') no-repeat center center scroll;
+    -webkit-background-size: cover; 
+    -moz-background-size: cover;
+    -o-background-size: cover; 
+    background-size: cover;
     padding-bottom: 64px;
     padding-top: 128px;
     position: relative;
-
+// text color for "featured items"
     h2, p {
-        color: $color-white;
+        color: $color-orange-light;
         text-align: center;
-    }
+        font-size: 75px;
+        font-weight: 800;
+        background-color: navy;
+        border-radius: 25px;
+        margin-left: 15px;
+        }
 
     p {
         margin-bottom: 32px;
     }
-
+@media (min-width: 320px) and (max-width: 767px) {
+    h2, p {
+        font-size: 30px;
+        margin-left: 5px;
+    }
+    
+}
+// top of featured items border
     .listing-boxes__listing {
         border-top-color: $color-orange-light;
+        border-radius: 10px;
     }
 
     &::before {
@@ -36,21 +54,47 @@
         height: 136px;
         width: 100%;
         left: 0;
-        background-image: url('/assets/img/squiggles-tan-light-big.png');
+        background-image: url('/assets/img/squiggles-turquise-dark-big.png');
         background-repeat: repeat-x;
         background-position: center center;
+        z-index: 10;
     }
 }
 
-.regular-ads-container {
+
+#regular-ads-container {
+    background: url('/assets/img/fullSizeBackground.svg') repeat center center scroll;
+    
+    padding-bottom: 64px;
     padding-top: 128px;
-    background-color: $color-tan-dark;
+    position: relative;
 
     .listing-boxes__listing {
         border-top-color: $color-navy-light;
     }
+// Auctions section heading
+h2{
+        color: $color-orange-light;
+        text-align: center;
+        font-size: 75px;
+        font-weight: 800;
+        background-color: navy;
+        border-radius: 25px;
+        margin-bottom:0px;
+        padding-bottom: 0px;
+}
+@media (min-width: 320px) and (max-width: 767px) {
+    h2{
+        font-size: 40px;
+        margin-left: 5px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    
+}
 }
 
+// carousel
 [data-component=home-slider].slick-initialized {
     .container {
         position: relative;
@@ -68,14 +112,15 @@
             position: relative;
 
             &__copy {
-                background-color: $color-tan-light;
+                background-color: rgb(33, 190, 196);
                 color: $color-navy;
                 margin-top: 16px;
                 padding: 24px;
                 margin-bottom: 16px;
+                border-radius: 25px;
 
                 h2 {
-                    color: $color-turquoise;
+                    color: $color-navy;
                 }
             }
 

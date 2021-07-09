@@ -25,7 +25,7 @@ class ShopOrdersController extends Controller
             'orders' => Order
                 ::placed()
                 ->orderBy('placed_at', 'desc')
-                ->paginate()
+                ->paginate(25)
         ]);
     }
 

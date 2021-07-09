@@ -38,6 +38,7 @@
         "jquery": "^3.2.0",
         "lodash": "^4.17.13",
         "magnific-popup": "^1.1.0",
+        "puzzy-search": "^1.0.20",
         "select2": "^4.0.13",
         "slick-carousel": "^1.8.1",
         "stickybits": "^3.7.7",

@@ -13,6 +13,7 @@
                 <th>Foreground</th>
             </tr>
         </thead>
+        
         <tbody>
             @foreach ($slides as $slide)
                 <tr>

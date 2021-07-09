@@ -580,5 +580,30 @@
 
 {{--        });--}}
 {{--    </script>--}}
+@if (!$listing->is_auction)
+<script>
+    // Set the expiry date
+    var expired_at = moment("{!! $listing->expired_at ? $listing->expired_at->toDateTimeString() : '00:00:00' !!}").format('x')
 
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+        var now = moment(moment().tz('America/New_York').format("YYYY-MM-DD HH:mm:ss")).format('x')
+      // Get time now
+      var distance = expired_at - now
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // Display the result in the element with id="count-down"
+      document.getElementById("count-down").innerHTML = days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ";
+      // If the count down is finished, write some text
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("count-down").innerHTML = "EXPIRED";
+      }
+    }, 1000);
+</script>
+@endif
 @endsection

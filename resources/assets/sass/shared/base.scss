@@ -1,12 +1,12 @@
 body {
-    background-color: $color-white;
+    background-color: white;
 }
 
 a {
-    color: $color-turquoise;
+    color: navy;
 
     &:hover {
-        color: $color-navy;
+        color: $color-orange-light;
     }
 }
 
@@ -22,6 +22,10 @@ h4 {
     }
 }
 
+.footer__top{
+    background: rgb(96, 227, 231);
+}
+
 .page-header {
     background: none;
 }
@@ -34,4 +38,7 @@ input[type="number"] {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
+}
+.page-header.search-page-header{
+    background:rgb(33, 190, 196);
 }

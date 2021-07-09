@@ -8,8 +8,9 @@
     }
 
     &__listing {
-        border-radius: 6px;
-        border-top: 6px solid $color-turquoise;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        border-top: 6px solid navy;
         display: flex;
         flex-basis: 100%;
         flex-direction: column;
@@ -61,18 +62,20 @@
     }
 
     &__listing-title {
-        background-color: $color-tan-light;
+        background-color: rgb(33, 190, 196);
         flex-grow: 1;
         padding: 24px;
 
         a {
-            color: $color-black;
+            color: black;
         }
     }
 
     &__listing-prices {
-        background-color: $color-tan-med;
+        background-color: rgb(33, 190, 196);
         padding: 12px;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
 
         .price-row {
             align-items: center;
@@ -80,23 +83,27 @@
             justify-content: space-between;
             margin-bottom: 8px;
 
+            
+            
+
             .btn {
+                background: navy;
                 &:hover {
                     cursor: default;
-                    background-color: $color-turquoise;
+                    background-color: $color-orange-light;
                 }
             }
         }
     }
 
     &__listing-bottom {
-        background-color: $color-brown;
+        background-color: navy;
         color: $color-white;
         font-size: 14px;
         padding: 0;
 
         &:hover {
-            background-color: $color-navy;
+            background-color: $color-orange-light;
             cursor: pointer;
         }
 

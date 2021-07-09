@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+
 @extends('layouts.app', ['bodyClass' => 'home'])
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
 
@@ -26,45 +37,20 @@
             </div>
         @endforeach
     </div>
+    
     <div class="home-featured">
+        
         <div class="container">
-            <div class="welcome-copy">
-                <p>Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.</p>
-                <table class="home-shipping">
-                    <thead>
-                        <tr>
-                            <th>Spend</th>
-                            <th>Shipping Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>$50</td>
-                            <td>FREE!</td>
-                        </tr>
-                        <tr>
-                            <td>$30</td>
-                            <td>$8.99</td>
-                        </tr>
-                        <tr>
-                            <td>$10</td>
-                            <td>$5.99</td>
-                        </tr>
-                        <tr>
-                            <td>Less than $10</td>
-                            <td>$2.99</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="a-us-company">A USA Made Company</p>
-            </div>
-
-            <h2>Featured Items</h2>
-            <p>Check out our featured Daily Dealz</p>
+            
+            
+            <H2>
+                Featured Items
+            </H2>
+            
                 @include('site.components.listings-list', ['listings' => $featuredListings])
             </div>
         </div>
-    </div>
+
     @if($listings->count())
         <div id="regular-ads-container">
             <div class="container">
@@ -72,7 +58,6 @@
                     <div class="col-md-12">
                         <div class="front-ads-head">
                             <h2>@lang('app.new_regular_ads')</h2>
-                            <h3>Don't miss out on the best <i>new</i> catch of the day!</h3>
                         </div>
                     </div>
                     @include('site.components.listings-list', ['listings' => $listings])
@@ -85,7 +70,7 @@
                 <div class="col-md-12">
                     <div class="no-ads-wrap">
                         <h2><i class="fa fa-frown-o"></i> @lang('app.no_regular_ads_country') </h2>
-
+                        
                     </div>
                 </div>
             </div>
@@ -96,3 +81,6 @@
 @section('page-js')
     @slick
 @endsection
+
+</body>
+</html>

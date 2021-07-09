@@ -10,12 +10,11 @@
         }
 
         h3 {
-            color: $color-turquoise;
+            color: navy;
         }
 
         form.place-bid {
             margin-bottom: 24px;
-
         }
 
 
@@ -24,7 +23,7 @@
     &__header {
         padding-bottom: 24px;
         margin-bottom: 24px;
-        border-bottom: 2px solid $color-tan-dark;
+        border-bottom: 2px solid navy;
     }
 
     &__condition {
@@ -42,7 +41,7 @@
     }
 
     &__current-bid-amount {
-        color: $color-turquoise;
+        color: navy;
         font-size: 36px;
         margin-bottom: 16px;
         margin-top: 0;

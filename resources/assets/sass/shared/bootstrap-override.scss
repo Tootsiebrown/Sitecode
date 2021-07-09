@@ -1,19 +1,19 @@
 .form-control {
-    background-color: $color-tan-light;
-    border-color: $color-tan-dark;
+    background-color: white;
+    border-color: black;
     border-style: solid;
-    border-width: 0 0 2px 0;
-    color: $color-brown;
+    border-width: 0 0 3px 0;
+    color: navy;
     font-size: 16px;
     font-weight: 800;
 
     &:focus {
         box-shadow: none;
-        border-bottom-color: $color-brown;
+        border-bottom-color: black;
     }
 
     &::placeholder {
-        color: $color-tan-dark;
+        color: black;
     }
 }
 
@@ -24,7 +24,7 @@ label.form-control {
 
 .btn {
     border: none;
-    border-radius: 6px;
+    border-radius: 25px;
     font-size: 16px;
 }
 
@@ -33,48 +33,48 @@ label.form-control {
 }
 
 .btn-primary {
-    background-color: $color-turquoise;
+    background-color: navy;
     svg  {
         height: 18px;
         vertical-align: middle;
         path {
-            fill: $color-tan-light;
+            fill: white;
         }
     }
 
     &:hover {
-        background-color: $color-navy;
+        background-color: $color-orange-light;
     }
 }
 
 .btn-default {
-    background-color: $color-navy;
-    color: $color-tan-light;
+    background-color: navy;
+    color: white;
 
     &:hover {
-        background-color: $color-turquoise;
-        color: $color-tan-light;
+        background-color: $color-orange-light;
+        color: navy;
     }
     &:focus {
-        background-color: $color-navy;
-        color: $color-tan-light;
+        background-color: navy;
+        color: $color-orange-light;
     }
 }
 
 .btn-secondary {
-    background-color: $color-orange-light;
-    color: $color-tan-light;
+    background-color: navy;
+    color: white;
 
     svg  {
         height: 18px;
         vertical-align: middle;
         path {
-            fill: $color-tan-light;
+            fill: white;
         }
     }
 
     &:hover {
-        background-color: $color-turquoise !important;
+        background-color: $color-orange-light !important;
     }
 
     &:focus {
@@ -83,12 +83,12 @@ label.form-control {
 }
 
 .form-control {
-    background-color: $color-tan-light;
-    border-radius: 4px;
+    background-color: white;
+    border-radius: 25px;
     border: none;
 
     &[disabled], &[readonly], fieldset[disabled] & {
-        background-color: $color-tan-med;
+        background-color: rgb(33, 190, 196);
     }
 }
 
@@ -96,17 +96,21 @@ label.form-control {
 
 
     .form-control {
-        background-color: $color-tan-light;
+        background-color: white;
         border: none;
+        border-radius: 25px;
     }
 
     .input-group-addon {
-        background-color: $color-tan-light;
+        background-color: navy;
         border: none;
+        border-radius: 25px;
+        color: white;
     }
 
     .btn-link {
-        background-color: $color-tan-light;
+        background-color: white;
+        border-radius: 25px;
     }
 }
 
@@ -114,23 +118,23 @@ label.form-control {
     border: none;
 
     .icon-bar {
-        background-color: $color-brown;
+        background-color: navy;
     }
 
     &:hover {
-        background-color: $color-turquoise;
+        background-color: rgb(33, 190, 196);
 
         .icon-bar {
-            background: $color-tan-light;
+            background: navy;
         }
     }
 
     &:active,
     &[aria-expanded="true"] {
-        background-color: $color-orange-light;
+        background-color: rgb(33, 190, 196);
 
         .icon-bar {
-            background: $color-tan-light;
+            background: navy;
         }
     }
 }
@@ -154,8 +158,8 @@ label.form-control {
         &.active {
             & > a.btn {
                 &.btn-primary {
-                    background-color: $color-orange-light;
-                    color: $color-tan-light;
+                    background-color: rgb(33, 190, 196);
+                    color: navy;
                     border-radius: 4px 4px 0 0;
                 }
             }
@@ -173,12 +177,15 @@ label.form-control {
 }
 
 .panel-default {
+    border: 0;
     .panel-heading {
-        background-color: $color-tan-dark;
+        background-color: rgb(33, 190, 196);
         background-image: none;
         border: none;
         box-shadow: none;
         padding: 10px 15px 0;
+        border-radius: 25px;
+        margin-bottom: 10px;
     }
 
     .panel-body {
@@ -191,18 +198,21 @@ label.form-control {
 .nav-pills {
     & > li {
         & > a {
-            color: $color-navy;
-            border-radius: 4px 4px 0 0;
+            background-color: navy;
+            color: white;
+            border-radius: 25px;
         }
 
         &.active > a {
-            background-color: $color-tan-med;
-            color: $color-turquoise;
+            background-color: navy;
+            color: white;
             font-weight: bold;
+            border-radius: 25px;
+            margin-bottom: 10px;
 
             &:hover {
-                background-color: $color-tan-med;
-                color: $color-turquoise;
+                background-color: white;
+                color: navy;
             }
         }
     }

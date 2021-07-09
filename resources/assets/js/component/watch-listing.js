@@ -1,8 +1,8 @@
 import selectComponent from "../utilities/select-component"
-import route from 'ziggy';
+import route from 'ziggy-js';
 import * as $ from "jquery";
-import { Ziggy } from "../ziggy";
-window.Ziggy = Ziggy; // this was missing from your setup
+import { Ziggy } from "ziggy-js";
+window.Ziggy = Ziggy;
 
 export default class WatchListing {
     constructor(element) {

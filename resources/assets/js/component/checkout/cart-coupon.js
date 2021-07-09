@@ -1,9 +1,7 @@
 import selectComponent from "../../utilities/select-component"
 import * as $ from 'jquery'
-import route from 'ziggy';
-import { Ziggy } from "../../ziggy";
-
-window.Ziggy = Ziggy; // this was missing from your setup
+import route from 'ziggy-js';
+import { Ziggy } from "ziggy-js"; // this was missing from your setup
 
 export default class CartCoupon {
     constructor(element, options) {

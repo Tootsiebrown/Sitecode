@@ -1,6 +1,6 @@
 @extends('layouts.dashboard', ['title' => 'Orders'])
 
-@section('dashboard-content')
+@section('dashboard-content')z
     <table class="dashboard-table">
         <tr>
             <th>Order ID</th>

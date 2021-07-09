@@ -45,8 +45,8 @@ class ResetAuction implements ShouldQueue
 
         DB::transaction(function () {
             $this->endedAuction->listing->expired_at = Carbon::now()
-                ->addDays(2)
-                ->setHour(20)
+                ->addDays(0)
+                ->setHour(0)
                 ->setMinute(0)
                 ->setSecond(0);
             $this->endedAuction->listing->save();

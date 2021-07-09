@@ -1,7 +1,7 @@
 import selectComponent from "../../utilities/select-component"
 import * as $ from 'jquery'
-import route from 'ziggy';
-import { Ziggy } from "../../ziggy";
+import route from 'ziggy-js';
+import { Ziggy } from "ziggy-js";
 import SearchSidebar from "../search-sidebar";
 import CartCoupon from "./cart-coupon";
 window.Ziggy = Ziggy; // this was missing from your setup

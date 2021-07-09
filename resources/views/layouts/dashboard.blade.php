@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('title') @if( ! empty($title)) {{ $title }} | @endif @parent @endsection
-
-
+@section('page-css')
+    @yield('css')
+@endsection
 @section('content')
 
     <div class="container">
@@ -33,3 +34,6 @@
     </div>
 @endsection
 
+@section('page-js')
+    @yield('js')
+@endsection

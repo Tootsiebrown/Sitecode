@@ -172,7 +172,7 @@ return [
     'payment_received_msg'      => 'Payment has been received successfully',
     'payment_declined_msg'      => 'The card has been declined',
     'invalid_transaction'       => 'This transaction is invalid or has been used',
-    'new_regular_ads'           => 'New regular Auctions',
+    'new_regular_ads'           => 'New Items',
     'new_premium_ads'           => 'New premium Auctions',
     'search___'                 => 'Search keywords',
     'filter'                    => 'Filter',
@@ -633,7 +633,7 @@ return [
     'starting_price'                    => 'Starting Price',
     'bid_deadline'                      => 'Bid Deadline',
     'current_bid'                       => 'Current Bid',
-    'before_bidding_sign_in_info'       => 'You\'ll need to <a href="'.route('login').'">sign in</a> or <a href="'.route('register').'">register</a> before bidding.',
+    'before_bidding_sign_in_info'       => 'You\'ll need to <a href="' . route('login') . '">sign in</a> or <a href="' . route('register') . '">register</a> before bidding.',
     'bid_deadline_info'                 => 'Bid deadline %s and closes in %s',
     'bid_deadline_closed_info'          => 'Bid deadline %s and closed %s',
     'place_bid'                         => 'Place Bid',
@@ -697,4 +697,6 @@ return [
      */
     'there_is_no_products'          => 'No products found for ":search".',
     'product_created'               => 'Successfully added product',
+
+    'bid_deleted' => 'Bid has been deleted successfully'
 ];

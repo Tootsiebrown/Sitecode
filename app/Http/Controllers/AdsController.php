@@ -180,7 +180,7 @@ class AdsController extends Controller
         $listing = Listing::withoutGlobalScopes()
             ->find($id);
 
-        if (! $listing) {
+        if (!$listing) {
             abort(404);
         }
 
@@ -236,9 +236,9 @@ class AdsController extends Controller
 
             'child_category_id' => [
                 'exclude_if:child_category_id,new',
-//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
-//                    $query->where('parent_id', $request->input('category_id'));
-//                }),
+                //                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+                //                    $query->where('parent_id', $request->input('category_id'));
+                //                }),
             ],
             'new_child_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
 
@@ -246,9 +246,9 @@ class AdsController extends Controller
 
             'grandchild_category_id' => [
                 'exclude_if:grandchild_category_id,new',
-//                Rule::exists('product_categories,id')->where(function($query) use ($request) {
-//                    $query->where('parent_id', $request->input('child_category_id'));
-//                }),
+                //                Rule::exists('product_categories,id')->where(function($query) use ($request) {
+                //                    $query->where('parent_id', $request->input('child_category_id'));
+                //                }),
             ],
             'new_grandchild_category' => 'exclude_unless:child_category_id,new|unique,product_categories,name',
             'shipping_weight_oz' => 'numeric|min:1',
@@ -511,12 +511,19 @@ class AdsController extends Controller
 
     public function search(Request $request)
     {
+        // dd(session('previousSearch'));
+        if(session('previousSearch') != $request->search){
+            $request->session()->forget('listFilters');
+            session(['previousSearch' => $request->search]);
+        }
         $this->syncFilters($request);
+
         $perPage = 48;
 
         $title = null;
 
         $categoryId = $request->input('category');
+        $categoryOptions = [];
 
         if ($categoryId) {
             $category = ProductCategory::where('secret_key', $categoryId)->first();
@@ -525,16 +532,52 @@ class AdsController extends Controller
             }
         }
 
+        $extraProperties[] = array();
+
+
         $paginatedListings = $this->repo->getPaginated($perPage);
 
+        if(is_numeric($categoryId)){
+            $productList =  ProductCategory::find($categoryId);
+            $categoryOptions = $productList->listings()->get(['size', 'gender', 'color']);
+            $extraProperties['color'] = $categoryOptions->unique('color')->where('color', '!=', '')->pluck('color');
+            $extraProperties['size'] = $categoryOptions->unique('size')->where('size', '!=', '')->pluck('size');
+            $extraProperties['gender'] = $categoryOptions->unique('gender')->where('gender', '!=', '')->pluck('gender');
+        }else{
+            if(!$request->session()->has('listFilters')){
+                $extraProperties['color'] = $paginatedListings->unique('color')->where('color', '!=', '')->pluck('color');
+                $extraProperties['size'] = $paginatedListings->unique('size')->where('size', '!=', '')->pluck('size');
+                $extraProperties['gender'] = $paginatedListings->unique('gender')->where('gender', '!=', '')->pluck('gender');
+                session(['listFilters' => $extraProperties]);
+                session(['previousSearch' => $request->search]);
+            }else{
+                $extraProperties = session('listFilters');
+            }
+        }
+
+
+
         $filterOptions = $this->repo->getFilterOptions();
+
+        $optionalParams = [];
+        $optionalParams['size'] = $request->has('size') ? $request->size : [];
+        $optionalParams['color'] = $request->has('color') ? $request->color : [];
+        $optionalParams['gender'] = $request->has('gender') ? $request->gender : [];
+
+        $filterValues = $this->getFilterValuesFromRequest($request);
+
+        unset($filterValues['size']);
+        unset($filterValues['color']);
+        unset($filterValues['gender']);
 
         return view('pages.search', [
             'googleAnalyticsDataLayer' => $this->getGoogleAnalyticsProductImpressions($paginatedListings),
             'listings' => $paginatedListings,
             'filterOptions' => $filterOptions,
-            'filterValues' => $this->getFilterValuesFromRequest($request),
-            'title' => 'Search Results'
+            'filterValues' => $filterValues,
+            'title' => 'Search Results',
+            'extraProperties' => $extraProperties,
+            'optionalParams' => $optionalParams,
         ]);
     }
 
@@ -567,11 +610,11 @@ class AdsController extends Controller
             ->withoutGlobalScope('notSecret')
             ->find($id);
 
-        if (! $listing) {
+        if (!$listing) {
             return view('error_404');
         }
 
-        if (! $listing->is_published()) {
+        if (!$listing->is_published()) {
             if (Auth::check()) {
                 $user_id = Auth::user()->id;
                 if ($user_id != $listing->user_id) {
@@ -624,7 +667,7 @@ class AdsController extends Controller
             ->withoutGlobalScope('notSecret')
             ->find($id);
 
-        if (! $listing) {
+        if (!$listing) {
             return view('error_404');
         }
 
@@ -636,7 +679,7 @@ class AdsController extends Controller
 
     protected function alreadyHasOfferOn(Listing $listing)
     {
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return false;
         }
 

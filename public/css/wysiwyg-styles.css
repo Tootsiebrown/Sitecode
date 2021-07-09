@@ -80,6 +80,10 @@
   font-style: italic;
 }
 
+.filter-parent{
+  cursor: pointer;
+}
+
 .editable-content ul, .ql-editor ul {
   list-style-type: disc;
   margin-bottom: 16px;

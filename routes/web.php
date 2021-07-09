@@ -43,7 +43,6 @@ Route::get(
     ['as' => 'email_activation_link', 'uses' => 'UserController@activatingAccount']
 );
 
-
 Route::get('search')
     ->uses('AdsController@search')
     ->name('search');
@@ -123,7 +122,7 @@ Route::group(
         Route::prefix('listings')
             ->name('dashboard.listings.')
             ->middleware('privilege:Listings')
-            ->group(function() {
+            ->group(function () {
                 Route::get('/')
                     ->uses('AdsController@index')
                     ->name('index');
@@ -150,6 +149,15 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('AuctionsController@index');
+                Route::post('/search')
+                    ->name('ajax')
+                    ->uses('AuctionsController@ajaxSearch');
+                Route::get('bid-history/{listing_id}')
+                    ->name('bid-history')
+                    ->uses('AuctionsController@getBidsHistory');
+                Route::delete('destroy-bid/{bid}')
+                    ->name('destroy-bid')
+                    ->uses('BidController@destroy');
             });
 
         Route::prefix('bins')
@@ -177,7 +185,6 @@ Route::group(
                 Route::post('add-items')
                     ->uses('BinsController@addItems')
                     ->name('addItems');
-
             });
 
         Route::prefix('tax')
@@ -275,7 +282,9 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('DashboardOrdersController@index');
-
+                    // Route::post('/search')
+                    // ->name('ajax')
+                    // ->uses('DashboardOrdersController@ajaxSearch');
                 Route::get('{id}')
                     ->name('details')
                     ->uses('DashboardOrdersController@details');
@@ -296,7 +305,6 @@ Route::group(
                 Route::post('{id}/reject')
                     ->uses('OfferController@customerReject')
                     ->name('reject');
-
             });
 
         Route::prefix('payment-methods')
@@ -550,7 +558,7 @@ Route::name('shop.')
 
         Route::prefix('checkout')
             ->name('checkout.')
-            ->group(function() {
+            ->group(function () {
                 Route::get('', '\App\Wax\Shop\Controllers\CheckoutController@checkout')
                     ->name('start');
 
@@ -620,4 +628,3 @@ Route::name('webhooks.')
             ->name('ebayNotification')
             ->uses('WebHookController@ebayNotification');
     });
-

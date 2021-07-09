@@ -48,8 +48,8 @@
     }
 
     &__corporate {
-        background-color: $color-tan-dark;
-        border-top: 6px solid $color-brown;
+        background-color: white;
+        border-top: 6px solid black;
         padding: 24px 0;
 
         a {
@@ -95,7 +95,7 @@
             }
         }
         &__middle {
-            background-image: url('/assets/img/squiggles.png');
+            background-image: url('/assets/img/defaultBackground.jpeg');
             background-repeat: repeat-x;
             background-position: center top;
             .container {
@@ -107,7 +107,7 @@
         &__menu {
             margin: 0;
             padding: 30px;
-            background-color: $color-tan-med;
+            background:url('/assets/img/defaultBackground.jpeg') ;
         }
     }
 }
