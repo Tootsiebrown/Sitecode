@@ -13,19 +13,64 @@
         color: $color-orange-light;
         text-align: center;
         font-size: 75px;
-        font-weight: 800;
-        background-color: navy;
-        border-radius: 25px;
+        font-weight: 300;
+        font-style: italic;
+        background: radial-gradient(rgb(33, 190, 196), navy);
+        border-radius: 50px;
         margin-left: 15px;
+        margin-right: -12px;
+        margin-bottom: 15px;
+        
         }
-
+        @mixin transition($transition){
+            -webkit-transition: $transition;
+            -moz-transition: $transition;
+            -ms-transition: $transition;
+            -o-transition: $transition;
+            transition: $transition;
+          }
+          
+          @mixin textShadow($text-shadow) {
+            -webkit-text-shadow: $text-shadow;
+            -moz-text-shadow: $text-shadow;
+            -ms-text-shadow: $text-shadow;
+            -o-text-shadow: $text-shadow;
+            text-shadow: $text-shadow;
+          }
+          
+          @mixin boxShadow($box-shadow) {
+            -webkit-box-shadow: $box-shadow;
+            -moz-box-shadow: $box-shadow;
+            -ms-box-shadow: $box-shadow;
+            -o-box-shadow: $box-shadow;
+            box-shadow: $box-shadow;
+          }
+          
+          @mixin NoUserSelect {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+          }
+    h2:hover {
+        @include transition(.5s ease-in-out);
+        @include textShadow((0 0 0 transparent,0 0 0 transparent));
+        color:rgba(0,0,0,.1);
+        overflow:visible;
+        &:hover {
+          color:white;
+          @include textShadow((0 0 10px #ff401a,0 0 50px #ff9b1a));
+        }
+      }
     p {
         margin-bottom: 32px;
     }
 @media (min-width: 320px) and (max-width: 767px) {
     h2, p {
-        font-size: 30px;
-        margin-left: 5px;
+        font-size: 40px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
     
 }
@@ -60,7 +105,28 @@
         z-index: 10;
     }
 }
-
+.recommended{
+    color: $color-orange-light;
+    background:navy;
+    border-radius: 25px;
+    position: absolute;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 40px;
+    margin-left: 390px;
+}
+    @media (min-width: 320px) and (max-width: 767px) {
+    .recommended{
+        font-size: 20px;
+        margin-left: 50px;
+    }
+}
+@media (min-width: 320px) and (max-width: 767px) {
+    .overlap{
+        margin-top: 50px;
+        margin-right: 250px;
+    }
+}
 
 #regular-ads-container {
     background: url('/assets/img/fullSizeBackground.svg') repeat center center scroll;
@@ -77,12 +143,54 @@ h2{
         color: $color-orange-light;
         text-align: center;
         font-size: 75px;
-        font-weight: 800;
-        background-color: navy;
-        border-radius: 25px;
+        font-weight: 300;
+        font-style: italic;
+        background: radial-gradient(rgb(33, 190, 196), navy);
+        border-radius: 50px;
         margin-bottom:0px;
         padding-bottom: 0px;
 }
+@mixin transition($transition){
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -ms-transition: $transition;
+    -o-transition: $transition;
+    transition: $transition;
+  }
+  
+  @mixin textShadow($text-shadow) {
+    -webkit-text-shadow: $text-shadow;
+    -moz-text-shadow: $text-shadow;
+    -ms-text-shadow: $text-shadow;
+    -o-text-shadow: $text-shadow;
+    text-shadow: $text-shadow;
+  }
+  
+  @mixin boxShadow($box-shadow) {
+    -webkit-box-shadow: $box-shadow;
+    -moz-box-shadow: $box-shadow;
+    -ms-box-shadow: $box-shadow;
+    -o-box-shadow: $box-shadow;
+    box-shadow: $box-shadow;
+  }
+  
+  @mixin NoUserSelect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+h2:hover {
+    @include transition(.5s ease-in-out);
+    @include textShadow((0 0 0 transparent,0 0 0 transparent));
+    color:rgba(0,0,0,.1);
+    overflow:visible;
+    &:hover {
+      color:white;
+      @include textShadow((0 0 10px #ff401a,0 0 50px #ff9b1a));
+    }
+  }
 @media (min-width: 320px) and (max-width: 767px) {
     h2{
         font-size: 40px;

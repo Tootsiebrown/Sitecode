@@ -111,3 +111,67 @@
         }
     }
 }
+  .board {
+    min-width: 175px;
+    max-width: 1100px;
+    position: relative;
+    margin: 0px;
+    border-radius: 3px;
+    padding: 12px;
+    box-sizing: padding-box;
+    position: relative;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+  }
+  
+  .top-block {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  
+    &:before {
+      border-radius: 3px 0 0 0;
+      display: block;
+      content: "";
+      flex: 2 0 0;
+      height: 1px;
+      border-top: 1px solid;
+    }
+    &:after {
+      border-radius: 0 3px 0 0;
+      display: block;
+      content: "";
+      flex: 2 0 0;
+      height: 1px;
+      border-top: 1px solid;
+    }
+  }
+  
+  .headline {
+    font: 18px Helvetica;
+    font-weight: bold;
+    overflow: hidden;
+    flex: 0 0 auto;
+    padding: 0 10px;
+    margin-top: -10px;
+    text-align: center;
+  }
+  
+  .description {
+    color: #505050;
+    margin: 8px 8px 0 8px;
+    text-align: center;
+  }
+  .main-orange {
+    color: #ed821e;
+    border-color: #ed821e;
+  }
+  #shipping {
+      text-align: center;
+      color: navy;
+      font-weight: 700;
+  }

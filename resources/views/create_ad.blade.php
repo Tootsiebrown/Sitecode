@@ -287,7 +287,6 @@
 
         </div> <!-- /#container -->
     </div>
-
 @endsection
 
 @section('page-js')

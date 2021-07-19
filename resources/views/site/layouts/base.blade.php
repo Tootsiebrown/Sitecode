@@ -15,12 +15,11 @@
 	@yield('head')
 </head>
 <body class="{{ $bodyClass ?? ''}}">
-	@include('site.components.page-header')
-
+	@include(site.components.page-header')
 	<main class="page-main">
 		@yield('body')
 	</main>
-
+	
 	@include('site.components.page-footer')
 
 	@section('footer-js')

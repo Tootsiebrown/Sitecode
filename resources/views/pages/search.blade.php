@@ -64,7 +64,7 @@
                 <div class="row">
                     @include('pages.search.sidebar')
                     <div class="search-body col-xs-9">
-                        <div class="alert alert-secondary" role="alert" >
+                        <div class="alert alert-secondary" role="alert">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @switch($OrderBy)
@@ -75,29 +75,62 @@
                                             Price: High to Low
                                             @break
                                         @case('created_at-desc')
-                                            Listed: Latest First
+                                            Update: Latest First
                                             @break
                                         @case('created_at-asc')
-                                            Listed: Oldest First
+                                            Update: Oldest First
                                             @break
                                         @default
-                                            Listed: Latest First
+                                            Update: Latest First
                                     @endswitch
                                 <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{route('search',array_merge($params,['OrderBy'=>'price-asc']))}}">Price: Low to High</a></li>
                                     <li><a href="{{route('search',array_merge($params,['OrderBy'=>'price-desc']))}}">Price: High to Low</a></li>
-                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-desc']))}}">Listed: Latest First</a></li>
-                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-asc']))}}">Listed: Oldest First</a></li>
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-desc']))}}">Listed: New to Old</a></li>
+                                    <li><a href="{{route('search',array_merge($params,['OrderBy'=>'created_at-asc']))}}">Listed: Old to New</a></li>
                                 </ul>
                             </div>
                         </div>
                         @include('site.components.listings-list', ['listings' => $listings, 'container' => false])
                     </div>
                 </div>
-            </div>
-        </div>
+                    <div>
+                        <h3 class="recommended">Recommended Items</h3> 
+                    </div>
+                    <br> <br> <br> <br>
+                    
+                    <?php 
+@include_once "/Volumes/catchndealz.com/database/factories/ListingFactory.php";
+$user = "Thing2"; 
+$password = "Thing2"; 
+$host = "host.mb:8889"; 
+$database= "cndz_testing_db";
+$connection= mysqli_connect ($host, $user, $password);
+$db_select = mysqli_select_db($connection, $database);
+$result= mysqli_query( $connection, "SELECT * FROM listings ORDER BY rand() limit 4" ); 
+if(mysqli_num_rows($result) > 0){
+     echo "<table>";
+        echo "<tr>";
+            echo "<th>Item</th>";
+            echo "<th>Price</th>";
+            echo "<th>Condition</th>";
+        echo "</tr>";
+    while($row = mysqli_fetch_array($result)){
+        echo "<tr>";
+            echo "<td>" . $row['title'] . "</td>";
+            echo "<td>" . $row['price'] . "</td>";
+            echo "<td>" . $row['condition'] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    // Free result set
+    mysqli_free_result($result);
+}
+?>
+                    
+         
 
     @else
         <div class="container">

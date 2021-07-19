@@ -44,7 +44,7 @@
             
             
             <H2>
-                Featured Items
+                Featured
             </H2>
             
                 @include('site.components.listings-list', ['listings' => $featuredListings])
