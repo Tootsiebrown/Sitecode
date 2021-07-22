@@ -73,6 +73,7 @@
         <h3>Total</h3>
         <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">
             {{ Currency::format($order->total) }}
+            <div class="pointless">
         </div>
         @if (!empty($cta))
             <a href="{{ $cta['url'] }}" class="checkout-cart__continue">{{ $cta['text'] }}</a>
