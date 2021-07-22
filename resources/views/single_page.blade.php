@@ -18,10 +18,12 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="page_wrapper page-{{ $page->id }}">
                     {!! safe_output($page->post_content) !!}
+                    
                 </div>
             </div>
         </div>
     </div>
+   
 
 @endsection
 
@@ -31,4 +33,5 @@
             toastr.success('{{ session('success') }}', '<?php echo trans('app.success') ?>', toastr_options);
         @endif
     </script>
+    
 @endsection

@@ -57,7 +57,7 @@
                 @if ($type->isSelected)
                 <span class="selected">{{ $type->label }} ({{ $type->extras['count'] }})</span>
                 @else
-                <a href="{{ route('search', array_merge($filterValues, ['type' => $type->value])) }}">{{ $type->label }} ({{ $type->extras['count'] }})</a>
+                <button id="buttonProperty"><a href="{{ route('search', array_merge($filterValues, ['type' => $type->value])) }}">{{ $type->label }} ({{ $type->extras['count'] }})</a></button>
                 @endif
             </li>
             @endforeach
@@ -78,31 +78,31 @@
             @endif
             <li>
                 @if ($category->isSelected)
-                <span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span>
+                <button id="buttonProperty"><span class="selected">{{ $category->label }} ({{ $category->extras['count'] }})</span></button>
                 @elseif ($category->extras['count'] > 0)
-                <a href="{{ route('search', array_merge($filterValues, ['category' => $category->value])) }}">
+                <button id="buttonProperty"><a href="{{ route('search', array_merge($filterValues, ['category' => $category->value])) }}">
                     {{ $category->label }} ({{ $category->extras['count'] }})
-                </a>
+                </a></button>
                 @endif
                 @if (!empty($category->extras['children']))
                 <ul>
                     @foreach(collect($category->extras['children'])->sortBy('label') as $child)
                     <li>
                         @if ($child->isSelected)
-                        <span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span>
+                        <button id="buttonProperty"><span class="selected">{{ $child->label }} ({{ $child->extras['count'] }})</span></button>
                         @elseif ($child->extras['count'] > 0)
-                        <a href="{{ route('search', array_merge($filterValues, ['category' => $child->value])) }}">
+                        <button id="buttonProperty"><a href="{{ route('search', array_merge($filterValues, ['category' => $child->value])) }}">
                             {{ $child->label }} ({{ $child->extras['count'] }})
-                        </a>
+                        </a></button>
                         @endif
                         @if (!empty($child->extras['children']))
                         <ul>
                             @foreach(collect($child->extras['children'])->sortBy('label') as $grandchild)
                             <li>
                                 @if ($grandchild->isSelected)
-                                <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span>
+                                <span class="selected">{{ $grandchild->label }} ({{ $grandchild->extras['count'] }})</span></button>
                                 @elseif ($grandchild->extras['count'] > 0)
-                                <a href="{{ route('search', array_merge($filterValues, ['category' => $grandchild->value])) }}" class="{{ $child->isSelected ? 'selected' : '' }}">
+                                <button id="buttonProperty"><a href="{{ route('search', array_merge($filterValues, ['category' => $grandchild->value])) }}" class="{{ $child->isSelected ? 'selected' : '' }}">
                                     {{ $grandchild->label }} ({{ $grandchild->extras['count'] }})
                                 </a>
                                 @endif
@@ -126,7 +126,7 @@
 
         @if (count($extraProperties) > 1)
             <p class="label">
-                <span class="">More Filters <i class="font-light fa fa-filter"></i> </span>
+                <span class="moreFilters">More Filters</span>
 
                 @if(count($extraProperties) > 1)
                     @php
@@ -142,7 +142,7 @@
  		@if(count($extraProperties['gender']) > 0)
                 <div class="mt-3">
                     <div class="flex flex-col">
-                        <div class="filter-parent font-bold-400">By Gender</div>
+                        <div class="filter-parent">By Gender</div>
                         <div class="flex flex-wrap mt-2 text-red-500" id="gender-property">
                             @foreach($extraProperties['gender'] as $genderProperty)
                                 @if(strlen($genderProperty) > 0)
@@ -167,11 +167,11 @@
                                             }
                                         }
                                     @endphp
-                                    <div class="py-1 mx-1 mt-4 rounded-lg gender-property-class border-theme-green extra-prop">
+                                    <button class="py-1 mx-1 mt-4 rounded-lg gender-property-class border-theme-green extra-prop"id="buttonProperty">
                                         <a href="{{ $url }}" class="@if(in_array($genderProperty, $optionalParams['gender']))
                                          text-white py-1 rounded bg-theme-green
                                         @endif px-3 py-2">{{ $genderProperty }}</a>
-                                    </div>
+                                    </button>
                                 @endif
                             @endforeach
 
@@ -213,11 +213,11 @@
                                             }
                                         }
                                     @endphp
-                                    <div class="py-1 mx-1 mt-4 rounded-lg border-theme-green extra-prop size-property-class">
+                                    <button class="py-1 mx-1 mt-4 rounded-lg border-theme-green extra-prop size-property-class"id="buttonProperty">
                                         <a href="{{ $url }}" class="@if(in_array($size, $optionalParams['size']))
                                          text-white py-1 rounded bg-theme-green
                                         @endif px-3 py-2">{{ $size }}</a>
-                                    </div>
+                                    </button>
                                 @endif
                             @endforeach
 
@@ -257,11 +257,11 @@
                                             }
                                         }
                                     @endphp
-                                    <div class="py-1 mx-1 mt-4 rounded-lg color-property-class border-theme-green extra-prop">
+                                    <button class="py-1 mx-1 mt-4 rounded-lg color-property-class border-theme-green extra-prop"id="buttonProperty">
                                         <a href="{{ $url }}" class="@if(in_array($colorProperty, $optionalParams['color']))
                                          text-white py-1 rounded bg-theme-green
                                         @endif px-3 py-2">{{ $colorProperty }}</a>
-                                    </div>
+                                    </botton>
                                 @endif
                             @endforeach
 
