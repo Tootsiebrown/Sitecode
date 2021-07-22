@@ -408,6 +408,8 @@
                         color: white;
                         border: none;
                         border-radius: 25px;
+                        margin-bottom: 5px;
+                        margin-top: -5px;
                     }
                 }
 
@@ -573,7 +575,7 @@
     }
 
     &__count {
-        background-color: yellow;
+        background-color: orange;
         border-radius: 12px;
         border: 2px solid navy;
         color: navy;

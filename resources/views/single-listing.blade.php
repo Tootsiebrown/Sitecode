@@ -387,7 +387,7 @@
                     </div>
                 @endif
             </div>
-
+            
             <div class="related-ads">
                 @if($relatedListings->count() > 0 && get_option('enable_related_ads') == 1)
                     <div class="widget similar-ads">

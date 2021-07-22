@@ -4,6 +4,7 @@
     padding: 16px;
     border-radius: 25px;
     font: navy;
+    margin-bottom: 10px;
     &__toggle-container {
         display: flex;
         align-items: center;
@@ -47,7 +48,7 @@
         @media (min-width: $bp-tablet) {
             display: block;
             max-height: none;
-            margin-bottom: 24px;
+            margin-bottom: 40px;
         }
     }
 
@@ -176,3 +177,55 @@ table {
       border-bottom: 0;
     }
   }
+
+.moreFilters{
+  font-weight: 800;
+  font-size: 23px;
+  padding-top: 0;
+}
+
+.filter-parent{
+  font-weight: 600;
+  margin-bottom: 5px;
+  margin-left: 90px;
+  border-bottom: 2px solid black;
+}
+
+#buttonProperty{
+background: orange;
+border-radius: 20px;
+}
+
+#buttonProperty:hover{
+  background: white;
+}
+
+.flex-container{
+  display: flex;
+  color: navy;
+  background: rgb(33, 190, 196);
+  margin: 15px;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: center;
+  
+}
+.recItems{
+  flex: 22%;
+  align-items: center;
+  border: 2px solid orange;
+  margin-left: 1%;
+  margin-right: 1%;
+  padding: 10px;
+  border-radius: 25px;
+}
+div{
+  div{
+    button{
+      border-radius: 25px;
+      background: orange;
+      color: navy;
+      margin-top: 5px;
+    }
+  }
+}

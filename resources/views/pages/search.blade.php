@@ -96,41 +96,47 @@
                         @include('site.components.listings-list', ['listings' => $listings, 'container' => false])
                     </div>
                 </div>
-                    <div>
-                        <h3 class="recommended">Recommended Items</h3> 
-                    </div>
-                    <br> <br> <br> <br>
-                    
-                    <?php 
-@include_once "/Volumes/catchndealz.com/database/factories/ListingFactory.php";
-$user = "Thing2"; 
-$password = "Thing2"; 
-$host = "host.mb:8889"; 
+
+
+<div>
+<h3 class="recommended">Recommended Items</h3>
+</div>
+<br><br><br><br>
+<div class="flex-container">
+<?php
+$user = "Thing2";
+$password = "Thing2";
+$host = "host.mb:8889";
 $database= "cndz_testing_db";
 $connection= mysqli_connect ($host, $user, $password);
 $db_select = mysqli_select_db($connection, $database);
-$result= mysqli_query( $connection, "SELECT * FROM listings ORDER BY rand() limit 4" ); 
-if(mysqli_num_rows($result) > 0){
-     echo "<table>";
-        echo "<tr>";
-            echo "<th>Item</th>";
-            echo "<th>Price</th>";
-            echo "<th>Condition</th>";
-        echo "</tr>";
-    while($row = mysqli_fetch_array($result)){
-        echo "<tr>";
-            echo "<td>" . $row['title'] . "</td>";
-            echo "<td>" . $row['price'] . "</td>";
-            echo "<td>" . $row['condition'] . "</td>";
-        echo "</tr>";
-    }
-    echo "</table>";
-    // Free result set
-    mysqli_free_result($result);
+$result= mysqli_query( $connection, ("SELECT listings.id,listing_items.listing_id,reserved_for_order_id,title,price,slug,ebay_order_id,media_name, listing_images.listing_id
+from listings, listing_items, listing_images
+where listings.id=listing_items.listing_id and reserved_for_order_id is NULL and ebay_order_id is NULL and listings.id=listing_images.listing_id
+ORDER BY rand() limit 4") );
+
+
+while ($row = mysqli_fetch_array($result)) {
+    echo "<div class='recItems'>";
+    printf( $row["title"]);
+    echo " ";
+
+    $image_name = ($row["media_name"]);
+    $image_url = "assets/img/" . $image_name;
+    echo "</br><img src='$image_url'></img></br>";
+
+    $link_listing_sku = ($row["id"]);
+    $link_listing_slug = ($row["slug"]);
+    $link_address = "auction" . "/" . $link_listing_sku . "/" . $link_listing_slug;
+
+    
+
+    echo "<a href='$link_address'> <button>Check out this deal!</button></a>";
+    echo "</br></div>";
 }
+
 ?>
-                    
-         
+</div>
 
     @else
         <div class="container">

@@ -49,47 +49,35 @@
     <div class="footer__middle">
         <div class="container">
         <div class="welcome-copy">
-    
-
-<div class="board main-orange">
-  <div class="top-block ">
-    <div class="headline">Shipping Information</div>
-  </div>
-  <div class="description"><p>Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.</p>  <br> 
-   <div> <p id="shipping">
-   Shipping Cost
-<br>
-    $50 is
-   FREE! |
-
-    $30 is
-   $8.99 |
-
-    $10 is
-   $5.99 |
-
-    Less than $10 is
-   $2.99
-</p>
-   </div>
-
-  
-    <div class="social-block main-orange">
-      <div class="social-net">
-        <div class="social-ball"><i class="fa fa-vk" aria-hidden="true"></i></div>
-        <div class="social-ball"><i class="fa fa-facebook" aria-hidden="true"></i></div>
-        <div class="social-ball"><i class="fa fa-instagram" aria-hidden="true"></i></div>
-      </div>
-      <div class="rating">
-        <div class="social-ball"><i class="like fa fa-thumbs-o-up" aria-hidden="true"></i></div>
-        <div class="social-ball bookmark"><i class="fa fa-bookmark" aria-hidden="true"></i></div>
-      </div>
-    </div>
-    
-  </div>
-</div>
-<p class="a-us-company">A USA Made Company</p>
-</div>
+                <p>Find great Dealz on everything for Home/Garden, Electronics, Appliances, Clothes, Shoes and much more! New items are listed daily! Enjoy <b>FREE SHIPPING on purchases over $50</b> and easy <a href="/returns">returns</a>.</p>
+                <table class="home-shipping">
+                    <thead>
+                        <tr>
+                            <th>Spend</th>
+                            <th>Shipping Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>$50</td>
+                            <td>FREE!</td>
+                        </tr>
+                        <tr>
+                            <td>$30</td>
+                            <td>$8.99</td>
+                        </tr>
+                        <tr>
+                            <td>$10</td>
+                            <td>$5.99</td>
+                        </tr>
+                        <tr>
+                            <td>Less than $10</td>
+                            <td>$2.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="a-us-company">A USA Made Company</p>
+            </div>
 
             <ul class="footer__menu">
                 @php $pagesRepository = app(Wax\Pages\Contracts\PagesRepositoryContract::class) @endphp
