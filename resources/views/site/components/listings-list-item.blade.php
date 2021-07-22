@@ -69,4 +69,5 @@
             <input type="submit" name="submit" value="Add to Cart">
         </form>
     @endif
+    
 </div>

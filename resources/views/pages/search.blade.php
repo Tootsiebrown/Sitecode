@@ -98,7 +98,7 @@
                 </div>
 
 
-<div>
+<div class="pointless">
 <h3 class="recommended">Recommended Items</h3>
 </div>
 <br><br><br><br>
@@ -118,20 +118,20 @@ ORDER BY rand() limit 4") );
 
 while ($row = mysqli_fetch_array($result)) {
     echo "<div class='recItems'>";
-    printf( $row["title"]);
+    echo $row["title"];
     echo " ";
 
     $image_name = ($row["media_name"]);
     $image_url = "assets/img/" . $image_name;
-    echo "</br><img src='$image_url'></img></br>";
+    echo "</br><div><img src='$image_url'></img></div></br>";
 
     $link_listing_sku = ($row["id"]);
     $link_listing_slug = ($row["slug"]);
     $link_address = "auction" . "/" . $link_listing_sku . "/" . $link_listing_slug;
 
-    
 
-    echo "<a href='$link_address'> <button>Check out this deal!</button></a>";
+
+    echo "<div> <a href='/$link_address'></div><button class='btnRecommended'>Check This Out!</button></a>";
     echo "</br></div>";
 }
 
