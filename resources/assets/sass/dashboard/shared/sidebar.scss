@@ -1,4 +1,5 @@
 .sidebar {
+    border-radius: 25px;
     .sidebar-nav.navbar-collapse {
         padding-right: 0;
         padding-left: 0;
@@ -9,17 +10,26 @@
     }
 
     ul li {
-        border-bottom: 1px solid #e7e7e7;
+        border-left: 1px solid #e7e7e7;
+        border-top: 1px solid #e7e7e7;
+        border-right: 1px solid #e7e7e7;
+        border-radius: 20px;
 
         a {
             color: #333333;
-            &.active,
+            border-radius: 25px;
+            &.active {
+                background: orange;
+                color: white;
+            }
             &:hover{
-                background-color: $color-tan-med;
+                background-color: navy;
+                color: white;
             }
 
             &.active {
                 font-weight: bold;
+
             }
         }
     }
