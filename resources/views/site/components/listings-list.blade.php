@@ -3,3 +3,4 @@
         @include('site.components.listings-list-item', ['listing' => $listing])
     @endforeach
 </div>
+
