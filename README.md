@@ -1,3 +1,5 @@
+<p> 07-27-2021 <br> main will be the branch that is upload to the live site <br> master is the branch that is from ATOM editor of item we are working on <br> Only merge after new features are acutally uploaded to live site</p>
+
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 <p align="center">
