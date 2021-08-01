@@ -37,16 +37,24 @@
             </div>
         @endforeach
     </div>
-    
+    <div class="banner-message container-fluid">
+  <div class="marquee">
+    <h3><i class="fas fa-exclamation-triangle"></i> SITE WIDE DISCOUNTS - 50% OFF EXCLUDING MYSTERY BOXS, HIGH END ELECTRONICS, AND WHOLELSALE CATEGORIES! <i class="fas fa-exclamation-triangle"></i></h3>
+  </div>
+
+  <div class="marquee">
+    <h3 id="secondmessage"><i class="fas fa-exclamation-triangle"></i> SITE WIDE SALE! ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i> </h3>
+  </div>
+</div>
     <div class="home-featured">
-        
+
         <div class="container">
-            
-            
-            <H2>
-                Featured
-            </H2>
-            
+
+
+            <h2>
+                Featured Items
+            </h2>
+
                 @include('site.components.listings-list', ['listings' => $featuredListings])
             </div>
         </div>
@@ -57,7 +65,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="front-ads-head">
-                            <h2>@lang('app.new_regular_ads')</h2>
+                            <h2>New Items</h2>
                         </div>
                     </div>
                     @include('site.components.listings-list', ['listings' => $listings])
@@ -70,7 +78,7 @@
                 <div class="col-md-12">
                     <div class="no-ads-wrap">
                         <h2><i class="fa fa-frown-o"></i> @lang('app.no_regular_ads_country') </h2>
-                        
+
                     </div>
                 </div>
             </div>

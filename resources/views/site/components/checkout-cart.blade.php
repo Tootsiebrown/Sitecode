@@ -30,7 +30,64 @@
         @else
             <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? Currency::format($order->shipping_subtotal) : 'TBD' }}</h4>
         @endif
+        <!-- local pick up radio buttons start -->
+        <style>
+        .switch-field {
+	display: flex;
+	margin-bottom: 36px;
+	overflow: hidden;
+}
 
+.switch-field input {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+
+.switch-field label {
+	
+	color: black;
+	font-size: 14px;
+	line-height: 1;
+	text-align: center;
+	padding: 8px 16px;
+	margin-right: -1px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	transition: all 0.1s ease-in-out;
+}
+
+.switch-field label:hover {
+	cursor: pointer;
+}
+
+.switch-field input:checked + label {
+	background-color: cyan;
+	box-shadow: none;
+}
+
+.switch-field label:first-of-type {
+	border-radius: 4px 0 0 4px;
+}
+
+.switch-field label:last-of-type {
+	border-radius: 0 4px 4px 0;
+}
+    </style>
+    <div class="shipping-option"> 
+        <p>Local Pick-Up</p>
+    <div class="switch-field">
+		<input type="radio" id="radio-one" name="switch-one" value="yes"onclick="if(this.checked==true) alert('Contact Alexa @ example@email.com to schedule a pick up.')
+        else alert('I am not selected');" />
+		<label for="radio-one">Yes</label>
+		<input type="radio" id="radio-two" name="switch-one" value="no" checked />
+		<label for="radio-two">No</label>
+	</div>
+</div>
+<!-- finish -->
         <div class="checkout-cart__discount">
             @if ($order->coupons->isNotEmpty())
                 <h4>Discount: {{ Currency::format($order->coupon_value) }}</h4>

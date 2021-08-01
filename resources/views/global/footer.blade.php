@@ -8,7 +8,6 @@
             <a class="footer__brand" href="{{ route('home') }}">
                 <img src="/assets/img/catchndealz.svg" title="{{get_option('site_name')}}" alt="{{get_option('site_name')}}" />
             </a>
-
             <div class="footer__social-links">
                 <p>Follow Us On:</p>
                 @php
@@ -80,7 +79,7 @@
                 </table>
                 <p class="a-us-company">A USA Made Company</p>
             </div>
-</div>
+
             <ul class="footer__menu">
                 @php $pagesRepository = app(Wax\Pages\Contracts\PagesRepositoryContract::class) @endphp
                 @foreach($pagesRepository->getTopLevel() as $page)
@@ -92,30 +91,8 @@
                 @endforeach
             </ul>
         </div>
-    </div>
-    <input class="centering" type="checkbox" id="moreInfo">
-
-<!--
-<div class="mi-outer">
-  <div class="mi">
-    <div class="mi-flap2"></div>
-    <label for="moreInfo" class="mi-flap1"></label>
-    <div class="mi-flap5">
-      <div class="mi-info"></div>
-    </div>
-    <div class="mi-flap4">
-      <div class="mi-info">
-        <label for="moreInfo" class="mi-close">X</label>
-      </div>
-    </div>
-    <div class="mi-flap3">
-      <div class="mi-info"></div>
-    </div>
-  </div>
-</div>
--->
+        </div>
             <!-- Search -->
-
     <div class="footer__corporate">
         <div class="container">
             &copy;{{ date('Y') }} Catch N Dealz. All rights reserved.

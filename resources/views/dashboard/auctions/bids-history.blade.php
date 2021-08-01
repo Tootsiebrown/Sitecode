@@ -8,7 +8,7 @@
     <table border="0" cellspacing="" cellpadding="">
         <tbody>
             <tr>
-                <td><strong>Product SKU :</strong></td>
+                <td><strong>Listing SKU :</strong></td>
                 &nbsp;
                 <td>
                     <div class="input-group">

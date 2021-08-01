@@ -33,7 +33,7 @@
                 <th>Bids History</th>
                 <th>Purchased</th>
                 <th>Created at</th>
-            </tr>ds
+            </tr>
         </thead>
     </table>
 

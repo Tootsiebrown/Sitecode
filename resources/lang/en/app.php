@@ -172,7 +172,7 @@ return [
     'payment_received_msg'      => 'Payment has been received successfully',
     'payment_declined_msg'      => 'The card has been declined',
     'invalid_transaction'       => 'This transaction is invalid or has been used',
-    'new_regular_ads'           => 'New Items',
+    'new_regular_ads'           => 'New regular Auctions',
     'new_premium_ads'           => 'New premium Auctions',
     'search___'                 => 'Search keywords',
     'filter'                    => 'Filter',

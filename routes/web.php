@@ -43,6 +43,7 @@ Route::get(
     ['as' => 'email_activation_link', 'uses' => 'UserController@activatingAccount']
 );
 
+
 Route::get('search')
     ->uses('AdsController@search')
     ->name('search');
@@ -282,9 +283,7 @@ Route::group(
                 Route::get('/')
                     ->name('index')
                     ->uses('DashboardOrdersController@index');
-                    // Route::post('/search')
-                    // ->name('ajax')
-                    // ->uses('DashboardOrdersController@ajaxSearch');
+
                 Route::get('{id}')
                     ->name('details')
                     ->uses('DashboardOrdersController@details');

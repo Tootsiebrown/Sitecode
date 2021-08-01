@@ -40,9 +40,10 @@ class PromoCodesController extends Controller
                 'expired_at' => 'date:Y-m-d',
                 'permitted_uses' => 'numeric',
                 'category_id' => 'exists:product_categories,id',
-                'listing_id' => 'exists:listings,id',
+                'listing_id' => 'exists:listings,id'
             ]
         );
+
 
         $couponData = [
             'title' => $request->input('title'),

@@ -24,7 +24,15 @@
             </div>
         </div>
     </div>
+    <div class="banner-message container-fluid">
+  <div class="marquee">
+    <h3><i class="fas fa-exclamation-triangle"></i> ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i></h3>
+  </div>
 
+  <div class="marquee">
+    <h3 id="secondmessage"><i class="fas fa-exclamation-triangle"></i> SITE WIDE SALE! ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i> </h3>
+  </div>
+</div>
 {{--    <div class="itemViewFilterWrap">--}}
 {{--        <div class="container">--}}
 {{--            <div class="row">--}}

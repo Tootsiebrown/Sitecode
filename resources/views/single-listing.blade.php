@@ -49,7 +49,7 @@
         <div class="container">
             <div class="single-ad__header">
                 <div class="single-ad__info">
-                    <h3>{{ safe_output($listing->title) }}</h3>
+                    <h3> {{ safe_output($listing->title) }}</h3>
                     @include('dashboard.flash_msg')
 
                     @if ($errors->any())
@@ -526,7 +526,15 @@
             </div>
         </div>
     </div>
+    <div class="banner-message container-fluid">
+  <div class="marquee">
+    <h3><i class="fas fa-exclamation-triangle"></i> ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i></h3>
+  </div>
 
+  <div class="marquee">
+    <h3 id="secondmessage"><i class="fas fa-exclamation-triangle"></i> SITE WIDE SALE! ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i> </h3>
+  </div>
+</div>
 @endsection
 
 @section('page-js')
