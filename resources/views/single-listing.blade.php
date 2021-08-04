@@ -153,9 +153,234 @@
                                     </div>
                                 </div>
                             </form>
+                            <div class="share-widget dark">
+    <div class="share-widget-sub">
+      <div class="share-widget-title">
+        <svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'>
+          <path d='M384 336a63.78 63.78 0 00-46.12 19.7l-148-83.27a63.85 63.85 0 000-32.86l148-83.27a63.8 63.8 0 10-15.73-27.87l-148 83.27a64 64 0 100 88.6l148 83.27A64 64 0 10384 336z' />
+        </svg>
+        <div>
+          SHARE
+        </div>
+      </div>
+<script>
+    function socialWindow(url) {
+    var left = (screen.width - 570) / 2;
+    var top = (screen.height - 570) / 2;
+    var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+    window.open(url,"NewWindow",params);
+}
+
+    function fbshareCurrentPage()
+    {window.open("https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(window.location.href)+"&t="+document.title, '',
+    'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    return false; }
+
+    // function twittershareCurrentPage()
+    // {window.open("https://twitter.com/intent/tweet?url="+encodeURIComponent(window.location.href)+"&t="+document.title, '',
+    // 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+    // return false; }
+
+
+</script>
+      <div class="share-widget-icons">
+
+        <!-- facebook -->
+        <a href="https://www.facebook.com/sharer.php?u=" onclick="fbshareCurrentPage()"  target="_blank">
+          <svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'>
+            <path d='M480 257.35c0-123.7-100.3-224-224-224s-224 100.3-224 224c0 111.8 81.9 204.47 189 221.29V322.12h-56.89v-64.77H221V208c0-56.13 33.45-87.16 84.61-87.16 24.51 0 50.15 4.38 50.15 4.38v55.13H327.5c-27.81 0-36.51 17.26-36.51 35v42h62.12l-9.92 64.77H291v156.54c107.1-16.81 189-109.48 189-221.31z' fill-rule='evenodd' />
+          </svg>
+        </a>
+
+        <!-- twitter -->
+        <!-- <a href="https://twitter.com/intent/tweet?url=" onclick="twittershareCurrentPage()" target="_top">
+          <svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'>
+            <path d='M496 109.5a201.8 201.8 0 01-56.55 15.3 97.51 97.51 0 0043.33-53.6 197.74 197.74 0 01-62.56 23.5A99.14 99.14 0 00348.31 64c-54.42 0-98.46 43.4-98.46 96.9a93.21 93.21 0 002.54 22.1 280.7 280.7 0 01-203-101.3A95.69 95.69 0 0036 130.4c0 33.6 17.53 63.3 44 80.7A97.5 97.5 0 0135.22 199v1.2c0 47 34 86.1 79 95a100.76 100.76 0 01-25.94 3.4 94.38 94.38 0 01-18.51-1.8c12.51 38.5 48.92 66.5 92.05 67.3A199.59 199.59 0 0139.5 405.6a203 203 0 01-23.5-1.4A278.68 278.68 0 00166.74 448c181.36 0 280.44-147.7 280.44-275.8 0-4.2-.11-8.4-.31-12.5A198.48 198.48 0 00496 109.5z' />
+          </svg>
+        </a> -->
+
+        <!-- email -->
+        <!-- <a href="mailto:?subject=CatchnDealz&body=" target="_blank">
+          <svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'>
+            <path d='M476.59 227.05l-.16-.07L49.35 49.84A23.56 23.56 0 0027.14 52 24.65 24.65 0 0016 72.59v113.29a24 24 0 0019.52 23.57l232.93 43.07a4 4 0 010 7.86L35.53 303.45A24 24 0 0016 327v113.31A23.57 23.57 0 0026.59 460a23.94 23.94 0 0013.22 4 24.55 24.55 0 009.52-1.93L476.4 285.94l.19-.09a32 32 0 000-58.8z' />
+          </svg>
+        </a> -->
+      </div>
+    </div>
+  </div>
+  <style>
+      .share-widget-sub {
+    margin-bottom: 20px;
+}
+/* END */
+
+
+.share-widget-sub .share-widget-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-widget-sub .share-widget-title svg {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.share-widget-sub .share-widget-title div {
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.share-widget-sub a {
+    text-decoration: none;
+}
+
+
+.share-widget-sub a svg {
+    width: 24px;
+    margin: 7px;
+    transition: .2s ease-in-out;
+}
+
+.share-widget-sub a svg:hover {
+    transform: scale(1.1);
+    transition: .2s ease-in-out;
+}
+
+
+
+
+/* FLIP ANIMATION */
+.share-widget {
+    perspective: 400px;
+    width: 220px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-widget .share-widget-sub {
+    width: 100%;
+    max-width: 400px;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    transition: -webkit-transform 0.6s;
+    -webkit-transition: -webkit-transform 0.6s;
+    transition: transform 0.6s;
+    transition: transform 0.6s, -webkit-transform 0.6s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.share-widget-sub .share-widget-title,
+.share-widget-sub .share-widget-icons {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.share-widget-sub .share-widget-icons {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
+
+.share-widget-sub.flipped {
+    -webkit-transform: rotateX(180deg);
+    transform: rotateX(180deg);
+}
+
+
+/* LIGHT & DARK STYLES */
+.share-widget.dark .share-widget-sub a svg {
+    fill: var(--light-color);
+}
+
+.share-widget.light .share-widget-sub a svg {
+    fill: var(--dark-color);
+}
+
+.share-widget.light .share-widget-sub .share-widget-title,
+.share-widget.light .share-widget-sub .share-widget-icons {
+    background-color: var(--light-color);
+}
+
+.share-widget.dark .share-widget-sub .share-widget-title,
+.share-widget.dark .share-widget-sub .share-widget-icons {
+    background-color: var(--dark-color);
+}
+
+.share-widget.light .share-widget-sub {
+    color: var(--dark-color);
+}
+
+.share-widget.dark .share-widget-sub {
+    color: var(--light-color);
+}
+
+.share-widget.light .share-widget-sub .share-widget-title svg {
+    fill: var(--dark-color);
+}
+
+.share-widget.dark .share-widget-sub .share-widget-title svg {
+    fill: var(--light-color);
+}
+
+/* FULL STYLE */
+
+.share-widget.full .share-widget-sub .share-widget-title div::after {
+    content: 'ON SOCIAL MEDIA'
+}
+
+.share-widget.full {
+    width: 400px;
+}
+
+.share-widget.full .share-widget-sub {
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    cursor: default;
+
+}
+
+.share-widget.full .share-widget-sub .share-widget-title,
+.share-widget.full .share-widget-sub .share-widget-icons {
+    position: relative;
+    transform: none;
+    box-shadow: none;
+}
+
+.share-widget.full .share-widget-sub .share-widget-title svg{
+    display: none;
+}
+  </style>
+  <script>
+      let shareWidgies = document.querySelectorAll('.share-widget:not(.full) .share-widget-sub');
+
+shareWidgies.forEach(el => {
+    el.addEventListener('click', function () {
+        if (this.classList.contains('flipped')) {
+            this.classList.remove('flipped');
+        } else {
+            this.classList.add('flipped');
+        }
+    });
+});
+
+  </script>
                             <p class="single-ad__available-inventory">
                                 Available Inventory: {{ $listing->availableItems->count() }}
                             </p>
+
                         @endif
 
                         @if (Auth::check())
@@ -393,7 +618,7 @@
             <h3 class="recommended">Recommended Items</h3>
             </div>
             <br><br><br><br>
-            <div class="flex-container">
+            <div class="flex-container1">
             <?php
             // this is our querry for pulling recommended items -KE
             $question = "SELECT listings.id,listing_items.listing_id,reserved_for_order_id,title,price,slug,ebay_order_id,media_name, listing_images.listing_id
@@ -410,8 +635,12 @@
                     echo $row->title;
                     echo "<br>";
                     $image_name = $row->media_name;
-                    $image_url = "/storage/uploads/listings/cropped/" . $image_name;
-                    echo "</br><div><img src='$image_url'></img></div></br>";
+                    $image_url = "/storage/uploads/listings/" . $image_name;
+                    echo "</br>";
+                    echo "<div>";
+                    echo "<img id='testImage' src='$image_url'></img>";
+                    echo "</div>";
+                    echo "</br>";
                     $link_listing_sku = $row->id;
                     $link_listing_slug = $row->slug;
                     $link_address = "auction" . "/" . $link_listing_sku . "/" . $link_listing_slug;
@@ -528,13 +757,14 @@
     </div>
     <div class="banner-message container-fluid">
   <div class="marquee">
-    <h3><i class="fas fa-exclamation-triangle"></i> ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i></h3>
+  <h3><i class="fas fa-exclamation-triangle"></i> SITE WIDE DISCOUNTS - 50% OFF ALL ITEMS EXCLUDING MYSTERY BOXS, HIGH END ELECTRONICS, AND WHOLESALE CATEGORIES! <i class="fas fa-exclamation-triangle"></i></h3>
   </div>
 
   <div class="marquee">
-    <h3 id="secondmessage"><i class="fas fa-exclamation-triangle"></i> SITE WIDE SALE! ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i> </h3>
+    <h3 id="secondmessage"> <i class="fas fa-money-bill-wave" id="money"></i> Use code Save50% and start saving today! <i class="fas fa-money-bill-wave"id="money"></i> </h3>
   </div>
 </div>
+
 @endsection
 
 @section('page-js')

@@ -30,9 +30,71 @@
         @else
             <h4 class="checkout-cart__tax">Shipping: {{ $order->validateShipping() ? Currency::format($order->shipping_subtotal) : 'TBD' }}</h4>
         @endif
-        <!-- local pick up radio buttons start -->
-        <style>
-        .switch-field {
+       
+        <div class="checkout-cart__discount">
+            @if ($order->coupons->isNotEmpty())
+                <h4>Discount: {{ Currency::format($order->coupon_value) }}</h4>
+                @foreach($order->coupons as $coupon)
+                    <div class="checkout-cart__discount-details" data-component="cart-coupon" data-code="{{ $coupon->code }}">
+                        <h3>
+                            Code: {{ $coupon->code }} |
+                            {{ $order->coupon->dollars ? Currency::format($coupon->calculated_value) : $coupon->percent . '%' }}
+                        </h3>
+                        @if (is_null($order->placed_at))
+                            <form class="solo-button remove-code" action="{{ route('shop.checkout.removeCode', ['code' => $coupon->code]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button data-element="remove-coupon" class="btn btn-default" name="submit" value="submit">Remove</button>
+                            </form>
+                        @endif
+                    </div>
+                @endforeach
+            @endif
+            @if (! $order->placed_at)
+                @if (isset($couponMessage))
+                    <h3 class="alert alert-danger">{{ $couponMessage }}</h3>
+                @endif
+                <form class="form-inline form-standalone checkout-cart__promo apply-code" action="{{ route('shop.checkout.applyCode') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" name="code" class="form-control" placeholder="promo code">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" data-element="apply-code">Apply</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            @endif
+        </div>
+        <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
+
+    <div class="checkout-cart__total">
+        <h3>Total</h3>
+        <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">
+            {{ Currency::format($order->total) }}
+        </div>
+        @if (!empty($cta))
+            <a href="{{ $cta['url'] }}" class="checkout-cart__continue">{{ $cta['text'] }}</a>
+        @endif
+    </div>
+</div>
+<!-- Start of local pick-up -->
+<div class="shipping-option"> 
+        <p>Local Pick-Up</p>
+    <div class="switch-field">
+		<input type="radio" id="radio-one" name="switch-one" value="yes"onclick="if(this.checked==true) alert('Contact Alexa @ alexa@catchndealz.com to schedule a pick up. Or chat with us now!')
+        else alert('I am not selected');" />
+		<label for="radio-one">Yes</label>
+		<input type="radio" id="radio-two" name="switch-one" value="no" checked />
+		<label for="radio-two">No</label>
+	</div>
+</div>
+<!-- finish -->
+
+<!-- start of local pick up CSS -->
+ <style>
+.switch-field {
 	display: flex;
 	margin-bottom: 36px;
 	overflow: hidden;
@@ -77,63 +139,3 @@
 	border-radius: 0 4px 4px 0;
 }
     </style>
-    <div class="shipping-option"> 
-        <p>Local Pick-Up</p>
-    <div class="switch-field">
-		<input type="radio" id="radio-one" name="switch-one" value="yes"onclick="if(this.checked==true) alert('Contact Alexa @ example@email.com to schedule a pick up.')
-        else alert('I am not selected');" />
-		<label for="radio-one">Yes</label>
-		<input type="radio" id="radio-two" name="switch-one" value="no" checked />
-		<label for="radio-two">No</label>
-	</div>
-</div>
-<!-- finish -->
-        <div class="checkout-cart__discount">
-            @if ($order->coupons->isNotEmpty())
-                <h4>Discount: {{ Currency::format($order->coupon_value) }}</h4>
-                @foreach($order->coupons as $coupon)
-                    <div class="checkout-cart__discount-details" data-component="cart-coupon" data-code="{{ $coupon->code }}">
-                        <h3>
-                            Code: {{ $coupon->code }} |
-                            {{ $order->coupon->dollars ? Currency::format($coupon->calculated_value) : $coupon->percent . '%' }}
-                        </h3>
-                        @if (is_null($order->placed_at))
-                            <form class="solo-button remove-code" action="{{ route('shop.checkout.removeCode', ['code' => $coupon->code]) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button data-element="remove-coupon" class="btn btn-default" name="submit" value="submit">Remove</button>
-                            </form>
-                        @endif
-                    </div>
-                @endforeach
-            @endif
-            @if (! $order->placed_at)
-                @if (isset($couponMessage))
-                    <h3 class="alert alert-danger">{{ $couponMessage }}</h3>
-                @endif
-                <form class="form-inline form-standalone checkout-cart__promo apply-code" action="{{ route('shop.checkout.applyCode') }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" name="code" class="form-control" placeholder="promo code">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit" data-element="apply-code">Apply</button>
-                            </span>
-                        </div>
-                    </div>
-                </form>
-            @endif
-        </div>
-        <h4 class="checkout-cart__tax">Tax: {{ $order->validateTax() ? '$' . $order->tax_subtotal : 'TBD' }}</h4>
-
-    <div class="checkout-cart__total">
-        <h3>Total</h3>
-        <div class="checkout-cart__subtotal @if(empty($cta)) --no-cta @endif">
-            {{ Currency::format($order->total) }}
-            <div class="pointless">
-        </div>
-        @if (!empty($cta))
-            <a href="{{ $cta['url'] }}" class="checkout-cart__continue">{{ $cta['text'] }}</a>
-        @endif
-    </div>
-</div>

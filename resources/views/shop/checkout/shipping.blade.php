@@ -257,34 +257,5 @@
             </div>
         </div>
     </div>
+    
 @endsection
-<h3 class="recommended">Recommended Items</h3>
-</div>
-<br><br><br><br>
-<div class="flex-container">
-  <?php
-
-  // this is our querry for pulling recommended items -KE
-  $question = "SELECT listings.id,listing_items.listing_id,reserved_for_order_id,title,price,slug,ebay_order_id,media_name, listing_images.listing_id
-  from listings, listing_items, listing_images
-  where listings.id=listing_items.listing_id and reserved_for_order_id is NULL and ebay_order_id is NULL and listings.id=listing_images.listing_id
-  ORDER BY rand() limit 4";
-
-  //This connects to the DB while keeping the loggin information safe. -KE
-  $result = DB::select($question);
-
-  //This grabs the data from the array -KE
-  foreach ($result as $row) {
-          echo "<div class='recItems'>";
-          echo $row->title;
-          echo "<br>";
-          $image_name = $row->media_name;
-          $image_url = "/storage/uploads/listings/cropped/" . $image_name;
-          echo "</br><div><img src='$image_url'></img></div></br>";
-          $link_listing_sku = $row->id;
-          $link_listing_slug = $row->slug;
-          $link_address = "auction" . "/" . $link_listing_sku . "/" . $link_listing_slug;
-          echo "<div> <a href='/$link_address'></div><button class='btnRecommended'>Check This Out!</button></a>";
-          echo "</div>";
-  }
-  ?>

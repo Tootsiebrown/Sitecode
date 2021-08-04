@@ -14,9 +14,10 @@
 @import "shop-orders/shop-orders";
 
 .dashboard-table {
+    width: auto;
     td, th {
         padding: 8px;
-
+        text-align: left;
         &:first-child {
             padding-left: 0;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Wax\Shop\Validators;
 
+use App\Models\ProductCategory;
 use App\Wax\Shop\Models\Coupon;
 use App\Wax\Shop\Models\Order;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,7 @@ class OrderCouponValidator extends AbstractValidator
 
     protected function validateSingleUse()
     {
-        if (! $this->coupon->one_time) {
+        if (!$this->coupon->one_time) {
             return;
         }
 
@@ -67,7 +68,7 @@ class OrderCouponValidator extends AbstractValidator
             return;
         }
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             $this->errors()->add(
                 'general',
                 __('shop::coupon.validation_not_logged_in')
@@ -121,7 +122,7 @@ class OrderCouponValidator extends AbstractValidator
             return;
         }
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             $this->errors()->add(
                 'general',
                 __('shop::coupon.validation_not_logged_in')
@@ -151,25 +152,38 @@ class OrderCouponValidator extends AbstractValidator
 
     public function validateCategoryMatches()
     {
-        if (is_null($this->coupon->category_id)) {
-            return;
-        }
-
         $categoryIds = $this->order
             ->items
-            ->map(fn($item) => $item->listing)
+            ->map(fn ($item) => $item->listing)
             ->pluck('categories')
             ->flatten()
             ->pluck('id');
+        $excludedCategories = [1842,  1894,  1748];
+        $children   = ProductCategory::whereIn('parent_id', $excludedCategories)->get()->pluck('id')->toArray();
+        $excludedCategoriesMerge = [...$excludedCategories, ...$children];
+        $result = array_intersect($categoryIds->toArray(), $excludedCategoriesMerge);
 
-        if ($categoryIds->contains($this->coupon->category_id)) {
-            return;
+
+        if (count($result) > 0) {
+            $category_Id = $result[0];
+            $productCategory = ProductCategory::find($category_Id);
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_category', ['breadcrumb' => $productCategory->breadcrumb])
+            );
+        } else {
+            if (is_null($this->coupon->category_id)) {
+                return;
+            }
+            if ($categoryIds->contains($this->coupon->category_id)) {
+                return;
+            }
+
+            $this->errors()->add(
+                'general',
+                __('shop::coupon.validation_category', ['breadcrumb' => $this->coupon->category->breadcrumb])
+            );
         }
-
-        $this->errors()->add(
-            'general',
-            __('shop::coupon.validation_category', ['breadcrumb' => $this->coupon->category->breadcrumb])
-        );
     }
 
     public function validateNotDuplicate()
@@ -196,8 +210,8 @@ class OrderCouponValidator extends AbstractValidator
             // the order has a coupon without a category, so
             // of course it overlaps with any other coupon
             $this->order->coupons
-                ->filter(fn ($coupon) => is_null($coupon->category))
-                ->isNotEmpty()
+            ->filter(fn ($coupon) => is_null($coupon->category))
+            ->isNotEmpty()
         ) {
             $this->errors()->add(
                 'general',

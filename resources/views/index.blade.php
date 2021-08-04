@@ -39,22 +39,19 @@
     </div>
     <div class="banner-message container-fluid">
   <div class="marquee">
-    <h3><i class="fas fa-exclamation-triangle"></i> SITE WIDE DISCOUNTS - 50% OFF EXCLUDING MYSTERY BOXS, HIGH END ELECTRONICS, AND WHOLELSALE CATEGORIES! <i class="fas fa-exclamation-triangle"></i></h3>
+    <h3><i class="fas fa-exclamation-triangle"></i> SITE WIDE DISCOUNTS - 50% OFF ALL ITEMS EXCLUDING MYSTERY BOXS, HIGH END ELECTRONICS, AND WHOLESALE CATEGORIES! <i class="fas fa-exclamation-triangle"></i></h3>
   </div>
 
   <div class="marquee">
-    <h3 id="secondmessage"><i class="fas fa-exclamation-triangle"></i> SITE WIDE SALE! ALL ITEMS DISCOUNTED 50%. EXCLUDING MYSTERY BOXS AND HIGH END ELECTRONICS <i class="fas fa-exclamation-triangle"></i> </h3>
+  <h3 id="secondmessage"> <i class="fas fa-money-bill-wave" id="money"></i> Use code Save50% and start saving today! <i class="fas fa-money-bill-wave"id="money"></i> </h3>
   </div>
 </div>
     <div class="home-featured">
 
         <div class="container">
-
-
             <h2>
                 Featured Items
             </h2>
-
                 @include('site.components.listings-list', ['listings' => $featuredListings])
             </div>
         </div>
@@ -89,6 +86,9 @@
 @section('page-js')
     @slick
 @endsection
-
+<!--       _
+       .__(.)< (MEOW)
+        \___)   
+ ~~~~~~~~~~~~~~~~~~-->
 </body>
 </html>

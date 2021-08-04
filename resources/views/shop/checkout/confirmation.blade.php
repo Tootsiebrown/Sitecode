@@ -29,7 +29,7 @@
                     <div class="confirmation__details">
                         <h5>Order Number:</h5>
                         <p>{{ $order->sequence }}</p>
-
+    
                         <h5>Shipping To:</h5>
                         @if ($shipment->in_store_pickup)
                             <p>In Store Pickup</p>
@@ -66,3 +66,5 @@
         </div>
     </div>
 @endsection
+
+
