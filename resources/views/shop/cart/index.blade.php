@@ -89,10 +89,11 @@
             </div>
         </div>
         <div>
-            <h3 class="recommended">Recommended Items</h3>
+        <h3 class="recommended">Recommended Items</h3> 
+            <button id="refresh1" onclick="$('#refresh').load(location.href + ' #refresh');"><i class="fas fa-redo-alt"></i></button>
             </div>
             <br><br><br><br>
-            <div class="flex-container1">
+            <div class="flex-container1" id="refresh">
             <?php
             // this is our querry for pulling recommended items -KE
             $question = "SELECT listings.id,listing_items.listing_id,reserved_for_order_id,title,price,slug,ebay_order_id,media_name, listing_images.listing_id

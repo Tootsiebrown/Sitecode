@@ -274,20 +274,24 @@ border-radius: 20px;
 .btnRecommended:hover::after, .btnRecommended:focus::after {
   animation: sheen 1s forwards;
 }
-@media (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 767px) {
   .flex-container1 {
     flex-direction: column;
     margin-bottom: 5px;
   }
+
   .recItems{
     margin-bottom: 10px;
     margin-top: 10px;
-
   }
+
   .pointless{
   margin-left: 12px;
   }
   
+  #refresh1{
+    background: red;
+  }
 }
 
 #testImage{
@@ -296,3 +300,9 @@ border-radius: 20px;
   overflow: hidden;
 }
 
+#refresh1{
+  border-radius: 50px;
+  background: darkorange;
+  fill: navy;
+  padding: 5px;
+}

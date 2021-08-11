@@ -83,7 +83,7 @@
 <div class="shipping-option"> 
         <p>Local Pick-Up</p>
     <div class="switch-field">
-		<input type="radio" id="radio-one" name="switch-one" value="yes"onclick="if(this.checked==true) alert('Contact Alexa @ alexa@catchndealz.com to schedule a pick up. Or chat with us now!')
+		<input type="radio" id="radio-one" name="switch-one" value="yes"onclick="if(this.checked==true) alert('Contact Alexa @ alexa@catchndealz.com to schedule a pick up. Or chat with us now! Please include your order number!')
         else alert('I am not selected');" />
 		<label for="radio-one">Yes</label>
 		<input type="radio" id="radio-two" name="switch-one" value="no" checked />

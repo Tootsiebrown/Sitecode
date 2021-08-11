@@ -130,7 +130,7 @@ class ShopOrdersController extends Controller
     }
 
     public function report()
-    {
+       {
         $fileName = 'orders-' . date('Y-m-d-H-i-s') . '.csv';
 
         $headers = array(
@@ -157,8 +157,8 @@ class ShopOrdersController extends Controller
             ->flatten()
             ->map(fn($item) => $item->listingItems)
             ->flatten();
-
-        $ebayLineItems = EbayOrder::forOrderProcessingReport()
+            
+            $ebayLineItems = EbayOrder::forOrderProcessingReport()
             ->get()
             ->map(fn ($order) => $order->items)
             ->flatten();
@@ -187,11 +187,15 @@ class ShopOrdersController extends Controller
                     $lineItem->id,
                     $lineItem->bin,
                 ]);
+                echo file_get_contents($file);
             }
         };
+        
 
         return response()->stream($callback, 200, $headers);
     }
+
+    
 
     public function salesByCategory(Request $request)
     {
